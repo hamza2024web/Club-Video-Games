@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: club_backend
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: club_php
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root_password
+    ports:
+      - "3311:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_club
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "8086:80"
+
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: php_club
+    restart: always
+    volumes:
+      - ./project:/var/www/html
+    ports:
+      - "86:80"
+
+volumes:
+  mysql_data:

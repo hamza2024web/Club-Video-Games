@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Game Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <header class="bg-gradient-to-r from-green-400 to-blue-500 text-white py-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
+            <h1 class="text-3xl font-bold">🎮 Video Game Club</h1>
+            <nav class="space-x-4">
+                <a href="#" class="hover:text-gray-200">Home</a>
+                <a href="#games" class="hover:text-gray-200">Games</a>
+                <a href="#events" class="hover:text-gray-200">Events</a>
+                <a href="#membership" class="hover:text-gray-200">Membership</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="py-10">
+        <!-- Intro Section -->
+        <section class="bg-white shadow-lg rounded-lg p-6 mb-10 mx-4 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-semibold mb-2">Welcome to the Video Game Club!</h2>
+            <p class="text-gray-600">
+                Join our community of passionate gamers and explore a world filled with exciting games, events, and
+                friendships. Whether you're a casual player or a hardcore gamer, there's something for everyone!
+            </p>
+        </section>
+
+        <!-- Featured Games Section -->
+        <section id="games" class="max-w-7xl mx-auto px-4 mb-10">
+            <h2 class="text-2xl font-semibold mb-4">Featured Games</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Game Card 1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://via.placeholder.com/300x150" alt="Game 1" class="w-full h-32 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold">Game Title 1</h3>
+                        <p class="text-gray-600">A brief description of Game 1 goes here. It's an exciting game that you
+                            will love!</p>
+                    </div>
+                </div>
+                <!-- Game Card 2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://via.placeholder.com/300x150" alt="Game 2" class="w-full h-32 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold">Game Title 2</h3>
+                        <p class="text-gray-600">A brief description of Game 2 goes here. It's an exciting game that you
+                            will enjoy!</p>
+                    </div>
+                </div>
+                <!-- Game Card 3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://via.placeholder.com/300x150" alt="Game 3" class="w-full h-32 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold">Game Title 3</h3>
+                        <p class="text-gray-600">A brief description of Game 3 goes here. It's an exciting game that you
+                            will definitely like!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events" class="bg-white shadow-lg rounded-lg p-6 mx-4 mb-10 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-semibold mb-4">Upcoming Events</h2>
+            <ul class="space-y-4">
+                <li class="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
+                    <div>
+                        <h3 class="text-lg font-semibold">Monthly Game Night</h3>
+                        <p class="text-gray-600">Join us for our monthly game night on the first Friday of every month!
+                        </p>
+                    </div>
+                    <span class="text-green-500 font-bold">Next: 1st</span>
+                </li>
+                <li class="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
+                    <div>
+                        <h3 class="text-lg font-semibold">Tournament Saturday</h3>
+                        <p class="text-gray-600">Compete with fellow members in our exciting tournaments every Saturday!
+                        </p>
+                    </div>
+                    <span class="text-green-500 font-bold">Next: Saturdays</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Membership Section -->
+        <section id="membership" class="max-w-7xl mx-auto px-4 mb-10">
+            <h2 class="text-2xl font-semibold mb-4">Become a Member!</h2>
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <p class="text-gray-600 mb-4">
+                    Join our club to gain access to exclusive events, game nights, and a community of fellow gamers!
+                </p>
+                <a href="#"
+                    class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">Sign Up
+                    Now</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; 2023 Video Game Club. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="#" class="hover:text-gray-300"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-gray-300"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
