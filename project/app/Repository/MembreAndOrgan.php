@@ -29,7 +29,7 @@ class MembreAndOrgan {
             if ($role === 'membre'){
                 $this->addMembre($userId , ['date_naissance' => $naissance]);
             } elseif ($role === 'organisateur'){
-                $this->addOrganisateur($userId , ['']);
+                $this->addOrganisateur($userId , ['nom_club' => $club]);
             }
             $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
             $stmt->execute([$userId]);
