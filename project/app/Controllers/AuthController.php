@@ -1,13 +1,26 @@
 <?php
 
 namespace App\Controllers;
-use App\Models\UserModel;
+use App\Services\AuthServices;
 
-class AuthController {
+class AuthController extends BaseController {
+    protected $authServices;
+
+    public function __construct()
+    {
+        $this->authServices = new AuthServices();     
+    }
+
+    public function index(){
+        return $this->renderAuth('login');
+    }
+
     public function login($email , $password){
-        $userModel = new UserModel();
-        $user = $userModel->loginSession($email , $password);
+        $email = $_POST["email"];
+        $password = $_POST["password"];
         
+        $user = $this->authServices->loginSession($email , $password);
+
         if ($user['status'] === "Activation"){
             $pathUrl = "/src/Views/";
             if($user['role'] == "administrateur"){
@@ -27,6 +40,6 @@ class AuthController {
                 echo "Votre compte a été encore désactivé";
             }
         }
-        }
+    }
     }
 ?>

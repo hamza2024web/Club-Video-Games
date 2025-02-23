@@ -1,17 +1,16 @@
 <?php
-namespace App\Models;
-
+namespace App\Repository;
+use Config\Database;
 use App\Classes\Users;
-use App\Config\Database;
 use PDO;
 
-class UserModel {
+class UserRepository {
     private $conn;
 
     public function __construct()
     {
         $db = new Database();
-        $this->conn = $db->connect();
+        $this->conn = $db->getConnection();
     }
 
     public function findUserByEmail($email){
