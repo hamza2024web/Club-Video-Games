@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 use App\Repository\UserRepository;
+use App\Repository\MembreAndOrgan;
 
 class AuthServices {
     protected $userRepository;
@@ -32,6 +33,10 @@ class AuthServices {
         } else {
             return false;
         }
+    }
+    public function registresession($role,$name,$email,$password,$naissance,$club){
+        $user = $this->userRepository->setMembreAndOrganisateur($role,$name,$email,$password,$naissance,$club);
+        return $user;
     }
 }
 ?>

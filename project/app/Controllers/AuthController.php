@@ -14,6 +14,9 @@ class AuthController extends BaseController {
     public function index(){
         return $this->renderAuth('login');
     }
+    public function indexRegistre(){
+        return $this->renderAuth('registre');
+    }
 
     public function login($email , $password){
         $email = $_POST["email"];
@@ -22,15 +25,14 @@ class AuthController extends BaseController {
         $user = $this->authServices->loginSession($email , $password);
 
         if ($user['status'] === "Activation"){
-            $pathUrl = "/src/Views/";
             if($user['role'] == "administrateur"){
-                header("location:" .$pathUrl. "Admin/dashboard.php");
+                header("location:");
             } 
-            else if($user['role'] === "etudiant"){
-                header("location:" .$pathUrl. "etudiant/home.php");
+            else if($user['role'] === "membre"){
+                header("location:");
             }
-            else if($user['role'] === "enseignant"){
-                header("location:".$pathUrl. "enseignant/home.php");
+            else if($user['role'] === "organisateur"){
+                header("location:");
             }
         } else {
             if ($user['status'] === "suspension"){
@@ -38,6 +40,39 @@ class AuthController extends BaseController {
             }
             else if($user['status'] === "Not Active"){
                 echo "Votre compte a été encore désactivé";
+            }
+        }
+    }
+
+    public function registre ( $role ,$name , $email , $password , $naissance = null, $club = null){
+        $role = $_POST["role"];
+        $name = $_POST["name"];
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+        $naissance = $_POST["naissance"];
+        $club = $_POST["club"];
+
+        $user = $this->authServices->registresession($role,$name,$email,$password,$naissance,$club);
+
+        if($user == null){
+            echo "please fields inputs and create your account ...";
+        } else {
+            if ($user->getStatus()=="Activation"){
+                if($user->getRole()=="administrateur"){
+                    header("location:");
+                }
+                else if($user->getRole()=="membre"){
+                    header("location:");
+                }
+                else if($user->getRole()=="organisateur"){
+                    header("location:");
+                }
+            } elseif ($user->getStatus()=="suspension"){
+                header("location:");
+                echo "Votre compte a été suspenser";
+            } elseif ($user->getStatus()=="Not Active"){
+                header("location:");
+                echo "Votre compte a été Disactiver";
             }
         }
     }

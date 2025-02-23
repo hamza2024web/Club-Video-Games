@@ -1,36 +1,3 @@
-<?php
-require_once("../../../vendor/autoload.php");
-use App\Controllers\AuthContrRegistre;
-
-if(isset($_POST["role"]) && $_POST["role"] === "etudiant"){
-    if(isset($_POST["submit"])){
-        if(empty($_POST["name"]) || empty($_POST["email"]) || empty($_POST["password"]) || empty($_POST["diplomat"])){
-            echo "Check your inputs name ...";
-        } else {
-            $username = $_POST["name"];
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-            $role = $_POST["role"];
-            $diplomat = $_POST["diplomat"];
-            $registre = new AuthContrRegistre();
-            $registre->Signup($username , $email , $password ,$role ,$diplomat);
-        }
-    }
-} else if(isset($_POST["role"]) && $_POST["role"] === "enseignant"){
-    if(isset($_POST["submit"])){
-      if(empty($_POST["name"]) || empty($_POST["email"]) || empty($_POST["password"])){
-        echo "Check your inputs name ...";
-      } else {
-        $username = $_POST["name"];
-        $email = $_POST["email"];
-        $password = $_POST["password"];
-        $role = $_POST["role"];
-        $registre = new AuthContrRegistre();
-        $registre->Signup($username , $email , $password ,$role );
-      }
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,11 +11,13 @@ if(isset($_POST["role"]) && $_POST["role"] === "etudiant"){
         const candidatFields = document.getElementById('etudiantFields');
         
         // Hide all fields initially
-        candidatFields.style.display = 'none';
-        
+        membreFields.style.display = 'none';
+        organisateurFields.style.display = 'none';
         // Show fields based on selected role
-        if (role === 'etudiant') {
-            candidatFields.style.display = 'block';
+        if (role === 'membre') {
+            membreFields.style.display = 'block';
+        } else {
+            organisateurFields.style.display = 'block';
         }
     }
     // Ensure fields are toggled on page load
@@ -62,7 +31,7 @@ if(isset($_POST["role"]) && $_POST["role"] === "etudiant"){
     <div class="min-h-screen flex fle-col items-center justify-center py-6 px-4">
       <div class="grid md:grid-cols-2 items-center gap-4 max-w-6xl w-full">
         <div class="border border-gray-300 rounded-lg p-6 max-w-md shadow-[0_2px_22px_-4px_rgba(93,96,127,0.2)] max-md:mx-auto">
-          <form id="login-form" class="space-y-4" action="" method="POST">
+          <form id="login-form" class="space-y-4" action="/registre" method="POST">
             <div class="mb-8">
               <h3 class="text-gray-800 text-3xl font-extrabold">Sign in</h3>
               <p class="text-gray-500 text-sm mt-4 leading-relaxed">Create your account and explore a world of possibilities. Your Career begins here.</p>
@@ -70,8 +39,8 @@ if(isset($_POST["role"]) && $_POST["role"] === "etudiant"){
             <div class="form-group">
                 <select name="role" id="role" required onchange="toggleFields()">
                     <option value="">Choisir un rôle</option>
-                    <option value="etudiant">étudiant</option>
-                    <option value="enseignant">Enseignant</option>
+                    <option value="membre">membre</option>
+                    <option value="organisateur">organisateur</option>
                 </select>
             </div>
             
@@ -95,12 +64,19 @@ if(isset($_POST["role"]) && $_POST["role"] === "etudiant"){
                 <input name="password" type="password" required class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-lg outline-blue-600" placeholder="Enter password" />
               </div>
             </div>
-            <!-- Candidat Specific Fields -->
-            <div id="etudiantFields" style="display:none;">
+            <div id="membreFields" style="display:none;">
                 <div>
-                    <label class="text-gray-800 text-sm mb-2 block">Diplomat</label>
+                    <label class="text-gray-800 text-sm mb-2 block">Date De Naissance</label>
                     <div class="relative flex items-center">
-                        <input name="diplomat" type="text" class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-lg outline-blue-600" placeholder="Enter diploma" />
+                        <input name="naissance" type="date" class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-lg outline-blue-600" placeholder="Enter diploma" />
+                    </div>
+                </div>
+            </div>
+            <div id="organisateurFields" style="display:none;">
+                <div>
+                    <label class="text-gray-800 text-sm mb-2 block">Nome de Club</label>
+                    <div class="relative flex items-center">
+                        <input name="club" type="text" class="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-lg outline-blue-600" placeholder="Enter diploma" />
                     </div>
                 </div>
             </div>

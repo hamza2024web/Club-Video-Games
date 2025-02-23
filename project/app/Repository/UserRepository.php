@@ -1,7 +1,7 @@
 <?php
 namespace App\Repository;
 use Config\Database;
-use App\Classes\Users;
+use App\Models\Users;
 use PDO;
 
 class UserRepository {
@@ -21,28 +21,6 @@ class UserRepository {
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    public function loginSession($email ,$password){
-        $userData = $this->findUserByEmail($email);
-        if (!$userData){
-            return false;
-        }
-        if ($userData['role'] === 'administrateur'){
-            return $userData;
-        }
-        
-        if(password_verify($password , $userData['password'])){
-            session_start();
-            $_SESSION['user_id'] = $userData['id'];
-            $_SESSION['email'] = $userData['email'];
-            $_SESSION['role'] = $userData['role'];
-            $_SESSION['status'] = $userData['status'];
-
-            error_log("Login successfly for email: $email");
-            return $userData;
-        } else {
-            return false;
-        }
     }
     public function getAllUsers(){
         $query = "SELECT users.id , users.name , users.email ,users.role ,users.status FROM users";
