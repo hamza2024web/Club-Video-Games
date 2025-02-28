@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Controllers;
-use App\Services\AuthServices;
+use App\Services\RegistreServices;
 
-class AuthController extends BaseController {
+class RegistreController extends BaseController {
     protected $authServices;
 
     public function __construct()
     {
-        $this->authServices = new AuthServices();     
+        $this->authServices = new RegistreServices();     
     }
 
     public function indexRegistre(){

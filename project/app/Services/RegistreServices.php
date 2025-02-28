@@ -3,7 +3,7 @@ namespace App\Services;
 use App\Repository\UserRepository;
 use App\Repository\MembreAndOrgan;
 
-class AuthServices {
+class RegistreServices {
     protected $userRepository;
     protected $registreRepository;
 
