@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Services;
+
 use App\Repository\UserRepository;
 use App\Repository\MembreAndOrgan;
 
-class AuthServices {
+class AuthServices
+{
     protected $userRepository;
     protected $registreRepository;
 
@@ -13,17 +16,18 @@ class AuthServices {
         $this->registreRepository = new MembreAndOrgan();
     }
 
-    public function loginSession($email , $password){
+    public function loginSession($email, $password)
+    {
         $user = $this->userRepository->findUserByEmail($email);
-        
-        if (!$user){
+
+        if (!$user) {
             return false;
         }
-        if ($user['role'] === 'administrateur'){
+        if ($user['role'] === 'administrateur') {
             return $user;
         }
-        
-        if(password_verify($password , $user['password'])){
+
+        if (password_verify($password, $user['password'])) {
             session_start();
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
@@ -36,9 +40,4 @@ class AuthServices {
             return false;
         }
     }
-    public function registresession($role,$name,$email,$password,$naissance,$club){
-        $user = $this->registreRepository->setMembreAndOrganisateur($role,$name,$email,$password,$naissance,$club);
-        return $user;
-    }
 }
-?>

@@ -11,37 +11,8 @@ class AuthController extends BaseController {
         $this->authServices = new AuthServices();     
     }
 
-    public function index(){
-        return $this->renderAuth('login');
-    }
     public function indexRegistre(){
         return $this->renderAuth('registre');
-    }
-
-    public function login($email , $password){
-        $email = $_POST["email"];
-        $password = $_POST["password"];
-        
-        $user = $this->authServices->loginSession($email , $password);
-
-        if ($user['status'] === "Activation"){
-            if($user['role'] == "administrateur"){
-                header("location:");
-            } 
-            else if($user['role'] === "membre"){
-                header("location:");
-            }
-            else if($user['role'] === "organisateur"){
-                header("location:");
-            }
-        } else {
-            if ($user['status'] === "suspension"){
-                echo "Votre compte a été suspenser";
-            }
-            else if($user['status'] === "Not Active"){
-                echo "Votre compte a été encore désactivé";
-            }
-        }
     }
 
     public function registre ( $role ,$name , $email , $password , $naissance = null, $club = null){

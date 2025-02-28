@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Controllers;
+use App\Services\AuthServices;
+
+class AuthController extends BaseController {
+    protected $authServices;
+
+    public function __construct()
+    {
+        $this->authServices = new AuthServices();     
+    }
+
+    public function index(){
+        return $this->renderAuth('login');
+    }
+
+    public function login($email , $password){
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+        
+        $user = $this->authServices->loginSession($email , $password);
+
+        if ($user['status'] === "Activation"){
+            if($user['role'] == "administrateur"){
+                header("location:");
+            } 
+            else if($user['role'] === "membre"){
+                header("location:");
+            }
+            else if($user['role'] === "organisateur"){
+                header("location:");
+            }
+        } else {
+            if ($user['status'] === "suspension"){
+                echo "Votre compte a été suspenser";
+            }
+            else if($user['status'] === "Not Active"){
+                echo "Votre compte a été encore désactivé";
+            }
+        }
+    }
+
+    }
+?>
