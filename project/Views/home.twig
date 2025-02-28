@@ -1,118 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Game Club</title>
+    <title>Game Club Management</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+<!-- Navigation -->
+    <nav class="bg-gradient-to-r from-indigo-700 to-purple-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-gamepad text-3xl mr-4"></i>
+                <h1 class="text-2xl font-bold">Game Club </h1>
+            </div>
+            <div class="flex items-center space-x-6">
+                <a href="#" class="hover:text-yellow-300 transition">Home</a>
+                <a href="#" class="hover:text-yellow-300 transition">Clubs</a>
+                <a href="#" class="hover:text-yellow-300 transition">Events</a>
+                <a href="#" class="hover:text-yellow-300 transition">Members</a>
+                
+                <!-- Login and Register Buttons -->
+                <div class="flex items-center space-x-4">
+                    <a href="/login" class="px-4 py-2 border-2 border-white rounded-lg hover:bg-white hover:text-indigo-700 transition duration-300">
+                        Login
+                    </a>
+                    <a href="/register" class="px-4 py-2 bg-yellow-400 text-black rounded-lg hover:bg-yellow-500 transition duration-300">
+                        Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<body class="bg-gray-100">
-    <header class="bg-gradient-to-r from-green-400 to-blue-500 text-white py-6">
-        <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
-            <h1 class="text-3xl font-bold">🎮 Video Game Club</h1>
-            <nav class="space-x-4">
-                <a href="#" class="hover:text-gray-200">Home</a>
-                <a href="#games" class="hover:text-gray-200">Games</a>
-                <a href="#events" class="hover:text-gray-200">Events</a>
-                <a href="#membership" class="hover:text-gray-200">Membership</a>
-            </nav>
+    <!-- Hero Section -->
+    <header class="bg-cover bg-center h-[500px] relative" style="background-image: url('https://images.unsplash.com/photo-1542751371-adf9c4dc4e3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80')">
+        <div class="absolute inset-0 bg-black opacity-60"></div>
+        <div class="relative max-w-7xl mx-auto px-4 h-full flex items-center">
+            <div class="text-white">
+                <h2 class="text-4xl font-bold mb-4">Welcome to Game Club Management</h2>
+                <p class="text-xl mb-8">Connect, Compete, and Celebrate Gaming</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded-lg transition">
+                        Join a Club
+                    </a>
+                    <a href="#" class="bg-transparent border-2 border-white hover:bg-white hover:text-black px-6 py-3 rounded-lg transition">
+                        View Events
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="py-10">
-        <!-- Intro Section -->
-        <section class="bg-white shadow-lg rounded-lg p-6 mb-10 mx-4 max-w-4xl mx-auto">
-            <h2 class="text-2xl font-semibold mb-2">Welcome to the Video Game Club!</h2>
-            <p class="text-gray-600">
-                Join our community of passionate gamers and explore a world filled with exciting games, events, and
-                friendships. Whether you're a casual player or a hardcore gamer, there's something for everyone!
-            </p>
-        </section>
-
-        <!-- Featured Games Section -->
-        <section id="games" class="max-w-7xl mx-auto px-4 mb-10">
-            <h2 class="text-2xl font-semibold mb-4">Featured Games</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Game Card 1 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x150" alt="Game 1" class="w-full h-32 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold">Game Title 1</h3>
-                        <p class="text-gray-600">A brief description of Game 1 goes here. It's an exciting game that you
-                            will love!</p>
-                    </div>
-                </div>
-                <!-- Game Card 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x150" alt="Game 2" class="w-full h-32 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold">Game Title 2</h3>
-                        <p class="text-gray-600">A brief description of Game 2 goes here. It's an exciting game that you
-                            will enjoy!</p>
-                    </div>
-                </div>
-                <!-- Game Card 3 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x150" alt="Game 3" class="w-full h-32 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold">Game Title 3</h3>
-                        <p class="text-gray-600">A brief description of Game 3 goes here. It's an exciting game that you
-                            will definitely like!</p>
+    <!-- Featured Clubs -->
+    <section class="max-w-7xl mx-auto px-4 py-12">
+        <h3 class="text-3xl font-bold text-center mb-8">Featured Game Clubs</h3>
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Club Card 1 -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                <img 
+                    src="https://images.unsplash.com/photo-1542751371-adf9c4dc4e3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                    alt="Club Image" 
+                    class="w-full h-48 object-cover"
+                >
+                <div class="p-6">
+                    <h4 class="text-xl font-bold mb-2">eSports Legends</h4>
+                    <p class="text-gray-600 mb-4">Competitive gaming club for serious players</p>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fas fa-users mr-2 text-indigo-600"></i>
+                            <span>42 Members</span>
+                        </div>
+                        <a href="#" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                            View Club
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Events Section -->
-        <section id="events" class="bg-white shadow-lg rounded-lg p-6 mx-4 mb-10 max-w-4xl mx-auto">
-            <h2 class="text-2xl font-semibold mb-4">Upcoming Events</h2>
-            <ul class="space-y-4">
-                <li class="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-                    <div>
-                        <h3 class="text-lg font-semibold">Monthly Game Night</h3>
-                        <p class="text-gray-600">Join us for our monthly game night on the first Friday of every month!
-                        </p>
+            <!-- Club Card 2 -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                <img 
+                    src="https://images.unsplash.com/photo-1552820728-8b83a6c3d0a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                    alt="Club Image" 
+                    class="w-full h-48 object-cover"
+                >
+                <div class="p-6">
+                    <h4 class="text-xl font-bold mb-2">RPG Adventurers</h4>
+                    <p class="text-gray-600 mb-4">Role-playing game enthusiasts unite</p>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fas fa-users mr-2 text-green-600"></i>
+                            <span>28 Members</span>
+                        </div>
+                        <a href="#" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                            View Club
+                        </a>
                     </div>
-                    <span class="text-green-500 font-bold">Next: 1st</span>
-                </li>
-                <li class="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-                    <div>
-                        <h3 class="text-lg font-semibold">Tournament Saturday</h3>
-                        <p class="text-gray-600">Compete with fellow members in our exciting tournaments every Saturday!
-                        </p>
-                    </div>
-                    <span class="text-green-500 font-bold">Next: Saturdays</span>
-                </li>
-            </ul>
-        </section>
+                </div>
+            </div>
 
-        <!-- Membership Section -->
-        <section id="membership" class="max-w-7xl mx-auto px-4 mb-10">
-            <h2 class="text-2xl font-semibold mb-4">Become a Member!</h2>
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <p class="text-gray-600 mb-4">
-                    Join our club to gain access to exclusive events, game nights, and a community of fellow gamers!
+            <!-- Club Card 3 -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                <img 
+                    src="https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                    alt="Club Image" 
+                    class="w-full h-48 object-cover"
+                >
+                <div class="p-6">
+                    <h4 class="text-xl font-bold mb-2">Indie Game Explorers</h4>
+                    <p class="text-gray-600 mb-4">Discovering and playing indie games</p>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fas fa-users mr-2 text-purple-600"></i>
+                            <span>35 Members</span>
+                        </div>
+                        <a href="#" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                            View Club
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events -->
+    <section class="bg-gray-100 py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-8">Upcoming Gaming Events</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Event Card 1 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 flex items-center">
+                    <div class="bg-red-100 text-red-600 p-4 rounded-lg mr-6">
+                        <span class="block text-2xl font-bold">15</span>
+                        <span class="block">Aug</span>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold mb-2">Annual eSports Tournament</h4>
+                        <p class="text-gray-600 mb-4">Compete in various game categories</p>
+                        <a href="#" class="text-indigo-600 hover:underline">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Event Card 2 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 flex items-center">
+                    <div class="bg-green-100 text-green-600 p-4 rounded-lg mr-6">
+                        <span class="block text-2xl font-bold">22</span>
+                        <span class="block">Sep</span>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold mb-2">Indie Game Showcase</h4>
+                        <p class="text-gray-600 mb-4">Discover new and exciting indie games</p>
+                        <a href="#" class="text-green-600 hover:underline">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+            <div>
+                <h5 class="text-xl font-bold mb-4">Game Club Hub</h5>
+                <p class="text-gray-400">
+                    Connecting gamers, creating communities, and celebrating the world of video games.
                 </p>
-                <a href="#"
-                    class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">Sign Up
-                    Now</a>
             </div>
-        </section>
-    </main>
-
-    <footer class="bg-gray-800 text-white py-4">
-        <div class="max-w-7xl mx-auto text-center">
-            <p>&copy; 2023 Video Game Club. All rights reserved.</p>
-            <div class="flex justify-center space-x-4 mt-2">
-                <a href="#" class="hover:text-gray-300"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="hover:text-gray-300"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+            <div>
+                <h5 class="text-xl font-bold mb-4">Quick Links</h5>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-yellow-300">Home</a></li>
+                    <li><a href="#" class="hover:text-yellow-300">Clubs</a></li>
+                    <li><a href="#" class="hover:text-yellow-300">Events</a></li>
+                    <li><a href="#" class="hover:text-yellow-300">Members</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-xl font-bold mb-4">Contact Us</h5>
+                <p class="text-gray-400">
+                    Email: support@gameclubhub.com<br>
+                    Phone: +1 (555) 123-4567
+                </p>
             </div>
         </div>
     </footer>
 </body>
-
 </html>

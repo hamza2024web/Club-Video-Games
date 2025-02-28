@@ -10,9 +10,10 @@ class BaseController
     protected $twigPro;
     protected $twigAdmin;
     protected $twigAuth;
+    protected $twigOrg;
     public function __construct()
     {
-        $loader = new FilesystemLoader(__DIR__ . '/../../Views/organisateur');
+        $loader = new FilesystemLoader(__DIR__ . '/../../Views');
         $this->twigPro = new Environment($loader, [
             'cache' => false,
             'debug' => true,
@@ -27,6 +28,11 @@ class BaseController
             'cache' => false,
             'debug' => false,
         ]);
+        $loaderOrganisateur = new FilesystemLoader(__DIR__ .'/../../Views/organisateur');
+        $this->twigOrg = new Environment($loaderOrganisateur, [
+            'cache' => false,
+            'debug' => true,
+        ]);
     }
 
     protected function render($template, $data = [])
@@ -40,5 +46,8 @@ class BaseController
     protected function renderAuth($template,$data = [])
     {
         echo $this->twigAuth->render($template . '.twig', $data);
+    }
+    protected function renderOrg($template ,$data = []){
+        echo $this->twigOrg->render($template . '.twig', $data);
     }
 }
