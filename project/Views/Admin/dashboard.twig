@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Game Club - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gradient-to-b from-green-600 to-green-800 text-white min-h-screen p-6">
+            <div class="mb-8 text-center">
+                <h1 class="text-2xl font-bold">Video Game Club</h1>
+                <p class="text-sm text-green-200">Admin Dashboard</p>
+            </div>
+
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#dashboard" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition">
+                            <i class="fas fa-tachometer-alt mr-3"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#games" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition">
+                            <i class="fas fa-gamepad mr-3"></i>
+                            Manage Games
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#users" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition">
+                            <i class="fas fa-users mr-3"></i>
+                            User Management
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#statistics" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition">
+                            <i class="fas fa-chart-line mr-3"></i>
+                            Club Statistics
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#settings" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition">
+                            <i class="fas fa-cog mr-3"></i>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-10">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-10">
+                <h2 class="text-3xl font-semibold text-gray-800">Dashboard</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search..." class="pl-8 pr-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-bell text-2xl text-gray-600"></i>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">3</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <img src="https://via.placeholder.com/40" class="rounded-full" alt="Admin Profile">
+                        <span>Admin Name</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stats Overview -->
+            <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Total Games</h3>
+                            <p class="text-2xl font-bold text-green-600">45</p>
+                        </div>
+                        <i class="fas fa-gamepad text-green-500 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Total Users</h3>
+                            <p class="text-2xl font-bold text-blue-600">1,200</p>
+                        </div>
+                        <i class="fas fa-users text-blue-500 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Active Sessions</h3>
+                            <p class="text-2xl font-bold text-purple-600">350</p>
+                        </div>
+                        <i class="fas fa-user-check text-purple-500 text-2xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm">Pending Approvals</h3>
+                            <p class="text-2xl font-bold text-yellow-600">12</p>
+                        </div>
+                        <i class="fas fa-hourglass-half text-yellow-500 text-2xl"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Recent Games -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Recent Games</h3>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center border-b pb-2">
+                            <div>
+                                <h4 class="font-semibold">Call of Duty: Modern Warfare</h4>
+                                <p class="text-sm text-gray-500">Added by: John Doe</p>
+                            </div>
+                            <span class="text-green-500">Active</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b pb-2">
+                            <div>
+                                <h4 class="font-semibold">Minecraft</h4>
+                                <p class="text-sm text-gray-500">Added by: Jane Smith</p>
+                            </div>
+                            <span class="text-yellow-500">Pending</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-semibold">Rocket League</h4>
+                                <p class="text-sm text-gray-500">Added by: Mike Johnson</p>
+                            </div>
+                            <span class="text-blue-500">Draft</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- User Performance -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Top Players</h3>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center border-b pb-2">
+                            <div class="flex items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-full mr-3" alt="User">
+                                <div>
+                                    <h4 class="font-semibold">Emma Wilson</h4>
+                                    <p class="text-sm text-gray-500">95% Win Rate</p>
+                                </div>
+                            </div>
+                            <span class="text-green-500">🏆</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b pb-2">
+                            <div class="flex items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-full mr-3" alt="User">
+                                <div>
+                                    <h4 class="font-semibold">Alex Rodriguez</h4>
+                                    <p class="text-sm text-gray-500">92% Win Rate</p>
+                                </div>
+                            </div>
+                            <span class="text-blue-500">🥈</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-full mr-3" alt="User">
+                                <div>
+                                    <h4 class="font-semibold">Sarah Lee</h4>
+                                    <p class="text-sm text-gray-500">88% Win Rate</p>
+                                </div>
+                            </div>
+                            <span class="text-yellow-500">🥉</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

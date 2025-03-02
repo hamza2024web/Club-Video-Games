@@ -17,7 +17,7 @@ class LoginController extends BaseController {
         return $this->renderAuth('login');
     }
 
-    public function login($email , $password){
+    public function login(){
         $email = $_POST["email"];
         $password = $_POST["password"];
         
@@ -25,13 +25,13 @@ class LoginController extends BaseController {
 
         if ($user['status'] === "Activation"){
             if($user['role'] == "administrateur"){
-                header("location:");
+                header("location:/dashboard");
             } 
             else if($user['role'] === "membre"){
-                header("location:");
+                header("location:/clubs");
             }
             else if($user['role'] === "organisateur"){
-                header("location:");
+                header("location:/club");
             }
         } else {
             if ($user['status'] === "suspension"){

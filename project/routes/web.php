@@ -7,4 +7,5 @@ Route::get('login','LoginController@index');
 Route::post('login','LoginController@login');
 Route::get('registre','RegistreController@indexRegistre');
 Route::post('registre','RegistreController@registre');
+Route::get('dashboard','AdminController@dashboard');
 ?>

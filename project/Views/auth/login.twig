@@ -5,14 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign in</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    function toggleForms() {
-      const loginForm = document.getElementById('login-form');
-      const registerForm = document.getElementById('register-form');
-      loginForm.classList.toggle('hidden');
-      registerForm.classList.toggle('hidden');
-    }
-  </script>
 </head>
 <body class="bg-gradient-to-r from-purple-800 to-blue-800">
     <div class="font-sans">
@@ -25,7 +17,6 @@
                             <h3 class="text-white text-3xl font-extrabold">Sign in</h3>
                             <p class="text-gray-300 text-sm mt-2 leading-relaxed">Welcome back! Sign in to explore a world of gaming possibilities.</p>
                         </div>
-
                         <div>
                             <label class="text-gray-200 text-sm mb-2 block">Email</label>
                             <div class="relative flex items-center">
@@ -43,8 +34,7 @@
                                 Log in
                             </button>
                         </div>
-
-                        <p class="text-sm mt-4 text-center text-gray-200">Don't have an account? <a href="../auth/signup.php" onclick="toggleForms()" class="text-blue-400 font-semibold hover:underline">Register here</a></p>
+                        <p class="text-sm mt-4 text-center text-gray-200">Don't have an account? <a href="/registre" class="text-blue-400 font-semibold hover:underline">Register here</a></p>
                     </form>
                 </div>
 

@@ -42,10 +42,8 @@ class RegistreController extends BaseController {
                 }
             } elseif ($user->getStatus()=="suspension"){
                 header("location:/login");
-                echo "Votre compte a été suspenser";
             } elseif ($user->getStatus()=="Not Active"){
                 header("location:/login");
-                echo "Votre compte a été Disactiver";
             }
         }
     }
