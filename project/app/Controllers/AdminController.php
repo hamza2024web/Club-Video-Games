@@ -3,7 +3,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\UsersServices;
 
-class AdminController extends BaseController{
+class AdminController extends BaseController { 
     protected $usersServices;
     public function __construct()
     {
@@ -17,8 +17,9 @@ class AdminController extends BaseController{
     }
 
     public function Users(){
-        $newStatus = $this->usersServices->getUsers();
-        return $newStatus;
+        $UsersStatus = $this->usersServices->getUsers();
+        $fetchUsers = $this->renderAdmin('userList',['results' => $UsersStatus]);
+        return $fetchUsers;
     }
 }
 ?>
