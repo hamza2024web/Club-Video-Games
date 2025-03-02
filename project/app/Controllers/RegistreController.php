@@ -2,12 +2,14 @@
 
 namespace App\Controllers;
 use App\Services\RegistreServices;
+use App\Controllers\BaseController;
 
 class RegistreController extends BaseController {
     protected $authServices;
 
     public function __construct()
     {
+        parent::__construct();
         $this->authServices = new RegistreServices();     
     }
 
@@ -15,7 +17,7 @@ class RegistreController extends BaseController {
         return $this->renderAuth('registre');
     }
 
-    public function registre ( $role ,$name , $email , $password , $naissance = null, $club = null){
+    public function registre (){
         $role = $_POST["role"];
         $name = $_POST["name"];
         $email = $_POST["email"];

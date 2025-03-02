@@ -2,12 +2,14 @@
 
 namespace App\Controllers;
 use App\Services\LoginServices;
+use App\Controllers\BaseController;
 
 class LoginController extends BaseController {
     protected $authServices;
 
     public function __construct()
     {
+        parent::__construct();
         $this->authServices = new LoginServices();     
     }
 

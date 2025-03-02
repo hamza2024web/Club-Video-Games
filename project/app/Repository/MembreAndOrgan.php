@@ -29,7 +29,9 @@ class MembreAndOrgan {
             if ($role === 'membre'){
                 $this->addMembre($userId , ['date_naissance' => $naissance]);
             } elseif ($role === 'organisateur'){
-                $this->addOrganisateur($userId , ['nom_club' => $club]);
+                if ($club === 'Tournoi'){
+                    // $this->addTournoi($userId ,['name' => $]);
+                }
             }
             $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
             $stmt->execute([$userId]);
