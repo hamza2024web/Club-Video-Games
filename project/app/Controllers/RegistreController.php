@@ -23,7 +23,7 @@ class RegistreController extends BaseController {
         $email = $_POST["email"];
         $password = $_POST["password"];
         $naissance = $_POST["naissance"];
-        $club = $_POST["club"];
+        $club = $_POST["nam_club"];
 
         $user = $this->authServices->registresession($role,$name,$email,$password,$naissance,$club);
 
@@ -32,19 +32,19 @@ class RegistreController extends BaseController {
         } else {
             if ($user->getStatus()=="Activation"){
                 if($user->getRole()=="administrateur"){
-                    header("location:");
+                    header("location:/login");
                 }
                 else if($user->getRole()=="membre"){
-                    header("location:");
+                    header("location:/login");
                 }
                 else if($user->getRole()=="organisateur"){
-                    header("location:");
+                    header("location:/login");
                 }
             } elseif ($user->getStatus()=="suspension"){
-                header("location:");
+                header("location:/login");
                 echo "Votre compte a été suspenser";
             } elseif ($user->getStatus()=="Not Active"){
-                header("location:");
+                header("location:/login");
                 echo "Votre compte a été Disactiver";
             }
         }

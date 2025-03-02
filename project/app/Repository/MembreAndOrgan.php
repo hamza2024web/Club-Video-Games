@@ -29,9 +29,7 @@ class MembreAndOrgan {
             if ($role === 'membre'){
                 $this->addMembre($userId , ['date_naissance' => $naissance]);
             } elseif ($role === 'organisateur'){
-                if ($club === 'Tournoi'){
-                    // $this->addTournoi($userId ,['name' => $]);
-                }
+                $this->addOrganisateur($userId , ['nam_club' => $club]);
             }
             $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
             $stmt->execute([$userId]);
@@ -50,9 +48,9 @@ class MembreAndOrgan {
     }
 
     private function addOrganisateur($userId , $data){
-        $sql = "INSERT INTO enseignant (nom_club ,user_id) VALUES (? , ?)";
+        $sql = "INSERT INTO organisateur (user_id ,nam_club) VALUES (? , ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$data['nom_club'],$userId]);
+        $stmt->execute([$userId,$data['nam_club']]);
     }
     
 
