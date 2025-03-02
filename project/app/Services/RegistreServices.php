@@ -1,6 +1,6 @@
 <?php
 namespace App\Services;
-use App\Repository\UserRepository;
+use App\Repository\LoginRepository;
 use App\Repository\MembreAndOrgan;
 
 class RegistreServices {
@@ -9,7 +9,7 @@ class RegistreServices {
 
     public function __construct()
     {
-        $this->userRepository = new UserRepository();
+        $this->userRepository = new LoginRepository();
         $this->registreRepository = new MembreAndOrgan();
     }
 

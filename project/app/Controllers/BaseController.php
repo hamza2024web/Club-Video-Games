@@ -11,6 +11,7 @@ class BaseController
     protected $twigAdmin;
     protected $twigAuth;
     protected $twigOrg;
+    protected $twigMem;
     public function __construct()
     {
         $loader = new FilesystemLoader(__DIR__ . '/../../Views');
@@ -33,6 +34,11 @@ class BaseController
             'cache' => false,
             'debug' => true,
         ]);
+        $loaderMembre = new FilesystemLoader(__DIR__ . '/../../Views/membre');
+        $this->twigMem = new Environment($loaderMembre, [
+            'cache' => false,
+            'debug' => true,
+        ]);
     }
 
     protected function render($template, $data = [])
@@ -49,5 +55,8 @@ class BaseController
     }
     protected function renderOrg($template ,$data = []){
         echo $this->twigOrg->render($template . '.twig', $data);
+    }
+    protected function renderMem($template ,$data = []){
+        echo $this->twigMem->render($template . '.twig', $data);
     }
 }

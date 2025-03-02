@@ -56,26 +56,26 @@
                                 <td class="px-6 py-4 space-x-2">
                                     <form method="POST" action="">
                                         <input type="hidden" name="id" value="{{result.id}}">
-                                        { if ($result['status'] === "Activation") }
+                                        {% if (result.status === "Activation") %}
                                             <button type="submit" name="status" value="suspension" class="px-3 py-2 text-sm font-semibold text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">
                                                 Suspendre
                                             </button>
                                             <button type="submit" name="status" value="Not Active" class="px-3 py-2 text-sm font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600">
                                                 Désactiver
                                             </button>
-                                        {  elseif ($result['status'] === "suspension") }
+                                        {%  elseif (result.status === "suspension") %}
                                             <button type="submit" name="status" value="Activation" class="px-3 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">
                                                 Activer
                                             </button>
-                                        {  elseif ($result['status'] === "Not Active") }
+                                        {%  elseif (result.status === "Not Active") %}
                                             <button type="submit" name="status" value="Activation" class="px-3 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">
                                                 Activer
                                             </button>
-                                        { }
+                                        {% endif %}
                                     </form>
                                 </td>
                             </tr>
-                        { } ?>
+                        {% endfor %} 
                     </tbody>
                 </table>
             </div>

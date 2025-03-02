@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Repository\UserRepository;
+use App\Repository\LoginRepository;
 use App\Repository\MembreAndOrgan;
 
 class LoginServices
@@ -12,7 +12,7 @@ class LoginServices
 
     public function __construct()
     {
-        $this->userRepository = new UserRepository();
+        $this->userRepository = new LoginRepository();
         $this->registreRepository = new MembreAndOrgan();
     }
 

@@ -1,71 +1,97 @@
-<?php
-require_once("../../../vendor/autoload.php");
-use App\Controllers\CourController;
-
-$listInscription = new CourController();
-$results = $listInscription->fetchInscription();
-?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users Management</title>
+    <title>Organizer Dashboard - Video Game Club</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-8 shadow-lg">
-        <div class="max-w-screen-xl mx-auto text-center">
-            <h1 class="text-5xl font-extrabold mb-4 animate-pulse">YouDemy - Enseignant</h1>
-            <p class="text-lg font-medium">Trouvez les talents qui feront la différence dans votre entreprise.</p>
-            <nav class="mt-6">
-                <ul class="flex justify-center space-x-8 text-lg font-medium">
-                    <li><a href="./home.php" class="hover:underline">Home</a></li>
-                    <li><a href="./inscription.php" class="hover:underline">Inscriptions</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<body class="bg-gray-900 text-white">
 
-    <!-- Main Content -->
-    <div class="max-w-screen-xl mx-auto p-6">
-        <!-- Page Title -->
-        <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">Inscriptions Management</h1>
-            <p class="text-gray-600 text-lg">Gérez vos Etudiants facilement. Activez, suspendez ou supprimez des utilisateurs en toute simplicité.</p>
+    <div class="container mx-auto p-6">
+        <header class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">Organizer Dashboard</h1>
+            <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Logout</button>
+        </header>
+
+        <!-- Manage Events Section -->
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Manage Events</h2>
+            <button class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded mb-4">Add New Event</button>
+            <table class="min-w-full bg-gray-700 rounded-lg">
+                <thead>
+                    <tr>
+                        <th class="py-3 px-4 text-left">Event Name</th>
+                        <th class="py-3 px-4 text-left">Date</th>
+                        <th class="py-3 px-4 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover:bg-gray-600">
+                        <td class="py-3 px-4">Tournament Night</td>
+                        <td class="py-3 px-4">March 15, 2023</td>
+                        <td class="py-3 px-4">
+                            <button class="bg-yellow-600 hover:bg-yellow-700 text-white py-1 px-2 rounded">Edit</button>
+                            <button class="bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded">Delete</button>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-gray-600">
+                        <td class="py-3 px-4">Game Release Party</td>
+                        <td class="py-3 px-4">April 20, 2023</td>
+                        <td class="py-3 px-4">
+                            <button class="bg-yellow-600 hover:bg-yellow-700 text-white py-1 px-2 rounded">Edit</button>
+                            <button class="bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <!-- Users List -->
-        <div class="bg-white shadow-lg rounded-lg p-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Users List</h2>
-            <div class="overflow-x-auto">
-                <table class="table-auto w-full border-collapse bg-white shadow-sm rounded-lg">
-                    <thead>
-                        <tr class="bg-gray-800 text-white">
-                            <th class="px-6 py-3 text-left text-sm font-medium">Nom d'Étudiant</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium">E-mail d'Étudiant</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium">Nom de Cours</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium">Date d'Inscription</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-700">
-                        <?php foreach ($results as $result) { ?>
-                            <tr class="hover:bg-gray-100 border-t border-gray-200">
-                                <td class="px-6 py-4"><?= htmlspecialchars($result['etudiant_name']); ?></td>
-                                <td class="px-6 py-4"><?= htmlspecialchars($result['etudiant_email']); ?></td>
-                                <td class="px-6 py-4"><?= htmlspecialchars($result['titre']); ?></td>
-                                <td class="px-6 py-4"><?= htmlspecialchars($result['date_postuler']); ?></td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
+        <!-- Member Registrations Section -->
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Member Registrations</h2>
+            <table class="min-w-full bg-gray-700 rounded-lg">
+                <thead>
+                    <tr>
+                        <th class="py-3 px-4 text-left">Member Name</th>
+                        <th class="py-3 px-4 text-left">Email</th>
+                        <th class="py-3 px-4 text-left">Registered On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover:bg-gray-600">
+                        <td class="py-3 px-4">Gamer123</td>
+                        <td class="py-3 px-4">gamer123@example.com</td>
+                        <td class="py-3 px-4">January 10, 2023</td>
+                    </tr>
+                    <tr class="hover:bg-gray-600">
+                        <td class="py-3 px-4">PlayerTwo</td>
+                        <td class="py-3 px-4">playertwo@example.com</td>
+                        <td class="py-3 px-4">January 15, 2023</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Update Club Information Section -->
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">Update Club Information</h2>
+            <form>
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2" for="clubName">Club Name:</label>
+                    <input type="text" id="clubName" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500" value="Video Game Club">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2" for="clubDescription">Description:</label>
+                    <textarea id="clubDescription" rows="4" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">Your club description goes here.</textarea>
+                </div>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Update Club Info</button>
+            </form>
         </div>
     </div>
+
 </body>
 
 </html>
