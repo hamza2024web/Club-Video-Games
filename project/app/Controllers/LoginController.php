@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Controllers;
-use App\Services\LoginServices;
 use App\Controllers\BaseController;
-
+use App\Services\LoginServices;
 class LoginController extends BaseController {
     protected $authServices;
 
@@ -42,6 +41,5 @@ class LoginController extends BaseController {
             }
         }
     }
-
-    }
+}
 ?>
