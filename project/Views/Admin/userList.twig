@@ -10,25 +10,25 @@
 </head>
 
 <body class="bg-gray-100">
-    <div class="flex">
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 bg-gradient-to-b from-green-600 to-green-800 text-white min-h-screen p-6">
-            <div class="mb-8 text-center">
-                <h1 class="text-2xl font-bold">Video Game Club</h1>
+        <aside class="w-64 bg-gradient-to-b from-green-600 to-green-800 text-white p-6">
+            <div class="mb-10 text-center">
+                <h1 class="text-3xl font-extrabold">🎮 Video Game Club</h1>
                 <p class="text-sm text-green-200">Admin Dashboard</p>
             </div>
 
             <nav>
-                <ul class="space-y-2">
-                    <li><a href="/dashboard" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-tachometer-alt mr-3"></i>Dashboard</a></li>
-                    <li><a href="/games" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-gamepad mr-3"></i>Manage Games</a></li>
-                    <li><a href="/users" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-users mr-3"></i>User Management</a></li>
-                    <li><a href="/statistics" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-chart-line mr-3"></i>Club Statistics</a></li>
-                    <li><a href="/settings" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-cog mr-3"></i>Settings</a></li>
+                <ul class="space-y-4">
+                    <li><a href="/dashboard" class="flex items-center p-3 hover:bg-green-700 rounded-lg transition"><i class="fas fa-tachometer-alt mr-3"></i>Dashboard</a></li>
+                    <li><a href="/games" class="flex items-center p-3 hover:bg-green-700 rounded-lg transition"><i class="fas fa-gamepad mr-3"></i>Manage Games</a></li>
+                    <li><a href="/users" class="flex items-center p-3 hover:bg-green-700 rounded-lg transition"><i class="fas fa-users mr-3"></i>User Management</a></li>
+                    <li><a href="/statistics" class="flex items-center p-3 hover:bg-green-700 rounded-lg transition"><i class="fas fa-chart-line mr-3"></i>Club Statistics</a></li>
+                    <li><a href="/settings" class="flex items-center p-3 hover:bg-green-700 rounded-lg transition"><i class="fas fa-cog mr-3"></i>Settings</a></li>
                 </ul>
             </nav>
 
-            <div class="absolute bottom-0 left-0 right-0 p-4">
+            <div class="absolute bottom-6 left-6 right-6">
                 <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition">
                     <i class="fas fa-sign-out-alt mr-2"></i>
                     Logout
@@ -37,23 +37,23 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 p-6">
+        <div class="flex-1 p-8">
             <!-- Header -->
             <header class="mb-8">
-                <h1 class="text-4xl font-bold text-gray-800">Users Management</h1>
-                <p class="text-gray-600 text-lg mt-2">Gérez vos Utilisateurs facilement. Activer, Suspenser ou supprimer des Utilisateurs en toute simplicité.</p>
+                <h1 class="text-5xl font-bold text-gray-800">Users Management</h1>
+                <p class="text-gray-600 text-lg mt-2">Gérez vos utilisateurs facilement. Activez, suspendez ou désactivez les comptes en quelques clics.</p>
             </header>
 
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Users List</h2>
-                <table class="min-w-full border-collapse bg-white">
+            <div class="bg-white shadow-lg rounded-lg p-8">
+                <h2 class="text-3xl font-semibold text-gray-800 mb-6">Users List</h2>
+                <table class="table-auto w-full border-collapse bg-white">
                     <thead>
                         <tr class="bg-gray-800 text-white">
-                            <th class="px-6 py-3 text-left text-sm font-medium">Nom d'utilisateur</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium">E-mail d'utilisateur</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium">Role d'utilisateur</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium">Status</th>
-                            <th class="px-6 py-3 text-left text-sm font-medium">Actions</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium">Nom d'utilisateur</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium">E-mail d'utilisateur</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium">Rôle d'utilisateur</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium">Statut</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
@@ -62,27 +62,36 @@
                                 <td class="px-6 py-4">{{ result.name }}</td>
                                 <td class="px-6 py-4">{{ result.email }}</td>
                                 <td class="px-6 py-4">{{ result.role }}</td>
-                                <td class="px-6 py-4">{{ result.status }}</td>
-                                <td class="px-6 py-4 space-x-2">
-                                    <form method="POST" action="">
-                                        <input type="hidden" name="id" value="{{ result.id }}">
-                                        {% if (result.status == "Activation") %}
-                                            <button type="submit" name="status" value="suspension" class="px-3 py-2 text-sm font-semibold text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 transition">
-                                                Suspendre
-                                            </button>
-                                            <button type="submit" name="status" value="Not Active" class="px-3 py-2 text-sm font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 transition">
-                                                Désactiver
-                                            </button>
-                                        {% elseif (result.status == "suspension") %}
-                                            <button type="submit" name="status" value="Activation" class="px-3 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600 transition">
-                                                Activer
-                                            </button>
-                                        {% elseif (result.status == "Not Active") %}
-                                            <button type="submit" name="status" value="Activation" class="px-3 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600 transition">
-                                                Activer
-                                            </button>
-                                        {% endif %}
-                                    </form>
+                                <td class="px-6 py-4">
+                                    {% if result.status == "Activation" %}
+                                        <span class="px-3 py-1 text-sm font-semibold text-green-700 bg-green-200 rounded-full">Actif</span>
+                                    {% elseif result.status == "suspension" %}
+                                        <span class="px-3 py-1 text-sm font-semibold text-yellow-700 bg-yellow-200 rounded-full">Suspendu</span>
+                                    {% else %}
+                                        <span class="px-3 py-1 text-sm font-semibold text-red-700 bg-red-200 rounded-full">Inactif</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 space-y-2">
+                                    {% if result.status == "Activation" %}
+                                        <form action="/updateStatus" method="post">
+                                            <input type="hidden" name="id" value="{{ result.id }}">
+                                            <button type="submit" name="status" value="suspension" class="px-4 py-2 text-sm font-semibold text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">Suspendre</button>
+                                        </form>
+                                        <form action="/updateStatus" method="post">
+                                            <input type="hidden" name="id" value="{{ result.id }}">
+                                            <button type="submit" name="status" value="Not Active" class="px-4 py-2 text-sm font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600">Désactiver</button>
+                                        </form>
+                                    {% elseif result.status == "suspension" %}
+                                        <form action="/updateStatus" method="post">
+                                            <input type="hidden" name="id" value="{{ result.id }}">
+                                            <button type="submit" name="status" value="Activation" class="px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">Activer</button>
+                                        </form>
+                                    {% else %}
+                                        <form action="/updateStatus" method="post">
+                                            <input type="hidden" name="id" value="{{ result.id }}">
+                                            <button type="submit" name="status" value="Activation" class="px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">Activer</button>
+                                        </form>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
