@@ -18,8 +18,8 @@ class AdminController extends BaseController {
 
     public function Users(){
         $UsersStatus = $this->usersServices->getUsers();
-        $fetchUsers = $this->renderAdmin('userList',['results' => $UsersStatus]);
-        return $fetchUsers;
+        $this->renderAdmin('userList',['results' => $UsersStatus]);
+        return $UsersStatus;
     }
 }
 ?>

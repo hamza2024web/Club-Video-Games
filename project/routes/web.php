@@ -10,5 +10,5 @@ Route::post('registre','RegistreController@registre');
 Route::get('dashboard','AdminController@dashboard');
 Route::get('clubs','membreController@clubs');
 Route::get('club','OrganisateurController@organisateur');
-Route::get('users','AdminController@')
+Route::get('users','AdminController@Users');
 ?>

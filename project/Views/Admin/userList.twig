@@ -12,8 +12,12 @@
 <body class="bg-gray-100">
     <div class="flex">
         <!-- Sidebar --> 
-        <aside class="bg-blue-600 text-white w-64 min-h-screen p-6">
-            <h1 class="text-2xl font-bold text-center mb-6">YouDemy</h1>
+        <aside class="w-64 bg-gradient-to-b from-green-600 to-green-800 text-white min-h-screen p-6">
+            <div class="mb-8 text-center">
+                <h1 class="text-2xl font-bold">Video Game Club</h1>
+                <p class="text-sm text-green-200">Admin Dashboard</p>
+            </div>
+
             <nav>
                 <ul class="space-y-2">
                     <li><a href="/dashboard" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-tachometer-alt mr-3"></i>Dashboard</a></li>
@@ -23,6 +27,13 @@
                     <li><a href="/settings" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-cog mr-3"></i>Settings</a></li>
                 </ul>
             </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Logout
+                </button>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -47,7 +58,7 @@
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
-                        {% for results in result %}
+                        {% for result  in results %}
                             <tr class="hover:bg-gray-100 border-t border-gray-200">
                                 <td class="px-6 py-4">{{result.name}}</td>
                                 <td class="px-6 py-4">{{result.email}}</td>
@@ -56,18 +67,18 @@
                                 <td class="px-6 py-4 space-x-2">
                                     <form method="POST" action="">
                                         <input type="hidden" name="id" value="{{result.id}}">
-                                        {% if (result.status === "Activation") %}
+                                        {% if (result.status == "Activation") %}
                                             <button type="submit" name="status" value="suspension" class="px-3 py-2 text-sm font-semibold text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">
                                                 Suspendre
                                             </button>
                                             <button type="submit" name="status" value="Not Active" class="px-3 py-2 text-sm font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600">
                                                 Désactiver
                                             </button>
-                                        {%  elseif (result.status === "suspension") %}
+                                        {%  elseif (result.status == "suspension") %}
                                             <button type="submit" name="status" value="Activation" class="px-3 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">
                                                 Activer
                                             </button>
-                                        {%  elseif (result.status === "Not Active") %}
+                                        {%  elseif (result.status == "Not Active") %}
                                             <button type="submit" name="status" value="Activation" class="px-3 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">
                                                 Activer
                                             </button>
