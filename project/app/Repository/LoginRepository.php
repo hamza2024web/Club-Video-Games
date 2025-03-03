@@ -14,8 +14,10 @@ class LoginRepository {
     }
 
     public function findUserByEmail($email){
-        $query = "SELECT users.id ,users.email , users.password , users.role ,users.status
-        FROM users WHERE users.email = :email";
+        $query = "SELECT users.id, users.email, users.password, role.name AS role, users.status
+        FROM users
+        INNER JOIN role ON role.id = users.role_id
+        WHERE users.email = :email";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":email",$email);
         $stmt->execute();

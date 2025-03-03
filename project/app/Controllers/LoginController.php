@@ -21,7 +21,6 @@ class LoginController extends BaseController {
         $password = $_POST["password"];
         
         $user = $this->authServices->loginSession($email , $password);
-
         if ($user['status'] === "Activation"){
             if($user['role'] == "administrateur"){
                 header("location:/dashboard");
