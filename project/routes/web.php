@@ -11,4 +11,5 @@ Route::get('dashboard','AdminController@dashboard');
 Route::get('clubs','membreController@clubs');
 Route::get('club','OrganisateurController@organisateur');
 Route::get('users','AdminController@Users');
+Route::post('updateStatus','AdminController@updateStatus');
 ?>
