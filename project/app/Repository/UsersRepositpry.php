@@ -13,7 +13,11 @@ class UsersRepositpry {
     }
 
     public function getAllUsers(){
-        $query = "SELECT users.id , users.name , users.email ,users.role ,users.status FROM users";
+        $query = "SELECT users.id,users.name,users.email,users.password,users.status,role.name as role 
+        FROM users 
+        INNER JOIN role ON role.id = users.role_id
+		WHERE role.name = 'membre' 
+        OR role.name = 'organisateur'";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $userData = $stmt->fetchAll(PDO::FETCH_ASSOC);

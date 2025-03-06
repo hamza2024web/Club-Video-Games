@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Controllers;
-use App\Services\LoginServices;
 use App\Controllers\BaseController;
-
+use App\Services\LoginServices;
 class LoginController extends BaseController {
     protected $authServices;
 
@@ -22,7 +21,6 @@ class LoginController extends BaseController {
         $password = $_POST["password"];
         
         $user = $this->authServices->loginSession($email , $password);
-
         if ($user['status'] === "Activation"){
             if($user['role'] == "administrateur"){
                 header("location:/dashboard");
@@ -43,5 +41,9 @@ class LoginController extends BaseController {
         }
     }
 
+    public function logout(){
+        session_destroy();
+        return $this->renderAuth('login');
     }
+}
 ?>

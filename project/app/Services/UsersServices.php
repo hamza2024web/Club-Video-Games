@@ -14,6 +14,11 @@ class UsersServices {
         $users = $this->Usersrepository->getAllUsers();
         return $users;
     }
+
+    public function Status($id , $newStatus){
+        $users = $this->Usersrepository->editStatusById($id , $newStatus);
+        return $users;
+    }
 }
 
 ?>
