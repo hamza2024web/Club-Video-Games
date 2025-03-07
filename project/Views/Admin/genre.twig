@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genre Management - Video Game Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        }
+        .hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gradient-to-b from-green-600 to-green-800 text-white min-h-screen p-6">
+            <div class="mb-8 text-center">
+                <h1 class="text-2xl font-bold">Video Game Club</h1>
+                <p class="text-sm text-green-200">Admin Dashboard</p>
+            </div>
+
+            <nav>
+                <ul class="space-y-2">
+                    <li><a href="/dashboard" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-tachometer-alt mr-3"></i>Dashboard</a></li>
+                    <li><a href="/genre" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-gamepad mr-3"></i>Genre Management</a></li>
+                    <li><a href="/users" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-users mr-3"></i>User Management</a></li>
+                    <li><a href="/statistics" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-chart-line mr-3"></i>Club Statistics</a></li>
+                    <li><a href="/settings" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-cog mr-3"></i>Settings</a></li>
+                </ul>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-10 bg-gray-100">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Add Genre Section -->
+                <div class="md:col-span-1 bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-800">Add New Genre</h2>
+                    <form id="addGenreForm" class="space-y-4" action="/addGenre" method="post">
+                        <div>
+                            <label class="block mb-2 text-gray-700">Genre Name</label>
+                            <input type="text" id="genreName" name="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter genre name"required>
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-2 text-gray-700">Description</label>
+                            <textarea id="Description" name="description" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Brief description of the genre"rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-3 rounded-lg hover:from-purple-700 hover:to-indigo-800 transition"   >Add Genre
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Genre List Section -->
+                <div class="md:col-span-2 bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Existing Genres</h2>
+                        <div class="relative">
+                            <input type="text" placeholder="Search genres..." class="px-4 py-2 border rounded-lg pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Genre Card Template -->
+                        {% for genre in genres %}
+                        <div class="bg-gray-50 rounded-lg p-4 hover-effect">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="flex space-x-2">
+                                    <button class="text-yellow-500 hover:text-yellow-600">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-500 hover:text-red-600">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">{{ genre.name }}</h3>
+                            <p class="text-gray-600 text-sm">{{ genre.description }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

@@ -1,21 +1,28 @@
 <?php
 namespace App\Controllers;
 use App\Controllers\BaseController;
+use App\Services\dashboardServices;
 use App\Services\UsersServices;
 
 class AdminController extends BaseController { 
     protected $usersServices;
+    protected $adminServices;
     public function __construct()
     {
         parent::__construct();
         $this->usersServices = new UsersServices();
-
+        $this->adminServices = new dashboardServices();
     }
 
     public function dashboard (){
         $this->renderAdmin('dashboard');
     }
-
+    
+    public function genre(){
+        $genres = $this->adminServices->getGenre();
+        $this->renderAdmin('genre',compact('genres'));
+        return $genres;
+    }
     public function Users(){
         $UsersStatus = $this->usersServices->getUsers();
         $this->renderAdmin('userList',['results' => $UsersStatus]);
@@ -27,6 +34,12 @@ class AdminController extends BaseController {
         $newStatus = $_POST['status'];
         $UpdateStatus = $this->usersServices->Status($id , $newStatus);
         $status = $this->Users();
+    }
+    public function addGenre(){
+        $name = $_POST["name"];
+        $description = $_POST["description"];
+        $addGenre = $this->adminServices->addGenre($name , $description);
+
     }
 }
 ?>

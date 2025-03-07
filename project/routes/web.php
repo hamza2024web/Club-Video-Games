@@ -13,4 +13,6 @@ Route::get('clubs','membreController@clubs');
 Route::get('club','OrganisateurController@organisateur');
 Route::get('users','AdminController@Users');
 Route::post('updateStatus','AdminController@updateStatus');
+Route::get('genre','AdminController@genre');
+Route::post('addGenre','AdminController@addGenre');
 ?>
