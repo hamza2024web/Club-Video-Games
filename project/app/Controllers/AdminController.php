@@ -42,5 +42,11 @@ class AdminController extends BaseController {
         $addGenre = $this->adminServices->addGenre($name , $description,$status);
         header("location: genre");
     }
+    public function deleteGenre(){
+        $id = $_POST["id"];
+        $delete = $this->adminServices->delete($id);
+        header("location: genre");
+        return $delete;
+    }
 }
 ?>

@@ -15,4 +15,5 @@ Route::get('users','AdminController@Users');
 Route::post('updateStatus','AdminController@updateStatus');
 Route::get('genre','AdminController@genre');
 Route::post('addGenre','AdminController@addGenre');
+Route::post('/deleteGenre','AdminController@deleteGenre');
 ?>

@@ -20,6 +20,10 @@ class dashboardServices {
         $genre = $this->dashboardRepository->setgenre($name , $description,$status);
         return $genre;
     }
+    public function delete($id){
+        $delete = $this->dashboardRepository->deleteGenre($id);
+        return $delete;
+    }
 }
 
 ?>
