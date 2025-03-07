@@ -55,14 +55,23 @@
                     <form id="addGenreForm" class="space-y-4" action="/addGenre" method="post">
                         <div>
                             <label class="block mb-2 text-gray-700">Genre Name</label>
-                            <input type="text" id="genreName" name="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter genre name"required>
+                            <input type="text" id="genreName" name="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter genre name" required>
                         </div>
-                        
+
                         <div>
                             <label class="block mb-2 text-gray-700">Description</label>
-                            <textarea id="Description" name="description" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Brief description of the genre"rows="4"></textarea>
+                            <textarea id="Description" name="description" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Brief description of the genre" rows="4"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-3 rounded-lg hover:from-purple-700 hover:to-indigo-800 transition"   >Add Genre
+
+                        <div>
+                            <label class="block mb-2 text-gray-700">Status</label>
+                            <select name="status" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="Active">Active</option>
+                                <option value="Desactiver">Desactiver</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-3 rounded-lg hover:from-purple-700 hover:to-indigo-800 transition">Add Genre
                         </button>
                     </form>
                 </div>
@@ -80,20 +89,54 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- Genre Card Template -->
                         {% for genre in genres %}
-                        <div class="bg-gray-50 rounded-lg p-4 hover-effect">
-                            <div class="flex justify-between items-center mb-4">
-                                <div class="flex space-x-2">
-                                    <button class="text-yellow-500 hover:text-yellow-600">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="text-red-500 hover:text-red-600">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                            <div class="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
+                                <div class="p-5">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
+                                            {% if genre.status == 'active' %}bg-green-100 text-green-800
+                                            {% else %}bg-red-100 text-red-800
+                                            {% endif %}">
+                                            {{ genre.status|default('Active') }}
+                                        </span>
+                                        <div class="flex space-x-2">
+                                            <button class="text-yellow-500 hover:text-yellow-600 transition hover:scale-110" 
+                                                    data-tooltip="Edit Genre" 
+                                                    onclick="editGenre('{{ genre.id }}')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-500 hover:text-red-600 transition hover:scale-110" 
+                                                    data-tooltip="Delete Genre" 
+                                                    onclick="deleteGenre('{{ genre.id }}')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h3 class="text-xl font-bold text-gray-800 mb-2 flex items-center">
+                                            <i class="{{ genre.icon|default('fas fa-gamepad') }} mr-3 text-purple-600"></i>
+                                            {{ genre.name }}
+                                        </h3>
+                                        <p class="text-gray-600 text-sm line-clamp-3">
+                                            {{ genre.description|slice(0, 100) }}{% if genre.description|length > 100 %}...{% endif %}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center border-t pt-3 mt-3">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-gray-500 text-xs">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                Created: {{ genre.createdAt|date('d M Y') }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="text-sm font-medium text-purple-600">
+                                                {{ genre.gameCount|default(0) }} Games
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <h3 class="text-lg font-semibold mb-2">{{ genre.name }}</h3>
-                            <p class="text-gray-600 text-sm">{{ genre.description }}</p>
-                        </div>
                         {% endfor %}
                     </div>
                 </div>

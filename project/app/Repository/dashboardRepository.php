@@ -21,12 +21,13 @@ class dashboardRepository {
         return $genreData;
     }
 
-    public function setgenre($name , $description){
-        $query = "INSERT INTO genre (name , description) VALUES (?,?)";
+    public function setgenre($name , $description ,$status){
+        $query = "INSERT INTO genre (name , description , status) VALUES (?,?,?)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":name",$name);
         $stmt->bindParam(":description", $description);
-        $stmt->execute([$name,$description]);
+        $stmt->bindParam(":status",$status);
+        $stmt->execute([$name,$description,$status]);
         $genreId = $this->conn->lastInsertId();
 
         $stmt = $this->conn->prepare("SELECT * FROM genre WHERE id = ?");
@@ -36,7 +37,7 @@ class dashboardRepository {
         if (!$genreData){
             return null;
         } else {
-            return new Genre($genreData["id"] , $genreData["name"], $genreData["description"]);
+            return new Genre($genreData["id"] , $genreData["name"], $genreData["description"] ,$genreData["status"]);
         }
     }  
 }

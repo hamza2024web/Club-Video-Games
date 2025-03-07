@@ -38,8 +38,9 @@ class AdminController extends BaseController {
     public function addGenre(){
         $name = $_POST["name"];
         $description = $_POST["description"];
-        $addGenre = $this->adminServices->addGenre($name , $description);
-
+        $status = $_POST["status"];
+        $addGenre = $this->adminServices->addGenre($name , $description,$status);
+        header("location: genre");
     }
 }
 ?>

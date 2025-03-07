@@ -16,8 +16,8 @@ class dashboardServices {
         return $genre;
     }
 
-    public function addGenre ($name , $description){
-        $genre = $this->dashboardRepository->setgenre($name , $description);
+    public function addGenre ($name , $description,$status){
+        $genre = $this->dashboardRepository->setgenre($name , $description,$status);
         return $genre;
     }
 }
