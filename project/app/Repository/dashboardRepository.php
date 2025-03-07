@@ -51,6 +51,22 @@ class dashboardRepository {
             return false; 
         }
     }
+    public function UpdateGenre($id,$name,$description,$status){
+        $query = "UPDATE genre SET name = :name, description = :description, status = :status  where id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":name",$name);
+        $stmt->bindParam(":description",$description);
+        $stmt->bindParam(":status",$status);
+        $stmt->bindParam(":id",$id);
+        $stmt->execute();
+        $newGenre = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if(!$newGenre){
+            return null;
+        } else {
+            return new Genre($newGenre["id"] , $newGenre["name"],$newGenre["description"],$newGenre["status"]);
+        }
+    }
 }
 
 

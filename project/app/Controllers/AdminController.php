@@ -48,5 +48,15 @@ class AdminController extends BaseController {
         header("location: genre");
         return $delete;
     }
+    public function updateGenre(){
+        $id = $_POST["id"];
+        $name = $_POST["name"];
+        $description = $_POST["description"];
+        $status = $_POST["status"];
+
+        $editGenre = $this->adminServices->editGenre($id,$name,$description,$status);
+        header("location: genre");
+        return $editGenre;
+    }
 }
 ?>
