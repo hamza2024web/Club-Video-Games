@@ -1,8 +1,33 @@
 <?php 
 namespace App\Services;
 
+use App\Repository\dashboardRepository;
+
 class dashboardServices {
-    
+    protected $dashboardRepository;
+
+    public function __construct()
+    {
+        $this->dashboardRepository = new dashboardRepository();
+    }
+
+    public function getGenre(){
+        $genre = $this->dashboardRepository->getAllGenre();
+        return $genre;
+    }
+
+    public function addGenre ($name , $description,$status){
+        $genre = $this->dashboardRepository->setgenre($name , $description,$status);
+        return $genre;
+    }
+    public function delete($id){
+        $delete = $this->dashboardRepository->deleteGenre($id);
+        return $delete;
+    }
+    public function editGenre($id,$name,$description,$status){
+        $newGenre = $this->dashboardRepository->UpdateGenre($id,$name,$description,$status);
+        return $newGenre;
+    }
 }
 
 ?>
