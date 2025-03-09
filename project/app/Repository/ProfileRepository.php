@@ -12,10 +12,9 @@ class ProfileRepository {
         $this->conn = $db->getConnection();
     }
 
-    public function fillProfile($user_id,$name,$email,$phone,$gamer_tag,$bio){
+    public function fillProfile($user_id,$name,$email,$phone,$gamer_tag,$profile_image,$bio){
         $query = "INSERT INTO profile (phone_number,gamer_tag,bio,profile_image)
         VALUES (:phone,:gamer_tag,:bio,:profile_image)";
     }
-
 }
 ?>
