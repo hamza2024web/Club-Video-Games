@@ -17,34 +17,42 @@ class ProfileController extends BaseController{
     public function profile (){
         return $this->renderOrg('profile');
     }
-    public function updateProfile(){
+    public function updateProfile() {
         $user_id = $_SESSION["user_id"];
         $name = $_POST["full_name"];
         $email = $_POST["email"];
         $phone = $_POST["phone"];
         $gamer_tag = $_POST["gamer_tag"];
         $bio = $_POST["bio"];
+        $profile_image = null;
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
-            $upload_dir = '../../public/uploads';
-            $file_name = basename($_FILES['profile_image']['name']);
+            $upload_dir = __DIR__ . '/../../public/uploads/';
+            $file_name = time() . '_' . basename($_FILES['profile_image']['name']);
             $target_path = $upload_dir . $file_name;
-    
+
             if (!file_exists($upload_dir)) {
                 mkdir($upload_dir, 0777, true);
             }
+
+            $file_type = mime_content_type($_FILES['profile_image']['tmp_name']);
+            if (strpos($file_type, 'image') === false) {
+                die("Invalid file type. Please upload an image.");
+            }
             if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_path)) {
-                $profile_image = "../../public/uploads" . $file_name;
-                $profile = $this->ProfileServices->saveProfile($user_id,$name,$email,$phone,$gamer_tag,$profile_image,$bio);
+                $profile_image = 'public/uploads/' . $file_name; 
+            } else {
+                die("Failed to upload image.");
             }
         }
-
-
+            $profile = $this->ProfileServices->saveProfile($user_id, $name, $email, $phone, $gamer_tag, $profile_image, $bio);
+    
         if ($profile) {
             echo "Profile updated successfully!";
         } else {
             echo "Failed to update profile.";
         }
     }
+    
 }
 
 ?>

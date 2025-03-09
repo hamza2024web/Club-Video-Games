@@ -98,7 +98,7 @@
                         <h2 class="text-2xl font-semibold mb-6 text-purple-300">Profile Information</h2>
 
                         <!-- Form Start -->
-                        <form action="/updateProfile" method="POST">
+                        <form action="/updateProfile" method="POST" enctype="multipart/form-data">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <label for="profile_image" class="block text-gray-400 mb-2">Profile Image</label>
                                 <input type="file" name="profile_image" id="profile_image" accept="image/*" class="w-full p-3 border border-purple-500/50 rounded bg-gray-700 text-white focus:outline-none focus:border-purple-400">

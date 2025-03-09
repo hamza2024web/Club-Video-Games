@@ -17,6 +17,4 @@ class Profile {
         $this->community_rating = $community_rating;
     }
 }
-
-
 ?>
