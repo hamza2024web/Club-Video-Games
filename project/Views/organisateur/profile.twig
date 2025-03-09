@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Profile - Video Game Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-profile {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        }
+        .game-gradient {
+            background: linear-gradient(135deg, #43198a 0%, #7d31e4 100%);
+        }
+        body {
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.15) 2px, transparent 0),
+                radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.1) 2px, transparent 0);
+            background-size: 100px 100px;
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+    <div class="flex min-h-screen">
+        <!-- Main Content -->
+        <main class="flex-1 p-6 md:p-10">
+            <!-- Header with Logout -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-purple-400">
+                    <i class="fas fa-gamepad mr-2"></i> Video Game Club
+                </h1>
+                <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Profile Overview -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gray-800 rounded-lg shadow-xl p-6 text-center border border-purple-500/30">
+                        <div class="relative inline-block mb-4">
+                            <img src="/api/placeholder/150/150" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover border-4 border-purple-500">
+                            <button class="absolute bottom-0 right-0 bg-purple-600 text-white p-2 rounded-full hover:bg-purple-700 transition">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <h2 class="text-2xl font-bold text-purple-300">John Doe</h2>
+                        <p class="text-gray-400 mb-4">Lead Video Game Club Organizer</p>
+                        
+                        <div class="flex justify-center space-x-4 mb-6">
+                            <a href="#" class="text-blue-400 hover:text-blue-300 transition">
+                                <i class="fab fa-discord text-xl"></i>
+                            </a>
+                            <a href="#" class="text-pink-400 hover:text-pink-300 transition">
+                                <i class="fab fa-twitch text-xl"></i>
+                            </a>
+                            <a href="#" class="text-red-400 hover:text-red-300 transition">
+                                <i class="fab fa-youtube text-xl"></i>
+                            </a>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg p-4 mb-6">
+                            <div class="flex justify-between mb-3">
+                                <span class="text-gray-400">Events Organized</span>
+                                <span class="font-bold text-purple-300">12</span>
+                            </div>
+                            <div class="flex justify-between mb-3">
+                                <span class="text-gray-400">Games Managed</span>
+                                <span class="font-bold text-purple-300">25</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Community Rating</span>
+                                <span class="text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <h3 class="text-lg font-semibold mb-3 text-purple-300">Favorite Games</h3>
+                            <div class="flex flex-wrap justify-center gap-2">
+                                <span class="bg-purple-800 text-xs px-3 py-1 rounded-full">Fortnite</span>
+                                <span class="bg-purple-800 text-xs px-3 py-1 rounded-full">League of Legends</span>
+                                <span class="bg-purple-800 text-xs px-3 py-1 rounded-full">CS:GO</span>
+                                <span class="bg-purple-800 text-xs px-3 py-1 rounded-full">Rocket League</span>
+                                <span class="bg-purple-800 text-xs px-3 py-1 rounded-full">Minecraft</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Details -->
+                <div class="lg:col-span-2">
+                    <div class="bg-gray-800 rounded-lg shadow-xl p-6 border border-purple-500/30">
+                        <h2 class="text-2xl font-semibold mb-6 text-purple-300">Profile Information</h2>
+
+                        <!-- Form Start -->
+                        <form action="/updateProfile" method="POST">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-gray-400 mb-2">Full Name</label>
+                                    <input type="text" name="full_name" class="w-full p-3 border border-purple-500/50 rounded bg-gray-700 text-white focus:outline-none focus:border-purple-400">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-400 mb-2">Email Address</label>
+                                    <input type="email" name="email" class="w-full p-3 border border-purple-500/50 rounded bg-gray-700 text-white focus:outline-none focus:border-purple-400">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-400 mb-2">Phone Number</label>
+                                    <input type="tel" name="phone" class="w-full p-3 border border-purple-500/50 rounded bg-gray-700 text-white focus:outline-none focus:border-purple-400">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-400 mb-2">Gamer Tag</label>
+                                    <input type="text" name="gamer_tag" class="w-full p-3 border border-purple-500/50 rounded bg-gray-700 text-white focus:outline-none focus:border-purple-400">
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <label class="block text-gray-400 mb-2">Bio</label>
+                                <textarea name="bio" class="w-full p-3 border border-purple-500/50 rounded bg-gray-700 text-white focus:outline-none focus:border-purple-400" rows="4"></textarea>
+                            </div>
+
+                            <div class="mt-6 flex justify-end space-x-4">
+                                <button type="submit" class="game-gradient text-white px-6 py-3 rounded hover:opacity-90 transition">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                        <!-- Form End -->
+                    </div>
+                </div>
+
+
+                    <!-- Change Password Section -->
+                    <div class="bg-gray-800 rounded-lg shadow-xl p-6 mt-6 border border-purple-500/30">
+                        <h2 class="text-2xl font-semibold mb-6 text-purple-300">Change Password</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-400 mb-2">Current Password</label>
+                                <input type="password" class="w-full p-3 border border-purple-500/50 rounded bg-gray-700 text-white focus:outline-none focus:border-purple-400">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 mb-2">New Password</label>
+                                <input type="password" class="w-full p-3 border border-purple-500/50 rounded bg-gray-700 text-white focus:outline-none focus:border-purple-400">
+                            </div>
+                        </div>
+
+                        <div class="mt-6 flex justify-end space-x-4">
+                            <button class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition">
+                                Update Password
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Events Section -->
+                    <div class="bg-gray-800 rounded-lg shadow-xl p-6 mt-6 border border-purple-500/30">
+                        <h2 class="text-2xl font-semibold mb-6 text-purple-300">Your Upcoming Events</h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center bg-gray-900 p-4 rounded-lg">
+                                <div class="flex-shrink-0 h-16 w-16 bg-purple-900 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-trophy text-yellow-400 text-2xl"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <h3 class="font-bold text-white">Weekend Fortnite Tournament</h3>
+                                    <p class="text-gray-400">Mar 15, 2025 • 2:00 PM</p>
+                                </div>
+                                <button class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">Manage</button>
+                            </div>
+                            
+                            <div class="flex items-center bg-gray-900 p-4 rounded-lg">
+                                <div class="flex-shrink-0 h-16 w-16 bg-purple-900 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-users text-blue-400 text-2xl"></i>
+                                </div>
+                                <div class="flex-grow">
+                                    <h3 class="font-bold text-white">Gaming Community Meetup</h3>
+                                    <p class="text-gray-400">Mar 22, 2025 • 6:00 PM</p>
+                                </div>
+                                <button class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">Manage</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Profile Picture Upload
+        document.querySelector('.absolute.bottom-0.right-0').addEventListener('click', () => {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.click();
+            
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.querySelector('img[alt="Profile Picture"]').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>    

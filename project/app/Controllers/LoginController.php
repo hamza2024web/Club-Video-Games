@@ -42,6 +42,7 @@ class LoginController extends BaseController {
     }
 
     public function logout(){
+        session_start();
         session_destroy();
         return $this->renderAuth('login');
     }
