@@ -29,11 +29,7 @@ class ProfileController extends BaseController{
             $upload_dir = __DIR__ . '/../../public/uploads/';
             $file_name = time() . '_' . basename($_FILES['profile_image']['name']);
             $target_path = $upload_dir . $file_name;
-
-            if (!file_exists($upload_dir)) {
-                mkdir($upload_dir, 0777, true);
-            }
-
+            
             $file_type = mime_content_type($_FILES['profile_image']['tmp_name']);
             if (strpos($file_type, 'image') === false) {
                 die("Invalid file type. Please upload an image.");
