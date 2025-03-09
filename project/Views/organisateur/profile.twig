@@ -42,9 +42,6 @@
                     <div class="bg-gray-800 rounded-lg shadow-xl p-6 text-center border border-purple-500/30">
                         <div class="relative inline-block mb-4">
                             <img src="/api/placeholder/150/150" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover border-4 border-purple-500">
-                            <button class="absolute bottom-0 right-0 bg-purple-600 text-white p-2 rounded-full hover:bg-purple-700 transition">
-                                <i class="fas fa-camera"></i>
-                            </button>
                         </div>
                         <h2 class="text-2xl font-bold text-purple-300">John Doe</h2>
                         <p class="text-gray-400 mb-4">Lead Video Game Club Organizer</p>
@@ -193,28 +190,5 @@
             </div>
         </main>
     </div>
-
-    <script>
-        // Profile Picture Upload
-        document.querySelector('.absolute.bottom-0.right-0').addEventListener('click', () => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.name = 'profile_image';
-            fileInput.accept = 'image/*';
-            fileInput.click();
-            
-            fileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        document.querySelector('img[alt="Profile Picture"]').src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        });
-
-    </script>
 </body>
 </html>    

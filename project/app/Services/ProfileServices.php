@@ -11,6 +11,7 @@ class ProfileServices {
     }
     public function saveProfile($user_id,$name,$email,$phone,$gamer_tag,$profile_image,$bio){
         $profile = $this->ProfileRepository->fillProfile($user_id,$name,$email,$phone,$gamer_tag,$profile_image,$bio);
+        return $profile;
     }
 }
 
