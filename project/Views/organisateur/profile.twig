@@ -197,6 +197,7 @@
         document.querySelector('.absolute.bottom-0.right-0').addEventListener('click', () => {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
+            fileInput.name = 'profile_image';
             fileInput.accept = 'image/*';
             fileInput.click();
             
