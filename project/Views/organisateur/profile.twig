@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organizer Profile - Video Game Club</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .gradient-profile {
@@ -51,9 +52,11 @@
                     <a href="/homePage" class="gradient-profile text-white px-4 py-2 rounded-lg hover:opacity-90 transition button-hover flex items-center">
                         <i class="fas fa-home mr-2"></i> Return to Home
                     </a>
-                    <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition button-hover flex items-center">
-                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                    </button>
+                    <a href="/logout">
+                        <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition button-hover flex items-center">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </button>
+                    </a>
                 </div>
             </div>
 
@@ -213,5 +216,36 @@
             </div>
         </main>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('password_updated')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Password updated successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/profile";
+                });
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('current_password_incorrect')){
+                Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "The Current Password Is Incorrect",
+                confirmButtonText: "OK",
+                timer: 3000 
+                }).then(() => {
+                    window.location.href = "/profile";
+                });
+            }
+        })
+    </script>
 </body>
 </html>

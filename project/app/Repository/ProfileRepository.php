@@ -53,26 +53,20 @@ class ProfileRepository {
 
         return $stmt->execute();
     }
-    public function updatePassword($user_id,$current_password,$new_password){
-        $hashed_password = password_hash($new_password,PASSWORD_DEFAULT);
-        $sql = "UPDATE users SET password = :new_password WHERE :current_password";
+    public function getPassword($user_id){
+        $sql = "SELECT password FROM users WHERE id = :user_id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":current_password",$current_password);
-        $stmt->bindParam(":new_password",$hashed_password);
+        $stmt->bindParam(":user_id", $user_id);
         $stmt->execute();
-        $password = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($password){
-            return true;
-        } else {
-            return false;
-        }
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    public function getPassword(){
-        $sql = "SELECT users.password FROM users";
+    
+    public function updatePassword($user_id, $hashed_password){
+        $sql = "UPDATE users SET password = :correctPassword WHERE id = :user_id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $user_password = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $user_password;
+        $stmt->bindParam(":user_id", $user_id);
+        $stmt->bindParam(":correctPassword", $hashed_password);
+        return $stmt->execute(); 
     }
     
 }
