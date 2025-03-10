@@ -14,6 +14,18 @@ class ProfileRepository {
         $this->conn = $db->getConnection();
     }
 
+    public function getProfile($user_id){
+        $sql = "SELECT users.name , users.email ,profile.phone_number,profile.gamer_tag,profile.bio,profile.profile_image
+        FROM profile
+        INNER JOIN users ON users.id = profile.user_id
+        WHERE profile.user_id = :user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $profileUser = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $profileUser;
+        }
+
     public function updateUser($user_id, $name, $email) {
         $sql = "UPDATE users SET name = :name, email = :email WHERE id = :user_id";
         $stmt = $this->conn->prepare($sql);

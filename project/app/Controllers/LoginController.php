@@ -21,22 +21,28 @@ class LoginController extends BaseController {
         $password = $_POST["password"];
         
         $user = $this->authServices->loginSession($email , $password);
+
+        if (!$user || !is_array($user)) {
+            echo "Email ou mot de passe incorrect.";
+            return;
+        }
+    
         if ($user['status'] === "Activation"){
             if($user['role'] == "administrateur"){
                 header("location:/dashboard");
             } 
             else if($user['role'] === "membre"){
-                header("location:/clubs");
+                header("location: /clubs");
             }
             else if($user['role'] === "organisateur"){
-                header("location:/profile");
+                header("location: /profile");
             }
         } else {
             if ($user['status'] === "suspension"){
-                echo "Votre compte a été suspenser";
+                echo "Votre compte a été suspendu";
             }
             else if($user['status'] === "Not Active"){
-                echo "Votre compte a été encore désactivé";
+                echo "Votre compte est encore désactivé";
             }
         }
     }
@@ -44,7 +50,7 @@ class LoginController extends BaseController {
     public function logout(){
         session_start();
         session_destroy();
-        return $this->renderAuth('login');
+        header("location: /login");
     }
 }
 ?>

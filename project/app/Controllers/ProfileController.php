@@ -15,6 +15,8 @@ class ProfileController extends BaseController{
 
     }
     public function profile (){
+        $user_id = $_SESSION["user_id"];
+        $profile = $this->ProfileServices->getProfileUser($user_id);
         return $this->renderOrg('profile');
     }
     public function updateProfile() {
