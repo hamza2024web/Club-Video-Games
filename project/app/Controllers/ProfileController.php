@@ -21,12 +21,16 @@ class ProfileController extends BaseController{
     }
     public function updateProfile() {
         $user_id = $_SESSION["user_id"];
-        $name = $_POST["full_name"];
-        $email = $_POST["email"];
-        $phone = $_POST["phone"];
-        $gamer_tag = $_POST["gamer_tag"];
-        $bio = $_POST["bio"];
-        $profile_image = null;
+
+        $currentProfile = $this->ProfileServices->getProfileUSer($user_id);
+
+        $name = $_POST["full_name"] ?? $currentProfile["name"];
+        $email = $_POST["email"] ?? $currentProfile["email"];
+        $phone = $_POST["phone"] ?? $currentProfile["phone_number"];
+        $gamer_tag = $_POST["gamer_tag"] ?? $currentProfile["gamer_tag"];
+        $bio = $_POST["bio"] ?? $currentProfile["bio"];
+        $profile_image = $currentProfile["profile_image"];
+        
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
             $upload_dir = __DIR__ . '/../../public/uploads/';
             $file_name = time() . '_' . basename($_FILES['profile_image']['name']);
