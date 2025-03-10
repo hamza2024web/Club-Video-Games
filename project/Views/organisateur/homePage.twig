@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard - Video Game Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e1e2f 0%, #16213e 100%);
+            min-height: 100vh;
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(99, 49, 255, 0.4);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(99, 49, 255, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(99, 49, 255, 0);
+            }
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .glowing-border {
+            border: 2px solid transparent;
+            background-image: linear-gradient(#1e1e2f, #1e1e2f), 
+                              linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+        }
+    </style>
+</head>
+<body class="flex flex-col">
+    <!-- Header -->
+    <header class="p-6 flex justify-between items-center">
+        <div class="flex items-center">
+            <h1 class="text-2xl font-bold text-purple-300">Video Game Club</h1>
+        </div>
+        
+        <!-- Profile Section -->
+        <div class="relative">
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <img 
+                        src="/api/placeholder/50/50" 
+                        alt="Profile" 
+                        class="w-12 h-12 rounded-full object-cover border-2 border-purple-500 cursor-pointer hover:scale-110 transition"
+                        onclick="document.getElementById('profileDropdown').classList.toggle('hidden')"
+                    >
+                    <!-- Profile Dropdown -->
+                    <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-50 overflow-hidden">
+                        <a href="/profile" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                            <i class="fas fa-user mr-2"></i> Profile
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                            <i class="fas fa-cog mr-2"></i> Settings
+                        </a>
+                        <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-gray-200">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-6">
+        <div class="text-center">
+            <h2 class="text-4xl font-bold text-purple-200 mb-12 animate-pulse">
+                Welcome, Organizer
+            </h2>
+            
+            <div class="flex justify-center space-x-12">
+                <!-- Club Management Button -->
+                <div class="group">
+                    <button class="bg-purple-800 text-white p-6 rounded-full w-64 h-64 
+                        flex flex-col items-center justify-center 
+                        hover-lift pulse-animation 
+                        transform transition-all duration-300
+                        glowing-border
+                        focus:outline-none focus:ring-4 focus:ring-purple-500"
+                    >
+                        <i class="fas fa-users text-5xl mb-4 group-hover:text-purple-300 transition"></i>
+                        <span class="text-xl font-semibold group-hover:text-purple-300 transition">
+                            Club Management
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Event Management Button -->
+                <div class="group">
+                    <button class="bg-purple-800 text-white p-6 rounded-full w-64 h-64 
+                        flex flex-col items-center justify-center 
+                        hover-lift pulse-animation 
+                        transform transition-all duration-300
+                        glowing-border
+                        focus:outline-none focus:ring-4 focus:ring-purple-500"
+                    >
+                        <i class="fas fa-calendar-alt text-5xl mb-4 group-hover:text-purple-300 transition"></i>
+                        <span class="text-xl font-semibold group-hover:text-purple-300 transition">
+                            Event Management
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="p-4 text-center text-gray-500">
+        <p>&copy; 2023 Video Game Club. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('profileDropdown');
+            const profileImage = event.target.closest('img[alt="Profile"]');
+            
+            if (!profileImage && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

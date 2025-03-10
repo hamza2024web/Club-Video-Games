@@ -29,7 +29,7 @@ class ProfileController extends BaseController{
             $upload_dir = __DIR__ . '/../../public/uploads/';
             $file_name = time() . '_' . basename($_FILES['profile_image']['name']);
             $target_path = $upload_dir . $file_name;
-            
+
             $file_type = mime_content_type($_FILES['profile_image']['tmp_name']);
             if (strpos($file_type, 'image') === false) {
                 die("Invalid file type. Please upload an image.");
@@ -43,7 +43,7 @@ class ProfileController extends BaseController{
             $profile = $this->ProfileServices->saveProfile($user_id, $name, $email, $phone, $gamer_tag, $profile_image, $bio);
     
         if ($profile) {
-            echo "Profile updated successfully!";
+            header("location: profile");
         } else {
             echo "Failed to update profile.";
         }
