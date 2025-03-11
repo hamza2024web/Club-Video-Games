@@ -49,7 +49,7 @@ class ProfileController extends BaseController{
             $profile = $this->ProfileServices->saveProfile($user_id, $name, $email, $phone, $gamer_tag, $profile_image, $bio);
     
         if ($profile) {
-            header("location: profile");
+            header("location: /profile?profile_updated_successffly=1");
         } else {
             echo "Failed to update profile.";
         }

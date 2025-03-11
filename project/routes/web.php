@@ -18,6 +18,6 @@ Route::post('addGenre','AdminController@addGenre');
 Route::post('/deleteGenre','AdminController@deleteGenre');
 Route::post('/updateGenre','AdminController@updateGenre');
 Route::get('/profile','ProfileController@profile');
-Route::post('/updateProfile','ProfileController@updateProfile');
-Route::post('/updatePassword','ProfileController@updatePassword');
+Route::post('updateProfile','ProfileController@updateProfile');
+Route::post('updatePassword','ProfileController@updatePassword');
 ?>
