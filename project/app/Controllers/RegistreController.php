@@ -47,5 +47,12 @@ class RegistreController extends BaseController {
             }
         }
     }
+    public function RegistreGoogle(){
+        $postData = $_POST;
+        $credential = $_POST['credential'] ?? null;
+        $this->verifyToken($postData);
+        $userServices = $this->authServices->RegistreWithGoogle($credential);
+        return $userServices;
+    }
     }
 ?>

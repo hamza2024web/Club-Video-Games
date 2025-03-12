@@ -17,5 +17,14 @@ class RegistreServices {
         $user = $this->registreRepository->setMembreAndOrganisateur($role,$name,$email,$password,$naissance,$club);
         return $user;
     }
+
+    public function RegistreWithGoogle($credential){
+
+        $clientId = "16802501273-egl3p0sb8f1a4hrjp3unu1pa80ckn0o5.apps.googleusercontent.com";
+        $client = new Google_Client(['client_id' => $clientId]);
+        $id_token = $credential;
+        $user = $client->verifyIdToken($id_token);
+    }
+
 }
 ?>

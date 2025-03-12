@@ -3,6 +3,8 @@
 namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\LoginServices;
+
+
 class LoginController extends BaseController {
     protected $authServices;
 
@@ -47,6 +49,41 @@ class LoginController extends BaseController {
         }
     }
 
+    private function verifyToken($postData){
+        $csrf_token_cookie = $_COOKIE['g_csrf_token'] ?? null;
+        $csrf_token_body = $postData['g_csrf_token'] ?? null;
+
+        if (!$csrf_token_cookie) {
+            http_response_code(400);
+            die('No CSRF token in Cookie.');
+        }
+
+        if (!$csrf_token_body) {
+            http_response_code(400);
+            die('No CSRF token in post body.');
+        }
+
+        if (hash_equals($csrf_token_cookie, $csrf_token_body) === false) {
+            http_response_code(400);
+            die('Failed to verify double submit cookie.');
+        }
+    }
+    
+    public function RegistreGoogle(){
+        $postData = $_POST;
+        $credential = $_POST['credential'] ?? null;
+        $this->verifyToken($postData);
+        $userServices = $this->authServices->RegistreWithGoogle($credential);
+        return $userServices;
+    }
+    public function loginGoogle(){
+        $postData = $_POST;
+        $credential = $_POST['credential'] ?? null;
+        $this->verifyToken($postData);
+        $userServices = $this->authServices->loginWithGoogle($credential);
+        return $userServices;
+    }
+        
     public function logout(){
         session_start();
         session_destroy();

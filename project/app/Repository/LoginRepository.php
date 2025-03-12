@@ -19,7 +19,7 @@ class LoginRepository {
         INNER JOIN role ON role.id = users.role_id
         WHERE users.email = :email";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":email",$email);
+        $stmt->bindParam(":email",$email);  
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
