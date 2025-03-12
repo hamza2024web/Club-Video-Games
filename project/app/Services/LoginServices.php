@@ -15,6 +15,10 @@ class LoginServices
         $this->userRepository = new LoginRepository();
         $this->registreRepository = new MembreAndOrgan();
     }
+    public function getUserByEmail($googleUser){
+        $email = $this->userRepository->findUserByEmail($googleUser->email);
+        return $email;
+    }
 
     public function loginSession($email, $password)
     {
