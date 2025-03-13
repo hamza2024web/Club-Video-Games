@@ -48,7 +48,7 @@ class AdminController extends BaseController {
         header("location: genre");
         return $delete;
     }
-    public function updateGenre(){
+    public function editGenre(){
         $id = $_POST["id"];
         $name = $_POST["name"];
         $description = $_POST["description"];
