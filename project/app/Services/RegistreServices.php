@@ -2,6 +2,7 @@
 namespace App\Services;
 use App\Repository\LoginRepository;
 use App\Repository\MembreAndOrgan;
+use Google_Client; 
 
 class RegistreServices {
     protected $userRepository;
@@ -17,5 +18,6 @@ class RegistreServices {
         $user = $this->registreRepository->setMembreAndOrganisateur($role,$name,$email,$password,$naissance,$club);
         return $user;
     }
+
 }
 ?>

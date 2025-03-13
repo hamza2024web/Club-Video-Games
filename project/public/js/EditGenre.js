@@ -8,7 +8,7 @@ function editGenre(id) {
     document.getElementById('Description').value = description;
     document.getElementById('genreStatus').value = status;
 
-    document.getElementById('addGenreForm').action = '/updateGenre';
+    document.getElementById('addGenreForm').action = '/editGenre';
     document.getElementById('formTitle').textContent = 'Edit Genre';
     document.getElementById('addGenre').textContent = 'Update Genre';
 }

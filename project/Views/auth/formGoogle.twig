@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function toggleFields() {
+            const role = document.getElementById('role').value;
+            const membreFields = document.getElementById('membreFields');
+            const organisateurFields = document.getElementById('organisateurFields');
+            
+            // Hide all fields initially
+            membreFields.style.display = 'none';
+            organisateurFields.style.display = 'none';
+            
+            // Show fields based on selected role
+            if (role === 'membre') {
+                membreFields.style.display = 'block';
+            } else if (role === 'organisateur') {
+                organisateurFields.style.display = 'block';
+
+                if (clubSelect.value === 'Tournoi') {
+                    clubInput.style.display = 'block';
+                    eventInput.style.display = 'none';
+                } else if (clubSelect.value === 'Evenements') {
+                    clubInput.style.display = 'none';
+                    eventInput.style.display = 'block';
+                }
+            }
+        }
+        
+        // Ensure fields are toggled on page load
+        window.onload = function() {
+            toggleFields();
+        }
+    </script>
+    <style>
+        /* Custom styles for video game theme */
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Press+Start+2P&display=swap');
+        
+        .game-font {
+            font-family: 'Exo 2', sans-serif;
+        }
+        
+        .game-title {
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 2px 2px 0px #6366F1;
+        }
+        
+        .game-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 0 #2563EB;
+        }
+        
+        .game-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #2563EB;
+        }
+        
+        .game-input {
+            border: 2px solid #4F46E5;
+            transition: all 0.2s;
+        }
+        
+        .game-input:focus {
+            border-color: #6366F1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-indigo-900 bg-opacity-10 flex items-center justify-center min-h-screen p-4 game-font">
+    <div class="w-full max-w-md">
+        <div class="bg-white rounded-2xl shadow-xl p-8 border-t-4 border-indigo-600">
+            <div class="text-center mb-8">
+                <div class="flex items-center justify-center space-x-6 py-8">
+                    <!-- Google Logo -->
+                    <img src="https://lh3.googleusercontent.com/0rpHlrX8IG77awQMuUZpQ0zGWT7HRYtpncsuRnFo6V3c8Lh2hPjXnEuhDDd-OsLz1vua4ld2rlUYFAaBYk-rZCODmi2eJlwUEVsZgg" alt="Google Logo" class="w-16 h-16 object-contain" />
+
+                    <!-- Plus Sign -->
+                    <h1 class="text-4xl font-extrabold text-white">+</h1>
+
+                    <!-- Custom Logo Image -->
+                    <img src="../../public/uploads/EXCPIX_-_Download_AI_Images_for_Free___Exclusive_AI_Pictures_Online-removebg-preview.png" alt="Logo Image" class="w-24 h-24 object-contain" />
+                </div>
+
+                <h2 class="text-2xl font-bold text-indigo-800 game-title">GAMER PROFILE</h2>
+                <p class="text-indigo-600 mt-2">Welcome Back {{data.name}}</p>
+            </div>
+
+            <form class="space-y-6" method="POST" action="/googleForm" enctype="multipart/form-data">
+                <input type="text" name="name" value="{{data.name}}" class="hidden">
+                <input type="text" name="email" value="{{data.email}}" class="hidden">
+                <div class="flex items-center space-x-4 p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-500">
+                    <img src="" alt="Profile" class="w-10 h-10 rounded-full border-2 border-indigo-300">
+                    <div>
+                        <p class="font-medium text-indigo-900">Google Account</p>
+                        <p class="text-sm text-indigo-500">{{data.email}}</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-indigo-700 mb-2">Choose your role</label>
+                    <div>
+                        <label class="block text-indigo-700 mb-2">Select Your Player Type</label>
+                        <select name="role" id="role" required onchange="toggleFields()" class="w-full px-4 py-3 border border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 game-input bg-indigo-50">
+                            <option value="">Choose a Role</option>
+                            <option value="membre">Member</option>
+                            <option value="organisateur">organisateur</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="membreFields" style="display:none;">
+                    <label class="block text-indigo-700 mb-2">Player Birth Date</label>
+                    <div class="relative">
+                        <i class="fas fa-calendar-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-400"></i>
+                        <input type="date" name="naissance" class="w-full px-4 pl-10 py-3 border border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 game-input bg-indigo-50">
+                    </div>
+                </div>
+
+                <div id="organisateurFields" style="display:none;">
+                    <label class="block text-indigo-700 mb-2">Gaming Club Name</label>
+                    <div class="relative">
+                        <i class="fas fa-calendar-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-400"></i>
+                        <input type="text" name="nam_club" placeholder="Enter name of your gaming club" class="w-full px-4 pl-10 py-3 border border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 game-input bg-indigo-50">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-indigo-700 mb-2">Password</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-indigo-400"></i>
+                        <input type="password" name="password" required placeholder="Create a strong password" class="w-full px-4 pl-10 py-3 border border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 game-input bg-indigo-50">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium game-btn">
+                    START YOUR JOURNEY
+                </button>
+            </form>
+
+            <p class="mt-6 text-center text-sm text-indigo-500">
+                By continuing, you agree to our
+                <a href="#" class="text-indigo-600 hover:underline">Terms</a> and
+                <a href="#" class="text-indigo-600 hover:underline">Privacy Policy</a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>
