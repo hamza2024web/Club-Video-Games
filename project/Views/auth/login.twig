@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign in</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gradient-to-r from-purple-800 to-blue-800">
     <div class="font-sans">
@@ -65,7 +66,51 @@
     </div>
     <script src="https://accounts.google.com/gsi/client" async></script>
     <script>
-        
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('registre_successfully')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Your Account have Created successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/login";
+                });
+
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('compte_Susspendu')) {
+                Swal.fire({
+                    title: "Susspendu!",
+                    text: "Your account has been suspended due to a violation of our policies. If you believe this is a mistake or would like to appeal, please contact our support team.!",
+                    icon: "question",
+                    confirmButtonText: "OK",
+                    timer: 10000 
+                }).then(()=> {
+                    window.location.href = "/login";
+                });
+
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('compte_desactiver')) {
+                Swal.fire({
+                    title: "Désactiver!",
+                    text: "Your account is currently deactivated. Please wait for an administrator to review and activate your account. If you need assistance, contact support.!",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                    timer: 10000 
+                }).then(()=> {
+                    window.location.href = "/login";
+                });
+
+            }
+        });
     </script>
 </body>
 </html>
