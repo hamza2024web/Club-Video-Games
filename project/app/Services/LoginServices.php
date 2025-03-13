@@ -47,18 +47,13 @@ class LoginServices
     }
 
     public function loginWithGoogle($credential){ 
-        
         $clientId = "16802501273-egl3p0sb8f1a4hrjp3unu1pa80ckn0o5.apps.googleusercontent.com";
         $client = new Google_Client(['client_id' => $clientId]);
         $id_token = $credential;
         $user = $client->verifyIdToken($id_token);
         if($user){
             $email = $user['email'];
-            $name = $user['name'];
-            $google_id = $user['sub'];
-
             $result = $this->userRepository->findUserByEmail($email);
-            
         }
         if ($result){
             $user = $result['user']; 
@@ -71,7 +66,11 @@ class LoginServices
             error_log("Login successfly for email: $email");
             return $user;
         } else {
-            die('Invalid Token');
+            $data = [
+                'name' => $user['name'],
+                'email' => $user['email']
+            ];
+            return $data;
         }
 
     }   

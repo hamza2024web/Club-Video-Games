@@ -8,7 +8,6 @@ Route::post('login','LoginController@login');
 Route::post('loginGoogle','LoginController@loginGoogle');
 Route::get('registre','RegistreController@indexRegistre');
 Route::post('registre','RegistreController@registre');
-Route::post('registreGoogle','RegistreController@');
 Route::get('logout','LoginController@logout');
 Route::get('dashboard','AdminController@dashboard');
 Route::get('clubs','membreController@clubs');
