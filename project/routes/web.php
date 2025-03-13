@@ -6,6 +6,7 @@ Route::get('','HomeController@index');
 Route::get('login','LoginController@index');
 Route::post('login','LoginController@login');
 Route::post('loginGoogle','LoginController@loginGoogle');
+Route::post('googleForm','RegistreController@registre');
 Route::get('registre','RegistreController@indexRegistre');
 Route::post('registre','RegistreController@registre');
 Route::get('logout','LoginController@logout');

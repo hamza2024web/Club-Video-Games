@@ -32,13 +32,13 @@ class RegistreController extends BaseController {
         } else {
             if ($user->getStatus()=="Activation"){
                 if($user->getRole()=="administrateur"){
-                    header("location:/login");
+                    header("location:/login?registre_succeseffly=1");
                 }
                 else if($user->getRole()=="membre"){
-                    header("location:/login");
+                    header("location:/login?registre_succeseffly=1");
                 }
                 else if($user->getRole()=="organisateur"){
-                    header("location:/login");
+                    header("location:/login?registre_succeseffly=1");
                 }
             } elseif ($user->getStatus()=="suspension"){
                 header("location:/login");
@@ -47,5 +47,6 @@ class RegistreController extends BaseController {
             }
         }
     }
+
     }
 ?>

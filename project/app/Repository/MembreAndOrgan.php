@@ -70,7 +70,7 @@ class MembreAndOrgan {
     private function addOrganisateur($userId , $data){
         $sql = "INSERT INTO organisateur (user_id ,nam_club) VALUES (? , ?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$userId,$data['nam_club']]);
+        $stmt->execute([$userId,$data['name_club']]);
     }
     
 
