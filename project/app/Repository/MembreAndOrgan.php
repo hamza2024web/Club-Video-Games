@@ -68,9 +68,15 @@ class MembreAndOrgan {
     }
 
     private function addOrganisateur($userId , $data){
-        $sql = "INSERT INTO organisateur (user_id ,nam_club) VALUES (? , ?)";
+        $sql = "INSERT INTO club (name) VALUES (?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$userId,$data['name_club']]);
+        $stmt->execute([$data['name']]);
+        $club_id = $this->conn->lastInsertId();
+        $query = "INSERT INTO organisateur (user_id,club_id) values (:user_id,:club_id)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":user_id",$userId);
+        $stmt->bindParam(":club_id",$club_id);
+        $stmt->execute();
     }
     
 
