@@ -1,97 +1,251 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizer Dashboard - Video Game Club</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>GameClub - Gestion de Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
-<body class="bg-gray-900 text-white">
-
-    <div class="container mx-auto p-6">
-        <header class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold">Organizer Dashboard</h1>
-            <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Logout</button>
-        </header>
-
-        <!-- Manage Events Section -->
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-            <h2 class="text-2xl font-semibold mb-4">Manage Events</h2>
-            <button class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded mb-4">Add New Event</button>
-            <table class="min-w-full bg-gray-700 rounded-lg">
-                <thead>
-                    <tr>
-                        <th class="py-3 px-4 text-left">Event Name</th>
-                        <th class="py-3 px-4 text-left">Date</th>
-                        <th class="py-3 px-4 text-left">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="hover:bg-gray-600">
-                        <td class="py-3 px-4">Tournament Night</td>
-                        <td class="py-3 px-4">March 15, 2023</td>
-                        <td class="py-3 px-4">
-                            <button class="bg-yellow-600 hover:bg-yellow-700 text-white py-1 px-2 rounded">Edit</button>
-                            <button class="bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded">Delete</button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-gray-600">
-                        <td class="py-3 px-4">Game Release Party</td>
-                        <td class="py-3 px-4">April 20, 2023</td>
-                        <td class="py-3 px-4">
-                            <button class="bg-yellow-600 hover:bg-yellow-700 text-white py-1 px-2 rounded">Edit</button>
-                            <button class="bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Member Registrations Section -->
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-            <h2 class="text-2xl font-semibold mb-4">Member Registrations</h2>
-            <table class="min-w-full bg-gray-700 rounded-lg">
-                <thead>
-                    <tr>
-                        <th class="py-3 px-4 text-left">Member Name</th>
-                        <th class="py-3 px-4 text-left">Email</th>
-                        <th class="py-3 px-4 text-left">Registered On</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="hover:bg-gray-600">
-                        <td class="py-3 px-4">Gamer123</td>
-                        <td class="py-3 px-4">gamer123@example.com</td>
-                        <td class="py-3 px-4">January 10, 2023</td>
-                    </tr>
-                    <tr class="hover:bg-gray-600">
-                        <td class="py-3 px-4">PlayerTwo</td>
-                        <td class="py-3 px-4">playertwo@example.com</td>
-                        <td class="py-3 px-4">January 15, 2023</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Update Club Information Section -->
-        <div class="bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 class="text-2xl font-semibold mb-4">Update Club Information</h2>
-            <form>
-                <div class="mb-4">
-                    <label class="block text-gray-300 mb-2" for="clubName">Club Name:</label>
-                    <input type="text" id="clubName" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500" value="Video Game Club">
+<body class="bg-gray-100">
+    <!-- Sidebar Navigation -->
+    <div class="flex">
+        <aside class="bg-gray-900 text-white w-64 min-h-screen flex flex-col fixed">
+            <div class="p-4 bg-purple-800">
+                <div class="flex items-center">
+                    <i class="fas fa-gamepad text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold">GameClub</h2>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-gray-300 mb-2" for="clubDescription">Description:</label>
-                    <textarea id="clubDescription" rows="4" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">Your club description goes here.</textarea>
+            </div>
+            
+            <div class="p-4 bg-gray-800">
+                <div class="flex items-center space-x-3">
+                    <img src="/api/placeholder/40/40" alt="Avatar" class="w-10 h-10 rounded-full bg-gray-500">
+                    <div>
+                        <p class="font-semibold">Thomas Durand</p>
+                        <p class="text-sm text-gray-300">Organisateur</p>
+                    </div>
                 </div>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Update Club Info</button>
-            </form>
-        </div>
+            </div>
+            
+            <nav class="mt-6 flex-1">
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider">
+                    Tableau de bord
+                </div>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-tachometer-alt w-6"></i>
+                    <span>Vue d'ensemble</span>
+                </a>
+                
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider">
+                    Gestion
+                </div>
+                <a href="#" class="flex items-center px-4 py-3 bg-gray-800 text-white">
+                    <i class="fas fa-users w-6"></i>
+                    <span>Gestion du club</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-trophy w-6"></i>
+                    <span>Tournois</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-gamepad w-6"></i>
+                    <span>Jeux</span>
+                </a>
+                
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider">
+                    Paramètres
+                </div>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-cog w-6"></i>
+                    <span>Configuration</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-sign-out-alt w-6"></i>
+                    <span>Déconnexion</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow">
+                <div class="flex justify-between items-center px-6 py-4">
+                    <h1 class="text-2xl font-bold text-gray-800">Gestion du Club</h1>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-bell text-lg"></i>
+                        </button>
+                        <button class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-envelope text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="p-6">
+                <!-- Club Info Card -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                        <div class="flex items-center space-x-4">
+                            <img src="/api/placeholder/80/80" alt="Logo du club" class="w-20 h-20 rounded-lg bg-purple-100">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800">Gaming Masters</h2>
+                                <p class="text-gray-600">Club fondé le 15 mars 2023</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md flex items-center">
+                                <i class="fas fa-edit mr-2"></i> Modifier le club
+                            </button>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center">
+                                <i class="fas fa-cog mr-2"></i> Paramètres
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Membres actifs</p>
+                                <p class="text-2xl font-bold">87</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-users text-blue-600"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>12%</span>
+                            <span class="text-gray-500 text-sm ml-2">vs mois dernier</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Événements ce mois</p>
+                                <p class="text-2xl font-bold">8</p>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-calendar-alt text-green-600"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>2</span>
+                            <span class="text-gray-500 text-sm ml-2">vs mois dernier</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Jeux disponibles</p>
+                                <p class="text-2xl font-bold">54</p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-gamepad text-purple-600"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>3</span>
+                            <span class="text-gray-500 text-sm ml-2">nouveaux jeux</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Taux de participation</p>
+                                <p class="text-2xl font-bold">78%</p>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">
+                                <i class="fas fa-chart-line text-yellow-600"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-2">
+                            <span class="text-red-500 text-sm"><i class="fas fa-arrow-down mr-1"></i>3%</span>
+                            <span class="text-gray-500 text-sm ml-2">vs mois dernier</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="mb-6">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex space-x-8">
+                            <button class="border-b-2 border-purple-500 text-purple-600 py-4 px-1 font-medium">
+                                Informations générales
+                            </button>
+                            <button class="text-gray-500 hover:text-gray-700 py-4 px-1 font-medium">
+                                Membres
+                            </button>
+                            <button class="text-gray-500 hover:text-gray-700 py-4 px-1 font-medium">
+                                Statistiques
+                            </button>
+                            <button class="text-gray-500 hover:text-gray-700 py-4 px-1 font-medium">
+                                Activités récentes
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Club Information Form -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Informations du club</h3>
+                    <form>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nom du club</label>
+                                <input type="text" value="Gaming Masters" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date de création</label>
+                                <input type="date" value="2023-03-15" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email du club</label>
+                                <input type="email" value="contact@gamingmasters.fr" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                                <input type="tel" value="+33612345678" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                                <input type="text" value="123 Rue des Joueurs, 75001 Paris" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea rows="4" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">Gaming Masters est un club de jeux vidéo dynamique basé à Paris. Nous organisons régulièrement des événements, tournois et sessions de jeux pour tous les passionnés de gaming. Notre objectif est de créer une communauté active et inclusive pour les joueurs de tous niveaux.</textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Logo du club</label>
+                                <div class="flex items-center space-x-4">
+                                    <img src="/api/placeholder/80/80" alt="Logo du club" class="w-20 h-20 rounded-lg bg-purple-100">
+                                    <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md">
+                                        Changer le logo
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Bannière du club</label>
+                                <div class="flex items-center space-x-4">
+                                    <img src="/api/placeholder/200/80" alt="Bannière du club" class="h-20 rounded-lg bg-blue-100">
+                                    <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md">
+                                        Changer la bannière
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
     </div>
-
 </body>
-
 </html>

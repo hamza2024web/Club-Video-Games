@@ -10,5 +10,8 @@ class ClubController extends BaseController {
         parent::__construct();
         $this->clubServices = new ClubServices();
     }
+    public function index (){
+        return $this->renderOrg('ClubManagement');
+    }
 }
 ?>
