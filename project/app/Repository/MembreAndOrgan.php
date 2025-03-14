@@ -43,7 +43,7 @@ class MembreAndOrgan {
             if ($role === 'membre') {
                 $this->addMembre($userId, ['date_naissance' => $naissance]);
             } elseif ($role === 'organisateur') {
-                $this->addOrganisateur($userId, ['name_club' => $club]);
+                $this->addOrganisateur($userId, ['name' => $club]);
             }
     
             $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
@@ -68,7 +68,7 @@ class MembreAndOrgan {
     }
 
     private function addOrganisateur($userId , $data){
-        $sql = "INSERT INTO club (name) VALUES (?)";
+        $sql = "INSERT INTO club (name,date_de_creation) VALUES (?,NOW())";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([$data['name']]);
         $club_id = $this->conn->lastInsertId();

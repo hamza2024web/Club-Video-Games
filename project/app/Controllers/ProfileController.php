@@ -29,7 +29,7 @@ class ProfileController extends BaseController{
         $phone = $_POST["phone"] ?? $currentProfile["phone_number"];
         $gamer_tag = $_POST["gamer_tag"] ?? $currentProfile["gamer_tag"];
         $bio = $_POST["bio"] ?? $currentProfile["bio"];
-        $profile_image = $currentProfile["profile_image"];
+        $profile_image = $currentProfile["profile_image"] ?? 'default.jpg';
 
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
             $upload_dir = __DIR__ . '/../../public/uploads/';
