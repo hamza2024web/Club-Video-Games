@@ -9,5 +9,13 @@ class ClubServices {
     {
         $this->clubRepository = new ClubRepository();
     }
+
+    public function getClubUser($user_id){
+        $club = $this->clubRepository->getClubOrganisateur($user_id);
+        return $club;        
+    }
+    public function saveClubInf($user_id,$name,$email,$phone_club,$description,$logo){
+        return $this->clubRepository->updateClub($user_id,$name,$email,$phone_club,$description,$logo);
+    }
 }
 ?>

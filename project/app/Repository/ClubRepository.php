@@ -2,6 +2,7 @@
 namespace App\Repository;
 
 use Config\Database;
+use PDO;
 
 class ClubRepository {
     private $conn;
@@ -9,6 +10,30 @@ class ClubRepository {
     {
         $db = new Database();
         $this->conn = $db->getConnection();
+    }
+    public function getClubOrganisateur(){
+        $sql = "SELECT * from club ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $club = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $club;
+    }
+    public function updateClub($user_id,$name,$email,$phone_club,$description,$logo){
+        $query = "SELECT club_id FROM organisateur WHERE user_id=:user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $club_id = $result['club_id'] ?? null;
+        $sql = "UPDATE club SET name=:name , email=:email , phone_club=:phone_club , logo=:logo ,description=:description WHERE id=:club_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":name",$name);
+        $stmt->bindParam(":email",$email);
+        $stmt->bindParam(":phone_club",$phone_club);
+        $stmt->bindParam(":logo",$logo);    
+        $stmt->bindParam(":description",$description);
+        $stmt->bindParam(":club_id",$club_id);
+        return $stmt->execute();
     }
     
 }
