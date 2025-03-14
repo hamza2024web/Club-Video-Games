@@ -20,10 +20,10 @@
             
             <div class="p-4 bg-gray-800">
                 <div class="flex items-center space-x-3">
-                    <img src="/api/placeholder/40/40" alt="Avatar" class="w-10 h-10 rounded-full bg-gray-500">
+                    <img src="{{profile.profile_image}}" alt="Avatar" class="w-10 h-10 rounded-full bg-gray-500">
                     <div>
-                        <p class="font-semibold">Thomas Durand</p>
-                        <p class="text-sm text-gray-300">Organisateur</p>
+                        <p class="font-semibold">{{profile.name}}</p>
+                        <p class="text-sm text-gray-300">{{profile.email}}</p>
                     </div>
                 </div>
             </div>
@@ -43,6 +43,13 @@
                 <a href="#" class="flex items-center px-4 py-3 bg-gray-800 text-white">
                     <i class="fas fa-users w-6"></i>
                     <span>Gestion du club</span>
+                </a>
+                <div class="px-4 py-2 text-xs text-gray-400 uppercase tracking-wider">
+                    Événements
+                </div>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-calendar-alt w-6"></i>
+                    <span>Événement</span>
                 </a>
                 <a href="#" class="flex items-center px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white">
                     <i class="fas fa-trophy w-6"></i>
