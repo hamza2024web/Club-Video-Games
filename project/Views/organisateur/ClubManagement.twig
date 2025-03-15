@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameClub - Gestion de Club</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="bg-gray-100">
@@ -104,7 +105,7 @@
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md flex items-center">
+                            <button onclick="showClub('{{ club.name }}', '{{ club.email }}', '{{ club.description }}', '{{ club.phone_club }}','{{ club.logo }}')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md flex items-center">
                                 <i class="fas fa-edit mr-2"></i> Modifier le club
                             </button>
                             <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center">
@@ -231,7 +232,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-indigo-700 mb-1">Nom du club</label>
-                                <input type="text" value="{{club.name}}" name="club_name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-shadow">
+                                <input type="text" value="{{club.name}}" id="name" name="club_name" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-shadow">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-indigo-700 mb-1">Email du club</label>
@@ -241,7 +242,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </div>
-                                    <input type="email" name="email" value="{{club.email}}" class="w-full border border-gray-300 rounded-lg pl-10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-shadow">
+                                    <input type="email" name="email" id="email" value="{{club.email}}" class="w-full border border-gray-300 rounded-lg pl-10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-shadow">
                                 </div>
                             </div>
                             <div>
@@ -252,12 +253,12 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                         </svg>
                                     </div>
-                                    <input type="tel" name="phone_club" value="{{club.phone_club}}" class="w-full border border-gray-300 rounded-lg pl-10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-shadow">
+                                    <input type="tel" name="phone_club" id="phone_club" value="{{club.phone_club}}" class="w-full border border-gray-300 rounded-lg pl-10 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-shadow">
                                 </div>
                             </div>
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-medium text-indigo-700 mb-1">Description</label>
-                                <textarea rows="4" name="description" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-shadow">{{club.description}}</textarea>
+                                <textarea rows="4" name="description" id="description" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-shadow">{{club.description}}</textarea>
                             </div>
                             <div class="md:col-span-2 mt-4 flex justify-end">
                                 <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
@@ -270,13 +271,62 @@
                         </div>
                     </form>
                 </div>
+
+                <div id="clubInformations" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+                    <div id="modalContent" class="bg-white rounded-lg shadow-lg p-8 transform transition-all scale-95 opacity-0 w-full max-w-2xl">
+                        <h3 class="text-xl font-bold text-indigo-800 mb-6">Informations du club</h3>
+                        <form action="/clubForm" method="POST" enctype="multipart/form-data">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="md:col-span-2">
+                                    <label for="club_image" class="block text-sm font-medium text-indigo-700 mb-2">Image du club</label>
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-2 border-purple-300">
+                                            <img src="{{club.logo|default('/images/placeholder.png')}}" alt="Club image" class="w-full h-full object-cover" id="image-preview">
+                                        </div>
+                                        <div class="flex-1">
+                                            <label class="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                                Choisir une image
+                                                <input type="file" name="logo" id="logo" accept="image/*" class="hidden" onchange="document.getElementById('image-preview').src = window.URL.createObjectURL(this.files[0])">
+                                            </label>
+                                            <p class="mt-1 text-xs text-gray-500">JPG, PNG or GIF, Taille max. 2MB</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-indigo-700 mb-1">Nom du club</label>
+                                    <input type="text" id="name" value="{{club.name}}" name="club_name" class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-indigo-700 mb-1">Email du club</label>
+                                    <input type="email" id="email" value="{{club.email}}" name="email" class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-indigo-700 mb-1">Téléphone</label>
+                                    <input type="tel" id="phone_club" value="{{club.phone_club}}" name="phone_club" class="w-full border border-gray-300 rounded-lg px-4 py-3">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-indigo-700 mb-1">Description</label>
+                                    <textarea id="description" name="description" rows="4" class="w-full border border-gray-300 rounded-lg px-4 py-3">{{club.description}}</textarea>
+                                </div>
+                                <div class="md:col-span-2 flex justify-end">
+                                    <button type="button" onclick="closeAnnonces()" class="px-4 py-2 bg-red-500 text-white rounded-lg mr-2">Fermer</button>
+                                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Enregistrer</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('club_updated_successffly')) {
+            if (urlParams.has('club_updated_successfully')) {
                 Swal.fire({
                     title: "Success!",
                     text: "Club updated successfully!",
@@ -289,6 +339,51 @@
 
             }
         });
+
+        function showClub(name, email, description, phone_club, logo) {
+            const modal = document.getElementById("clubInformations");
+            const modalContent = document.getElementById("modalContent");
+
+            document.getElementById("name").value = name;
+            document.getElementById("email").value = email;
+            document.getElementById("description").value = description;
+            document.getElementById("phone_club").value = phone_club;
+            document.getElementById("image-preview").src = logo;
+
+            modal.classList.remove("hidden");
+
+            requestAnimationFrame(() => {
+                modalContent.classList.remove("scale-95", "opacity-0");
+                modalContent.classList.add("scale-100", "opacity-100");
+            });
+        }
+
+        function closeAnnonces() {
+            const modal = document.getElementById("clubInformations");
+            const modalContent = document.getElementById("modalContent");
+
+            modalContent.classList.remove("scale-100", "opacity-100");
+            modalContent.classList.add("scale-95", "opacity-0");
+
+            setTimeout(() => {
+                modal.classList.add("hidden");
+            }, 300);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById("clubInformations").addEventListener("click", (e) => {
+            if (e.target.id === "clubInformations") {
+                closeAnnonces();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !document.getElementById("clubInformations").classList.contains("hidden")) {
+                closeAnnonces();
+            }
+        });
+
     </script>
 </body>
 </html>
