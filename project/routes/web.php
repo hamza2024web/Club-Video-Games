@@ -22,4 +22,6 @@ Route::post('editGenre','AdminController@editGenre');
 Route::get('profile','ProfileController@profile');
 Route::post('updateProfile','ProfileController@updateProfile');
 Route::post('updatePassword','ProfileController@updatePassword');
+Route::get('ClubManagement','ClubController@index');
+Route::post('clubForm','ClubController@updateClub');
 ?>

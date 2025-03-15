@@ -12,7 +12,7 @@ class dashboardRepository {
         $db = new Database();
         $this->conn = $db->getConnection();
     }
-
+    
     public function getAllGenre(){
         $query = "SELECT * FROM genre";
         $stmt = $this->conn->prepare($query);
