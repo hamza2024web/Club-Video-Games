@@ -19,6 +19,7 @@ Route::get('genre','AdminController@genre');
 Route::post('addGenre','AdminController@addGenre');
 Route::post('deleteGenre','AdminController@deleteGenre');
 Route::post('editGenre','AdminController@editGenre');
+Route::get('Game','AdminController@game');
 Route::get('profile','ProfileController@profile');
 Route::post('updateProfile','ProfileController@updateProfile');
 Route::post('updatePassword','ProfileController@updatePassword');

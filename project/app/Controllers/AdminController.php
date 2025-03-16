@@ -58,5 +58,8 @@ class AdminController extends BaseController {
         header("location: genre");
         return $editGenre;
     }
+    public function game(){
+        return $this->renderAdmin('game');
+    }
 }
 ?>
