@@ -87,7 +87,7 @@ class dashboardRepository {
             if ($isGameInserted && $gameId){
                 $attachToGame = $this->attachGameToGenre($gameId,$genre_id);
                 if ($attachToGame){
-                    return ;
+                    return $attachToGame;
                 }
             }
             return null;

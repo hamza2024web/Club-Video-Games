@@ -91,10 +91,10 @@ class AdminController extends BaseController {
                 die("Failed to upload image.");
             }
         }
-
-        $saveGame = $this->adminServices->saveGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image);;
+        
+        $saveGame = $this->adminServices->saveGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image);
         if ($saveGame) {
-            header("Location: /game?game_Inserted_successfully=1");
+            header("Location: /Game?game_Inserted_successfully=1");
             exit();
         } else {
             echo "Failed to insert Game.";
