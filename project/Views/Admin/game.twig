@@ -65,10 +65,25 @@
 
                         <div>
                             <label class="block mb-2 text-gray-700">Genre</label>
-                            <select id="gameGenre" name="genreId" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <select id="gameGenre" name="genreId[]" multiple class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                                 {% for genre in genres %}
                                     <option value="{{ genre.id }}">{{ genre.name }}</option>
                                 {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="gamePlatform" class="block mb-2 text-gray-700">Plateforme</label>
+                            <select id="gamePlatform" name="platform" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="pc">PC</option>
+                                <option value="ps5">PlayStation 5</option>
+                                <option value="ps4">PlayStation 4</option>
+                                <option value="xbox_series_x">Xbox Series X</option>
+                                <option value="xbox_one">Xbox One</option>
+                                <option value="switch">Nintendo Switch</option>
+                                <option value="steam">Steam</option>
+                                <option value="epic_games">Epic Games Store</option>
+                                <option value="stadia">Google Stadia</option>
+                                <option value="mobile">Mobile (iOS & Android)</option>
                             </select>
                         </div>
 
@@ -90,6 +105,11 @@
                         <div>
                             <label class="block mb-2 text-gray-700">Game Cover Image</label>
                             <input type="file" id="gameCover" name="coverImage" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" accept="image/*">
+                        </div>
+
+                        <div>
+                            <label class="block mb-2 text-gray-700">Prix</label>
+                            <input type="number" id="prix" name="prix" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" accept="image/*">
                         </div>
 
                         <div>
@@ -192,22 +212,16 @@
 
     <script>
         function editGame(gameId) {
-            // Change form title
+            
             document.getElementById('formTitle').innerText = 'Edit Game';
             document.getElementById('addGame').innerText = 'Update Game';
             
-            // Set form action to update
             document.getElementById('addGameForm').action = '/updateGame';
             
-            // Populate form with game data
             document.getElementById('gameId').value = gameId;
             document.getElementById('gameTitle').value = document.getElementById('gameTitle-' + gameId).innerText;
             document.getElementById('gameDescription').value = document.getElementById('gameDescription-' + gameId).innerText;
-            
-            // Set genre, developer, year and status values
-            // This would need additional data attributes or JavaScript to properly select the correct options
-            
-            // Scroll to form
+
             document.getElementById('formTitle').scrollIntoView({behavior: 'smooth'});
         }
     </script>

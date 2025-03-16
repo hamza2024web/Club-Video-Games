@@ -4,6 +4,8 @@ namespace App\Repository;
 use Config\Database;
 use App\Models\Genre;
 use PDO;
+use PDOException;
+
 class dashboardRepository {
     private $conn ;
 
@@ -67,7 +69,49 @@ class dashboardRepository {
             return new Genre($newGenre["id"] , $newGenre["name"],$newGenre["description"],$newGenre["status"]);
         }
     }
-}
+    public function addGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image){
+        try{
+            $sql = "INSERT INTO jeux (nom_de_jeu,description,plateforme,date_de_sortie,developpeur,image,prix,status) VALUES 
+            (:title,:description,:plateforme,:date_de_sortie,:developpeur,:image,:prix,:status)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":title",$title);
+            $stmt->bindParam(":description",$description);
+            $stmt->bindParam(":plateforme",$plateform);
+            $stmt->bindParam(":date_de_sortie",$date_de_sortie);
+            $stmt->bindParam(":developpeur",$developer);
+            $stmt->bindParam(":image",$image);
+            $stmt->bindParam("prix",$prix);
+            $stmt->bindParam("status",$status);
+            $isGameInserted = $stmt->execute();
+            $gameId = $this->conn->lastInsertId();
+            if ($isGameInserted && $gameId){
+                $attachToGame = $this->attachGameToGenre($gameId,$genre_id);
+                if ($attachToGame){
+                    return ;
+                }
+            }
+            return null;
+        } catch (PDOException $e){
+            echo "Error adding jeux:" . $e->getMessage();
+            return null;
+        }
 
+    }
+    private function attachGameToGenre($gameId,$genre_id){
+        try {
+            $sql = "INSERT INTO genre_jeux (jeux_id,genre_id) VALUES (:jeux_id , :genre_id)";
+            $stmt = $this->conn->prepare($sql);
+            foreach ($genre_id as $genre){
+                $stmt->bindParam(":jeux_id",$gameId);
+                $stmt->bindParam(":genre_id",$genre);
+                $stmt->execute();
+            }
+            return $gameId;
+        } catch (PDOException $e){
+            echo "Error attaching genre to jeu:" . $e->getMessage();
+            return null;
+        }
+    }
+}
 
 ?>

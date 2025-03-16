@@ -1,5 +1,6 @@
 <?php 
 namespace App\Services;
+use App\Models\Jeu;
 
 use App\Repository\dashboardRepository;
 
@@ -27,6 +28,11 @@ class dashboardServices {
     public function editGenre($id,$name,$description,$status){
         $newGenre = $this->dashboardRepository->UpdateGenre($id,$name,$description,$status);
         return $newGenre;
+    }
+    public function saveGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image){
+
+        $saveGame = $this->dashboardRepository->addGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image);
+        return $saveGame;
     }
 }
 
