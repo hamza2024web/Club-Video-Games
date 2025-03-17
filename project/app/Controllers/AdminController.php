@@ -59,8 +59,9 @@ class AdminController extends BaseController {
         return $editGenre;
     }
     public function game(){
+        $games = $this->adminServices->getGame();
         $genres = $this->adminServices->getGenre();
-        return $this->renderAdmin('game',compact('genres'));
+        return $this->renderAdmin('game',compact('genres','games'));
     }
     public function addGame(){
         $title = $_POST["title"];

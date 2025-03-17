@@ -23,6 +23,16 @@ class dashboardRepository {
         return $genreData;
     }
 
+    public function getAllGame(){
+        $query = "SELECT jeux.id,jeux.nom_de_jeu,jeux.description,jeux.plateforme,jeux.date_de_sortie,jeux.developpeur,jeux.image,jeux.prix,jeux.status , genre.name as genre FROM jeux 
+        INNER JOIN genre_jeux ON genre_jeux.jeux_id = jeux.id
+        INNER JOIN genre ON genre.id = genre_jeux.genre_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $games;
+    }
+
     public function setgenre($name , $description ,$status){
         $query = "INSERT INTO genre (name , description , status) VALUES (:name,:description,:status)";
         $stmt = $this->conn->prepare($query);

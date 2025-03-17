@@ -34,6 +34,10 @@ class dashboardServices {
         $saveGame = $this->dashboardRepository->addGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image);
         return $saveGame;
     }
+    public function getGame(){
+        $games = $this->dashboardRepository->getAllGame();
+        return $games;
+    }
 }
 
 ?>
