@@ -26,4 +26,5 @@ Route::post('updatePassword','ProfileController@updatePassword');
 Route::get('ClubManagement','ClubController@index');
 Route::post('clubForm','ClubController@updateClub');
 Route::post('/addGame','AdminController@addGame');
+Route::post('/updateGame','AdminController@EditGame');
 ?>

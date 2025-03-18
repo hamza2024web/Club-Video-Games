@@ -101,5 +101,18 @@ class AdminController extends BaseController {
             echo "Failed to insert Game.";
         }
     }
+    public function EditGame(){
+        $gameId = $_POST["gameId"];
+        $title = $_POST["gameTitle"];
+        $genre_id = $_POST["genreId"];
+        $plateform = $_POST["platform"];
+        $developer = $_POST["developer"];
+        $date_de_sortie = $_POST["releaseYear"];
+        $description = $_POST["description"];
+        $image = $_POST["coverImage"];
+        $prix = $_POST["prix"];
+        $status = $_POST["status"];
+        
+    }
 }
 ?>
