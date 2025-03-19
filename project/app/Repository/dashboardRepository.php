@@ -82,12 +82,8 @@ class dashboardRepository {
     }
     public function addGame($title, $plateform, $genre_id, $developer, $date_de_sortie, $description, $prix, $status, $image) {
         try {
-            // Start Transaction
             $this->conn->beginTransaction();
-    
-            // Insert game
-            $sql = "INSERT INTO jeux (nom_de_jeu, description, plateforme, date_de_sortie, developpeur, image, prix, status) 
-                    VALUES (:title, :description, :plateforme, :date_de_sortie, :developpeur, :image, :prix, :status)";
+                $sql = "INSERT INTO jeux (nom_de_jeu, description, plateforme, date_de_sortie, developpeur, image, prix, status) VALUES (:title, :description, :plateforme, :date_de_sortie, :developpeur, :image, :prix, :status)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":title", $title);
             $stmt->bindParam(":description", $description);
@@ -98,25 +94,18 @@ class dashboardRepository {
             $stmt->bindParam(":prix", $prix);
             $stmt->bindParam(":status", $status);
             $isGameInserted = $stmt->execute();
-    
-            // Get last inserted game ID
             $gameId = $this->conn->lastInsertId();
             if (!$isGameInserted || !$gameId) {
                 throw new Exception("Failed to insert game. Game ID is null.");
             }
-    
-            // Attach genres
             $attachToGame = $this->attachGameToGenre($gameId, $genre_id);
             if (!$attachToGame) {
                 throw new Exception("Failed to attach genres.");
             }
-    
-            // Commit transaction
             $this->conn->commit();
             return $gameId;
     
         } catch (PDOException $e) {
-            // Rollback in case of an error
             $this->conn->rollBack();
             echo "Error adding jeux: " . $e->getMessage();
             return null;
@@ -144,7 +133,6 @@ class dashboardRepository {
             return false;
         }
     }
-    
     
     public function updateGame($gameId, $title, $genre_id, $plateform, $developer, $date_de_sortie, $description, $image, $prix, $status) {
         try {
