@@ -117,22 +117,29 @@ class dashboardRepository {
             if (!is_array($genre_id) || empty($genre_id)) {
                 throw new Exception("Genre ID must be a non-empty array.");
             }
-    
-            $sql = "INSERT INTO genre_jeux (jeux_id, genre_id) VALUES (:jeux_id, :genre_id)";
-            $stmt = $this->conn->prepare($sql);
-    
+            $existingGenres = [];
+            $stmt = $this->conn->prepare("SELECT genre_id FROM genre_jeux WHERE jeux_id = :gameId");
+            $stmt->bindParam(":gameId", $gameId);
+            $stmt->execute();
+            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                $existingGenres[] = $row['genre_id'];
+            }
+            $sqlInsert = "INSERT INTO genre_jeux (jeux_id, genre_id) VALUES (:gameId, :genreId)";
+            $stmtInsert = $this->conn->prepare($sqlInsert);
             foreach ($genre_id as $genre) {
-                $stmt->bindValue(":jeux_id", $gameId, PDO::PARAM_INT);
-                $stmt->bindValue(":genre_id", $genre, PDO::PARAM_INT);
-                $stmt->execute();
+                if (!in_array($genre, $existingGenres)) { 
+                    $stmtInsert->bindParam(":gameId", $gameId, PDO::PARAM_INT);
+                    $stmtInsert->bindParam(":genreId", $genre, PDO::PARAM_INT);
+                    $stmtInsert->execute();
+                }
             }
             return true;
-    
         } catch (PDOException $e) {
-            echo "Error attaching genre to jeu: " . $e->getMessage();
+            echo "Error attaching genre to game: " . $e->getMessage();
             return false;
         }
     }
+    
     
     public function updateGame($gameId, $title, $genre_id, $plateform, $developer, $date_de_sortie, $description, $image, $prix, $status) {
         try {
@@ -168,6 +175,13 @@ class dashboardRepository {
             echo "Error updating Game: " . $e->getMessage();
             return false;
         }
+    }
+    public function getGameImage($gameId) {
+        $sql = "SELECT image FROM jeux WHERE id = :gameId";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":gameId", $gameId);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
 }

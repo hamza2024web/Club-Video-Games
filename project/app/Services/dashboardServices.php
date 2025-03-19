@@ -30,7 +30,6 @@ class dashboardServices {
         return $newGenre;
     }
     public function saveGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image){
-
         $saveGame = $this->dashboardRepository->addGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image);
         return $saveGame;
     }
@@ -42,6 +41,11 @@ class dashboardServices {
         $newGame = $this->dashboardRepository->updateGame($gameId,$title,$genre_id,$plateform,$developer,$date_de_sortie,$description,$image,$prix,$status);
         return $newGame;
     }
+    public function getImage($gameId){
+        $image = $this->dashboardRepository->getGameImage($gameId);
+        return $image;
+    }
+
 }
 
 ?>

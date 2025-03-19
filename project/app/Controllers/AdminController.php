@@ -104,14 +104,17 @@ class AdminController extends BaseController {
     public function EditGame(){
         $gameId = $_POST["id"];
         $title = $_POST["title"];
-        $genre_id = $_POST["genreId"];
+        $genre_id = isset($_POST["genreId"]) ? (is_array($_POST["genreId"]) ? $_POST["genreId"] : [$_POST["genreId"]]) : [];
         $plateform = $_POST["platform"];
         $developer = $_POST["developer"];
         $date_de_sortie = $_POST["releaseYear"];
         $description = $_POST["description"];
         $prix = $_POST["prix"];
         $status = $_POST["status"];
+        $currentImage = $this->adminServices->getImage($gameId);
 
+        $image = ($currentImage && isset($currentImage['image'])) ? $currentImage['image'] : 'default.jpg';
+        
         if (isset($_FILES['coverImage']) && $_FILES['coverImage']['error'] == 0) {
             $upload_dir = __DIR__ . '/../../public/uploads/';
             $file_name = time() . '_' . basename($_FILES['coverImage']['name']);
@@ -140,5 +143,6 @@ class AdminController extends BaseController {
             echo "Failed to insert Game.";
         }
     }
+
 }
 ?>
