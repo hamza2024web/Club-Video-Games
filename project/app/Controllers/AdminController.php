@@ -102,17 +102,43 @@ class AdminController extends BaseController {
         }
     }
     public function EditGame(){
-        $gameId = $_POST["gameId"];
-        $title = $_POST["gameTitle"];
+        $gameId = $_POST["id"];
+        $title = $_POST["title"];
         $genre_id = $_POST["genreId"];
         $plateform = $_POST["platform"];
         $developer = $_POST["developer"];
         $date_de_sortie = $_POST["releaseYear"];
         $description = $_POST["description"];
-        $image = $_POST["coverImage"];
         $prix = $_POST["prix"];
         $status = $_POST["status"];
-        
+
+        if (isset($_FILES['coverImage']) && $_FILES['coverImage']['error'] == 0) {
+            $upload_dir = __DIR__ . '/../../public/uploads/';
+            $file_name = time() . '_' . basename($_FILES['coverImage']['name']);
+            $target_path = $upload_dir . $file_name;
+    
+            // Validate file type
+            $file_type = mime_content_type($_FILES['coverImage']['tmp_name']);
+            if (strpos($file_type, 'image') === false) {
+                die("Invalid file type. Please upload an image.");
+            }
+    
+            // Move file and update the logo variable
+            if (move_uploaded_file($_FILES['coverImage']['tmp_name'], $target_path)) {
+                $image = 'public/uploads/' . $file_name; // Save only the file path
+            } else {
+                die("Failed to upload image.");
+            }
+        }
+
+
+        $updateGame = $this->adminServices->setGame($gameId,$title,$genre_id,$plateform,$developer,$date_de_sortie,$description,$image,$prix,$status);
+        if ($updateGame) {
+            header("Location: /Game?game_Updated_successfully=1");
+            exit();
+        } else {
+            echo "Failed to insert Game.";
+        }
     }
 }
 ?>

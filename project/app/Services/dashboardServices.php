@@ -38,6 +38,10 @@ class dashboardServices {
         $games = $this->dashboardRepository->getAllGame();
         return $games;
     }
+    public function setGame($gameId,$title,$genre_id,$plateform,$developer,$date_de_sortie,$description,$image,$prix,$status){
+        $newGame = $this->dashboardRepository->updateGame($gameId,$title,$genre_id,$plateform,$developer,$date_de_sortie,$description,$image,$prix,$status);
+        return $newGame;
+    }
 }
 
 ?>
