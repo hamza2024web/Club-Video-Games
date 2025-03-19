@@ -111,8 +111,59 @@ class dashboardRepository {
             return null;
         }
     }
+    private function attachGameToGenre($gameId,$genre_id){
+        try {
+            $sql = "INSERT INTO genre_jeux (jeux_id,genre_id) VALUES (:jeux_id , :genre_id)";
+            $stmt = $this->conn->prepare($sql);
+            foreach ($genre_id as $genre){
+                $stmt->bindParam(":jeux_id",$gameId);
+                $stmt->bindParam(":genre_id",$genre);
+                $stmt->execute();
+            }
+            return $gameId;
+        } catch (PDOException $e){
+            echo "Error attaching genre to jeu:" . $e->getMessage();
+            return null;
+        }
+    }
     
-    private function attachGameToGenre($gameId, $genre_id) {
+    public function updateGame($gameId, $title, $genre_id, $plateform, $developer, $date_de_sortie, $description, $image, $prix, $status) {
+        try {
+            $this->conn->beginTransaction();
+            $sql = "UPDATE jeux SET nom_de_jeu = :title, description = :description, plateforme = :plateform, date_de_sortie = :date_de_sortie, developpeur = :developer, image = :image, prix = :prix, status = :status WHERE id = :gameId";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":title", $title);
+            $stmt->bindParam(":description", $description);
+            $stmt->bindParam(":plateform", $plateform);
+            $stmt->bindParam(":date_de_sortie", $date_de_sortie);
+            $stmt->bindParam(":developer", $developer);
+            $stmt->bindParam(":image", $image);
+            $stmt->bindParam(":prix", $prix);
+            $stmt->bindParam(":status", $status);
+            $stmt->bindParam(":gameId", $gameId);
+            $isGameUpdated = $stmt->execute();
+            if (!$isGameUpdated) {
+                $this->conn->rollBack();
+                throw new Exception("Failed To Update Game Details.");
+            }
+            $sql = "DELETE FROM genre_jeux WHERE jeux_id = :gameId";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":gameId", $gameId);
+            $stmt->execute();
+            if (!$this->UpdateGameToGenre($gameId,$genre_id)){
+                $this->conn->rollBack();
+                throw new Exception("Failed To update Game Genre.");
+            }
+            $this->conn->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            echo "Error updating Game: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+    private function UpdateGameToGenre($gameId, $genre_id) {
         try {
             if (!is_array($genre_id) || empty($genre_id)) {
                 throw new Exception("Genre ID must be a non-empty array.");
@@ -139,43 +190,7 @@ class dashboardRepository {
             return false;
         }
     }
-    
-    
-    public function updateGame($gameId, $title, $genre_id, $plateform, $developer, $date_de_sortie, $description, $image, $prix, $status) {
-        try {
-            $this->conn->beginTransaction();
-            $sql = "UPDATE jeux SET nom_de_jeu = :title, description = :description, plateforme = :plateform, date_de_sortie = :date_de_sortie, developpeur = :developer, image = :image, prix = :prix, status = :status WHERE id = :gameId";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(":title", $title);
-            $stmt->bindParam(":description", $description);
-            $stmt->bindParam(":plateform", $plateform);
-            $stmt->bindParam(":date_de_sortie", $date_de_sortie);
-            $stmt->bindParam(":developer", $developer);
-            $stmt->bindParam(":image", $image);
-            $stmt->bindParam(":prix", $prix);
-            $stmt->bindParam(":status", $status);
-            $stmt->bindParam(":gameId", $gameId);
-            $isGameUpdated = $stmt->execute();
-            if (!$isGameUpdated) {
-                $this->conn->rollBack();
-                throw new Exception("Failed To Update Game Details.");
-            }
-            $sql = "DELETE FROM genre_jeux WHERE jeux_id = :gameId";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(":gameId", $gameId);
-            $stmt->execute();
-            if (!$this->attachGameToGenre($gameId,$genre_id)){
-                $this->conn->rollBack();
-                throw new Exception("Failed To update Game Genre.");
-            }
-            $this->conn->commit();
-            return true;
-        } catch (PDOException $e) {
-            $this->conn->rollBack();
-            echo "Error updating Game: " . $e->getMessage();
-            return false;
-        }
-    }
+
     public function getGameImage($gameId) {
         $sql = "SELECT image FROM jeux WHERE id = :gameId";
         $stmt = $this->conn->prepare($sql);
