@@ -45,6 +45,10 @@ class dashboardServices {
         $image = $this->dashboardRepository->getGameImage($gameId);
         return $image;
     }
+    public function GameDelete($gameId){
+        $result = $this->dashboardRepository->deleteGame($gameId);
+        return $result;
+    }
 
 }
 

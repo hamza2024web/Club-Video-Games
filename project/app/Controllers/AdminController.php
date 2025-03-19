@@ -140,7 +140,17 @@ class AdminController extends BaseController {
             header("Location: /Game?game_Updated_successfully=1");
             exit();
         } else {
-            echo "Failed to insert Game.";
+            echo "Failed to update Game.";
+        }
+    }
+    public function deleteGame(){
+        $gameId = $_POST["id"];
+        $result = $this->adminServices->GameDelete($gameId);
+        if ($result) {
+            header("Location: /Game?game_Deleted_successfully=1");
+            exit();
+        } else {
+            echo "Failed to delete Game.";
         }
     }
 

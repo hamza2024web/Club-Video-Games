@@ -27,4 +27,5 @@ Route::get('ClubManagement','ClubController@index');
 Route::post('addGame','AdminController@addGame');
 Route::post('clubForm','ClubController@updateClub');
 Route::post('updateGame','AdminController@EditGame');
+Route::post('/deleteGame','AdminController@deleteGame');
 ?>

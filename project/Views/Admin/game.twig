@@ -278,7 +278,22 @@
             if (urlParams.has('game_Updated_successfully')) {
                 Swal.fire({
                     title: "Success!",
-                    text: "game_Updated_successfully!",
+                    text: "game Updated Successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/Game";
+                });
+
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('game_Deleted_successfully')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "game Deleted Successfully!",
                     icon: "success",
                     confirmButtonText: "OK",
                     timer: 3000 

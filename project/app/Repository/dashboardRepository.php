@@ -190,6 +190,31 @@ class dashboardRepository {
             return false;
         }
     }
+    public function deleteGame($gameId){
+        try {
+            $this->conn->beginTransaction();
+            $sql = "DELETE FROM genre_jeux WHERE jeux_id = :gameId";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":gameId", $gameId, PDO::PARAM_INT);
+            $stmt->execute();
+            $sql = "DELETE FROM jeux WHERE id = :gameId";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":gameId", $gameId, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->conn->commit();
+                return true;
+            } else {
+                $this->conn->rollBack();
+                return false;
+            }
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            echo "Error deleting game: " . $e->getMessage();
+            return false;
+        }
+    }
+    
 
     public function getGameImage($gameId) {
         $sql = "SELECT image FROM jeux WHERE id = :gameId";
