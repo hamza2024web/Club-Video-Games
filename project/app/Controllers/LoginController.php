@@ -37,7 +37,7 @@ class LoginController extends BaseController {
                 header("location: /clubs");
             }
             else if($user['role'] === "organisateur"){
-                header("location: /homePage");
+                header("location: /ClubManagement");
             }
         } else {
             if ($user['status'] === "suspension"){
