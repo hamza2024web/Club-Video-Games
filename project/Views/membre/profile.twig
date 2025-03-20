@@ -778,7 +778,7 @@
                 
                 <!-- Modal Body -->
                 <div class="p-6">
-                    <form id="editProfileForm" class="space-y-6">
+                    <form id="editProfileForm" class="space-y-6" action="/profileMembre" method="POST" enctype="multipart/form-data">
                         <!-- Profile & Cover Photo -->
                         <div class="space-y-4">
                             <div>
@@ -874,67 +874,17 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Gaming Preferences -->
-                        <div>
-                            <h4 class="text-md font-semibold text-gray-900 mb-3">Gaming Preferences</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Preferred Platforms</label>
-                                    <div class="space-y-2">
-                                        <div class="flex items-center">
-                                            <input id="pc" name="platforms" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded" checked>
-                                            <label for="pc" class="ml-2 text-sm text-gray-700">PC</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="ps5" name="platforms" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded" checked>
-                                            <label for="ps5" class="ml-2 text-sm text-gray-700">PlayStation 5</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="xbox" name="platforms" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                            <label for="xbox" class="ml-2 text-sm text-gray-700">Xbox Series X</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="switch" name="platforms" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                            <label for="switch" class="ml-2 text-sm text-gray-700">Nintendo Switch</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Favorite Genres</label>
-                                    <div class="space-y-2">
-                                        <div class="flex items-center">
-                                            <input id="fps" name="genres" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded" checked>
-                                            <label for="fps" class="ml-2 text-sm text-gray-700">First-Person Shooter</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="moba" name="genres" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded" checked>
-                                            <label for="moba" class="ml-2 text-sm text-gray-700">MOBA</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="rpg" name="genres" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                            <label for="rpg" class="ml-2 text-sm text-gray-700">RPG</label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="battle-royale" name="genres" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded" checked>
-                                            <label for="battle-royale" class="ml-2 text-sm text-gray-700">Battle Royale</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-xl flex justify-end">
+                            <button type="button" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg mr-2" id="cancelEditProfile">
+                                Cancel
+                            </button>
+                            <button type="button" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition" id="saveProfile">
+                                Save Changes
+                            </button>
                         </div>
                     </form>
                 </div>
-                
-                <!-- Modal Footer -->
-                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-xl flex justify-end">
-                    <button type="button" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg mr-2" id="cancelEditProfile">
-                        Cancel
-                    </button>
-                    <button type="button" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition" id="saveProfile">
-                        Save Changes
-                    </button>
-                </div>
+            
             </div>
         </div>
     </div>

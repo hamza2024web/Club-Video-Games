@@ -24,7 +24,7 @@ class ProfileMembre extends BaseController implements IProfile {
         $user_id = $_SESSION["user_id"];
 
         $currentProfile = $this->ProfileServices->getProfileUSer($user_id);
-
+        
         $name = $_POST["full_name"] ?? $currentProfile["name"];
         $email = $_POST["email"] ?? $currentProfile["email"];
         $phone = $_POST["phone"] ?? $currentProfile["phone_number"];
