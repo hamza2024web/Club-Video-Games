@@ -6,6 +6,7 @@ function editGame(gameId) {
     const description = document.getElementById('gameDescription-' + gameId).innerText;
     const status = document.getElementById('gameStatus-' + gameId).innerText;
     const prix = document.getElementById('gamePrice-' + gameId).innerText;
+    const stock = document.getElementById('gameStock-' + gameId).innerText;
     
     document.getElementById('formTitle').innerText = 'Edit Game';
     document.getElementById('addGame').innerText = 'Update Game';
@@ -25,6 +26,7 @@ function editGame(gameId) {
     document.getElementById('gameDescription').value = description;
     document.getElementById('gameStatus').value = status;
     document.getElementById('prix').value = prix;
+    document.getElementById('stock').value = stock;
     
     document.getElementById('formTitle').scrollIntoView({ behavior: 'smooth' });
 }
