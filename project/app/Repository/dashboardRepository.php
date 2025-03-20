@@ -25,9 +25,9 @@ class dashboardRepository {
     }
 
     public function getAllGame(){
-        $query = "SELECT jeux.id,jeux.nom_de_jeu,jeux.description,jeux.plateforme,jeux.date_de_sortie,jeux.developpeur,jeux.image,jeux.prix,jeux.status , GROUP_CONCAT(genre.name) as genre FROM jeux 
-        INNER JOIN genre_jeux ON genre_jeux.jeux_id = jeux.id
-        INNER JOIN genre ON genre.id = genre_jeux.genre_id
+        $query = "SELECT jeux.id,jeux.nom_de_jeu,jeux.description,jeux.plateforme,jeux.date_de_sortie,jeux.developpeur,jeux.image,jeux.prix,jeux.status , COALESCE(GROUP_CONCAT(genre.name), 'No Genre') as genre FROM jeux 
+        LEFT JOIN genre_jeux ON genre_jeux.jeux_id = jeux.id
+        LEFT JOIN genre ON genre.id = genre_jeux.genre_id
         GROUP BY jeux.id";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
