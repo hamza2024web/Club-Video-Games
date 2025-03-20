@@ -17,7 +17,7 @@ class ProfileController extends BaseController implements IProfile {
     }
     public function profile (){
         $user_id = $_SESSION["user_id"];
-        $profile = $this->ProfileServices->getProfileUser($user_id);
+        $profile = $this->ProfileServices->getProfileMembre($user_id);
         return $this->renderOrg('profile',compact('profile'));
     }
     public function updateProfile() {
