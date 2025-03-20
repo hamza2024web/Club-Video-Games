@@ -1,112 +1,340 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-</head>
+    <title>User Management - Video Game Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .sidebar-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-item:hover::after {
+            width: 100%;
+        }
 
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .table-row {
+            transition: all 0.2s ease;
+        }
+        
+        .table-row:hover {
+            background-color: #f3f4f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-button {
+            transition: all 0.2s ease;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .table-container {
+            scrollbar-width: thin;
+            scrollbar-color: #8b5cf6 #f3f4f6;
+        }
+        
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .table-container::-webkit-scrollbar-track {
+            background: #f3f4f6;
+            border-radius: 10px;
+        }
+        
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: #8b5cf6;
+            border-radius: 10px;
+            border: 2px solid #f3f4f6;
+        }
+    </style>
+</head>
 <body class="bg-gray-100">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 bg-gradient-to-b from-green-600 to-green-800 text-white min-h-screen p-6 relative">
+        <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
             <div class="mb-8 text-center">
-                <h1 class="text-2xl font-bold">Video Game Club</h1>
-                <p class="text-sm text-green-200">Admin Dashboard</p>
+                <div class="flex justify-center mb-3">
+                    <i class="fas fa-gamepad text-4xl text-purple-300"></i>
+                </div>
+                <h1 class="text-2xl font-bold">GamersHub</h1>
+                <p class="text-sm text-purple-200">Admin Portal</p>
             </div>
 
             <nav class="flex-grow">
-                <ul class="space-y-2">
-                    <li><a href="/dashboard" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-tachometer-alt mr-3"></i>Dashboard</a></li>
-                    <li><a href="/genre" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-list mr-3"></i>Genre Management</a></li>
-                    <li><a href="/Game" class="flex items-center p-2 bg-green-700 rounded-lg transition"><i class="fas fa-gamepad mr-3"></i>Game Management</a></li>
-                    <li><a href="/users" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-users mr-3"></i>User Management</a></li>
-                    <li><a href="/statistics" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-chart-line mr-3"></i>Club Statistics</a></li>
-                    <li><a href="/settings" class="flex items-center p-2 hover:bg-green-700 rounded-lg transition"><i class="fas fa-cog mr-3"></i>Settings</a></li>
+                <ul class="space-y-1">
+                    <li><a href="/dashboard" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-tachometer-alt mr-3 text-purple-300"></i>Dashboard</a></li>
+                    <li><a href="/genre" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-list mr-3 text-purple-300"></i>Genres</a></li>
+                    <li><a href="/Game" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Games</a></li>
+                    <li><a href="/users" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Members</a></li>
+                    <li><a href="/statistics" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-chart-line mr-3 text-purple-300"></i>Analytics</a></li>
+                    <li><a href="/settings" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-cog mr-3 text-purple-300"></i>Settings</a></li>
                 </ul>
             </nav>
 
             <div class="absolute bottom-0 left-0 right-0 p-4">
+                <a href="/profile" class="flex items-center space-x-2 mb-3 p-2 rounded-lg hover:bg-indigo-700 transition">
+                    <img src="public/uploads/1742477036_Capture d'écran 2024-12-30 100608.png" class="rounded-full border-2 border-purple-300 h-20 w-20" alt="Admin Profile">
+                    <div>
+                        <p class="text-sm font-medium">Hamza Akroubi</p>
+                        <p class="text-xs text-purple-300">Club Admin</p>
+                    </div>
+                </a>
                 <a href="/logout">
-                    <button class="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg transition duration-300 transform hover:scale-105 shadow-md flex items-center justify-center">
+                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center">
                         <i class="fas fa-sign-out-alt mr-2"></i>
-                        <span class="font-semibold">Logout</span>
+                        Logout
                     </button>
                 </a>
             </div>
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 p-8">
+        <main class="flex-1 p-8">
             <!-- Header -->
-            <header class="mb-8">
-                <h1 class="text-5xl font-bold text-gray-800">Users Management</h1>
-                <p class="text-gray-600 text-lg mt-2">Gérez vos utilisateurs facilement. Activez, suspendez ou désactivez les comptes en quelques clics.</p>
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">User Management</h1>
+                    <p class="text-gray-500">Manage your users easily. Activate, suspend, or deactivate accounts with a few clicks.</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search users..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-600 hover:text-gray-800 transition">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
+                        </button>
+                    </div>
+                </div>
             </header>
 
-            <div class="bg-white shadow-lg rounded-lg p-8">
-                <h2 class="text-3xl font-semibold text-gray-800 mb-6">Users List</h2>
+            <!-- Stats Overview -->
+            <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm font-medium">Total Users</h3>
+                            <p class="text-3xl font-bold text-gray-800">1,258</p>
+                            <p class="text-xs text-green-500 mt-1">↑ 12% from last month</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-lg">
+                            <i class="fas fa-users text-purple-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm font-medium">Active Users</h3>
+                            <p class="text-3xl font-bold text-gray-800">987</p>
+                            <p class="text-xs text-green-500 mt-1">↑ 8% from last month</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-lg">
+                            <i class="fas fa-user-check text-green-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm font-medium">Suspended Users</h3>
+                            <p class="text-3xl font-bold text-gray-800">42</p>
+                            <p class="text-xs text-red-500 mt-1">↑ 5 new suspensions</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-lg">
+                            <i class="fas fa-user-clock text-yellow-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm font-medium">Inactive Users</h3>
+                            <p class="text-3xl font-bold text-gray-800">229</p>
+                            <p class="text-xs text-gray-500 mt-1">No change from last month</p>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-lg">
+                            <i class="fas fa-user-slash text-red-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- User List -->
+            <section class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-user-friends mr-2 text-purple-600"></i>
+                            Users List
+                        </h2>
+                        <div class="flex items-center space-x-2">
+                            <button class="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                                <i class="fas fa-filter mr-1"></i> Filter
+                            </button>
+                            <button class="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                                <i class="fas fa-download mr-1"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Improved Scrollable Container -->
-                <div class="overflow-auto max-h-[500px] border border-gray-200 rounded-lg shadow-inner"> 
-                    <table class="table-auto w-full border-collapse bg-white">
-                        <thead class="sticky top-0 bg-gray-800 text-white z-10">
+                <div class="overflow-auto table-container max-h-[500px]"> 
+                    <table class="w-full border-collapse bg-white">
+                        <thead class="sticky top-0 bg-gray-50 z-10">
                             <tr>
-                                <th class="px-6 py-4 text-left text-sm font-medium">Nom d'utilisateur</th>
-                                <th class="px-6 py-4 text-left text-sm font-medium">E-mail d'utilisateur</th>
-                                <th class="px-6 py-4 text-left text-sm font-medium">Rôle d'utilisateur</th>
-                                <th class="px-6 py-4 text-left text-sm font-medium">Statut</th>
-                                <th class="px-6 py-4 text-left text-sm font-medium">Actions</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Username</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Role</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="text-gray-700">
+                        <tbody class="divide-y divide-gray-200">
                             {% for result in results %}
-                                <tr class="hover:bg-gray-100 border-t border-gray-200">
-                                    <td class="px-6 py-4">{{ result.name }}</td>
-                                    <td class="px-6 py-4">{{ result.email }}</td>
-                                    <td class="px-6 py-4">{{ result.role }}</td>
-                                    <td class="px-6 py-4">
+                                <tr class="table-row">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="{{result.profile_image}}" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">{{ result.name }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">{{ result.email }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">{{ result.role }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         {% if result.status == "Activation" %}
-                                            <span class="px-3 py-1 text-sm font-semibold text-green-700 bg-green-200 rounded-full">Actif</span>
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                <i class="fas fa-circle text-xs mr-1 my-auto"></i> Active
+                                            </span>
                                         {% elseif result.status == "suspension" %}
-                                            <span class="px-3 py-1 text-sm font-semibold text-yellow-700 bg-yellow-200 rounded-full">Suspendu</span>
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                <i class="fas fa-circle text-xs mr-1 my-auto"></i> Suspended
+                                            </span>
                                         {% else %}
-                                            <span class="px-3 py-1 text-sm font-semibold text-red-700 bg-red-200 rounded-full">Inactif</span>
+                                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                <i class="fas fa-circle text-xs mr-1 my-auto"></i> Inactive
+                                            </span>
                                         {% endif %}
                                     </td>
-                                    <td class="px-6 py-4 space-y-2">
-                                        {% if result.status == "Activation" %}
-                                            <form action="/updateStatus" method="post">
-                                                <input type="hidden" name="id" value="{{ result.id }}">
-                                                <button type="submit" name="status" value="suspension" class="px-4 py-2 text-sm font-semibold text-white bg-yellow-500 rounded-lg hover:bg-yellow-600">Suspendre</button>
-                                            </form>
-                                            <form action="/updateStatus" method="post">
-                                                <input type="hidden" name="id" value="{{ result.id }}">
-                                                <button type="submit" name="status" value="Not Active" class="px-4 py-2 text-sm font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600">Désactiver</button>
-                                            </form>
-                                        {% elseif result.status == "suspension" %}
-                                            <form action="/updateStatus" method="post">
-                                                <input type="hidden" name="id" value="{{ result.id }}">
-                                                <button type="submit" name="status" value="Activation" class="px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">Activer</button>
-                                            </form>
-                                        {% else %}
-                                            <form action="/updateStatus" method="post">
-                                                <input type="hidden" name="id" value="{{ result.id }}">
-                                                <button type="submit" name="status" value="Activation" class="px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600">Activer</button>
-                                            </form>
-                                        {% endif %}
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex space-x-2">
+                                            {% if result.status == "Activation" %}
+                                                <form action="/updateStatus" method="post">
+                                                    <input type="hidden" name="id" value="{{ result.id }}">
+                                                    <button type="submit" name="status" value="suspension" 
+                                                        class="action-button px-3 py-1.5 text-xs font-medium text-yellow-700 bg-yellow-100 rounded-lg hover:bg-yellow-200">
+                                                        <i class="fas fa-user-clock mr-1"></i> Suspend
+                                                    </button>
+                                                </form>
+                                                <form action="/updateStatus" method="post">
+                                                    <input type="hidden" name="id" value="{{ result.id }}">
+                                                    <button type="submit" name="status" value="Not Active" 
+                                                        class="action-button px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-lg hover:bg-red-200">
+                                                        <i class="fas fa-user-slash mr-1"></i> Deactivate
+                                                    </button>
+                                                </form>
+                                            {% elseif result.status == "suspension" %}
+                                                <form action="/updateStatus" method="post">
+                                                    <input type="hidden" name="id" value="{{ result.id }}">
+                                                    <button type="submit" name="status" value="Activation" 
+                                                        class="action-button px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200">
+                                                        <i class="fas fa-user-check mr-1"></i> Activate
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <form action="/updateStatus" method="post">
+                                                    <input type="hidden" name="id" value="{{ result.id }}">
+                                                    <button type="submit" name="status" value="Activation" 
+                                                        class="action-button px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-lg hover:bg-green-200">
+                                                        <i class="fas fa-user-check mr-1"></i> Activate
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+                
+                <!-- Pagination -->
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">1,258</span> users
+                        </div>
+                        <div>
+                            <nav class="flex items-center space-x-2">
+                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">
+                                    <i class="fas fa-chevron-left text-xs"></i>
+                                </a>
+                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-purple-600 bg-purple-600 text-white">1</a>
+                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">2</a>
+                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">3</a>
+                                <span class="w-8 h-8 flex items-center justify-center text-gray-600">...</span>
+                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">126</a>
+                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">
+                                    <i class="fas fa-chevron-right text-xs"></i>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 </body>
-
 </html>

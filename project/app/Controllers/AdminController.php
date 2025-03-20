@@ -33,7 +33,11 @@ class AdminController extends BaseController {
         $id = $_POST['id'];
         $newStatus = $_POST['status'];
         $UpdateStatus = $this->usersServices->Status($id , $newStatus);
-        $status = $this->Users();
+        if ($UpdateStatus){
+            header("location: /users");
+        } else {
+            echo "Failde To Update Status";
+        }
     }
     public function addGenre(){
         $name = $_POST["name"];
