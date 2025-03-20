@@ -25,9 +25,10 @@ class dashboardRepository {
     }
 
     public function getAllGame(){
-        $query = "SELECT jeux.id,jeux.nom_de_jeu,jeux.description,jeux.plateforme,jeux.date_de_sortie,jeux.developpeur,jeux.image,jeux.prix,jeux.status , genre.name as genre FROM jeux 
+        $query = "SELECT jeux.id,jeux.nom_de_jeu,jeux.description,jeux.plateforme,jeux.date_de_sortie,jeux.developpeur,jeux.image,jeux.prix,jeux.status , GROUP_CONCAT(genre.name) as genre FROM jeux 
         INNER JOIN genre_jeux ON genre_jeux.jeux_id = jeux.id
-        INNER JOIN genre ON genre.id = genre_jeux.genre_id";
+        INNER JOIN genre ON genre.id = genre_jeux.genre_id
+        GROUP BY jeux.id";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -165,31 +166,33 @@ class dashboardRepository {
     
     private function UpdateGameToGenre($gameId, $genre_id) {
         try {
-            if (!is_array($genre_id) || empty($genre_id)) {
-                throw new Exception("Genre ID must be a non-empty array.");
+            if ($genre_id === null || !is_array($genre_id)) {
+                return true;
             }
-            $existingGenres = [];
-            $stmt = $this->conn->prepare("SELECT genre_id FROM genre_jeux WHERE jeux_id = :gameId");
-            $stmt->bindParam(":gameId", $gameId);
+    
+            $stmt = $this->conn->prepare("DELETE FROM genre_jeux WHERE jeux_id = :gameId");
+            $stmt->bindParam(":gameId", $gameId, PDO::PARAM_INT);
             $stmt->execute();
-            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                $existingGenres[] = $row['genre_id'];
-            }
-            $sqlInsert = "INSERT INTO genre_jeux (jeux_id, genre_id) VALUES (:gameId, :genreId)";
-            $stmtInsert = $this->conn->prepare($sqlInsert);
-            foreach ($genre_id as $genre) {
-                if (!in_array($genre, $existingGenres)) { 
+    
+            if (!empty($genre_id)) {
+                $sqlInsert = "INSERT INTO genre_jeux (jeux_id, genre_id) VALUES (:gameId, :genreId)";
+                $stmtInsert = $this->conn->prepare($sqlInsert);
+    
+                foreach ($genre_id as $genre) {
                     $stmtInsert->bindParam(":gameId", $gameId, PDO::PARAM_INT);
                     $stmtInsert->bindParam(":genreId", $genre, PDO::PARAM_INT);
                     $stmtInsert->execute();
                 }
             }
+    
             return true;
         } catch (PDOException $e) {
-            echo "Error attaching genre to game: " . $e->getMessage();
+            echo "Error updating game genres: " . $e->getMessage();
             return false;
         }
     }
+    
+    
     public function deleteGame($gameId){
         try {
             $this->conn->beginTransaction();
