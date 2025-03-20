@@ -81,10 +81,10 @@ class dashboardRepository {
             return new Genre($newGenre["id"] , $newGenre["name"],$newGenre["description"],$newGenre["status"]);
         }
     }
-    public function addGame($title, $plateform, $genre_id, $developer, $date_de_sortie, $description, $prix, $status, $image) {
+    public function addGame($title, $plateform, $genre_id, $developer, $date_de_sortie, $description, $prix, $status, $image,$stock) {
         try {
             $this->conn->beginTransaction();
-                $sql = "INSERT INTO jeux (nom_de_jeu, description, plateforme, date_de_sortie, developpeur, image, prix, status) VALUES (:title, :description, :plateforme, :date_de_sortie, :developpeur, :image, :prix, :status)";
+                $sql = "INSERT INTO jeux (nom_de_jeu, description, plateforme, date_de_sortie, developpeur, image, prix, status,stock) VALUES (:title, :description, :plateforme, :date_de_sortie, :developpeur, :image, :prix, :status,:stock)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":title", $title);
             $stmt->bindParam(":description", $description);
@@ -94,6 +94,7 @@ class dashboardRepository {
             $stmt->bindParam(":image", $image);
             $stmt->bindParam(":prix", $prix);
             $stmt->bindParam(":status", $status);
+            $stmt->bindParam(":stock",$stock);
             $isGameInserted = $stmt->execute();
             $gameId = $this->conn->lastInsertId();
             if (!$isGameInserted || !$gameId) {
@@ -128,10 +129,10 @@ class dashboardRepository {
         }
     }
     
-    public function updateGame($gameId, $title, $genre_id, $plateform, $developer, $date_de_sortie, $description, $image, $prix, $status) {
+    public function updateGame($gameId, $title, $genre_id, $plateform, $developer, $date_de_sortie, $description, $image, $prix, $status,$stock) {
         try {
             $this->conn->beginTransaction();
-            $sql = "UPDATE jeux SET nom_de_jeu = :title, description = :description, plateforme = :plateform, date_de_sortie = :date_de_sortie, developpeur = :developer, image = :image, prix = :prix, status = :status WHERE id = :gameId";
+            $sql = "UPDATE jeux SET nom_de_jeu = :title, description = :description, plateforme = :plateform, date_de_sortie = :date_de_sortie, developpeur = :developer, image = :image, prix = :prix, status = :status ,stock = :stock WHERE id = :gameId";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":title", $title);
             $stmt->bindParam(":description", $description);
@@ -142,6 +143,7 @@ class dashboardRepository {
             $stmt->bindParam(":prix", $prix);
             $stmt->bindParam(":status", $status);
             $stmt->bindParam(":gameId", $gameId);
+            $stmt->bindParam(":stock",$stock);
             $isGameUpdated = $stmt->execute();
             if (!$isGameUpdated) {
                 $this->conn->rollBack();

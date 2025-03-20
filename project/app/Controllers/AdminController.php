@@ -76,6 +76,7 @@ class AdminController extends BaseController {
         $description = $_POST["description"];
         $prix = $_POST["prix"];
         $status = $_POST["status"];
+        $stock = $_POST["stock"];
         $image = "default.jpg";
 
         if (isset($_FILES['coverImage']) && $_FILES['coverImage']['error'] == 0) {
@@ -97,7 +98,7 @@ class AdminController extends BaseController {
             }
         }
         
-        $saveGame = $this->adminServices->saveGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image);
+        $saveGame = $this->adminServices->saveGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image,$stock);
         if ($saveGame) {
             header("Location: /Game?game_Inserted_successfully=1");
             exit();
@@ -115,6 +116,7 @@ class AdminController extends BaseController {
         $description = $_POST["description"];
         $prix = $_POST["prix"];
         $status = $_POST["status"];
+        $stock = $_POST["stock"];
         $currentImage = $this->adminServices->getImage($gameId);
 
         $image = ($currentImage && isset($currentImage['image'])) ? $currentImage['image'] : 'default.jpg';
@@ -139,7 +141,7 @@ class AdminController extends BaseController {
         }
 
 
-        $updateGame = $this->adminServices->setGame($gameId,$title,$genre_id,$plateform,$developer,$date_de_sortie,$description,$image,$prix,$status);
+        $updateGame = $this->adminServices->setGame($gameId,$title,$genre_id,$plateform,$developer,$date_de_sortie,$description,$image,$prix,$status,$stock);
         if ($updateGame) {
             header("Location: /Game?game_Updated_successfully=1");
             exit();
