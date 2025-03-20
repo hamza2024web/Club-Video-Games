@@ -6,7 +6,7 @@ use App\Controllers\IProfile;
 
 session_start();
 
-class ProfileController extends BaseController implements IProfile {
+class ProfileMembre extends BaseController implements IProfile {
 
     protected $ProfileServices;
     public function __construct()
@@ -16,9 +16,9 @@ class ProfileController extends BaseController implements IProfile {
 
     }
     public function profile (){
-        $user_id = $_SESSION["user_id"];
-        $profile = $this->ProfileServices->getProfileMembre($user_id);
-        return $this->renderOrg('profile',compact('profile'));
+        // $user_id = $_SESSION["user_id"];
+        // $profile = $this->ProfileServices->getProfileMembre($user_id);
+        return $this->renderMem('profile');
     }
     public function updateProfile() {
         $user_id = $_SESSION["user_id"];
