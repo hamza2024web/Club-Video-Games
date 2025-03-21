@@ -1,17 +1,20 @@
 <?php
 namespace App\Controllers;
 use App\Controllers\BaseController;
-use App\Services\ProfileServices;
+use App\Services\MembreServices;
 use App\Controllers\IProfile;
+use App\Services\ProfileServices;
 
 session_start();
 
 class ProfileMembre extends BaseController implements IProfile {
 
+    protected $MembreServices;
     protected $ProfileServices;
     public function __construct()
     {
         parent::__construct();
+        $this->MembreServices = new MembreServices();
         $this->ProfileServices = new ProfileServices();
 
     }
@@ -23,18 +26,22 @@ class ProfileMembre extends BaseController implements IProfile {
     public function updateProfile() {
         $user_id = $_SESSION["user_id"];
 
-        $currentProfile = $this->ProfileServices->getProfileUSer($user_id);
-
-        $name = $_POST["full_name"] ?? $currentProfile["name"];
+        $currentProfile = $this->MembreServices->getProfileMembre($user_id);
+        $username = $_POST["username"] ?? $currentProfile["name"];
         $email = $_POST["email"] ?? $currentProfile["email"];
-        $phone = $_POST["phone"] ?? $currentProfile["phone_number"];
-        $gamer_tag = $_POST["gamer_tag"] ?? $currentProfile["gamer_tag"];
-        $bio = $_POST["bio"] ?? $currentProfile["bio"];
-        $currentImage = $currentProfile["profile_image"] ?? 'default.jpg';
-        $image = $_FILES['profile_image'];
-        $profile_image = $this->generateImage($image,$currentImage);
-
-        $profile = $this->ProfileServices->saveProfile($user_id, $name, $email, $phone, $gamer_tag, $profile_image, $bio);
+        $tag_name = $_POST["displayName"] ?? $currentProfile["tag_name"];
+        $location = $_POST["location"] ?? $currentProfile["location"];
+        $about = $_POST["about"] ?? $currentProfile["about_me"];
+        $discord = $_POST["discord"] ?? $currentProfile["discord"];
+        $instagram = $_POST["instagram"] ?? $currentProfile["instagram"];
+        $youtube = $_POST["youtube"] ?? $currentProfile["youtube"];
+        $twitch = $_POST["twitch"] ?? $currentProfile["twitch"];
+        $coverPhoto = $_POST["coverPhoto"] ?? $currentProfile["cover_photo"];
+        $covre_photo = $this->generateImage($coverPhoto,$currentProfile["cover_photo"]);
+        $profilePhoto = $_POST["profilePhoto"] ?? $currentProfile["profile_photo"];
+        $profile_photo = $this->generateImage($profilePhoto,$currentProfile["profile_photo"]);
+        
+        $profile = $this->MembreServices->saveProfileMembre($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$covre_photo,$profile_photo);
     
         if ($profile) {
             header("location: /profile?profile_updated_successffly=1");

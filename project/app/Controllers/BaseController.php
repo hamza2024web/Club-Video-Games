@@ -63,11 +63,11 @@ class BaseController
 
     public function generateImage($image, $currentImage) {
         if (!isset($image) || !is_array($image) || !isset($image['error'])) {
-            return $currentImage; // Keep old image if no new one is uploaded
+            return $currentImage; 
         }
     
         if ($image['error'] !== 0) {
-            return $currentImage; // Keep old image if there's an upload error
+            return $currentImage; 
         }
     
         $upload_dir = __DIR__ . '/../../public/uploads/';
@@ -76,14 +76,14 @@ class BaseController
     
         $file_type = mime_content_type($image['tmp_name']);
         if (strpos($file_type, 'image') === false) {
-            return $currentImage; // Keep old image if it's not a valid image
+            return $currentImage; 
         }
     
         if (move_uploaded_file($image['tmp_name'], $target_path)) {
             return 'public/uploads/' . $file_name;
         }
     
-        return $currentImage; // Keep old image if upload fails
+        return $currentImage; 
     }
     
     

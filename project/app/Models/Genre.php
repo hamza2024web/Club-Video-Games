@@ -13,5 +13,17 @@ class Genre {
         $this->description = $description;
         $this->status = $status;
     }
+    public function getId(){
+        return $this->id;
+    }
+    public function getName(){
+        return $this->name;
+    }
+    public function getDescription(){
+        return $this->description;
+    }
+    public function getStatus(){
+        return $this->status;
+    }
 }
 ?>
