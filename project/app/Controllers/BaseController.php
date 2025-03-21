@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Exception;
 
 class BaseController
 {
@@ -59,4 +60,31 @@ class BaseController
     protected function renderMem($template ,$data = []){
         echo $this->twigMem->render($template . '.twig', $data);
     }
+
+    public function generateImage($image, $currentImage) {
+        if (!isset($image) || !is_array($image) || !isset($image['error'])) {
+            return $currentImage; // Keep old image if no new one is uploaded
+        }
+    
+        if ($image['error'] !== 0) {
+            return $currentImage; // Keep old image if there's an upload error
+        }
+    
+        $upload_dir = __DIR__ . '/../../public/uploads/';
+        $file_name = time() . '_' . basename($image['name']);
+        $target_path = $upload_dir . $file_name;
+    
+        $file_type = mime_content_type($image['tmp_name']);
+        if (strpos($file_type, 'image') === false) {
+            return $currentImage; // Keep old image if it's not a valid image
+        }
+    
+        if (move_uploaded_file($image['tmp_name'], $target_path)) {
+            return 'public/uploads/' . $file_name;
+        }
+    
+        return $currentImage; // Keep old image if upload fails
+    }
+    
+    
 }
