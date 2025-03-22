@@ -10,12 +10,13 @@ class MembreServices {
         $this->Membrerepository = new MembreRepository();
     }
     public function getProfileMembre($user_id){
-        $profile = $this->Membrerepository->getProifle($user_id);
+        $profile = $this->Membrerepository->getProfile($user_id);
         return $profile;
     }
 
-    public function saveProfileMembre($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$covre_photo,$profile_photo){
-        $newProfile = $this->Membrerepository->updateProfile($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$covre_photo,$profile_photo);
+    public function saveProfileMembre($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$cover_photo,$profile_photo){
+        $newProfile = $this->Membrerepository->updateProfile($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$cover_photo,$profile_photo);
+        return $newProfile;
     }
 }
 

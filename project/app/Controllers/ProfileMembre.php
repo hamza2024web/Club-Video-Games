@@ -19,9 +19,9 @@ class ProfileMembre extends BaseController implements IProfile {
 
     }
     public function profile (){
-        // $user_id = $_SESSION["user_id"];
-        // $profile = $this->ProfileServices->getProfileMembre($user_id);
-        return $this->renderMem('profile');
+        $user_id = $_SESSION["user_id"];
+        $profile = $this->MembreServices->getProfileMembre($user_id);
+        return $this->renderMem('profile',compact('profile'));
     }
     public function updateProfile() {
         $user_id = $_SESSION["user_id"];
@@ -36,15 +36,15 @@ class ProfileMembre extends BaseController implements IProfile {
         $instagram = $_POST["instagram"] ?? $currentProfile["instagram"];
         $youtube = $_POST["youtube"] ?? $currentProfile["youtube"];
         $twitch = $_POST["twitch"] ?? $currentProfile["twitch"];
-        $coverPhoto = $_POST["coverPhoto"] ?? $currentProfile["cover_photo"];
-        $covre_photo = $this->generateImage($coverPhoto,$currentProfile["cover_photo"]);
-        $profilePhoto = $_POST["profilePhoto"] ?? $currentProfile["profile_photo"];
+        $coverPhoto = $_FILES["coverPhoto"] ?? $currentProfile["cover_photo"];
+        $cover_photo = $this->generateImage($coverPhoto,$currentProfile["cover_photo"]);
+        $profilePhoto = $_FILES["profilePhoto"] ?? $currentProfile["profile_photo"];
         $profile_photo = $this->generateImage($profilePhoto,$currentProfile["profile_photo"]);
         
-        $profile = $this->MembreServices->saveProfileMembre($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$covre_photo,$profile_photo);
+        $profile = $this->MembreServices->saveProfileMembre($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$cover_photo,$profile_photo);
     
         if ($profile) {
-            header("location: /profile?profile_updated_successffly=1");
+            header("location: /member/profile?profile_updated_successffly=1");
         } else {
             echo "Failed to update profile.";
         }

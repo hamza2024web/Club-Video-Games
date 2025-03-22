@@ -28,5 +28,6 @@ Route::post('addGame','AdminController@addGame');
 Route::post('clubForm','ClubController@updateClub');
 Route::post('updateGame','AdminController@EditGame');
 Route::post('/deleteGame','AdminController@deleteGame');
-Route::get('/ProfileMembre','ProfileMembre@profile');
+Route::get('/member/profile','ProfileMembre@profile');
+Route::post('/member/profile/edit','ProfileMembre@updateProfile');
 ?>
