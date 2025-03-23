@@ -42,7 +42,6 @@ class ProfileMembre extends BaseController implements IProfile {
         $profile_photo = $this->generateImage($profilePhoto,$currentProfile["profile_photo"]);
         
         $profile = $this->MembreServices->saveProfileMembre($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$cover_photo,$profile_photo);
-    
         if ($profile) {
             header("location: /member/profile?profile_updated_successffly=1");
         } else {
