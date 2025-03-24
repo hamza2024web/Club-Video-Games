@@ -79,25 +79,9 @@ class AdminController extends BaseController {
         $stock = $_POST["stock"];
         $image = "default.jpg";
 
-        if (isset($_FILES['coverImage']) && $_FILES['coverImage']['error'] == 0) {
-            $upload_dir = __DIR__ . '/../../public/uploads/';
-            $file_name = time() . '_' . basename($_FILES['coverImage']['name']);
-            $target_path = $upload_dir . $file_name;
-    
-            // Validate file type
-            $file_type = mime_content_type($_FILES['coverImage']['tmp_name']);
-            if (strpos($file_type, 'image') === false) {
-                die("Invalid file type. Please upload an image.");
-            }
-    
-            // Move file and update the logo variable
-            if (move_uploaded_file($_FILES['coverImage']['tmp_name'], $target_path)) {
-                $image = 'public/uploads/' . $file_name; // Save only the file path
-            } else {
-                die("Failed to upload image.");
-            }
+        if (isset($_FILES['coverImage'])) {
+            $image = $this->generateImage($_FILES['coverImage'], $image);
         }
-        
         $saveGame = $this->adminServices->saveGame($title,$plateform,$genre_id,$developer,$date_de_sortie,$description,$prix,$status,$image,$stock);
         if ($saveGame) {
             header("Location: /Game?game_Inserted_successfully=1");
@@ -121,26 +105,10 @@ class AdminController extends BaseController {
 
         $image = ($currentImage && isset($currentImage['image'])) ? $currentImage['image'] : 'default.jpg';
         
-        if (isset($_FILES['coverImage']) && $_FILES['coverImage']['error'] == 0) {
-            $upload_dir = __DIR__ . '/../../public/uploads/';
-            $file_name = time() . '_' . basename($_FILES['coverImage']['name']);
-            $target_path = $upload_dir . $file_name;
-    
-            // Validate file type
-            $file_type = mime_content_type($_FILES['coverImage']['tmp_name']);
-            if (strpos($file_type, 'image') === false) {
-                die("Invalid file type. Please upload an image.");
-            }
-    
-            // Move file and update the logo variable
-            if (move_uploaded_file($_FILES['coverImage']['tmp_name'], $target_path)) {
-                $image = 'public/uploads/' . $file_name; // Save only the file path
-            } else {
-                die("Failed to upload image.");
-            }
+        if (isset($_FILES["coverImage"]) && $_FILES["coverImage"]["error"] == 0) {
+            $image = $this->generateImage($_FILES["coverImage"], $image);
         }
-
-
+    
         $updateGame = $this->adminServices->setGame($gameId,$title,$genre_id,$plateform,$developer,$date_de_sortie,$description,$image,$prix,$status,$stock);
         if ($updateGame) {
             header("Location: /Game?game_Updated_successfully=1");
