@@ -4,86 +4,114 @@ namespace Src\Http;
 
 class Route 
 {
-    public Request $request ;
+    public Request $request;
     public static array $routes = [];
+    public static array $middlewares = [];
+
     public function __construct($request)
     {
         $this->request = $request;
     }
 
-
-    public static function get($route , $action){
-        self::$routes['get'][$route] = $action;
+    /**
+     * Register a GET route
+     */
+    public static function get($route, $action, $middlewares = [])
+    {
+        self::$routes['get'][self::normalize($route)] = [
+            'action' => $action,
+            'middlewares' => $middlewares
+        ];
     }
 
-    public static function post($route , $action){
-        self::$routes['post'][$route] = $action;
+    /**
+     * Register a POST route
+     */
+    public static function post($route, $action, $middlewares = [])
+    {
+        self::$routes['post'][self::normalize($route)] = [
+            'action' => $action,
+            'middlewares' => $middlewares
+        ];
     }
-   
-   
 
-    public function resolve(){
-        $path = $this->request->path(); 
-        $method = $this->request->Methode();
-        
+    /**
+     * Normalize route path (remove multiple slashes)
+     */
+    private static function normalize($route)
+    {
+        return '/' . trim($route, '/');
+    }
 
+    /**
+     * Resolve the requested route
+     */
+    public function resolve()
+    {
+        $path = self::normalize($this->request->path());
+        $method = strtolower($this->request->Methode());
 
-        if(isset(self::$routes[$method][$path])){
+        $action = null;
+        $params = [];
 
-        $action = self::$routes[$method][$path];
-    } else {
-        // Vérifie si une route dynamique correspond
-        foreach (self::$routes[$method] as $route => $action) {
-            $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '([a-zA-Z0-9_-]+)', $route);
-            
-            if (preg_match("#^$pattern$#", $path, $matches)) {
-                array_shift($matches); 
-                $params = $matches;  
-                break;              
+        // Exact route match
+        if (isset(self::$routes[$method][$path])) {
+            $routeInfo = self::$routes[$method][$path];
+            $action = $routeInfo['action'];
+            $middlewares = $routeInfo['middlewares'];
+        } else {
+            // Check for dynamic route matching
+            foreach (self::$routes[$method] as $route => $routeInfo) {
+                $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '([a-zA-Z0-9_-]+)', $route);
+                
+                if (preg_match("#^$pattern$#", $path, $matches)) {
+                    array_shift($matches); // Remove full match
+                    $action = $routeInfo['action'];
+                    $middlewares = $routeInfo['middlewares'];
+                    $params = $matches;
+                    break;
+                }
             }
         }
-        
-    }
 
-        if (is_string($action)){
+        // If no route matches, return 404
+        if (!$action) {
+            http_response_code(404);
+            echo "Error 404: Route not found";
+            exit;
+        }
 
-            [$controllerAction , $methodeAction] = explode('@',$action);
+        // Apply middlewares before calling controller
+        foreach ($middlewares ?? [] as $middleware) {
+            $middlewareClass = "App\\Middlewares\\$middleware";
+            if (class_exists($middlewareClass)) {
+                (new $middlewareClass())->handle();
+            }
+        }
 
-            $controllerAction = "App\\Controllers\\$controllerAction";
-          
-            if(!class_exists($controllerAction)){
-                echo "class not exist";
+        // Execute the route action
+        if (is_callable($action)) {
+            return call_user_func_array($action, $params);
+        }
+
+        if (is_string($action)) {
+            [$controller, $method] = explode('@', $action);
+            $controller = "App\\Controllers\\$controller";
+
+            if (!class_exists($controller)) {
+                echo "Error: Controller $controller not found";
                 exit;
             }
 
-    if (is_callable($action)) {
-        call_user_func_array($action, $params ?? []);
-        return;
-    }
+            $object = new $controller();
+            if (!method_exists($object, $method)) {
+                echo "Error: Method $method not found in $controller";
+                exit;
+            }
 
-    if (is_string($action)) {
-        [$controller, $method] = explode('@', $action);
-        $controller = "App\\Controllers\\$controller";
-
-        if (!class_exists($controller)) {
-            echo "Class $controller does not exist";
-            exit;
+            return call_user_func_array([$object, $method], $params);
         }
 
-        $object = new $controller();
-        if (!method_exists($object, $method)) {
-            echo "Method $method does not exist in $controller";
-            exit;
-        }
-        
-        return call_user_func_array([$object, $method], $params ?? []);
-    }else{
-        echo'error 404';
-        
-    }
-
-}
+        echo "Error 500: Invalid route definition";
     }
 }
-
-
