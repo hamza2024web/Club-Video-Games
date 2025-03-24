@@ -155,9 +155,11 @@
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <button onclick="showClub('{{ club.name }}', '{{ club.email }}', '{{ club.description }}', '{{ club.phone_club }}','{{ club.logo }}')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm">
+                            <button onclick="showClub(`{{ club.name }}`, `{{ club.email }}`, `{{ club.description }}`, `{{ club.phone_club }}`, `{{ club.logo }}`)"
+                                class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg flex items-center shadow-sm">
                                 <i class="fas fa-edit mr-2"></i> Modifier le club
                             </button>
+
                             <button class="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-4 py-2 rounded-lg flex items-center shadow-sm">
                                 <i class="fas fa-cog mr-2"></i> Paramètres
                             </button>
