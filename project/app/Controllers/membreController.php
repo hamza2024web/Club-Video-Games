@@ -9,8 +9,8 @@ class membreController extends BaseController{
         parent::__construct();
     }
 
-    public function clubs (){
-        $this->renderMem('clubs');
+    public function dashboard (){
+        $this->renderMem('dashboard');
     }
 
     
