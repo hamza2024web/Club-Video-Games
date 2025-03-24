@@ -31,4 +31,5 @@ Route::get('member/dashboard','membreController@dashboard');
 Route::get('member/profile','ProfileMembre@profile');
 Route::post('member/profile/edit','ProfileMembre@updateProfile');
 Route::post('member/password/change','ProfileMembre@UpdatePassword');
+
 ?>
