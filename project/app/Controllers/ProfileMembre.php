@@ -21,6 +21,7 @@ class ProfileMembre extends BaseController implements IProfile {
     public function profile (){
         $user_id = $_SESSION["user_id"];
         $profile = $this->MembreServices->getProfileMembre($user_id);
+
         return $this->renderMem('profile',compact('profile'));
     }
     public function updateProfile() {
