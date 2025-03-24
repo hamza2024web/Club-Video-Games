@@ -44,27 +44,27 @@ class ProfileMembre extends BaseController implements IProfile {
         
         $profile = $this->MembreServices->saveProfileMembre($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$cover_photo,$profile_photo);
         if ($profile) {
-            header("location: /member/profile?profile_updated_successffly=1");
+            header("location: /member/profile?profile_updated_successfully=1");
         } else {
             echo "Failed to update profile.";
         }
     }
-    public function updatePassword(){
+    public function UpdatePassword(){
         $user_id = $_SESSION["user_id"];
-        $current_password = $_POST["current_password"];
-        $new_password = $_POST["new_password"];
+        $current_password = $_POST["currentPassword"];
+        $new_password = $_POST["newPassword"];
 
         $isPasswordCorrect = $this->ProfileServices->verifyPassword($current_password, $user_id);
 
         if (!$isPasswordCorrect) {
-            header("location: /profile?current_password_incorrect=1");
+            header("location: /member/profile?current_password_incorrect=1");
             exit();
         }
         
         $updatePassword = $this->ProfileServices->updatePassword($user_id, $new_password);
         
         if ($updatePassword) {
-            header("location: /profile?password_updated=1");
+            header("location: /member/profile?password_updated=1");
             exit();
         } else {
             echo "Failed to update password!";

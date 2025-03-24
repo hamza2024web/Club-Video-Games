@@ -46,7 +46,7 @@ class ProfileController extends BaseController implements IProfile {
         }
     }
     
-    public function updatePassword(){
+    public function UpdatePassword(){
         $user_id = $_SESSION["user_id"];
         $current_password = $_POST["current_password"];
         $new_password = $_POST["new_password"];

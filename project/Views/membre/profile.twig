@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GamersHub - Member Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -764,9 +765,7 @@
             </div>
         </main>
             <!-- Edit Profile Modal -->
-        <div id="editProfileModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-                <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity modal-backdrop" id="modalBackdrop"></div>
-                
+            <div id="editProfileModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
                 <div class="flex items-center justify-center min-h-screen p-4">
                     <div class="relative bg-white rounded-xl shadow-xl max-w-2xl w-full mx-auto modal-content transform transition-all">
                         <!-- Modal Header -->
@@ -891,8 +890,29 @@
                                     </button>
                                 </div>
                             </form>
+                            
+                            <!-- Separate Password Change Form -->
+                            <div class="mt-8 pt-6 border-t border-gray-200">
+                                <form id="changePasswordForm" class="space-y-6" action="/member/password/change" method="POST">
+                                    <h4 class="text-md font-semibold text-gray-900 mb-3">Change Password</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                                            <input type="password" name="currentPassword" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter current password">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                                            <input type="password" name="newPassword" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter new password">
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition" id="changePassword">
+                                            Update Password
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    
                     </div>
                 </div>
             </div>
@@ -981,6 +1001,50 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('password_updated')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Password updated successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/member/profile";
+                });
+
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('current_password_incorrect')){
+                Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "The Current Password Is Incorrect",
+                confirmButtonText: "OK",
+                timer: 3000 
+                }).then(() => {
+                    window.location.href = "/member/profile";
+                });
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('profile_updated_successfully')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Profile updated successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/member/profile";
+                });
+
+            }
+        });
     </script>
     
     <style>
