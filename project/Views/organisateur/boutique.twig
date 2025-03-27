@@ -517,7 +517,7 @@
                             
                             <!-- Carousel item 2 -->
                             <div class="carousel-item relative">
-                                <img src="https://cdn.akamai.steamstatic.com/steam/apps/2394790/header.jpg" alt="Game Promotion" class="w-full h-80 object-cover">
+                                <img src="https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70070000023212/a0009b79158fb57944bccf96b3fed690790cbb0de4e660128d39b28dd4311f92" alt="Game Promotion" class="w-full h-80 object-cover">
                                 <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
                                     <div class="p-10 max-w-xl">
                                         <div class="text-white">
@@ -539,7 +539,7 @@
                             
                             <!-- Carousel item 3 -->
                             <div class="carousel-item relative">
-                                <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/990080/header.jpg" alt="Game Promotion" class="w-full h-80 object-cover">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShtZ4-blVSiLEDsFzDeKNFrJUl_XDygpIMqA&s" alt="Game Promotion" class="w-full h-80 object-cover">
                                 <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
                                     <div class="p-10 max-w-xl">
                                         <div class="text-white">
@@ -717,6 +717,65 @@
                 showConfirmButton: false
             });
         }
+
+        let currentSlide = 0;
+        const totalSlides = document.querySelectorAll('.carousel-item').length;
+
+        // Function to handle arrow navigation
+        function moveCarousel(direction) {
+            // Calculate the new slide index
+            currentSlide = (currentSlide + direction) % totalSlides;
+            
+            // Handle negative index (when going left from the first slide)
+            if (currentSlide < 0) {
+                currentSlide = totalSlides - 1;
+            }
+            
+            // Update carousel position
+            updateCarouselPosition();
+        }
+
+        // Function to directly set the slide
+        function setCarouselSlide(slideIndex) {
+            if (slideIndex >= 0 && slideIndex < totalSlides) {
+                currentSlide = slideIndex;
+                updateCarouselPosition();
+            }
+        }
+
+        // Function to update the carousel's position
+        function updateCarouselPosition() {
+            // Get all carousel items and dots
+            const slides = document.querySelectorAll('.carousel-item');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            // Hide all slides first
+            slides.forEach(slide => {
+                slide.style.display = 'none';
+            });
+            
+            // Remove active class from all dots
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            
+            // Show the current slide
+            slides[currentSlide].style.display = 'block';
+            
+            // Add active class to current dot
+            dots[currentSlide].classList.add('active');
+        }
+
+        // Initialize the carousel on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show the first slide and hide the rest
+            updateCarouselPosition();
+            
+            // Optional: Set up auto-rotation
+            setInterval(() => {
+                moveCarousel(1);
+            }, 5000); // Change slides every 5 seconds
+        });
         
         function removeFromCart(id) {
             const index = cart.findIndex(item => item.id === id);
