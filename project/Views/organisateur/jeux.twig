@@ -380,10 +380,10 @@
             
             <div class="p-4 border-b border-indigo-800">
                 <div class="flex items-center space-x-3">
-                    <img src="https://i.pravatar.cc/40?img=68" alt="Avatar" class="w-10 h-10 rounded-full bg-gray-500 border-2 border-purple-300">
+                    <img src="/{{profile.profile_image}}" alt="Avatar" class="w-10 h-10 rounded-full bg-gray-500 border-2 border-purple-300">
                     <div>
-                        <p class="font-semibold">Arthur Durand</p>
-                        <p class="text-sm text-purple-200">Gamer Tag : ProGamer42</p>
+                        <p class="font-semibold">{{profile.name}}</p>
+                        <p class="text-sm text-purple-200">Gamer Tag : {{profile.gamer_tag}}</p>
                     </div>
                 </div>
             </div>
@@ -633,378 +633,52 @@
                 <!-- Games Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <!-- Game Card 1: Valorant -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="fps" data-price="0" data-rating="4.7" data-release="2023">
-                        <div class="relative">
-                            <img src="https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg" alt="Valorant" class="w-full h-48 object-cover">
-                            <div class="game-badge bg-purple-600">FPS</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'Valorant')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span>5v5 Tactique</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-desktop mr-2"></i>
-                                    <span>PC, Console</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Valorant</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.7</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Valorant est un jeu de tir tactique 5v5 avec des personnages uniques et leurs capacités.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-purple-600 font-bold">Gratuit</span>
-                                <button onclick="addToCart('Valorant', 0, 'https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
+                    {% for jeu in jeux %}
+                        <div class="game-card bg-white shadow-sm overflow-hidden" data-category="fps" data-price="0" data-rating="4.7" data-release="2023">
+                            <div class="relative">
+                                <img src="/{{jeu.image}}" alt="Valorant" class="w-full h-48 object-cover">
+                                <div class="game-badge bg-purple-600">{{jeu.genre}}</div>
+                                <button class="wish-btn" onclick="toggleWishlist(this, 'Valorant')">
+                                    <i class="far fa-heart"></i>
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Card 2: League of Legends -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="moba" data-price="0" data-rating="4.5" data-release="2022">
-                        <div class="relative">
-                            <img src="https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_LeagueofLegends_RiotGames_S1_2560x1440-ee500721c06da3ec1e5535a88588c77f" alt="League of Legends" class="w-full h-48 object-cover">
-                            <div class="game-badge bg-blue-600">MOBA</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'League of Legends')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span>5v5 Stratégie</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-desktop mr-2"></i>
-                                    <span>PC</span>
+                                <div class="overlay-info">
+                                    <div class="flex items-center mb-1">
+                                        <i class="fas fa-users mr-2"></i>
+                                        <span>5v5 Tactique</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-desktop mr-2"></i>
+                                        <span>{{jeu.plateforme}}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">League of Legends</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.5</span>
+                            <div class="p-4">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 class="text-lg font-bold text-gray-800">{{jeu.nom_de_jeu}}</h3>
+                                        <p class="text-xs text-gray-600">{{jeu.developpeur}}</p>
+                                        <p class="text-xs text-gray-600">Sorti le {{jeu.date_de_sortie}}</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <span class="ml-1 text-sm font-semibold">4.7</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Un jeu de stratégie en équipe où deux équipes de cinq champions s'affrontent pour détruire la base ennemie.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-purple-600 font-bold">Gratuit</span>
-                                <button onclick="addToCart('League of Legends', 0, 'https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_LeagueofLegends_RiotGames_S1_2560x1440-ee500721c06da3ec1e5535a88588c77f')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Card 3: FIFA 25 -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="sport" data-price="69.99" data-rating="4.2" data-release="2025">
-                        <div class="relative">
-                            <img src="https://image.api.playstation.com/vulcan/ap/rnd/202307/0710/60745447bd9a0e747f33371afec8fb0b34308a3a04f6055f.jpg" alt="FIFA 25" class="w-full h-48 object-cover">
-                            <div class="discount-badge">-15%</div>
-                            <div class="game-badge bg-green-600">Sport</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'EA Sports FC 25')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span>1-4 Joueurs</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-gamepad mr-2"></i>
-                                    <span>PC, PS5, Xbox</span>
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{jeu.description}}.</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-purple-600 font-bold">{{jeu.prix}} £</span>
+                                    <button onclick="addToCart('Valorant', 0, 'https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
+                                        <i class="fas fa-plus mr-1"></i> Ajouter
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">EA Sports FC 25</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.2</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Le jeu de football le plus populaire avec les licences officielles des clubs et joueurs du monde entier.</p>
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <span class="text-purple-600 font-bold">59,49 €</span>
-                                    <span class="price-old ml-1">69,99 €</span>
-                                </div>
-                                <button onclick="addToCart('EA Sports FC 25', 59.49, 'https://image.api.playstation.com/vulcan/ap/rnd/202307/0710/60745447bd9a0e747f33371afec8fb0b34308a3a04f6055f.jpg')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Card 4: Counter-Strike 2 -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="fps" data-price="14.99" data-rating="4.8" data-release="2023">
-                        <div class="relative">
-                            <img src="https://cdn.akamai.steamstatic.com/steam/apps/730/capsule_616x353.jpg" alt="Counter-Strike 2" class="w-full h-48 object-cover">
-                            <div class="game-badge bg-purple-600">FPS</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'Counter-Strike 2')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span>5v5 Compétitif</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-desktop mr-2"></i>
-                                    <span>PC, Mac</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Counter-Strike 2</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.8</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Le jeu de tir tactique à la première personne légendaire avec un gameplay compétitif de référence.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-purple-600 font-bold">14,99 €</span>
-                                <button onclick="addToCart('Counter-Strike 2', 14.99, 'https://cdn.akamai.steamstatic.com/steam/apps/730/capsule_616x353.jpg')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Card 5: Fortnite -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="battle-royale" data-price="0" data-rating="4.3" data-release="2024">
-                        <div class="relative">
-                            <img src="https://cdn2.unrealengine.com/fortnite-chapter-4-season-4-key-art-1920x1080-fe3a60d10a9f.jpg" alt="Fortnite" class="w-full h-48 object-cover">
-                            <div class="game-badge bg-amber-600">Battle Royale</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'Fortnite')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span>100 Joueurs</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-gamepad mr-2"></i>
-                                    <span>Toutes plateformes</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Fortnite</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.3</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Un jeu Battle Royale où 100 joueurs s'affrontent pour être le dernier survivant dans un monde qui évolue constamment.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-purple-600 font-bold">Gratuit</span>
-                                <button onclick="addToCart('Fortnite', 0, 'https://cdn2.unrealengine.com/fortnite-chapter-4-season-4-key-art-1920x1080-fe3a60d10a9f.jpg')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Card 6: Rocket League -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="sport" data-price="0" data-rating="4.6" data-release="2022">
-                        <div class="relative">
-                            <img src="https://cdn1.epicgames.com/offer/9773aa1aa54f4f7b80e44bef04986cea/EGS_RocketLeague_PsyonixLLC_S2_1200x1600-d441923f5b54b8377fedbb6ce1fb2150" alt="Rocket League" class="w-full h-48 object-cover">
-                            <div class="game-badge bg-green-600">Sport</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'Rocket League')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span>1-8 Joueurs</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-gamepad mr-2"></i>
-                                    <span>Toutes plateformes</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Rocket League</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.6</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Football avec des voitures propulsées par des fusées dans des arènes futuristes. Un mélange d'adresse et de stratégie.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-purple-600 font-bold">Gratuit</span>
-                                <button onclick="addToCart('Rocket League', 0, 'https://cdn1.epicgames.com/offer/9773aa1aa54f4f7b80e44bef04986cea/EGS_RocketLeague_PsyonixLLC_S2_1200x1600-d441923f5b54b8377fedbb6ce1fb2150')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Card 7: DOTA 2 -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="moba" data-price="0" data-rating="4.4" data-release="2021">
-                        <div class="relative">
-                            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/570/capsule_616x353.jpg?t=1699408933" alt="DOTA 2" class="w-full h-48 object-cover">
-                            <div class="game-badge bg-blue-600">MOBA</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'DOTA 2')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span>5v5 Stratégie</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-desktop mr-2"></i>
-                                    <span>PC</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">DOTA 2</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.4</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Un jeu de stratégie en temps réel avec des héros uniques et des compétitions mondiales aux prix astronomiques.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-purple-600 font-bold">Gratuit</span>
-                                <button onclick="addToCart('DOTA 2', 0, 'https://cdn.cloudflare.steamstatic.com/steam/apps/570/capsule_616x353.jpg?t=1699408933')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Card 8: Apex Legends -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="battle-royale" data-price="0" data-rating="4.3" data-release="2023">
-                        <div class="relative">
-                            <img src="https://media.contentapi.ea.com/content/dam/apex-legends/images/2019/01/apex-featured-image-16x9.jpg.adapt.crop16x9.1023w.jpg" alt="Apex Legends" class="w-full h-48 object-cover">
-                            <div class="game-badge bg-amber-600">Battle Royale</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'Apex Legends')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span>Équipes de 3</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-gamepad mr-2"></i>
-                                    <span>PC, PS5, Xbox</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Apex Legends</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.3</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Battle Royale avec des héros aux capacités uniques et un gameplay basé sur les équipes de trois joueurs.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-purple-600 font-bold">Gratuit</span>
-                                <button onclick="addToCart('Apex Legends', 0, 'https://media.contentapi.ea.com/content/dam/apex-legends/images/2019/01/apex-featured-image-16x9.jpg.adapt.crop16x9.1023w.jpg')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Card 9: Elden Ring -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="rpg" data-price="59.99" data-rating="4.9" data-release="2022">
-                        <div class="relative">
-                            <img src="https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/phvVT0qZfcRms5qDAk0SI3CM.png" alt="Elden Ring" class="w-full h-48 object-cover">
-                            <div class="game-badge bg-indigo-600">RPG</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'Elden Ring')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-user mr-2"></i>
-                                    <span>Solo</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-gamepad mr-2"></i>
-                                    <span>PC, PS5, Xbox</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Elden Ring</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.9</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Une aventure épique dans un monde ouvert créé par FromSoftware et George R.R. Martin.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-purple-600 font-bold">59,99 €</span>
-                                <button onclick="addToCart('Elden Ring', 59.99, 'https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/phvVT0qZfcRms5qDAk0SI3CM.png')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Game Card 10: Baldur's Gate 3 -->
-                    <div class="game-card bg-white shadow-sm overflow-hidden" data-category="rpg" data-price="59.99" data-rating="4.9" data-release="2023">
-                        <div class="relative">
-                            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg" alt="Baldur's Gate 3" class="w-full h-48 object-cover">
-                            <div class="game-badge bg-indigo-600">RPG</div>
-                            <button class="wish-btn" onclick="toggleWishlist(this, 'Baldur\'s Gate 3')">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="overlay-info">
-                                <div class="flex items-center mb-1">
-                                    <i class="fas fa-users mr-2"></i>
-                                    <span>Solo/Multi</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-desktop mr-2"></i>
-                                    <span>PC, PS5</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Baldur's Gate 3</h3>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <span class="ml-1 text-sm font-semibold">4.9</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">Un RPG épique basé sur Donjons & Dragons avec des choix qui influencent réellement l'histoire.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-purple-600 font-bold">59,99 €</span>
-                                <button onclick="addToCart('Baldur\'s Gate 3', 59.99, 'https://cdn.cloudflare.steamstatic.com/steam/apps/1086940/header.jpg')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
-                                    <i class="fas fa-plus mr-1"></i> Ajouter
-                                </button>
-                            </div>
-                        </div>
-                    </div
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
     <!-- JavaScript for Cart and Payment Functionality -->
     <script>
         // Cart functionality
