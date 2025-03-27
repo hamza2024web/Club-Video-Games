@@ -18,7 +18,7 @@ class ClubController extends BaseController {
         $user_id = $_SESSION["user_id"];
         $profile = $this->profileServices->getProfileUSer($user_id);
         $club = $this->clubServices->getClubUser($user_id);
-
+        
         return $this->renderOrg('ClubManagement', compact('profile', 'club'));
     }
     public function updateClub() {
