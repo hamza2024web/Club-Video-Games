@@ -596,21 +596,11 @@
                             <button class="filter-button filter-active px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-filter="all">
                                 Tous
                             </button>
-                            <button class="filter-button px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors" data-filter="fps">
-                                FPS
-                            </button>
-                            <button class="filter-button px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors" data-filter="moba">
-                                MOBA
-                            </button>
-                            <button class="filter-button px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors" data-filter="sport">
-                                Sport
-                            </button>
-                            <button class="filter-button px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors" data-filter="battle-royale">
-                                Battle Royale
-                            </button>
-                            <button class="filter-button px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors" data-filter="rpg">
-                                RPG
-                            </button>
+                            {% for genre in genres%}
+                                <button class="filter-button filter-active px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-filter="all">
+                                    {{genre.name}}
+                                </button>
+                            {% endfor %}
                         </div>
                         
                         <div>
