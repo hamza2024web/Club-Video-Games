@@ -5,7 +5,7 @@ use App\Services\dashboardServices;
 use App\Services\ProfileServices;
 session_start();    
 
-class JeuxController extends BaseController{
+class BoutiqueController extends BaseController{
     protected $AdminServices ;
     protected $ProfileServices;
     public function __construct()
@@ -19,7 +19,7 @@ class JeuxController extends BaseController{
         $user_id = $_SESSION["user_id"];
         $profile = $this->ProfileServices->getProfileUser($user_id);
         $jeux = $this->AdminServices->getGame();
-        return $this->renderOrg('jeux',compact('jeux','profile'));
+        return $this->renderOrg('boutique',compact('jeux','profile'));
     }
 }
 ?>

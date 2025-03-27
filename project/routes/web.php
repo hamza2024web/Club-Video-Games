@@ -40,5 +40,5 @@ Route::post('updatePassword','ProfileController@UpdatePassword');
 Route::get('ClubManagement','ClubController@index');
 Route::post('clubForm','ClubController@updateClub');
 Route::get('tournoi','TournoiController@index');
-Route::get('jeux','JeuxController@index');
+Route::get('boutique','BoutiqueController@index');
 ?>
