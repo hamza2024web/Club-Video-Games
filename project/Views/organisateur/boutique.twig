@@ -931,22 +931,22 @@
             const checkoutBtn = document.getElementById('checkout-btn');
             const cartCountElement = document.getElementById('cart-count');
             
-            // Update cart count badge
+            // Update cart count badge  
             cartCountElement.textContent = cart.length;
             
             // Calculate totals
             const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
             const tax = subtotal * 0.2; // 20% VAT
             const total = subtotal + tax;
-            
+
             // Update price displays
             subtotalElement.textContent = `${subtotal.toFixed(2)} €`;
             taxElement.textContent = `${tax.toFixed(2)} €`;
             totalElement.textContent = `${total.toFixed(2)} €`;
-            
+
             // Enable/disable checkout button
             checkoutBtn.disabled = cart.length === 0;
-            
+
             // Show/hide empty cart message
             if (cart.length === 0) {
                 emptyCartMessage.classList.remove('hidden');
