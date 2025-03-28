@@ -661,7 +661,7 @@
                             <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{jeu.description}}.</p>
                             <div class="flex justify-between items-center">
                             <span class="text-purple-600 font-bold">{{jeu.prix}} £</span>
-                            <button onclick="addToCart('Valorant', 0, 'https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
+                            <button onclick="addToCart(`{{jeu.nom_de_jeu}}`, `{{jeu.prix}}`, `{{jeu.image}}`)" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
                                 <i class="fas fa-plus mr-1"></i> Ajouter
                             </button>
                             </div>
@@ -798,6 +798,7 @@
                 });
                 return;
             }
+            price = Number(price);
             
             // Add to cart
             cart.push({
@@ -960,11 +961,10 @@
             cartItemsContainer.innerHTML = '';
             
             cart.forEach(item => {
-                console.log(item.image)
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item flex items-center p-3 border border-gray-100 rounded-lg';
                 cartItem.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+                    <img src="/${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
                     <div class="ml-3 flex-1">
                         <h4 class="font-medium text-gray-800">${item.name}</h4>
                         <p class="text-purple-600 font-semibold">${item.price === 0 ? 'Gratuit' : item.price.toFixed(2) + ' €'}</p>
@@ -976,7 +976,7 @@
                 cartItemsContainer.appendChild(cartItem);
             });
         }
-        
+
         function toggleCart() {
             const cart = document.getElementById('shopping-cart');
             const overlay = document.getElementById('overlay');
