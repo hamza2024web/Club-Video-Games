@@ -672,7 +672,111 @@
             </div>
         </main>
     </div>
-</body>
+
+    <!-- Overlay for cart and modals -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="shopping-cart" class="fixed top-0 right-0 h-full w-80 bg-white shadow-lg z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">
+                    <i class="fas fa-shopping-cart mr-2 text-purple-600"></i> Panier
+                </h3>
+                <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3">
+                <div id="empty-cart-message" class="text-center py-8 text-gray-500">
+                    <i class="fas fa-shopping-cart text-4xl mb-3"></i>
+                    <p>Votre panier est vide</p>
+                    <p class="text-sm mt-2">Ajoutez des jeux pour commencer vos achats</p>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-gray-200">
+                <div class="space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Sous-total:</span>
+                        <span id="subtotal" class="font-medium">0.00 €</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">TVA (20%):</span>
+                        <span id="tax" class="font-medium">0.00 €</span>
+                    </div>
+                    <div class="flex justify-between font-bold">
+                        <span>Total:</span>
+                        <span id="total" class="text-purple-600">0.00 €</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 space-y-3">
+                    <button id="checkout-btn" onclick="checkout()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        Procéder au paiement
+                    </button>
+                    <button onclick="clearCart()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg font-medium transition-colors">
+                        Vider le panier
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+        <div id="payment-content" class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 transform scale-95 opacity-0 transition-all duration-300">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Finaliser votre achat</h3>
+                <button onclick="closePaymentModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="text-gray-700">
+                        <span id="payment-items-count">0</span> jeux dans votre panier
+                    </div>
+                    <div class="text-purple-600 font-bold text-lg" id="payment-total">0.00 €</div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="form-floating">
+                        <input type="text" id="card-number" placeholder=" " class="input-card payment-card-field">
+                        <label for="card-number">Numéro de carte</label>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-floating">
+                            <input type="text" id="card-expiry" placeholder=" " class="input-card">
+                            <label for="card-expiry">Date d'expiration</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" id="card-cvc" placeholder=" " class="input-card">
+                            <label for="card-cvc">CVC</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating">
+                        <input type="text" id="card-name" placeholder=" " class="input-card">
+                        <label for="card-name">Nom sur la carte</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-5 border-t border-gray-200">
+                <button onclick="processPayment()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 rounded-lg font-medium shadow-md transition-all duration-200 hover:shadow-lg flex items-center justify-center">
+                    Payer <span id="payment-button-total">0.00 €</span>
+                </button>
+                <p class="text-center text-sm text-gray-500 mt-3">
+                    <i class="fas fa-lock mr-1"></i> Transaction sécurisée
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript for Cart and Payment Functionality -->
     <script>
         // Cart functionality
@@ -856,6 +960,7 @@
             cartItemsContainer.innerHTML = '';
             
             cart.forEach(item => {
+                console.log(item.image)
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item flex items-center p-3 border border-gray-100 rounded-lg';
                 cartItem.innerHTML = `
@@ -987,3 +1092,5 @@
             });
         });
     </script>
+</body>
+</html>
