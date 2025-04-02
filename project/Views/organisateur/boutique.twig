@@ -810,6 +810,7 @@
             
             // Update cart UI
             updateCartUI();
+            saveCartToLocalStorage();
             
             // Show success notification
             Swal.fire({
@@ -888,6 +889,7 @@
                 const removedItem = cart[index];
                 cart.splice(index, 1);
                 updateCartUI();
+                saveCartToLocalStorage();
                 
                 // Show notification
                 Swal.fire({
@@ -918,6 +920,7 @@
                 if (result.isConfirmed) {
                     cart.length = 0;
                     updateCartUI();
+                    saveCartToLocalStorage();
                 }
             });
         }
@@ -1088,6 +1091,7 @@
                     // Clear cart
                     cart.length = 0;
                     updateCartUI();
+                    saveCartToLocalStorage();
                     
                     // Close payment modal
                     paymentModal.classList.add('hidden');
@@ -1098,6 +1102,7 @@
         
         // Initialize the cart UI on page load
         document.addEventListener('DOMContentLoaded', () => {
+            loadCartFromLocalStorage();
             updateCartUI();
             
             // Close cart when clicking on overlay
@@ -1107,6 +1112,17 @@
                 document.getElementById('overlay').classList.add('hidden');
             });
         });
+        function saveCartToLocalStorage(){
+            localStorage.setItem('gamersHubCart',JSON.stringify(cart));
+        }
+        function loadCartFromLocalStorage (){
+            const savedCart = localStorage.getItem('gamersHubCart');
+            if (savedCart){
+                cart.length = 0;
+                const loadedCart = JSON.parse(savedCart);
+                loadedCart.forEach(item => cart.push(item));
+            }
+        }
     </script>
 </body>
 </html>
