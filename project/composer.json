@@ -13,7 +13,8 @@
         "google/apiclient": "^2.12",
         "google/apiclient-services": "^0.396.0",
         "paypal/paypal-checkout-sdk": "^1.0",
-        "srmklive/paypal": "^3.0"
+        "srmklive/paypal": "^3.0",
+        "paypal/paypal-server-sdk": "^1.0"
     },
     "config": {
         "process-timeout": 900
