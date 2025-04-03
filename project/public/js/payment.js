@@ -1,3 +1,4 @@
+// Payment functionality
 function checkout() {
     if (cart.length === 0) return;
     
@@ -16,6 +17,7 @@ function checkout() {
     // Update payment modal info
     itemsCountElement.textContent = cart.length;
     totalElement.textContent = `${total.toFixed(2)} €`;
+    buttonTotalElement.textContent = `${total.toFixed(2)} €`;
     
     // Show payment modal
     paymentModal.classList.remove('hidden');
@@ -50,4 +52,37 @@ if (document.getElementById('shopping-cart').classList.contains('translate-x-ful
     }, 300);
 }
         
-
+function processPayment() {
+    // Simulate payment processing
+    const paymentModal = document.getElementById('payment-modal');
+    const overlay = document.getElementById('overlay');
+    
+    Swal.fire({
+title: 'Traitement du paiement',
+text: 'Veuillez patienter...',
+allowOutsideClick: false,
+showConfirmButton: false,
+willOpen: () => {
+    Swal.showLoading();
+}
+});
+            
+// Simulate payment delay
+setTimeout(() => {
+    Swal.fire({
+        title: 'Paiement réussi!',
+        text: 'Vos jeux sont maintenant disponibles pour vos tournois',
+        icon: 'success',
+        confirmButtonColor: '#8b5cf6'
+    }).then(() => {
+        // Clear cart
+        cart.length = 0;
+        updateCartUI();
+        saveCartToLocalStorage();
+        
+        // Close payment modal
+        paymentModal.classList.add('hidden');
+        overlay.classList.add('hidden');
+    });
+}, 2000);
+}

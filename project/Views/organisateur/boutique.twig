@@ -10,10 +10,7 @@
     <script src="../../public/js/panier.js"></script>
     <script src="../../public/js/localStorage.js"></script>
     <script src="../../public/js/payment.js"></script>
-    <script
-        src="https://www.paypal.com/sdk/js?client-id=Ab8HTohZR73kzlwDMg8YXHYAolYkaza2v8Pw6VQ6rzDNA_tz1voikOQ-7pUFNLKYEHR4CKS-E0-c5Xxu&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo,paylater,card"            data-sdk-integration-source="developer-studio"
-    ></script>
-    <script src="../../public/js/app.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -774,8 +771,9 @@
             </div>
             
             <div class="p-5 border-t border-gray-200">
-                <div id="paypal-button-container"></div>
-                <p id="result-message"></p>
+                <button onclick="processPayment()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 rounded-lg font-medium shadow-md transition-all duration-200 hover:shadow-lg flex items-center justify-center">
+                    Payer <span id="payment-button-total">0.00 €</span>
+                </button>
                 <p class="text-center text-sm text-gray-500 mt-3">
                     <i class="fas fa-lock mr-1"></i> Transaction sécurisée
                 </p>
