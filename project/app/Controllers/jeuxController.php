@@ -2,17 +2,23 @@
 namespace App\Controllers;
 use App\Services\JeuxServices;
 use App\Controllers\BaseController;
+use App\Services\ProfileServices;
+session_start();
 
 class jeuxController extends BaseController {
     protected $JeuxServices;
+    protected $ProfileServices;
 
     public function __construct()
     {
         parent::__construct();
         $this->JeuxServices = new JeuxServices();
+        $this->ProfileServices = new ProfileServices();
     }
     public function index(){
-        $this->renderOrg('jeux');
+        $user_id = $_SESSION["user_id"];
+        $profile = $this->ProfileServices->getProfileUser($user_id);
+        $this->renderOrg('jeux',compact('profile'));
     }
 }
 ?>
