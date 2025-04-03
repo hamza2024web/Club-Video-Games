@@ -20,7 +20,7 @@ class PaymentController {
         $saveOrder = $this->PayementServices->saveOrder($user_id,$game_id,$order_id);
 
         if ($saveOrder){
-            header("location: /boutique?paiment_réeussite=1");
+            header("location: /boutique?paiment_réussite=1");
         } else {
             header("location: /boutique?paiment_échouée=1");
         }

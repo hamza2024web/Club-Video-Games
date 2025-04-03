@@ -21,7 +21,7 @@ class PaymentRepository {
             return false; 
         }
         
-        $stmt = $this->conn->prepare("INSERT INTO orders (game_id, order_id, user_id) VALUES (:game_id, :order_id,:user_id)");
+        $stmt = $this->conn->prepare("INSERT INTO orders (jeu_id, order_id, user_id) VALUES (:game_id, :order_id,:user_id)");
         
         $results = [];
         

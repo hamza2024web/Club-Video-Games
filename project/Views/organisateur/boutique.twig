@@ -856,6 +856,21 @@
                 overlay.classList.add('hidden');
             }
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('paiment_réussite')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "paiment réussite!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/boutique";
+                });
+            }
+        });
         
     </script>
 </body>
