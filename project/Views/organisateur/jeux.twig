@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamersHub - Mes Jeux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Animated gradient background */
+        .animated-gradient {
+            background: linear-gradient(-45deg, #6366F1, #8B5CF6, #EC4899, #8B5CF6);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .game-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-card img {
+            transition: all 0.5s ease;
+        }
+        
+        .game-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .sidebar-item {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(139, 92, 246, 0.9);
+        }
+        
+        .sidebar-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover .sidebar-icon {
+            transform: translateX(5px);
+        }
+        
+        .game-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .overlay-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 20px 15px 15px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .game-card:hover .overlay-info {
+            opacity: 1;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #d4d4d8;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa;
+        }
+        
+        /* Filter pill active state */
+        .filter-pill.active {
+            background-color: #8B5CF6;
+            color: white;
+        }
+        
+        /* Empty state animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar Navigation -->
+    <div class="flex">
+        <aside class="bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white w-64 min-h-screen flex flex-col fixed">
+            <div class="p-4 border-b border-indigo-800">
+                <div class="flex items-center">
+                    <i class="fas fa-gamepad text-2xl mr-3 text-purple-300"></i>
+                    <h2 class="text-xl font-bold">GamersHub</h2>
+                </div>
+            </div>
+            
+            <div class="p-4 border-b border-indigo-800">
+                <div class="flex items-center space-x-3">
+                    <img src="/{{profile.profile_image}}" alt="Avatar" class="w-10 h-10 rounded-full bg-gray-500 border-2 border-purple-300">
+                    <div>
+                        <p class="font-semibold">{{profile.name}}</p>
+                        <p class="text-sm text-purple-200">Gamer Tag : {{profile.gamer_tag}}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="mt-6 flex-1 px-2">
+                <div class="px-4 py-2 text-xs text-purple-300 uppercase tracking-wider font-semibold">
+                    Tableau de bord
+                </div>
+                <a href="#" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-tachometer-alt w-6 sidebar-icon text-purple-300"></i>
+                    <span>Vue d'ensemble</span>
+                </a>
+                
+                <div class="px-4 py-2 text-xs text-purple-300 uppercase tracking-wider font-semibold">
+                    Gestion
+                </div>
+                <a href="/ClubManagement" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-users w-6 sidebar-icon text-purple-300"></i>
+                    <span>Gestion du club</span>
+                </a>
+
+                <a href="/profile" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-user w-6 sidebar-icon text-purple-300"></i>
+                    <span>Profil</span>
+                </a>
+                
+                <div class="px-4 py-2 text-xs text-purple-300 uppercase tracking-wider font-semibold">
+                    Événements
+                </div>
+                <a href="#" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-calendar-alt w-6 sidebar-icon text-purple-300"></i>
+                    <span>Événement</span>
+                </a>
+                <a href="/tournoi" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-trophy w-6 sidebar-icon text-purple-300"></i>
+                    <span>Tournois</span>
+                </a>
+                <a href="/boutique" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-store w-6 sidebar-icon text-purple-300"></i>
+                    <span>Boutique</span>
+                </a>
+                <a href="/mes-jeux" class="sidebar-item active flex items-center px-4 py-3 text-white rounded-lg mb-1">
+                    <i class="fas fa-gamepad w-6 sidebar-icon text-white"></i>
+                    <span>Mes Jeux</span>
+                </a>
+                
+                <div class="px-4 py-2 text-xs text-purple-300 uppercase tracking-wider font-semibold">
+                    Paramètres
+                </div>
+                <a href="#" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-cog w-6 sidebar-icon text-purple-300"></i>
+                    <span>Configuration</span>
+                </a>
+                <a href="/logout" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-sign-out-alt w-6 sidebar-icon text-purple-300"></i>
+                    <span>Déconnexion</span>
+                </a>
+            </nav>
+            
+            <!-- Sidebar Footer -->
+            <div class="p-4 border-t border-indigo-800">
+                <div class="bg-indigo-800 rounded-lg p-3 text-center">
+                    <div class="text-sm font-medium mb-1">Solde du compte</div>
+                    <div class="text-xl font-bold">120,00 €</div>
+                    <button class="mt-2 text-xs px-3 py-1 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                        Recharger
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm sticky top-0 z-30">
+                <div class="flex justify-between items-center px-6 py-4">
+                    <div class="flex items-center">
+                        <h1 class="text-2xl font-bold text-gray-800">Mes Jeux</h1>
+                        <div class="ml-4 text-sm bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
+                            <i class="fas fa-gamepad mr-1"></i> Ma Bibliothèque
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="/boutique" class="text-purple-600 hover:text-purple-800">
+                            <i class="fas fa-store mr-1"></i> Visiter la boutique
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="p-6">
+                <!-- Search and Filters -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                        <div class="w-full md:w-1/3">
+                            <div class="relative">
+                                <input type="text" id="search-input" placeholder="Rechercher un jeu..." class="pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                                <button id="clear-search" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                            <button class="filter-pill active px-4 py-2 rounded-full text-sm font-medium transition-colors bg-gray-100 hover:bg-gray-200" data-filter="all">
+                                Tous les jeux
+                            </button>
+                            {% for genre in genres %}
+                                <button class="filter-pill px-4 py-2 rounded-full text-sm font-medium transition-colors bg-gray-100 hover:bg-gray-200" data-filter="{{ genre.name }}">
+                                    {{ genre.name }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                        
+                        <div>
+                            <select id="sort-games" class="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white">
+                                <option value="recent">Achat récent</option>
+                                <option value="alpha">Alphabétique (A-Z)</option>
+                                <option value="alpha-desc">Alphabétique (Z-A)</option>
+                                <option value="price">Prix (croissant)</option>
+                                <option value="price-desc">Prix (décroissant)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Games Grid -->
+                <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Si aucun jeu n'est acheté, afficher un message -->
+                    {% if jeuxAchetes|length == 0 %}
+                        <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                            <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-4 float-animation">
+                                <i class="fas fa-gamepad text-5xl text-purple-400"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold text-gray-800 mb-2">Aucun jeu dans votre bibliothèque</h2>
+                            <p class="text-gray-600 mb-6 max-w-md">Vous n'avez pas encore acheté de jeux. Visitez notre boutique pour découvrir notre catalogue.</p>
+                            <a href="/boutique" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg font-medium shadow-md transition-all duration-200 hover:shadow-lg flex items-center">
+                                <i class="fas fa-shopping-cart mr-2"></i> Explorer la boutique
+                            </a>
+                        </div>
+                    {% else %}
+                        <!-- Affichage des jeux achetés -->
+                        {% for jeu in jeuxAchetes %}
+                            <div class="game-card bg-white shadow-sm overflow-hidden" data-category="{{ jeu.genre }}" data-name="{{ jeu.nom_de_jeu|lower }}">
+                                <div class="relative">
+                                    <img src="/{{ jeu.image }}" alt="{{ jeu.nom_de_jeu }}" class="w-full h-48 object-cover">
+                                    <div class="game-badge bg-purple-600">{{ jeu.genre }}</div>
+                                    <div class="overlay-info">
+                                        <div class="flex items-center mb-1">
+                                            <i class="fas fa-desktop mr-2"></i>
+                                            <span>{{ jeu.plateforme }}</span>
+                                        </div>
+                                        <div class="flex items-center mb-1">
+                                            <i class="fas fa-code-branch mr-2"></i>
+                                            <span>{{ jeu.developpeur }}</span>
+                                        </div>
+                                        <div class="flex items-center mb-1">
+                                            <i class="fas fa-calendar-alt mr-2"></i>
+                                            <span>{{ jeu.date_de_sortie }}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-shopping-cart mr-2"></i>
+                                            <span>Acheté le: {{ jeu.date_achat|date('d/m/Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h3 class="text-lg font-bold text-gray-800">{{ jeu.nom_de_jeu }}</h3>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <span class="ml-1 text-sm font-semibold">4.7</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ jeu.description }}</p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-green-600 font-bold">
+                                            <i class="fas fa-check-circle mr-1"></i> Disponible
+                                        </span>
+                                        <button onclick="getGameDetails({{ jeu.id }})" class="bg-purple-100 text-purple-700 hover:bg-purple-200 px-3 py-1.5 rounded-lg flex items-center text-sm transition-colors">
+                                            <i class="fas fa-info-circle mr-1"></i> Détails
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Game Details Modal -->
+    <div id="game-details-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full mx-auto overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+                <div id="modal-loading" class="p-8 text-center">
+                    <div class="inline-block w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+                    <p class="mt-4 text-gray-600">Chargement des détails...</p>
+                </div>
+                
+                <div id="modal-data" class="hidden">
+                    <!-- Le contenu du modal sera injecté ici via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Filtrage des jeux
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter functionality
+            const filterPills = document.querySelectorAll('.filter-pill');
+            const gameCards = document.querySelectorAll('.game-card');
+            const searchInput = document.getElementById('search-input');
+            const clearSearchBtn = document.getElementById('clear-search');
+            const sortGamesSelect = document.getElementById('sort-games');
+            
+            // Filter games by category
+            filterPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    // Remove active class from all pills
+                    filterPills.forEach(p => p.classList.remove('active'));
+                    
+                    // Add active class to clicked pill
+                    pill.classList.add('active');
+                    
+                    const filter = pill.getAttribute('data-filter');
+                    
+                    // Show/hide game cards based on filter
+                    gameCards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Also apply search filter if there is any
+                    if (searchInput.value.trim() !== '') {
+                        applySearchFilter();
+                    }
+                });
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                if (searchInput.value.trim() !== '') {
+                    clearSearchBtn.classList.remove('hidden');
+                } else {
+                    clearSearchBtn.classList.add('hidden');
+                }
+                
+                applySearchFilter();
+            });
+            
+            clearSearchBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                clearSearchBtn.classList.add('hidden');
+                
+                // Reset search filter
+                gameCards.forEach(card => {
+                    // Only show cards that match the current category filter
+                    const activeFilter = document.querySelector('.filter-pill.active').getAttribute('data-filter');
+                    if (activeFilter === 'all' || card.getAttribute('data-category') === activeFilter) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+            
+            function applySearchFilter() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                const activeFilter = document.querySelector('.filter-pill.active').getAttribute('data-filter');
+                
+                gameCards.forEach(card => {
+                    const gameName = card.getAttribute('data-name');
+                    const gameCategory = card.getAttribute('data-category');
+                    
+                    // Check both filter and search criteria
+                    const matchesFilter = activeFilter === 'all' || gameCategory === activeFilter;
+                    const matchesSearch = gameName.includes(searchTerm);
+                    
+                    if (matchesFilter && matchesSearch) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Sorting functionality
+            sortGamesSelect.addEventListener('change', () => {
+                const sortValue = sortGamesSelect.value;
+                const gamesGrid = document.getElementById('games-grid');
+                const gamesArray = Array.from(gameCards);
+                
+                // Sort the games array based on selected sort option
+                gamesArray.sort((a, b) => {
+                    switch(sortValue) {
+                        case 'alpha':
+                            return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+                        case 'alpha-desc':
+                            return b.getAttribute('data-name').localeCompare(a.getAttribute('data-name'));
+                        // Add other sorting options as needed
+                        default:
+                            return 0;
+                    }
+                });
+                
+                // Remove all current cards
+                gameCards.forEach(card => {
+                    card.remove();
+                });
+                
+                // Append sorted cards
+                gamesArray.forEach(card => {
+                    gamesGrid.appendChild(card);
+                });
+                
+                // Re-apply current filters
+                const activeFilter = document.querySelector('.filter-pill.active').getAttribute('data-filter');
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                
+                gameCards.forEach(card => {
+                    const gameName = card.getAttribute('data-name');
+                    const gameCategory = card.getAttribute('data-category');
+                    
+                    const matchesFilter = activeFilter === 'all' || gameCategory === activeFilter;
+                    const matchesSearch = searchTerm === '' || gameName.includes(searchTerm);
+                    
+                    if (matchesFilter && matchesSearch) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+        
+        // Game details modal
+        function getGameDetails(gameId) {
+            const modal = document.getElementById('game-details-modal');
+            const modalContent = document.getElementById('modal-content');
+            const modalLoading = document.getElementById('modal-loading');
+            const modalData = document.getElementById('modal-data');
+            
+            // Show modal
+            modal.classList.remove('hidden');
+            
+            // Show loading state
+            modalLoading.classList.remove('hidden');
+            modalData.classList.add('hidden');
+            
+            // Animate modal appearance
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            // Simulate loading game details (replace with actual AJAX call)
+            setTimeout(() => {
+                // Hide loading state
+                modalLoading.classList.add('hidden');
+                
+                // Populate modal with game details
+                modalData.innerHTML = `
+                    <div class="flex flex-col md:flex-row">
+                        <div class="md:w-1/2">
+                            <img src="/{{jeux[0].image}}" alt="Game" class="w-full h-80 object-cover">
+                        </div>
+                        <div class="md:w-1/2 p-6">
+                            <div class="flex justify-between items-start">
+                                <h2 class="text-2xl font-bold text-gray-800">Titre du jeu</h2>
+                                <button class="text-gray-500 hover:text-gray-700" onclick="closeModal()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="flex items-center mt-2 mb-4">
+                                <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Genre</span>
+                                <span class="ml-2 text-sm text-gray-600">Développeur</span>
+                                <div class="ml-auto flex items-center">
+                                    <i class="fas fa-star text-yellow-400"></i>
+                                    <span class="ml-1 text-sm font-medium">4.7</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-700 mb-6">Description du jeu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="bg-gray-50 p-3 rounded-lg">
+                                    <div class="text-sm text-gray-500">Plateforme</div>
+                                    <div class="font-medium">PC</div>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg">
+                                    <div class="text-sm text-gray-500">Date de sortie</div>
+                                    <div class="font-medium">01/01/2023</div>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg">
+                                    <div class="text-sm text-gray-500">Prix</div>
+                                    <div class="font-medium">59.99 €</div>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg">
+                                    <div class="text-sm text-gray-500">Date d'achat</div>
+                                    <div class="font-medium">15/04/2023</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <button class="bg-purple-100 text-purple-700 hover:bg-purple-200 px-4 py-2 rounded-lg flex items-center text-sm transition-colors">
+                                    <i class="fas fa-download mr-2"></i> Télécharger
+                                </button>
+                                <button class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 px-4 py-2 rounded-lg flex items-center text-sm transition-colors">
+                                    <i class="fas fa-trophy mr-2"></i> Créer un tournoi
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 border-t border-gray-200">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Configuration requise</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">Configuration minimale</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-center">
+                                        <i class="fas fa-microchip mr-2 text-gray-400"></i>
+                                        <span>Processeur: Intel Core i5-4460 / AMD FX-8350</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-memory mr-2 text-gray-400"></i>
+                                        <span>Mémoire vive: 8 Go RAM</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-desktop mr-2 text-gray-400"></i>
+                                        <span>Carte graphique: NVIDIA GTX 960 / AMD R9 280</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-hdd mr-2 text-gray-400"></i>
+                                        <span>Espace disque: 50 Go</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">Configuration recommandée</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-center">
+                                        <i class="fas fa-microchip mr-2 text-gray-400"></i>
+                                        <span>Processeur: Intel Core i7-8700K / AMD Ryzen 5 3600X</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-memory mr-2 text-gray-400"></i>
+                                        <span>Mémoire vive: 16 Go RAM</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-desktop mr-2 text-gray-400"></i>
+                                        <span>Carte graphique: NVIDIA RTX 2060 / AMD RX 5700</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-hdd mr-2 text-gray-400"></i>
+                                        <span>Espace disque: 50 Go SSD</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Show data container
+                modalData.classList.remove('hidden');
+            }, 1500);
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('game-details-modal');
+            const modalContent = document.getElementById('modal-content');
+            
+            // Animate modal disappearance
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            // Hide modal after animation
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('game-details-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
