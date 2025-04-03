@@ -279,12 +279,9 @@
                         </select>
                         
                         <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white">
-                            <option value="all">Tous les jeux</option>
-                            <option value="league-of-legends">League of Legends</option>
-                            <option value="valorant">Valorant</option>
-                            <option value="fortnite">Fortnite</option>
-                            <option value="fifa">FIFA 25</option>
-                            <option value="csgo">CS:GO</option>
+                            {% for jeu in jeux %}
+                                <option value="{{jeu.id}}">{{ jeu.nom_de_jeu }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -681,17 +678,9 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Jeu</label>
                                 <select name="game" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                     <option value="">Sélectionner un jeu</option>
-                                    <option value="valorant">Valorant</option>
-                                    <option value="league-of-legends">League of Legends</option>
-                                    <option value="csgo">CS:GO</option>
-                                    <option value="fortnite">Fortnite</option>
-                                    <option value="fifa">FIFA 25</option>
-                                    <option value="rocket-league">Rocket League</option>
-                                    <option value="apex-legends">Apex Legends</option>
-                                    <option value="call-of-duty">Call of Duty</option>
-                                    <option value="hearthstone">Hearthstone</option>
-                                    <option value="overwatch">Overwatch</option>
-                                    <option value="other">Autre</option>
+                                    {% for jeu in jeux %}
+                                    <option value="{{jeu.id}}">{{ jeu.nom_de_jeu }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             
@@ -701,9 +690,6 @@
                                     <option value="">Sélectionner un format</option>
                                     <option value="single-elimination">Élimination simple</option>
                                     <option value="double-elimination">Double élimination</option>
-                                    <option value="round-robin">Tournoi à la ronde</option>
-                                    <option value="swiss">Système suisse</option>
-                                    <option value="groups">Phases de groupe</option>
                                 </select>
                             </div>
                             
@@ -720,14 +706,6 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre max. de participants</label>
                                 <input type="number" name="max_participants" min="2" max="256" placeholder="Ex: 32" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Type d'équipe</label>
-                                <select name="team_type" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                    <option value="individual">Individuel</option>
-                                    <option value="team">Équipe</option>
-                                </select>
                             </div>
                         </div>
                     </div>
