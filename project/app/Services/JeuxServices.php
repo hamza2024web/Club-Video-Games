@@ -10,5 +10,9 @@ class JeuxServices {
     {
         $this->JeuxRepository = new JeuxRepository();
     }
+    public function getGame($user_id){
+        $games = $this->JeuxRepository->getGames($user_id);
+        return $games;
+    }
 }
 ?>
