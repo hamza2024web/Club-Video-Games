@@ -11,7 +11,7 @@ class PayementServices {
         $this->PaymentRepository = new PaymentRepository();
     }
 
-    public function saveOrder($game_id,$order_id){
+    public function saveOrder($user_id,$game_id,$order_id){
         $savePaiment = $this->PaymentRepository->savePayement($user_id,$game_id,$order_id);
         return $savePaiment;
     }
