@@ -3,7 +3,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\dashboardServices;
 use App\Services\ProfileServices;
-use 
+use App\Services\PayementServices;  
 session_start();    
 
 class BoutiqueController extends BaseController{
