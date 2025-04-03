@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Services\PayementServices;
+session_start();
 
 class PaymentController {
     protected $PayementServices;
@@ -12,9 +13,16 @@ class PaymentController {
     }
 
     public function payer(){
+        $user_id = $_SESSION["user_id"];
         $game_id = $_POST["games_id"];
         $order_id = $_POST["order_id"];
 
-        $saveOrder = $this->PayementServices->saveOrder($game_id,$order_id);
+        $saveOrder = $this->PayementServices->saveOrder($user_id,$game_id,$order_id);
+
+        if ($saveOrder){
+            header("location: /boutique?paiment_réeussite=1");
+        } else {
+            header("location: /boutique?paiment_échouée=1");
+        }
     }
 }
