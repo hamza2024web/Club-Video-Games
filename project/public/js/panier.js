@@ -1,6 +1,6 @@
 const cart = [];
 
-function addToCart(name, price, image) {
+function addToCart(id,name, price, image) {
     // Check if the game is already in the cart
     const existingItem = cart.find(item => item.name === name);
     
@@ -20,10 +20,11 @@ function addToCart(name, price, image) {
     
     // Add to cart
     cart.push({
+        id,
         name,
         price,
         image,
-        id: Date.now() // Simple unique identifier
+        order_id: Date.now() // Simple unique identifier
     });
     
     // Update cart UI

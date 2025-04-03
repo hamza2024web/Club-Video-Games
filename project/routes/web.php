@@ -42,5 +42,6 @@ Route::post('clubForm','ClubController@updateClub');
 Route::get('tournoi','TournoiController@index');
 Route::get('boutique','BoutiqueController@index');
 
-
+// payment 
+Route::post('payer','PaymentController@payer');
 ?>

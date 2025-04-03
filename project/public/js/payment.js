@@ -58,31 +58,74 @@ function processPayment() {
     const overlay = document.getElementById('overlay');
     
     Swal.fire({
-title: 'Traitement du paiement',
-text: 'Veuillez patienter...',
-allowOutsideClick: false,
-showConfirmButton: false,
-willOpen: () => {
-    Swal.showLoading();
-}
-});
-            
-// Simulate payment delay
-setTimeout(() => {
-    Swal.fire({
-        title: 'Paiement réussi!',
-        text: 'Vos jeux sont maintenant disponibles pour vos tournois',
-        icon: 'success',
-        confirmButtonColor: '#8b5cf6'
-    }).then(() => {
-        // Clear cart
-        cart.length = 0;
-        updateCartUI();
-        saveCartToLocalStorage();
-        
-        // Close payment modal
-        paymentModal.classList.add('hidden');
-        overlay.classList.add('hidden');
+        title: 'Traitement du paiement',
+        text: 'Veuillez patienter...',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
     });
-}, 2000);
+    
+    // Charger le panier depuis le localStorage
+    let cartItems = loadCartFromLocalStorage();
+    
+    if (cartItems && cartItems.length > 0) {
+        // Vous pouvez également créer un objet combiné si nécessaire
+        let orderDetails = cartItems.map(item => ({
+            game_id: item.id,
+            order_id: item.order_id
+        }));
+                
+        // Créer un formulaire caché pour soumettre les données
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/payer';
+        form.style.display = 'none';
+        
+        // Ajouter un champ caché pour les IDs des jeux
+        const gameIdsInput = document.createElement('input');
+        gameIdsInput.type = 'hidden';
+        gameIdsInput.name = 'games_id';
+        gameIdsInput.value = JSON.stringify(orderDetails.map(item => item.game_id));
+        form.appendChild(gameIdsInput);
+        
+        // Ajouter un champ caché pour les order_IDs
+        const orderIdsInput = document.createElement('input');
+        orderIdsInput.type = 'hidden';
+        orderIdsInput.name = 'order_id';
+        orderIdsInput.value = JSON.stringify(orderDetails.map(item => item.order_id));
+        form.appendChild(orderIdsInput);
+        
+        // Ajouter le formulaire au document
+        document.body.appendChild(form);
+        
+        // Soumettre le formulaire
+        form.submit();
+    } else {
+        console.log("Le panier est vide");
+        
+        // Simulate payment delay
+        setTimeout(() => {
+            Swal.fire({
+                title: 'Panier vide',
+                text: 'Veuillez ajouter des jeux à votre panier',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Close payment modal
+                paymentModal.classList.add('hidden');
+                overlay.classList.add('hidden');
+            });
+        }, 1000);
+    }
+}
+
+// Fonction pour charger le panier depuis le localStorage
+function loadCartFromLocalStorage() {
+    const savedCart = localStorage.getItem('gamersHubCart');
+    if (savedCart) {
+        return JSON.parse(savedCart);
+    }
+    return [];
 }
