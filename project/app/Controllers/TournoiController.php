@@ -52,7 +52,12 @@ class TournoiController extends BaseController{
         $tournament_photo = $this->generateImage($image,$currentImage);
 
         $saveTournoi = $this->TournnoiServices->setTournoi($user_id,$name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo);
-        
+
+        if ($saveTournoi){
+            header("location: /tournoi?Tournoi Created successfully!=1");
+        } else {
+            header("location: /tournoi?Creation de votre tournoi echouée=1");
+        }
     }
 }
 ?>

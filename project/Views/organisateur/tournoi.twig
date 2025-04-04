@@ -660,7 +660,7 @@
                 </button>
             </div>
             
-<form action="organisateur/addTournoi" method="POST" enctype="multipart/form-data">
+            <form action="organisateur/addTournoi" method="POST" enctype="multipart/form-data">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Basic Info Section -->
                     <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
@@ -932,25 +932,6 @@
                     });
                     return;
                 }
-                
-                // Success - would normally submit form data to server
-                Swal.fire({
-                    title: 'Tournoi créé !',
-                    text: 'Votre tournoi a été créé avec succès',
-                    icon: 'success',
-                    confirmButtonColor: '#8b5cf6'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Reset form and close modal
-                        this.reset();
-                        closeTournamentModal();
-                        
-                        // Refresh the tournament list (simulated)
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 500);
-                    }
-                });
             });
         });
         
@@ -975,5 +956,48 @@
                 });
             });
         });
-        </script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('organisateur/addTournoi')) {
+                Swal.fire({
+                    title: 'Traitement du création',
+                    text: 'Veuillez patienter...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('Tournoi Created successfully!')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Tournoi Created successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/Tournoi";
+                });
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('Creation de votre tournoi echouée')) {
+                Swal.fire({
+                    title: 'Erreur de creation',
+                    text: 'Creation de votre tournoi echouée',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    window.location.href = "/Tournoi";
+                });
+            }
+        });
+
+    </script>
 </body>
