@@ -42,6 +42,7 @@ Route::post('clubForm','ClubController@updateClub');
 Route::get('tournoi','TournoiController@index');
 Route::get('boutique','BoutiqueController@index');
 Route::get('jeux','jeuxController@index');
+Route::post('organisateur/addTournoi','TournoiController@addTournoi');
 // payment 
 Route::post('payer','PaymentController@payer');
 ?>
