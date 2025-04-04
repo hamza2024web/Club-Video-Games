@@ -24,7 +24,8 @@ class TournoiController extends BaseController{
         $user_id = $_SESSION["user_id"];
         $profile = $this->ProfileServices->getProfileUser($user_id);
         $jeux = $this->JeuxServices->getGame($user_id);
-        return $this->renderOrg('tournoi',compact('profile','jeux'));
+        $tournois = $this->TournnoiServices->getTournoi($user_id);
+        return $this->renderOrg('tournoi',compact('profile','jeux','tournois'));
     }
     public function addTournoi(){
         $user_id = $_SESSION["user_id"];

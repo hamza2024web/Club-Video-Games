@@ -12,6 +12,19 @@ class TournoiRepository {
         $db = new Database();
         $this->conn = $db->getConnection();
     }
+    public function getTournoiInformations($user_id){
+        $sql = "SELECT tournoi.name,tournoi.date_de_debut,tournoi.date_de_fin,tournoi.numbre_membre,tournoi.statut,tournoi.regles,tournoi.description,jeux.nom_de_jeu
+        ,tournoi.prix_total ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.frais_inscription,tournoi.discord,tournoi.twitch FROM tournoi
+        INNER JOIN jeux ON jeux.id = tournoi.jeu_id
+        INNER JOIN evenement ON evenement.id = tournoi.event_id
+        INNER JOIN organisateur ON organisateur.club_id = evenement.club_id
+        WHERE organisateur.user_id = :user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $tournoi = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $tournoi;
+    }
     public function addTounroi($user_id, $name, $start_date, $end_date, $max_participants, $status, $rules, $game, $format, $description, $prix_total, $prize_first, $prize_second, $prize_third, $registration_start, $registration_end, $registration_fee, $discord_url, $stream_url, $tournament_photo) {
         try {
             // Liste des statuts valides selon votre définition ENUM
