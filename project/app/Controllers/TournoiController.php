@@ -26,6 +26,7 @@ class TournoiController extends BaseController{
     public function addTournoi(){
         $name = $_POST["name"];
         $game = $_POST["game"];
+        $status = $_POST["status"];
         $format = $_POST["format"];
         $start_date = $_POST["start_date"];
         $end_date = $_POST["end_date"];
@@ -46,7 +47,7 @@ class TournoiController extends BaseController{
         
         $tournament_photo = $this->generateImage($image,$currentImage);
 
-        $saveTournoi = $this->TournnoiServices->setTournoi();
+        $saveTournoi = $this->TournnoiServices->setTournoi($name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo);
     }
 }
 ?>
