@@ -14,6 +14,14 @@ class TournoiRepository {
     }
     public function addTounroi($user_id, $name, $start_date, $end_date, $max_participants, $status, $rules, $game, $format, $description, $prix_total, $prize_first, $prize_second, $prize_third, $registration_start, $registration_end, $registration_fee, $discord_url, $stream_url, $tournament_photo) {
         try {
+            // Liste des statuts valides selon votre définition ENUM
+            $validStatuses = ['Pending', 'Open', 'In Progress', 'Paused', 'Completed', 'Cancelled', 'Full', 'Registration Closed'];
+            
+            // Vérifiez que le statut est valide
+            if (!in_array($status, $validStatuses)) {
+                $status = 'Pending'; // Valeur par défaut si non valide
+            }
+            
             // Récupérer le club_id de l'organisateur
             $query = "SELECT club_id FROM organisateur WHERE user_id=:user_id";
             $stmt = $this->conn->prepare($query);
@@ -26,7 +34,7 @@ class TournoiRepository {
             }
             
             $club_id = $club_idd["club_id"];
-            
+    
             // Débuter une transaction
             $this->conn->beginTransaction();
             
@@ -38,7 +46,7 @@ class TournoiRepository {
             $stmt->bindParam(":date_debut", $start_date);
             $stmt->bindParam(":date_fin", $end_date);
             $stmt->bindParam(":description", $description);
-            $type = "Tournament"; // En français pour être cohérent
+            $type = "Tournament"; 
             $stmt->bindParam(":type_evenement", $type);
             $stmt->bindParam(":statut", $status);
             $stmt->bindParam(":numbre_membre", $max_participants);
@@ -46,7 +54,7 @@ class TournoiRepository {
             $stmt->execute();
             
             $event_id = $this->conn->lastInsertId();
-            
+    
             // Insérer dans la table tournoi
             $sql = "INSERT INTO tournoi (name, date_de_debut, date_de_fin, numbre_membre, statut, regles, jeu_id, event_id, format_tournoi, description, prix_total, premier_place, deuxieme_place, troisieme_place, date_ouverture_inscription, date_cloture_inscription, frais_inscription, discord, twitch, image) 
                    VALUES (:name, :date_de_debut, :date_de_fin, :numbre_membre, :statut, :regles, :jeu_id, :event_id, :format_tournoi, :description, :prix_total, :premier_place, :deuxieme_place, :troisieme_place, :date_ouverture_inscription, :date_cloture_inscription, :frais_inscription, :discord, :twitch, :image)";
@@ -71,7 +79,7 @@ class TournoiRepository {
             $stmt->bindParam(":discord", $discord_url);
             $stmt->bindParam(":twitch", $stream_url);
             $stmt->bindParam(":image", $tournament_photo);
-            $stmt->execute();
+            $stmt->execute(); 
             
             // Valider la transaction
             $this->conn->commit();
@@ -80,7 +88,14 @@ class TournoiRepository {
         } catch (PDOException $e) {
             // Annuler la transaction en cas d'erreur
             $this->conn->rollBack();
-            // Vous pourriez loguer l'erreur ici
+                
+            // Enregistrer l'erreur détaillée
+            error_log("Erreur PDO dans addTounroi: " . $e->getMessage());
+            
+            // Pour le débogage temporaire, vous pouvez également afficher l'erreur
+            // (à supprimer en production)
+            echo "Erreur: " . $e->getMessage();
+            
             return false;
         }
     }

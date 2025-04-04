@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -713,11 +715,9 @@
                                     <option value="Pending">En attente</option>
                                     <option value="Open">Ouvert</option>
                                     <option value="In Progress">En cours</option>
-                                    <option value="Paused">En pause</option>
                                     <option value="Completed">Terminé</option>
                                     <option value="Cancelled">Annulé</option>
                                     <option value="Full">Complet</option>
-                                    <option value="Registration Closed">Inscriptions fermées</option>
                                 </select>
                             </div>
                             
@@ -847,157 +847,181 @@
     <!-- JavaScript Logic -->
     <script>
         // Modal Handling
-        function openTournamentModal() {
-            const modal = document.getElementById('tournamentModal');
-            const modalContent = document.getElementById('modalContent');
-            
-            modal.classList.remove('hidden');
-            
-            // Animation timing
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-        
-        function closeTournamentModal() {
-            const modal = document.getElementById('tournamentModal');
-            const modalContent = document.getElementById('modalContent');
-            
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
-        
-        // Fee Toggle Logic
-        document.addEventListener('DOMContentLoaded', function() {
-            const feeToggle = document.getElementById('registration_fee_toggle');
-            const feeInput = document.getElementById('fee_input');
-            
-            feeToggle.addEventListener('change', function() {
-                if (this.checked) {
-                    feeInput.classList.remove('hidden');
-                } else {
-                    feeInput.classList.add('hidden');
-                }
-            });
-            
-            // Tab switching logic
-            const tabButtons = document.querySelectorAll('.tab-button');
-            
-            tabButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all tabs
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-                });
-            });
-            
-            // Form validation
-            const tournamentForm = document.querySelector('form');
-            
-            tournamentForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Get required fields
-                const tournamentName = this.querySelector('input[name="name"]').value;
-                const game = this.querySelector('select[name="game"]').value;
-                const startDate = this.querySelector('input[name="start_date"]').value;
-                const endDate = this.querySelector('input[name="end_date"]').value;
-                const maxParticipants = this.querySelector('input[name="max_participants"]').value;
-                
-                // Simple validation
-                if (!tournamentName || !game || !startDate || !endDate || !maxParticipants) {
-                    Swal.fire({
-                        title: 'Formulaire incomplet',
-                        text: 'Veuillez remplir tous les champs obligatoires',
-                        icon: 'error',
-                        confirmButtonColor: '#8b5cf6'
-                    });
-                    return;
-                }
-                
-                // Check that end date is after start date
-                if (new Date(endDate) <= new Date(startDate)) {
-                    Swal.fire({
-                        title: 'Erreur de date',
-                        text: 'La date de fin doit être postérieure à la date de début',
-                        icon: 'error',
-                        confirmButtonColor: '#8b5cf6'
-                    });
-                    return;
-                }
-            });
-        });
-        
-        // Tooltip initialization
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        tooltipTriggerList.forEach(tooltipTriggerEl => {
-            new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        
-        // Tournament card status highlighting
-        document.addEventListener('DOMContentLoaded', function() {
-            const tournamentCards = document.querySelectorAll('.tournament-card');
-            
-            tournamentCards.forEach(card => {
-                // Highlight the card when hovered
-                card.addEventListener('mouseenter', function() {
-                    this.classList.add('shadow-md');
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.classList.remove('shadow-md');
-                });
-            });
-        });
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('organisateur/addTournoi')) {
-                Swal.fire({
-                    title: 'Traitement du création',
-                    text: 'Veuillez patienter...',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-            }
-        });
+function openTournamentModal() {
+    const modal = document.getElementById('tournamentModal');
+    const modalContent = document.getElementById('modalContent');
+    
+    modal.classList.remove('hidden');
+    
+    // Animation timing
+    setTimeout(() => {
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+    }, 10);
+}
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('Tournoi Created successfully!')) {
-                Swal.fire({
-                    title: "Success!",
-                    text: "Tournoi Created successfully!",
-                    icon: "success",
-                    confirmButtonText: "OK",
-                    timer: 3000 
-                }).then(()=> {
-                    window.location.href = "/Tournoi";
-                });
+function closeTournamentModal() {
+    const modal = document.getElementById('tournamentModal');
+    const modalContent = document.getElementById('modalContent');
+    
+    modalContent.classList.remove('scale-100', 'opacity-100');
+    modalContent.classList.add('scale-95', 'opacity-0');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
+
+// Fee Toggle Logic
+document.addEventListener('DOMContentLoaded', function() {
+    const feeToggle = document.getElementById('registration_fee_toggle');
+    const feeInput = document.getElementById('fee_input');
+    
+    // Vérifier si les éléments existent avant d'ajouter des écouteurs d'événements
+    if (feeToggle && feeInput) {
+        feeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                feeInput.classList.remove('hidden');
+            } else {
+                feeInput.classList.add('hidden');
+                // Réinitialiser la valeur du champ lorsqu'il est caché
+                const feeInputField = document.querySelector('input[name="registration_fee"]');
+                if (feeInputField) {
+                    feeInputField.value = '0';
+                }
             }
         });
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('Creation de votre tournoi echouée')) {
+    }
+    
+    // Tab switching logic
+    const tabButtons = document.querySelectorAll('.tab-button');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all tabs
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+        });
+    });
+    
+    // Form validation
+    const tournamentForm = document.querySelector('form[action="organisateur/addTournoi"]');
+    
+    if (tournamentForm) {
+        tournamentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get required fields
+            const tournamentName = this.querySelector('input[name="name"]').value;
+            const game = this.querySelector('select[name="game"]').value;
+            const status = this.querySelector('select[name="status"]').value;
+            const format = this.querySelector('select[name="format"]').value;
+            const startDate = this.querySelector('input[name="start_date"]').value;
+            const endDate = this.querySelector('input[name="end_date"]').value;
+            const maxParticipants = this.querySelector('input[name="max_participants"]').value;
+            
+            // Simple validation
+            if (!tournamentName || !game || !format || !status || !startDate || !endDate || !maxParticipants) {
                 Swal.fire({
-                    title: 'Erreur de creation',
-                    text: 'Creation de votre tournoi echouée',
+                    title: 'Formulaire incomplet',
+                    text: 'Veuillez remplir tous les champs obligatoires',
                     icon: 'error',
                     confirmButtonColor: '#8b5cf6'
-                }).then(() => {
-                    window.location.href = "/Tournoi";
                 });
+                return;
             }
+            
+            // Check that end date is after start date
+            if (new Date(endDate) <= new Date(startDate)) {
+                Swal.fire({
+                    title: 'Erreur de date',
+                    text: 'La date de fin doit être postérieure à la date de début',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                });
+                return;
+            }
+            
+            // Si feeToggle est coché mais aucun montant n'est fourni
+            if (feeToggle && feeToggle.checked) {
+                const feeAmount = this.querySelector('input[name="registration_fee"]').value;
+                if (!feeAmount || feeAmount <= 0) {
+                    Swal.fire({
+                        title: 'Frais d\'inscription invalides',
+                        text: 'Veuillez indiquer un montant valide pour les frais d\'inscription',
+                        icon: 'error',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                    return;
+                }
+            }
+            
+            // Si toutes les validations passent, soumettre le formulaire
+            Swal.fire({
+                title: 'Création en cours',
+                text: 'Veuillez patienter pendant que nous créons votre tournoi...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            // Soumettre le formulaire
+            this.submit();
         });
-
+    }
+    
+    // Gestion des paramètres d'URL pour les notifications
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Notification de tournoi créé avec succès
+    if (urlParams.has('Tournoi%20Created%20successfully!') || urlParams.has('Tournoi Created successfully!')) {
+        Swal.fire({
+            title: "Succès !",
+            text: "Tournoi créé avec succès !",
+            icon: "success",
+            confirmButtonText: "OK",
+            confirmButtonColor: '#8b5cf6',
+            timer: 3000 
+        }).then(() => {
+            // Nettoyer l'URL
+            const url = new URL(window.location.href);
+            url.search = '';
+            window.history.replaceState({}, document.title, url);
+        });
+    }
+    
+    // Notification d'échec de création de tournoi
+    if (urlParams.has('Creation%20de%20votre%20tournoi%20echouée') || urlParams.has('Creation de votre tournoi echouée')) {
+        Swal.fire({
+            title: 'Erreur de création',
+            text: 'La création de votre tournoi a échoué',
+            icon: 'error',
+            confirmButtonColor: '#8b5cf6'
+        }).then(() => {
+            // Nettoyer l'URL
+            const url = new URL(window.location.href);
+            url.search = '';
+            window.history.replaceState({}, document.title, url);
+        });
+    }
+    
+    // Tournament card status highlighting
+    const tournamentCards = document.querySelectorAll('.tournament-card');
+    
+    tournamentCards.forEach(card => {
+        // Highlight the card when hovered
+        card.addEventListener('mouseenter', function() {
+            this.classList.add('shadow-md');
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.classList.remove('shadow-md');
+        });
+    });
+    });
     </script>
 </body>
