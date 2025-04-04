@@ -14,7 +14,7 @@ class TournoiRepository {
     }
     public function getTournoiInformations($user_id){
         $sql = "SELECT tournoi.name,tournoi.date_de_debut,tournoi.date_de_fin,tournoi.numbre_membre,tournoi.statut,tournoi.regles,tournoi.description,jeux.nom_de_jeu
-        ,tournoi.prix_total ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.frais_inscription,tournoi.discord,tournoi.twitch FROM tournoi
+        ,tournoi.prix_total ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.frais_inscription,tournoi.discord,tournoi.twitch,tournoi.image FROM tournoi
         INNER JOIN jeux ON jeux.id = tournoi.jeu_id
         INNER JOIN evenement ON evenement.id = tournoi.event_id
         INNER JOIN organisateur ON organisateur.club_id = evenement.club_id
