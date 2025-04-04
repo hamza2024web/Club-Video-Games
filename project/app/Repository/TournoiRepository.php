@@ -33,6 +33,27 @@ class TournoiRepository {
         $event_id = $this->conn->lastInsertId();
         $sql = "INSERT INTO tournoi (name,date_de_debut,date_de_fin,numbre_membre,statut,regles,jeu_id,event_id,format_tournoi,description,prix_total,premier_place,deuxieme_place,troisieme_place,date_ouverture_inscription,date_cloture_inscription,frais_inscription,discord,twitch,image) VALUES
         (:name,:date_de_debut,:date_de_fin,:numbre_membre,:statut,:regles,:jeu_id,:event_id,:format_tournoi,:description,:prix_total,:premier_place,:deuxieme_place,:troisieme_place,:date_ouverture_inscription,:date_cloture_inscription,:frais_inscription,:discord,:twitch,:image)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":name",$name);
+        $stmt->bindParam(":date_de_debut",$start_date);
+        $stmt->bindParam(":date_de_fin",$end_date);
+        $stmt->bindParam(":numbre_membre",$max_participants);
+        $stmt->bindParam(":statut",$status);
+        $stmt->bindParam(":regles",$rules);
+        $stmt->bindParam(":jeu_id",$game);
+        $stmt->bindParam(":event_id",$event_id);
+        $stmt->bindParam(":format_tournoi",$format);
+        $stmt->bindParam(":description",$description);
+        $stmt->bindParam(":prix_total",$prix_total);
+        $stmt->bindParam(":premier_place",$prize_first);
+        $stmt->bindParam(":deuxieme_place",$prize_second);
+        $stmt->bindParam(":troisieme_place",$prize_third);
+        $stmt->bindParam(":date_ouverture_inscription",$registration_start);
+        $stmt->bindParam(":date_cloture_inscription",$registration_end);
+        $stmt->bindParam(":frais_inscription",$registration_fee);
+        $stmt->bindParam(":discord",$discord_url);
+        $stmt->bindParam(":twitch",$stream_url);
+        $stmt->bindParam(":image",$tournament_photo);
     }
 }
 ?>
