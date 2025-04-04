@@ -3,6 +3,8 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\JeuxServices;
 use App\Services\ProfileServices;
+use App\Services\TournoiServices;
+
 session_start();
 
 class TournoiController extends BaseController{
@@ -15,6 +17,7 @@ class TournoiController extends BaseController{
         parent::__construct();
         $this->ProfileServices = new ProfileServices();
         $this->JeuxServices = new JeuxServices();
+        $this->TournnoiServices = new TournoiServices();
     }
 
     public function index(){
@@ -24,6 +27,7 @@ class TournoiController extends BaseController{
         return $this->renderOrg('tournoi',compact('profile','jeux'));
     }
     public function addTournoi(){
+        $user_id = $_SESSION["user_id"];
         $name = $_POST["name"];
         $game = $_POST["game"];
         $status = $_POST["status"];
@@ -47,8 +51,8 @@ class TournoiController extends BaseController{
         
         $tournament_photo = $this->generateImage($image,$currentImage);
 
-        $saveTournoi = $this->TournnoiServices->setTournoi($name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo);
-        
+        $saveTournoi = $this->TournnoiServices->setTournoi($user_id,$name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo);
+
     }
 }
 ?>
