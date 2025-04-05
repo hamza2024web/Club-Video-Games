@@ -914,6 +914,123 @@
             </form>
         </div>
     </div>
+
+    <!-- Recharge Modal -->
+    
+<div id="recharge-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl w-[450px] p-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 flex-grow text-center">Recharger votre compte</h2>
+            <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700 -mr-2">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <form id="recharge-form" class="space-y-5">
+            <div>
+                <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                        <i class="fas fa-euro-sign"></i>
+                    </span>
+                    <input 
+                        type="number" 
+                        id="recharge-amount" 
+                        class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        min="10" 
+                        max="500" 
+                        required
+                        placeholder="Entrez le montant"
+                    >
+                </div>
+            </div>
+            
+            <div>
+                <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input 
+                        type="text" 
+                        id="card-holder" 
+                        class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        required
+                        placeholder="Nom complet"
+                    >
+                </div>
+            </div>
+            
+            <div>
+                <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                        <i class="fas fa-credit-card"></i>
+                    </span>
+                    <input 
+                        type="text" 
+                        id="card-number" 
+                        class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        pattern="[0-9]{16}"
+                        maxlength="16"
+                        required
+                        placeholder="Numéro de carte"
+                    >
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                            <i class="fas fa-calendar-alt"></i>
+                        </span>
+                        <input 
+                            type="text" 
+                            id="card-expiry" 
+                            class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            pattern="(0[1-9]|1[0-2])\/[0-9]{2}"
+                            maxlength="5"
+                            required
+                            placeholder="MM/AA"
+                        >
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input 
+                            type="text" 
+                            id="card-cvv" 
+                            class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            pattern="[0-9]{3}"
+                            maxlength="3"
+                            required
+                            placeholder="CVV"
+                        >
+                    </div>
+                </div>
+            </div>
+            
+            <button 
+                type="submit" 
+                class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4"
+            >
+                Recharger mon compte
+            </button>
+            
+            <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                Paiement 100% sécurisé
+            </div>
+        </form>
+    </div>
+</div>
     
     <!-- JavaScript Logic -->
     <script>
@@ -1290,6 +1407,114 @@
                     closeStatusModal();
                 }
             });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const rechargeButton = Array.from(document.querySelectorAll('button')).find(
+                button => button.textContent.trim() === 'Recharger'
+            );
+            
+            const rechargeModal = document.getElementById('recharge-modal');
+            const closeModalButton = document.getElementById('close-recharge-modal');
+            const rechargeForm = document.getElementById('recharge-form');
+
+            // Input formatting
+            const cardNumberInput = document.getElementById('card-number');
+            const cardExpiryInput = document.getElementById('card-expiry');
+            const cardCvvInput = document.getElementById('card-cvv');
+
+            // Card number formatting
+            cardNumberInput.addEventListener('input', function(e) {
+                // Remove non-digit characters
+                let value = e.target.value.replace(/\D/g, '');
+                
+                // Truncate to 16 digits
+                value = value.substring(0, 16);
+                
+                e.target.value = value;
+            });
+
+            // Expiry date formatting
+            cardExpiryInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '').substring(0, 4);
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2);
+                }
+                e.target.value = value;
+            });
+
+            // CVV formatting
+            cardCvvInput.addEventListener('input', function(e) {
+                // Remove non-digit characters
+                let value = e.target.value.replace(/\D/g, '');
+                
+                // Truncate to 3 digits
+                value = value.substring(0, 3);
+                
+                e.target.value = value;
+            });
+
+            // Show modal function
+            function showModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.remove('hidden');
+                    rechargeModal.classList.add('flex');
+                }
+            }
+
+            // Hide modal function
+            function hideModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.add('hidden');
+                    rechargeModal.classList.remove('flex');
+                }
+            }
+
+            // Add click event to recharge button
+            if (rechargeButton) {
+                rechargeButton.addEventListener('click', showModal);
+            }
+
+            // Close modal button event
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', hideModal);
+            }
+
+            // Form submission
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Simulate recharge process
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours`,
+                        icon: 'info',
+                        confirmButtonColor: '#8b5cf6'
+                    }).then(() => {
+                        // Close modal after submission
+                        hideModal();
+                        
+                        // Optional: Update balance display
+                        const balanceElement = document.querySelector('.text-xl.font-bold');
+                        if (balanceElement) {
+                            const currentBalance = parseFloat(balanceElement.textContent.replace('€', '').trim());
+                            const newBalance = currentBalance + parseFloat(amount);
+                            balanceElement.textContent = `${newBalance.toFixed(2)} €`;
+                        }
+                    });
+                });
+            }
+
+            // Close modal when clicking outside
+            if (rechargeModal) {
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        hideModal();
+                    }
+                });
+            }
         });
     </script>
 </body>
