@@ -13,15 +13,6 @@ class CompteController extends BaseController {
     }
 
     public function rechargeCompte() {
-        if (!isset($_SESSION["user_id"])) {
-            header("location: /login");
-            exit;
-        }
-        
-        if (!isset($_POST["solde"]) || !is_numeric($_POST["solde"]) || $_POST["solde"] <= 0) {
-            header("location: /tournoi?Rechargement_de_votre_solde_échouée=1");
-            exit;
-        }
         
         $user_id = $_SESSION["user_id"];
         $montant = (float)$_POST["solde"]; 
@@ -30,10 +21,13 @@ class CompteController extends BaseController {
         // Effectuer le rechargement
         $success = $this->CompteServices->setSolde($user_id, $montant);
         
+        // Obtenir la page de référence ou utiliser tournoi par défaut
+        $referer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH) : '/tournoi';
+        
         if ($success) {
-            header("location: /tournoi?Rechargement_de_votre_solde_réussite=1");
+            header("location: " . $referer . "?Rechargement_de_votre_solde_réussite=1");
         } else {
-            header("location: /tournoi?Rechargement_de_votre_solde_échouée=1");
+            header("location: " . $referer . "?Rechargement_de_votre_solde_échouée=1");
         }
         exit;
     }

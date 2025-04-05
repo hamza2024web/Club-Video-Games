@@ -1122,6 +1122,10 @@
             
             // Vérifier si l'URL contient le paramètre de succès (vérifier les deux formats possibles)
             const urlParams = new URLSearchParams(window.location.search);
+            
+            // Obtenir le chemin de base sans les paramètres de query
+            const currentPath = window.location.pathname;
+            
             if (urlParams.get('message') === 'Rechargement de votre solde réussite' || 
                 urlParams.has('Rechargement_de_votre_solde_réussite')) {
                 Swal.fire({
@@ -1129,6 +1133,11 @@
                     text: 'Rechargement de votre solde réussi',
                     icon: 'success',
                     confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                    // Si vous souhaitez rafraîchir la page pour montrer le nouveau solde, décommentez la ligne suivante
+                    // window.location.reload();
                 });
             }
             
@@ -1139,6 +1148,9 @@
                     text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
                     icon: 'error',
                     confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
                 });
             }
         });
