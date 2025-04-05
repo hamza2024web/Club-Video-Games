@@ -18,6 +18,7 @@ class PayementServices {
     public function getUserPurchasedGames($user_id){
         return $this->PaymentRepository->getUserPurchasedGames($user_id);
     }
+
 }
 
 ?>

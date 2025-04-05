@@ -12,6 +12,7 @@ class PaymentController {
         $this->PayementServices = new PayementServices();
     }
 
+
     public function payer(){
         $user_id = $_SESSION["user_id"];
         $game_id = $_POST["games_id"];

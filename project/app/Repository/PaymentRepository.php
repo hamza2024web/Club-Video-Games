@@ -85,6 +85,9 @@ class PaymentRepository {
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function setSolde($user_id,$solde){
+
+    }
 }
 
 ?>

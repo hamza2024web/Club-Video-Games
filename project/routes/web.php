@@ -46,4 +46,6 @@ Route::post('organisateur/addTournoi','TournoiController@addTournoi');
 Route::post('/organisateur/updateTournoiStatus','TournoiController@updateTournoiStatus');
 // payment 
 Route::post('payer','PaymentController@payer');
+// compte
+Route::post('rechargeCompte','CompteController@rechargeCompte');
 ?>
