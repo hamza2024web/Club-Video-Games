@@ -395,6 +395,84 @@
             </div>
         </main>
     </div>
+        
+    <!-- Modal de rechargement -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                    <div>
+                        <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                            <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" required placeholder="MM/AA">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4">
+                        Recharger mon compte
+                    </button>
+                    
+                    <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                        Paiement 100% sécurisé
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -511,6 +589,130 @@
         document.head.appendChild(sidebarStyle);
         
 
+                document.addEventListener('DOMContentLoaded', function() {
+            // Find the recharge button
+            const rechargeButton = Array.from(document.querySelectorAll('button')).find(
+                button => button.textContent.trim() === 'Recharger'
+            );
+            
+            const rechargeModal = document.getElementById('recharge-modal');
+            const closeModalButton = document.getElementById('close-recharge-modal');
+            const rechargeForm = document.getElementById('recharge-form');
+
+            // Input formatting
+            const cardNumberInput = document.getElementById('card-number');
+            const cardExpiryInput = document.getElementById('card-expiry');
+            const cardCvvInput = document.getElementById('card-cvv');
+
+            // Show modal function
+            function showModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.remove('hidden');
+                    rechargeModal.classList.add('flex');
+                }
+            }
+
+            // Hide modal function
+            function hideModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.add('hidden');
+                    rechargeModal.classList.remove('flex');
+                }
+            }
+
+            // Add click event to recharge button
+            if (rechargeButton) {
+                rechargeButton.addEventListener('click', showModal);
+            }
+
+            // Close modal button event
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', hideModal);
+            }
+
+            // Form submission
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Simulate recharge process
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours`,
+                        icon: 'info',
+                        confirmButtonColor: '#8b5cf6'
+                    }).then(() => {
+                        // Close modal after submission
+                        hideModal();
+                    });
+                });
+            }
+
+            if (rechargeModal) {
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        hideModal();
+                    }
+                });
+            }
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trouver le formulaire de rechargement
+            const rechargeForm = document.getElementById('recharge-form');
+            
+            // Gestionnaire d'événement pour la soumission du formulaire
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    // Empêcher la soumission par défaut du formulaire
+                    e.preventDefault();
+                    
+                    // Récupérer le montant saisi
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Afficher l'alerte de chargement
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours...`,
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Soumettre le formulaire après un court délai pour montrer l'animation
+                    setTimeout(() => {
+                        rechargeForm.submit();
+                    }, 1500);
+                });
+            }
+            
+            // Vérifier si l'URL contient le paramètre de succès (vérifier les deux formats possibles)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('message') === 'Rechargement de votre solde réussite' || 
+                urlParams.has('Rechargement_de_votre_solde_réussite')) {
+                Swal.fire({
+                    title: 'Succès!',
+                    text: 'Rechargement de votre solde réussi',
+                    icon: 'success',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            }
+            
+            // Vérifier si l'URL contient un message d'échec
+            if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+                Swal.fire({
+                    title: 'Échec',
+                    text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            }
+        });
     </script>
 </body>
 </html>
