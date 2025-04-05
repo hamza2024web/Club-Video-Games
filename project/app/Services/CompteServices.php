@@ -10,7 +10,8 @@ class CompteServices {
         $this->CompteRepository = new CompteRepository();
     }
     public function getSolde($user_id){
-        $getamount = $this->CompteRepository->getSold($user_id);
+        $amount = $this->CompteRepository->getSold($user_id);
+        return $amount;
     }
     public function setSolde($user_id,$montant){
         $saveSolde = $this->CompteRepository->rechargerCompte($user_id,$montant);

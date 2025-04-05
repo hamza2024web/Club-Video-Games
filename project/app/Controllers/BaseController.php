@@ -90,14 +90,11 @@ class BaseController
         return $currentImage;
     }
     public function solde($user_id = null) {
-        // If no user_id is provided, try to use the session user_id
         if ($user_id === null) {
-        // Ensure session is started
         if (session_status() == PHP_SESSION_NONE) {
         session_start();
         }
 
-        // Check if user is logged in
         if (!isset($_SESSION["user_id"])) {
         throw new Exception("Aucun utilisateur connecté");
         }
@@ -105,7 +102,6 @@ class BaseController
         $user_id = $_SESSION["user_id"];
         }
 
-        // Call the service method to get the solde
         return $this->compteServices->getSolde($user_id);
     }
 

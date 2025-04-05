@@ -13,7 +13,8 @@ class CompteRepository {
         $this->conn = $db->getConnection();
     }
     public function getSold($user_id){
-        $stmt = $this->conn->prepare("SELECT solde FROM compte WHERE user_id = :user_id");
+        $sql = "SELECT solde FROM compte WHERE user_id = :user_id";
+        $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
