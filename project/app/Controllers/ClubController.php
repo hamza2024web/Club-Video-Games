@@ -16,10 +16,11 @@ class ClubController extends BaseController {
     }
     public function index() {
         $user_id = $_SESSION["user_id"];
+        $my_solde = $this->solde($user_id);
         $profile = $this->profileServices->getProfileUSer($user_id);
         $club = $this->clubServices->getClubUser($user_id);
         
-        return $this->renderOrg('ClubManagement', compact('profile', 'club'));
+        return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde'));
     }
     public function updateClub() {
         $user_id = $_SESSION["user_id"];

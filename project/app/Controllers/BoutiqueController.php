@@ -20,6 +20,7 @@ class BoutiqueController extends BaseController{
 
     public function index(){
         $user_id = $_SESSION["user_id"];
+        $my_solde = $this->solde($user_id);
         $genres = $this->AdminServices->getGenre();
         $profile = $this->ProfileServices->getProfileUser($user_id);
         $jeux = $this->AdminServices->getGame();
@@ -28,7 +29,7 @@ class BoutiqueController extends BaseController{
         foreach ($jeuxAchetes as $jeu) {
             $jeuxAchetesIds[] = $jeu['jeu_id'];
         }
-        return $this->renderOrg('boutique', compact('jeux', 'profile', 'genres', 'jeuxAchetesIds'));
+        return $this->renderOrg('boutique', compact('jeux', 'profile', 'genres', 'jeuxAchetesIds','my_solde'));
     }
 }
 ?>

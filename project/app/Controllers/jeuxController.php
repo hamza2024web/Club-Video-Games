@@ -20,10 +20,11 @@ class jeuxController extends BaseController {
     }
     public function index() {
         $user_id = $_SESSION["user_id"];
+        $my_solde = $this->solde($user_id);
         $profile = $this->ProfileServices->getProfileUser($user_id);
         $jeuxAchetes = $this->JeuxServices->getGame($user_id);
         $genres = $this->AdminServices->getGenre();
-        return $this->renderOrg('jeux', compact('profile', 'jeuxAchetes', 'genres'));
+        return $this->renderOrg('jeux', compact('profile', 'jeuxAchetes', 'genres','my_solde'));
     }
 }
 ?>
