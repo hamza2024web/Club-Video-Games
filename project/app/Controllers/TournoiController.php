@@ -22,6 +22,7 @@ class TournoiController extends BaseController{
 
     public function index(){
         $user_id = $_SESSION["user_id"];
+        $my_solde = $this->solde($user_id);
         $profile = $this->ProfileServices->getProfileUser($user_id);
         $jeux = $this->JeuxServices->getGame($user_id);
         $tournois = $this->TournnoiServices->getTournoi($user_id);

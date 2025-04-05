@@ -10,10 +10,6 @@ class CompteController extends BaseController {
         parent::__construct();
         $this->CompteServices = new CompteServices();
     }
-    public function solde(){
-        $user_id = $_SESSION["user_id"];
-        $solde = $this->CompteServices->getSolde($user_id);
-    }
 
     public function rechargeCompte(){
         $user_id = $_SESSION["user_id"];
