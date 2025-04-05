@@ -13,7 +13,7 @@ class TournoiRepository {
         $this->conn = $db->getConnection();
     }
     public function getTournoiInformations($user_id){
-        $sql = "SELECT tournoi.name,tournoi.date_de_debut,tournoi.date_de_fin,tournoi.numbre_membre,tournoi.statut,tournoi.regles,tournoi.description,jeux.nom_de_jeu
+        $sql = "SELECT tournoi.id,tournoi.name,tournoi.date_de_debut,tournoi.date_de_fin,tournoi.numbre_membre,tournoi.statut,tournoi.regles,tournoi.description,jeux.nom_de_jeu
         ,tournoi.prix_total ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.frais_inscription,tournoi.discord,tournoi.twitch,tournoi.image FROM tournoi
         INNER JOIN jeux ON jeux.id = tournoi.jeu_id
         INNER JOIN evenement ON evenement.id = tournoi.event_id
