@@ -86,13 +86,26 @@ class PaymentRepository {
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function GetSolde($user_id){
-        $sql = "SELECT solde FROM compte WHERE user_id=:user_id";
+
+    public function GetSolde($user_id) {
+        $sql = "SELECT solde FROM compte WHERE user_id = :user_id";
         $pricestmt = $this->conn->prepare($sql);
-        $pricestmt->bindParam(":user_id",$user_id);
+        $pricestmt->bindParam(":user_id", $user_id);
         $pricestmt->execute();
         $price = $pricestmt->fetch(PDO::FETCH_ASSOC);
-        return $price;
+        return $price['solde'];
+    }
+    public function updateUserSolde($user_id, $newSolde) {
+        try {
+            $sql = "UPDATE compte SET solde = :solde WHERE user_id = :user_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":solde", $newSolde, PDO::PARAM_STR);
+            $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Update solde error: " . $e->getMessage());
+            return false;
+        }
     }
 }
 
