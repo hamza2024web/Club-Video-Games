@@ -26,15 +26,7 @@ class TournoiRepository {
         return $tournoi;
     }
     public function addTounroi($user_id, $name, $start_date, $end_date, $max_participants, $status, $rules, $game, $format, $description, $prix_total, $prize_first, $prize_second, $prize_third, $registration_start, $registration_end, $registration_fee, $discord_url, $stream_url, $tournament_photo) {
-        try {
-            // Liste des statuts valides selon votre définition ENUM
-            $validStatuses = ['Pending', 'Open', 'In Progress', 'Paused', 'Completed', 'Cancelled', 'Full', 'Registration Closed'];
-            
-            // Vérifiez que le statut est valide
-            if (!in_array($status, $validStatuses)) {
-                $status = 'Pending'; // Valeur par défaut si non valide
-            }
-            
+        try {            
             // Récupérer le club_id de l'organisateur
             $query = "SELECT club_id FROM organisateur WHERE user_id=:user_id";
             $stmt = $this->conn->prepare($query);

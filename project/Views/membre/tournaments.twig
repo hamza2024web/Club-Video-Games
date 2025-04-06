@@ -309,36 +309,37 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Tournament Card 1 -->
+                    {% for tournoi in tournois %}
                     <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
                         <div class="relative">
-                            <img src="https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70070000023212/a0009b79158fb57944bccf96b3fed690790cbb0de4e660128d39b28dd4311f92" alt="Tournament" class="w-full h-40 object-cover">
+                            <img src="/{{tournoi.image}}" alt="Tournament" class="w-full h-40 object-cover">
                             <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                <i class="fas fa-calendar-alt mr-1"></i> 12 Avril, 18:00
+                                <i class="fas fa-calendar-alt mr-1"></i> {{tournoi.date_de_debut}}
                             </div>
                             <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
-                                500€ de prix
+                                {{tournoi.frais_inscription}}€ de prix
                             </div>
                         </div>
                         <div class="p-5">
                             <div class="flex justify-between items-start mb-2">
                                 <h3 class="text-lg font-bold text-gray-800">FIFA 25 Ultimate Cup</h3>
                                 <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
-                                    Places disponibles
+                                    {{tournoi.statut}}
                                 </div>
                             </div>
-                            <p class="text-sm text-gray-600 mb-4">Tournoi 1v1 pour couronner le meilleur joueur FIFA de la plateforme</p>
+                            <p class="text-sm text-gray-600 mb-4">Tournoi {{tournoi.format_tournoi}} pour couronner le meilleur joueur FIFA de la plateforme</p>
                             <div class="flex justify-between items-center text-sm">
                                 <div class="flex items-center">
                                     <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
                                         <i class="fas fa-users text-blue-600"></i>
                                     </div>
-                                    <span class="text-gray-600">32 joueurs</span>
+                                    <span class="text-gray-600">{{tournoi.numbre_membre}} joueurs</span>
                                 </div>
                                 <div class="flex items-center">
                                     <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
                                         <i class="fas fa-trophy text-purple-600"></i>
                                     </div>
-                                    <span class="text-gray-600">1v1</span>
+                                    <span class="text-gray-600">{{tournoi.format_tournoi}}</span>
                                 </div>
                             </div>
                             <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
@@ -346,201 +347,8 @@
                             </button>
                         </div>
                     </div>
-                    
-                    <!-- Tournament Card 2 -->
-                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
-                        <div class="relative">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShtZ4-blVSiLEDsFzDeKNFrJUl_XDygpIMqA&s" alt="Tournament" class="w-full h-40 object-cover">
-                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                <i class="fas fa-calendar-alt mr-1"></i> 15 Avril, 19:00
-                            </div>
-                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
-                                1000€ de prix
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Hogwarts Legacy Duel</h3>
-                                <div class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
-                                    Bientôt complet
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-4">Affrontez d'autres sorciers dans ce tournoi de duels magiques</p>
-                            <div class="flex justify-between items-center text-sm">
-                                <div class="flex items-center">
-                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-users text-blue-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">64 joueurs</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-trophy text-purple-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">1v1</span>
-                                </div>
-                            </div>
-                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
-                                S'inscrire
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Tournament Card 3 -->
-                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
-                        <div class="relative">
-                            <img src="https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg" alt="Tournament" class="w-full h-40 object-cover">
-                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                <i class="fas fa-calendar-alt mr-1"></i> 20 Avril, 14:00
-                            </div>
-                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
-                                2000€ de prix
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Valorant Pro League</h3>
-                                <div class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
-                                    Dernier jour
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-4">Formez votre équipe de 5 et dominez dans ce tournoi d'élite</p>
-                            <div class="flex justify-between items-center text-sm">
-                                <div class="flex items-center">
-                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-users text-blue-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">16 équipes</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-trophy text-purple-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">5v5</span>
-                                </div>
-                            </div>
-                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
-                                S'inscrire
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Tournament Card 4 -->
-                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
-                        <div class="relative">
-                            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/990080/header.jpg" alt="Tournament" class="w-full h-40 object-cover">
-                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                <i class="fas fa-calendar-alt mr-1"></i> 22 Avril, 20:00
-                            </div>
-                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
-                                750€ de prix
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">Hogwarts Legacy Duel</h3>
-                                <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
-                                    Places disponibles
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-4">La magie et la stratégie s'affrontent dans ce tournoi spécial</p>
-                            <div class="flex justify-between items-center text-sm">
-                                <div class="flex items-center">
-                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-users text-blue-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">32 joueurs</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-trophy text-purple-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">1v1</span>
-                                </div>
-                            </div>
-                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
-                                S'inscrire
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Tournament Card 5 -->
-                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
-                        <div class="relative">
-                            <img src="https://cdn.akamai.steamstatic.com/steam/apps/2394790/header.jpg" alt="Tournament" class="w-full h-40 object-cover">
-                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                <i class="fas fa-calendar-alt mr-1"></i> 25 Avril, 18:00
-                            </div>
-                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
-                                1500€ de prix
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">FIFA 25 Team Cup</h3>
-                                <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
-                                    Places disponibles
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-4">Formez votre équipe de 2 joueurs et dominez sur le terrain</p>
-                            <div class="flex justify-between items-center text-sm">
-                                <div class="flex items-center">
-                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-users text-blue-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">16 équipes</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-trophy text-purple-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">2v2</span>
-                                </div>
-                            </div>
-                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
-                                S'inscrire
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Tournament Card 6 -->
-                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
-                        <div class="relative">
-                            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406" alt="Tournament" class="w-full h-40 object-cover">
-                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                <i class="fas fa-calendar-alt mr-1"></i> 30 Avril, 19:00
-                            </div>
-                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
-                                3000€ de prix
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-lg font-bold text-gray-800">COD Championship</h3>
-                                <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
-                                    Places disponibles
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-600 mb-4">Le plus grand tournoi de l'année pour les fans de Call of Duty</p>
-                            <div class="flex justify-between items-center text-sm">
-                                <div class="flex items-center">
-                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-users text-blue-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">32 équipes</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
-                                        <i class="fas fa-trophy text-purple-600"></i>
-                                    </div>
-                                    <span class="text-gray-600">4v4</span>
-                                </div>
-                            </div>
-                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
-                                S'inscrire
-                            </button>
-                        </div>
-                    </div>
+                    {% endfor %}
+
                 </div>
                 
                 <div class="flex justify-center mt-8">
