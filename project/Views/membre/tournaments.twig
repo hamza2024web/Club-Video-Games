@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamersHub - Tournois</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-item:hover::after {
+            width: 100%;
+        }
+
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .tournament-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .tournament-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tournament-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(45deg);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .tournament-card:hover::before {
+            opacity: 1;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 10px;
+        }
+        
+        .tab-active {
+            color: #6366F1;
+            border-bottom: 2px solid #6366F1;
+        }
+        
+        .status-live {
+            position: relative;
+        }
+        
+        .status-live::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #EF4444;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        
+        .prize-badge {
+            background: linear-gradient(45deg, #F59E0B, #EF4444);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
+            <div class="mb-8 text-center">
+                <div class="flex justify-center mb-3">
+                    <i class="fas fa-gamepad text-4xl text-purple-300"></i>
+                </div>
+                <h1 class="text-2xl font-bold">GamersHub</h1>
+                <p class="text-sm text-purple-200">Member Portal</p>
+            </div>
+
+            <nav class="flex-grow">
+                <ul class="space-y-1">
+                    <li><a href="/member/dashboard" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-home mr-3 text-purple-300"></i>Dashboard</a></li>
+                    <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>My Games</a></li>
+                    <li><a href="/member/tournaments" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournaments</a></li>
+                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Friends</a></li>
+                    <li><a href="/member/messages" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition">
+                        <i class="fas fa-envelope mr-3 text-purple-300"></i>Messages
+                        <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
+                    </a></li>
+                    <li><a href="/member/rewards" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gift mr-3 text-purple-300"></i>Rewards</a></li>
+                    <li><a href="/member/profile" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profile</a></li>
+                    <li><a href="/member/settings" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-cog mr-3 text-purple-300"></i>Settings</a></li>
+                </ul>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <div class="flex items-center space-x-2 mb-3 p-2 rounded-lg bg-indigo-800/50">
+                    <img src="/{{member.profile_photo}}" class="rounded-full border-2 border-purple-300 h-20 w-20" alt="Member Profile">
+                    <div>
+                        <p class="text-sm font-medium">{{member.name}}</p>
+                        <div class="flex items-center">
+                            <i class="fas fa-circle text-green-500 mr-1 text-xs"></i>
+                            <p class="text-xs text-purple-300">Online</p>
+                        </div>
+                        <p class="text-xs text-purple-300 mt-1">Solde: {{member.solde}} €</p>
+                    </div>
+                </div>
+                <!-- Mini Account Balance -->
+                <div class="p-3 border-t border-indigo-800 sidebar-footer">
+                    <div class="bg-indigo-800 rounded-lg p-2 text-center">
+                        <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
+                        <button class="mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                            Recharger
+                        </button>
+                    </div>
+                </div>
+                <a href="/logout">
+                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Tournois</h1>
+                    <p class="text-gray-500">Participez à des tournois compétitifs et gagnez des prix</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Rechercher des tournois..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-600 hover:text-gray-800 transition">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tournament Tabs -->
+            <div class="bg-white rounded-xl shadow-sm mb-8">
+                <div class="flex border-b">
+                    <button class="tab-active flex-1 py-4 px-6 text-center font-medium">
+                        Tous les tournois
+                    </button>
+                    <button class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-gray-800 transition">
+                        Mes inscriptions
+                    </button>
+                    <button class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-gray-800 transition">
+                        Tournois terminés
+                    </button>
+                    <button class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-gray-800 transition">
+                        Calendrier
+                    </button>
+                </div>
+            </div>
+
+            <!-- Featured Tournament -->
+            <section class="mb-10 relative">
+                <div class="bg-indigo-900 rounded-xl overflow-hidden relative shadow-lg">
+                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-900/90 to-indigo-900/40"></div>
+                    <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406" alt="Featured Tournament" class="w-full h-72 object-cover">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="p-10 max-w-2xl">
+                            <div class="flex items-center mb-4">
+                                <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">En vedette</span>
+                                <span class="status-live bg-black/50 text-white text-xs px-3 py-1 rounded-full flex items-center">
+                                    EN DIRECT
+                                </span>
+                            </div>
+                            <h2 class="text-3xl font-bold text-white mb-2">Championnat Call of Duty 2025</h2>
+                            <p class="text-gray-200 mb-4">Affrontez les meilleurs joueurs et prouvez votre talent dans ce tournoi épique de Call of Duty. Prix total de 5000€!</p>
+                            <div class="flex space-x-4 items-center">
+                                <button class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2.5 rounded-lg flex items-center font-medium transition-colors">
+                                    <i class="fas fa-trophy mr-2"></i> S'inscrire maintenant
+                                </button>
+                                <div class="bg-black/30 text-white px-4 py-2 rounded-lg flex items-center text-sm">
+                                    <i class="fas fa-users mr-2"></i> 128 participants
+                                </div>
+                                <div class="bg-black/30 text-white px-4 py-2 rounded-lg flex items-center text-sm">
+                                    <i class="fas fa-calendar-alt mr-2"></i> Débute le 15 Avril
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Tournament Categories -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Filtrer par catégorie</h2>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition shadow-sm">
+                        Tous
+                    </button>
+                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
+                        <i class="fas fa-crosshairs mr-1 text-red-500"></i> FPS
+                    </button>
+                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
+                        <i class="fas fa-gamepad mr-1 text-blue-500"></i> Battle Royale
+                    </button>
+                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
+                        <i class="fas fa-futbol mr-1 text-green-500"></i> Sports
+                    </button>
+                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
+                        <i class="fas fa-chess mr-1 text-yellow-500"></i> Stratégie
+                    </button>
+                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
+                        <i class="fas fa-fighter-jet mr-1 text-orange-500"></i> Course
+                    </button>
+                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
+                        <i class="fas fa-cubes mr-1 text-purple-500"></i> Sandbox
+                    </button>
+                </div>
+            </section>
+
+            <!-- Active Tournaments -->
+            <section class="mb-10">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Tournois actifs</h2>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-500 mr-3">Trier par:</span>
+                        <select class="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>Date de début</option>
+                            <option>Prix</option>
+                            <option>Popularité</option>
+                            <option>Jeu</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Tournament Card 1 -->
+                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="relative">
+                            <img src="https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70070000023212/a0009b79158fb57944bccf96b3fed690790cbb0de4e660128d39b28dd4311f92" alt="Tournament" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                <i class="fas fa-calendar-alt mr-1"></i> 12 Avril, 18:00
+                            </div>
+                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
+                                500€ de prix
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">FIFA 25 Ultimate Cup</h3>
+                                <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                                    Places disponibles
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Tournoi 1v1 pour couronner le meilleur joueur FIFA de la plateforme</p>
+                            <div class="flex justify-between items-center text-sm">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-users text-blue-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">32 joueurs</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-trophy text-purple-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">1v1</span>
+                                </div>
+                            </div>
+                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
+                                S'inscrire
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tournament Card 2 -->
+                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="relative">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShtZ4-blVSiLEDsFzDeKNFrJUl_XDygpIMqA&s" alt="Tournament" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                <i class="fas fa-calendar-alt mr-1"></i> 15 Avril, 19:00
+                            </div>
+                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
+                                1000€ de prix
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">Hogwarts Legacy Duel</h3>
+                                <div class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
+                                    Bientôt complet
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Affrontez d'autres sorciers dans ce tournoi de duels magiques</p>
+                            <div class="flex justify-between items-center text-sm">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-users text-blue-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">64 joueurs</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-trophy text-purple-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">1v1</span>
+                                </div>
+                            </div>
+                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
+                                S'inscrire
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tournament Card 3 -->
+                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="relative">
+                            <img src="https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg" alt="Tournament" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                <i class="fas fa-calendar-alt mr-1"></i> 20 Avril, 14:00
+                            </div>
+                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
+                                2000€ de prix
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">Valorant Pro League</h3>
+                                <div class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                                    Dernier jour
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Formez votre équipe de 5 et dominez dans ce tournoi d'élite</p>
+                            <div class="flex justify-between items-center text-sm">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-users text-blue-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">16 équipes</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-trophy text-purple-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">5v5</span>
+                                </div>
+                            </div>
+                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
+                                S'inscrire
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tournament Card 4 -->
+                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="relative">
+                            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/990080/header.jpg" alt="Tournament" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                <i class="fas fa-calendar-alt mr-1"></i> 22 Avril, 20:00
+                            </div>
+                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
+                                750€ de prix
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">Hogwarts Legacy Duel</h3>
+                                <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                                    Places disponibles
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">La magie et la stratégie s'affrontent dans ce tournoi spécial</p>
+                            <div class="flex justify-between items-center text-sm">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-users text-blue-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">32 joueurs</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-trophy text-purple-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">1v1</span>
+                                </div>
+                            </div>
+                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
+                                S'inscrire
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tournament Card 5 -->
+                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="relative">
+                            <img src="https://cdn.akamai.steamstatic.com/steam/apps/2394790/header.jpg" alt="Tournament" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                <i class="fas fa-calendar-alt mr-1"></i> 25 Avril, 18:00
+                            </div>
+                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
+                                1500€ de prix
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">FIFA 25 Team Cup</h3>
+                                <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                                    Places disponibles
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Formez votre équipe de 2 joueurs et dominez sur le terrain</p>
+                            <div class="flex justify-between items-center text-sm">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-users text-blue-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">16 équipes</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-trophy text-purple-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">2v2</span>
+                                </div>
+                            </div>
+                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
+                                S'inscrire
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tournament Card 6 -->
+                    <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="relative">
+                            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406" alt="Tournament" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                <i class="fas fa-calendar-alt mr-1"></i> 30 Avril, 19:00
+                            </div>
+                            <div class="prize-badge absolute top-3 right-3 text-white text-xs font-bold px-2 py-1 rounded">
+                                3000€ de prix
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">COD Championship</h3>
+                                <div class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                                    Places disponibles
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Le plus grand tournoi de l'année pour les fans de Call of Duty</p>
+                            <div class="flex justify-between items-center text-sm">
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-users text-blue-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">32 équipes</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="bg-purple-100 p-1.5 rounded-lg mr-2">
+                                        <i class="fas fa-trophy text-purple-600"></i>
+                                    </div>
+                                    <span class="text-gray-600">4v4</span>
+                                </div>
+                            </div>
+                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
+                                S'inscrire
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center mt-8">
+                    <button class="px-6 py-3 bg-white border border-gray-300 rounded-lg text-purple-600 hover:bg-gray-50 transition flex items-center font-medium">
+                        Voir plus de tournois <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Tournament Stats -->
+            <section class="mb-10">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-gray-500 text-sm font-medium">Tournois participés</h3>
+                                <p class="text-3xl font-bold text-gray-800">24</p>
+                                <p class="text-xs text-green-500 mt-1">↑ 3 ce mois-ci</p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-lg">
+                                <i class="fas fa-gamepad text-purple-600 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-gray-500 text-sm font-medium">Victoires</h3>
+                                <p class="text-3xl font-bold text-gray-800">7</p>
+                                <p class="text-xs text-green-500 mt-1">↑ 2 ce mois-ci</p>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-lg">
+                                <i class="fas fa-trophy text-green-600 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-gray-500 text-sm font-medium">Récompenses gagnées</h3>
+                                <p class="text-3xl font-bold text-gray-800">4 250 €</p>
+                                <p class="text-xs text-green-500 mt-1">↑ 750 € ce mois-ci</p>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-lg">
+                                <i class="fas fa-coins text-yellow-600 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Past Tournament Results -->
+            <section class="mb-10">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Mes résultats précédents</h2>
+                    <a href="/member/tournaments/history" class="text-sm text-purple-600 hover:text-purple-800 transition">Voir tout l'historique</a>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Tournoi
+                                </th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Date
+                                </th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Placement
+                                </th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Récompense
+                                </th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Statistiques
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                                            <img src="https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg" class="w-full h-full object-cover" alt="Tournament">
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">Valorant Spring Cup</div>
+                                            <div class="text-xs text-gray-500">Équipe de 5</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">12 Mars 2025</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                        1er place
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    1 500 €
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Détails</a>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                                            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406" class="w-full h-full object-cover" alt="Tournament">
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">COD Winter Showdown</div>
+                                            <div class="text-xs text-gray-500">Solo</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">28 Février 2025</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        3ème place
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    500 €
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Détails</a>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                                            <img src="https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70070000023212/a0009b79158fb57944bccf96b3fed690790cbb0de4e660128d39b28dd4311f92" class="w-full h-full object-cover" alt="Tournament">
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">FIFA Pro League</div>
+                                            <div class="text-xs text-gray-500">1v1</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">15 Février 2025</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                                        5ème place
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    250 €
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Détails</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- Create Tournament Banner -->
+            <section class="mb-10">
+                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-8 relative overflow-hidden shadow-lg">
+                    <div class="absolute top-0 right-0 w-64 h-64 -mt-10 -mr-10">
+                        <div class="absolute inset-0 bg-white opacity-10 rounded-full transform rotate-45"></div>
+                    </div>
+                    <div class="max-w-3xl relative z-10">
+                        <h2 class="text-2xl font-bold text-white mb-3">Vous voulez organiser votre propre tournoi?</h2>
+                        <p class="text-purple-100 mb-6">Créez et gérez votre propre événement pour vous mesurer à vos amis ou à la communauté. Débloquez des fonctionnalités premium pour les organisateurs!</p>
+                        <button class="bg-white text-purple-700 px-6 py-2.5 rounded-lg font-medium hover:bg-purple-50 transition-colors inline-flex items-center">
+                            <i class="fas fa-trophy mr-2"></i> Devenir organisateur
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Call to Action -->
+            <section class="bg-white rounded-xl shadow-sm p-6 mb-10">
+                <div class="text-center max-w-2xl mx-auto">
+                    <h2 class="text-xl font-bold text-gray-800 mb-3">Prêt à montrer vos compétences?</h2>
+                    <p class="text-gray-600 mb-6">Rejoignez nos tournois réguliers et affrontez les meilleurs joueurs. Gagnez des prix et améliorez votre classement!</p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <button class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                            Tournois populaires
+                        </button>
+                        <button class="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+                            Créer une équipe
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de rechargement -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                    <div>
+                        <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                            <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" required placeholder="MM/AA">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4">
+                        Recharger mon compte
+                    </button>
+                    
+                    <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                        Paiement 100% sécurisé
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Action Button -->
+    <button class="fixed bottom-6 right-6 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full shadow-lg hover:from-purple-700 hover:to-indigo-700 transition z-50">
+        <i class="fas fa-plus"></i>
+    </button>
+    
+    <script>
+        // Modal de rechargement
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trouver le bouton "Recharger" dans la barre latérale
+            const rechargeBtn = document.querySelector('.sidebar-footer button');
+            const rechargeModal = document.getElementById('recharge-modal');
+            const closeModalBtn = document.getElementById('close-recharge-modal');
+            
+            // Fonction pour ouvrir le modal
+            function openRechargeModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.remove('hidden');
+                    rechargeModal.classList.add('flex');
+                }
+            }
+            
+            // Fonction pour fermer le modal
+            function closeRechargeModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.add('hidden');
+                    rechargeModal.classList.remove('flex');
+                }
+            }
+            
+            // Ajouter un événement click au bouton "Recharger"
+            if (rechargeBtn) {
+                rechargeBtn.addEventListener('click', openRechargeModal);
+            }
+            
+            // Ajouter un événement click au bouton de fermeture
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', closeRechargeModal);
+            }
+            
+            // Fermer le modal quand on clique en dehors
+            if (rechargeModal) {
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        closeRechargeModal();
+                    }
+                });
+            }
+            
+            // Gestion du formulaire de rechargement
+            const rechargeForm = document.getElementById('recharge-form');
+            
+            // Gestionnaire d'événement pour la soumission du formulaire
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    // Empêcher la soumission par défaut du formulaire
+                    e.preventDefault();
+                    
+                    // Récupérer le montant saisi
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Afficher l'alerte de chargement
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours...`,
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Soumettre le formulaire après un court délai pour montrer l'animation
+                    setTimeout(() => {
+                        rechargeForm.submit();
+                    }, 1500);
+                });
+            }
+            
+            // Vérifier si l'URL contient le paramètre de succès
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentPath = window.location.pathname;
+            
+            if (urlParams.has('Rechargement_de_votre_solde_réussite')) {
+                Swal.fire({
+                    title: 'Succès!',
+                    text: 'Rechargement de votre solde réussi',
+                    icon: 'success',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                });
+            }
+            
+            // Vérifier si l'URL contient un message d'échec
+            if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+                Swal.fire({
+                    title: 'Échec',
+                    text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
