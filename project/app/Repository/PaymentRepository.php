@@ -14,20 +14,20 @@ class PaymentRepository {
         $this->conn = $db->getConnection();
     }
 
-    public function savePayement($user_id, $game_id, $order_id) {
+    public function savePayement($user_id, $game_id, $order_id, $price) {
         try {
-    
-            // Decode game IDs and order IDs
+            // Decode game IDs, order IDs, and prices
             $gameIds = json_decode($game_id, true);
             $orderIds = json_decode($order_id, true);
+            $prices = json_decode($price, true);
             
             // Check if arrays have same length
-            if (count($gameIds) !== count($orderIds)) {
-                throw new Exception("Mismatch between game and order IDs");
+            if (count($gameIds) !== count($orderIds) || count($gameIds) !== count($prices)) {
+                throw new Exception("Mismatch between game, order IDs, and prices");
             }
             
             // Prepare order insertion statement
-            $orderStmt = $this->conn->prepare("INSERT INTO orders (jeu_id, order_id, user_id) VALUES (:game_id, :order_id, :user_id)");
+            $orderStmt = $this->conn->prepare("INSERT INTO orders (jeu_id, order_id, user_id, price) VALUES (:game_id, :order_id, :user_id, :price)");
             
             $results = [];
             
@@ -40,6 +40,7 @@ class PaymentRepository {
                 $orderStmt->bindParam(":game_id", $gameIds[$i], PDO::PARAM_INT);
                 $orderStmt->bindParam(":order_id", $orderIds[$i], PDO::PARAM_STR);
                 $orderStmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+                $orderStmt->bindParam(":price", $prices[$i], PDO::PARAM_STR); // Changed to PARAM_STR for float values
                 $orderStmt->execute();
                 
                 // Récupérer l'ID de la dernière insertion
@@ -85,8 +86,13 @@ class PaymentRepository {
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function setSolde($user_id,$solde){
-
+    public function GetSolde($user_id){
+        $sql = "SELECT solde FROM compte WHERE user_id=:user_id";
+        $pricestmt = $this->conn->prepare($sql);
+        $pricestmt->bindParam(":user_id",$user_id);
+        $pricestmt->execute();
+        $price = $pricestmt->fetch(PDO::FETCH_ASSOC);
+        return $price;
     }
 }
 

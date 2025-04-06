@@ -1,4 +1,6 @@
 // Payment functionality
+let cartTotal = 0;
+
 function checkout() {
     if (cart.length === 0) return;
     
@@ -13,6 +15,9 @@ function checkout() {
     const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
     const tax = subtotal * 0.2;
     const total = subtotal + tax;
+    
+    // Stockez le total dans la variable globale
+    cartTotal = total;
     
     // Update payment modal info
     itemsCountElement.textContent = cart.length;
@@ -74,7 +79,8 @@ function processPayment() {
         // Vous pouvez également créer un objet combiné si nécessaire
         let orderDetails = cartItems.map(item => ({
             game_id: item.id,
-            order_id: item.order_id
+            order_id: item.order_id,
+            price: item.price
         }));
                 
         // Créer un formulaire caché pour soumettre les données
@@ -96,6 +102,20 @@ function processPayment() {
         orderIdsInput.name = 'order_id';
         orderIdsInput.value = JSON.stringify(orderDetails.map(item => item.order_id));
         form.appendChild(orderIdsInput);
+
+        // Ajouter un champ caché pour les prix individuels
+        const priceInput = document.createElement('input');
+        priceInput.type = 'hidden';
+        priceInput.name = 'price';
+        priceInput.value = JSON.stringify(orderDetails.map(item => item.price));
+        form.appendChild(priceInput);
+        
+        // Ajouter un champ caché pour le montant total
+        const totalAmountInput = document.createElement('input');
+        totalAmountInput.type = 'hidden';
+        totalAmountInput.name = 'total_amount';
+        totalAmountInput.value = cartTotal.toFixed(2);
+        form.appendChild(totalAmountInput);
         
         // Ajouter le formulaire au document
         document.body.appendChild(form);

@@ -17,8 +17,10 @@ class PaymentController {
         $user_id = $_SESSION["user_id"];
         $game_id = $_POST["games_id"];
         $order_id = $_POST["order_id"];
+        $price = $_POST["price"];
+        $total = $_POST["total_amount"];
 
-        $saveOrder = $this->PayementServices->saveOrder($user_id,$game_id,$order_id);
+        $saveOrder = $this->PayementServices->saveOrder($user_id,$game_id,$order_id,$price,$total);
 
         if ($saveOrder){
             header("location: /boutique?paiment_réussite=1");

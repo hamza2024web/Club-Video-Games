@@ -962,6 +962,21 @@
                 });
             }
         });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('paiment_échouée')) {
+                Swal.fire({
+                    title: "Échec",
+                    text: "Please Verify Your Solde!",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/boutique";
+                });
+            }
+        });
         // Initialize sidebar
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButton = document.getElementById('sidebar-toggle');
