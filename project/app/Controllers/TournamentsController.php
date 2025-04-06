@@ -18,7 +18,8 @@ class TournamentsController extends BaseController {
     public function index(){
         $user_id = $_SESSION["user_id"];
         $member = $this->MembreServices->getProfileMembre($user_id);
-        return $this->renderMem('tournaments',compact('member'));
+        $my_solde = $this->solde($user_id);
+        return $this->renderMem('tournaments',compact('member','my_solde'));
     }
 }
 ?>
