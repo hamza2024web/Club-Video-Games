@@ -20,13 +20,20 @@ class TournamentsController extends BaseController {
         $member = $this->MembreServices->getProfileMembre($user_id);
         $my_solde = $this->solde($user_id);
         $tournois = $this->TournamentsServices->getAllTournoi();
-        return $this->renderMem('tournaments',compact('member','my_solde','tournois'));
+        $inscriptions = $this->TournamentsServices->getInscriptionTournoi($user_id);
+        return $this->renderMem('tournaments',compact('member','my_solde','tournois','inscriptions'));
     }
     public function inscriptionTournoi(){
         $user_id = $_SESSION["user_id"];
         $tournoi_id = $_POST["tournoi_id"];
 
         $inscription = $this->TournamentsServices->Inscription($user_id,$tournoi_id);
+
+        if($inscription){
+            header("location: /member/tournaments?Inscription_succefully=1");
+        } else {
+            header("location: /member/tournaments?Inscription_failed=1");
+        }
     }
 }
 ?>

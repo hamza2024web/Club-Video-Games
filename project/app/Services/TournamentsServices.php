@@ -15,7 +15,12 @@ class TournamentsServices {
         return $tournois;
     }
     public function Inscription($user_id,$tournoi_id){
-        $inscription = $this->TournamentsRepository->Inscription_member($user_id,$tournoi_id);
+        $inscription = $this->TournamentsRepository->Inscription_Tournoi($user_id,$tournoi_id);
+        return $inscription;
+    }
+    public function getInscriptionTournoi($user_id){
+        $inscriptions = $this->TournamentsRepository->getTournoiInscri($user_id);
+        return $inscriptions;
     }
 }
 ?>

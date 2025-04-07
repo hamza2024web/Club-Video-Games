@@ -215,17 +215,17 @@
 
             <!-- Tournament Tabs -->
             <div class="bg-white rounded-xl shadow-sm mb-8">
-                <div class="flex border-b">
-                    <button class="tab-active flex-1 py-4 px-6 text-center font-medium">
+                <div class="flex border-b tournament-tabs">
+                    <button data-tab="all-tournaments" class="tab-active flex-1 py-4 px-6 text-center font-medium">
                         Tous les tournois
                     </button>
-                    <button class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-gray-800 transition">
+                    <button data-tab="mes-inscriptions" class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-gray-800 transition">
                         Mes inscriptions
                     </button>
-                    <button class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-gray-800 transition">
+                    <button data-tab="tournois-termines" class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-gray-800 transition">
                         Tournois terminés
                     </button>
-                    <button class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-gray-800 transition">
+                    <button data-tab="calendrier" class="flex-1 py-4 px-6 text-center font-medium text-gray-500 hover:text-gray-800 transition">
                         Calendrier
                     </button>
                 </div>
@@ -406,123 +406,146 @@
                 </div>
             </section>
             
-            <!-- Past Tournament Results -->
-            <section class="mb-10">
+            <!-- Section Mes Inscriptions -->
+            <section id="mes-inscriptions" class="hidden">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-gray-800">Mes résultats précédents</h2>
-                    <a href="/member/tournaments/history" class="text-sm text-purple-600 hover:text-purple-800 transition">Voir tout l'historique</a>
+                    <h2 class="text-xl font-bold text-gray-800">Mes Inscriptions Actives</h2>
+                    <div class="flex items-center space-x-2">
+                        <select class="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>Tous les tournois</option>
+                            <option>FPS</option>
+                            <option>Sports</option>
+                            <option>Battle Royale</option>
+                        </select>
+                        <button class="text-purple-600 hover:text-purple-800 transition flex items-center">
+                            <i class="fas fa-filter mr-1"></i> Filtrer
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Tournoi
-                                </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
-                                </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Placement
-                                </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Récompense
-                                </th>
-                                <th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Statistiques
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
-                                            <img src="https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg" class="w-full h-full object-cover" alt="Tournament">
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">Valorant Spring Cup</div>
-                                            <div class="text-xs text-gray-500">Équipe de 5</div>
-                                        </div>
+
+                {% if inscriptions %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for inscription in inscriptions %}
+                        <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:border-purple-200 transition">
+                            <div class="relative">
+                                <img src="/{{inscription.tournoi.image}}" alt="Tournament" class="w-full h-40 object-cover">
+                                <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                    <i class="fas fa-calendar-alt mr-1"></i> {{ inscription.tournoi.date_de_debut }}
+                                </div>
+                                <div class="absolute top-3 right-3 text-xs font-bold px-2 py-1 rounded 
+                                    {% if inscription.statut == 'En cours' %}bg-green-500 text-white
+                                    {% elseif inscription.statut == 'À venir' %}bg-blue-500 text-white
+                                    {% else %}bg-gray-500 text-white{% endif %}">
+                                    {{ inscription.statut }}
+                                </div>
+                            </div>
+                            <div class="p-5">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-lg font-bold text-gray-800">{{ inscription.tournoi.name }}</h3>
+                                    <div class="flex items-center text-yellow-500">
+                                        <i class="fas fa-trophy mr-1"></i>
+                                        <span class="text-sm font-semibold">{{ inscription.tournoi.prix }} €</span>
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">12 Mars 2025</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                        1er place
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    1 500 €
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Détails</a>
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
-                                            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406" class="w-full h-full object-cover" alt="Tournament">
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">COD Winter Showdown</div>
-                                            <div class="text-xs text-gray-500">Solo</div>
-                                        </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ inscription.tournoi.description }}</p>
+                                
+                                <div class="grid grid-cols-2 gap-2 mb-4">
+                                    <div class="flex items-center text-sm text-gray-600">
+                                        <i class="fas fa-users mr-2 text-blue-500"></i>
+                                        {{ inscription.tournoi.nombre_participants }} / {{ inscription.tournoi.max_participants }}
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">28 Février 2025</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                        3ème place
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    500 €
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Détails</a>
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
-                                            <img src="https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70070000023212/a0009b79158fb57944bccf96b3fed690790cbb0de4e660128d39b28dd4311f92" class="w-full h-full object-cover" alt="Tournament">
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">FIFA Pro League</div>
-                                            <div class="text-xs text-gray-500">1v1</div>
-                                        </div>
+                                    <div class="flex items-center text-sm text-gray-600">
+                                        <i class="fas fa-gamepad mr-2 text-purple-500"></i>
+                                        {{ inscription.tournoi.jeu }}
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">15 Février 2025</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
-                                        5ème place
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    250 €
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Détails</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                </div>
+                                
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-white">
+                                            <img src="/{{inscription.player.avatar}}" alt="Player" class="w-full h-full object-cover">
+                                        </div>
+                                        <span class="text-sm text-gray-700">{{ inscription.player.username }}</span>
+                                    </div>
+                                    
+                                    <div class="space-x-2">
+                                        {% if inscription.statut == 'En cours' %}
+                                        <button class="bg-green-100 text-green-700 text-xs px-3 py-1.5 rounded-lg hover:bg-green-200 transition">
+                                            <i class="fas fa-play mr-1"></i> Rejoindre
+                                        </button>
+                                        {% elseif inscription.statut == 'À venir' %}
+                                        <button class="bg-blue-100 text-blue-700 text-xs px-3 py-1.5 rounded-lg hover:bg-blue-200 transition">
+                                            <i class="fas fa-clock mr-1"></i> Détails
+                                        </button>
+                                        {% else %}
+                                        <button class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-200 transition" disabled>
+                                            <i class="fas fa-check mr-1"></i> Terminé
+                                        </button>
+                                        {% endif %}
+                                        <button onclick="showTournamentDetails({{ inscription.tournoi.id }})" class="bg-purple-100 text-purple-700 text-xs px-3 py-1.5 rounded-lg hover:bg-purple-200 transition">
+                                            <i class="fas fa-info-circle mr-1"></i> Info
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                {% if inscription.statut == 'En cours' %}
+                                <div class="mt-4">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-purple-600 h-2.5 rounded-full" style="width: {{ inscription.progression }}%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                        <span>Progression du tournoi</span>
+                                        <span>{{ inscription.progression }}%</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="bg-white rounded-xl shadow-sm p-10 text-center">
+                        <i class="fas fa-trophy text-5xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Aucun tournoi inscrit</h3>
+                        <p class="text-gray-600 mb-6">Explorez et inscrivez-vous à des tournois passionnants!</p>
+                        <button onclick="redirectToTournaments()" class="bg-purple-600 text-white px-6 py-2.5 rounded-lg hover:bg-purple-700 transition">
+                            Découvrir les tournois
+                        </button>
+                    </div>
+                {% endif %}
+
+                <!-- Pagination -->
+                <div class="flex justify-center mt-8">
+                    <nav class="inline-flex rounded-md shadow">
+                        <a href="#" class="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        <a href="#" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">1</a>
+                        <a href="#" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">2</a>
+                        <a href="#" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">3</a>
+                        <a href="#" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </nav>
                 </div>
             </section>
-            
+
+            <section id="tournois-termines" class="hidden mb-10">
+                <div class="bg-white rounded-xl shadow-sm p-10 text-center">
+                    <i class="fas fa-history text-5xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Historique des tournois</h3>
+                    <p class="text-gray-600 mb-6">Consultez vos anciens tournois et performances</p>
+                </div>
+            </section>
+
+            <section id="calendrier" class="hidden mb-10">
+                <div class="bg-white rounded-xl shadow-sm p-10 text-center">
+                    <i class="fas fa-calendar-alt text-5xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Calendrier des tournois</h3>
+                    <p class="text-gray-600 mb-6">Planifiez vos prochains tournois et événements</p>
+                </div>
+            </section>
+
             <!-- Create Tournament Banner -->
             <section class="mb-10">
                 <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-8 relative overflow-hidden shadow-lg">
@@ -743,6 +766,57 @@
                 });
             }
         });
+
+        function redirectToTournaments() {
+            // Rediriger vers la section des tournois disponibles
+            document.querySelector('button[data-tab="all-tournaments"]').click();
+        }
+
+        function showTournamentDetails(tournamentId) {
+            // Logique pour afficher les détails du tournoi
+            Swal.fire({
+                title: 'Détails du Tournoi',
+                text: 'Fonctionnalité à implémenter pour afficher les détails complets du tournoi.',
+                icon: 'info',
+                confirmButtonColor: '#8b5cf6'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tournament-tabs button');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('tab-active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('tab-active');
+                    
+                    // Hide all sections
+                    document.querySelectorAll('section[id]').forEach(section => {
+                        if (section.id === 'all-tournaments' || 
+                            section.id === 'mes-inscriptions' || 
+                            section.id === 'tournois-termines' || 
+                            section.id === 'calendrier') {
+                            section.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Show the corresponding section
+                    const targetId = this.getAttribute('data-tab');
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.classList.remove('hidden');
+                        console.log('Showing section:', targetId);
+                    } else {
+                        console.error('Target section not found:', targetId);
+                    }
+                });
+            });
+        });
+
     </script>
 </body>
 </html>
