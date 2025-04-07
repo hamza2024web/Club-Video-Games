@@ -42,7 +42,7 @@ class TournamentsRepository {
         }
     }
     public function getTournoiInscri($user_id){
-        $sql = "SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.frais_inscription , tournoi.image , tournoi.numbre_membre ,tournoi.statut , tournoi.format_tournoi ,tournoi.regles , tournoi.description , tournoi.prix_total ,tournoi.premier_place , tournoi.deuxieme_place ,tournoi.troisieme_place ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.discord,tournoi.twitch FROM tournoi
+        $sql = "SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.image , tournoi.numbre_membre ,tournoi.statut , tournoi.format_tournoi ,tournoi.regles , tournoi.description , tournoi.prix_total ,tournoi.premier_place , tournoi.deuxieme_place ,tournoi.troisieme_place ,tournoi.discord,tournoi.twitch FROM tournoi
         INNER JOIN inscription_tournoi ON inscription_tournoi.tournoi_id = tournoi.id
         INNER JOIN membre ON membre.id = inscription_tournoi.membre_id
         INNER JOIN users ON users.id = membre.user_id

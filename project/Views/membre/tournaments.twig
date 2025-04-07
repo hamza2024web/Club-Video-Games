@@ -1118,9 +1118,12 @@
                         <input name="tournoi_id" value="{{tournoi.id}}" type="hidden">
                         
                         {% if tournoi.statut == 'Open' %}
-                        <button type="submit" class="registration-btn btn-register">
-                            <i class="fas fa-user-plus mr-1"></i> S'inscrire au tournoi
-                        </button>
+                        <form method="POST" action="/member/inscription">
+                            <input name="tournoi_id" value="{{tournoi.id}}" type="hidden"></input>
+                            <button type="submit" class="registration-btn btn-register">
+                                <i class="fas fa-user-plus mr-1"></i> S'inscrire au tournoi
+                            </button>
+                        </form>
                         <div class="registration-info">
                             L'inscription est ouverte jusqu'au {{ tournoi.date_cloture_inscription|default('date non spécifiée') }}
                         </div>
