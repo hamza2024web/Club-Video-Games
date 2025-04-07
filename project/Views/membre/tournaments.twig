@@ -428,9 +428,9 @@
                         {% for inscription in inscriptions %}
                         <div class="tournament-card bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:border-purple-200 transition">
                             <div class="relative">
-                                <img src="/{{inscription.tournoi.image}}" alt="Tournament" class="w-full h-40 object-cover">
+                                <img src="/{{inscription.image}}" alt="Tournament" class="w-full h-40 object-cover">
                                 <div class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                    <i class="fas fa-calendar-alt mr-1"></i> {{ inscription.tournoi.date_de_debut }}
+                                    <i class="fas fa-calendar-alt mr-1"></i> {{ inscription.date_de_debut }}
                                 </div>
                                 <div class="absolute top-3 right-3 text-xs font-bold px-2 py-1 rounded 
                                     {% if inscription.statut == 'En cours' %}bg-green-500 text-white
@@ -441,31 +441,31 @@
                             </div>
                             <div class="p-5">
                                 <div class="flex justify-between items-start mb-2">
-                                    <h3 class="text-lg font-bold text-gray-800">{{ inscription.tournoi.name }}</h3>
+                                    <h3 class="text-lg font-bold text-gray-800">{{ inscription.name }}</h3>
                                     <div class="flex items-center text-yellow-500">
                                         <i class="fas fa-trophy mr-1"></i>
-                                        <span class="text-sm font-semibold">{{ inscription.tournoi.prix }} €</span>
+                                        <span class="text-sm font-semibold">{{ inscription.prix }} €</span>
                                     </div>
                                 </div>
-                                <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ inscription.tournoi.description }}</p>
+                                <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ inscription.description }}</p>
                                 
                                 <div class="grid grid-cols-2 gap-2 mb-4">
                                     <div class="flex items-center text-sm text-gray-600">
                                         <i class="fas fa-users mr-2 text-blue-500"></i>
-                                        {{ inscription.tournoi.nombre_participants }} / {{ inscription.tournoi.max_participants }}
+                                        {{ inscription.nombre_participants }} / {{ inscription.max_participants }}
                                     </div>
                                     <div class="flex items-center text-sm text-gray-600">
                                         <i class="fas fa-gamepad mr-2 text-purple-500"></i>
-                                        {{ inscription.tournoi.jeu }}
+                                        {{ inscription.jeu }}
                                     </div>
                                 </div>
                                 
                                 <div class="flex justify-between items-center">
                                     <div class="flex items-center space-x-2">
                                         <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-white">
-                                            <img src="/{{inscription.player.avatar}}" alt="Player" class="w-full h-full object-cover">
+                                            <img src="/{{inscription.avatar}}" alt="Player" class="w-full h-full object-cover">
                                         </div>
-                                        <span class="text-sm text-gray-700">{{ inscription.player.username }}</span>
+                                        <span class="text-sm text-gray-700">{{ inscription.username }}</span>
                                     </div>
                                     
                                     <div class="space-x-2">
@@ -815,6 +815,67 @@
                     }
                 });
             });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Existing code...
+            
+            // Handle status form submission
+            const memberInscription = document.getElementById('/member/inscription');
+            if (memberInscription) {
+                memberInscription.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Traitement en cours',
+                        text: 'Inscription on Tournoi demandé...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Submit the form
+                    this.submit();
+                });
+            }
+            
+            // Check for URL parameters for status update notifications
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.has('Inscription_succefully')) {
+                Swal.fire({
+                    title: "Succès !",
+                    text: "L'inscription au  tournament a été passé avec succès !",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: '#8b5cf6',
+                    timer: 3000 
+                }).then(() => {
+                    // Clean the URL
+                    const url = new URL(window.location.href);
+                    url.search = '';
+                    window.history.replaceState({}, document.title, url);
+                });
+            }
+            
+            if (urlParams.has('error') && urlParams.get('error') === 'Inscription_failed') {
+                Swal.fire({
+                    title: 'Erreur',
+                    text: "L'inscription au tournament a échoué",
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Clean the URL
+                    const url = new URL(window.location.href);
+                    url.search = '';
+                    window.history.replaceState({}, document.title, url);
+                });
+            }
+            
         });
 
     </script>
