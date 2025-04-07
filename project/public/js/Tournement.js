@@ -277,3 +277,99 @@
                 }
             });
         });
+
+        
+    // Fonction pour afficher le formulaire de paiement
+    function showPaymentForm(tournoiId, fraisInscription, tournoiName) {
+        // Mettre à jour les informations de paiement
+        document.getElementById('payment-tournament-name').textContent = tournoiName;
+        
+        // Afficher le prix
+        const frais = parseFloat(fraisInscription);
+        if (frais > 0) {
+            document.getElementById('payment-amount').textContent = `${frais.toFixed(2)} €`;
+        } else {
+            document.getElementById('payment-amount').textContent = 'Gratuit';
+        }
+        
+        // Mettre à jour les valeurs cachées du formulaire
+        document.getElementById('payment-tournoi-id').value = tournoiId;
+        document.getElementById('payment-frais').value = fraisInscription;
+        
+        // Afficher le modal
+        const modal = document.getElementById('payment-modal');
+        const modalContent = document.getElementById('payment-modal-content');
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Animation d'entrée
+        setTimeout(() => {
+            modalContent.classList.remove('opacity-0', 'scale-95');
+            modalContent.classList.add('opacity-100', 'scale-100');
+        }, 10);
+        
+        // Désactiver le scroll de la page
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Fonction pour fermer le modal de paiement
+    function closePaymentModal() {
+        const modal = document.getElementById('payment-modal');
+        const modalContent = document.getElementById('payment-modal-content');
+        
+        // Animation de sortie
+        modalContent.classList.remove('opacity-100', 'scale-100');
+        modalContent.classList.add('opacity-0', 'scale-95');
+        
+        // Cacher le modal après l'animation
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            
+            // Réactiver le scroll de la page
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+    
+    // Fonction pour traiter le paiement
+    function processPayment() {
+        // Afficher un message de chargement
+        Swal.fire({
+            title: 'Traitement en cours',
+            text: 'Veuillez patienter pendant le traitement du paiement...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        // Simuler un délai de traitement (2 secondes)
+        setTimeout(() => {
+            // Récupérer les données du formulaire
+            const tournoiId = document.getElementById('payment-tournoi-id').value;
+            const fraisInscription = document.getElementById('payment-frais').value;
+            
+            // Créer un formulaire pour soumettre les données
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/member/inscription';
+            
+            // Ajouter les champs nécessaires
+            const inputTournoiId = document.createElement('input');
+            inputTournoiId.type = 'hidden';
+            inputTournoiId.name = 'tournoi_id';
+            inputTournoiId.value = tournoiId;
+            form.appendChild(inputTournoiId);
+            
+            const inputFrais = document.createElement('input');
+            inputFrais.type = 'hidden';
+            inputFrais.name = 'frais_inscription';
+            inputFrais.value = fraisInscription;
+            form.appendChild(inputFrais);
+            
+            // Ajouter le formulaire au document et le soumettre
+            document.body.appendChild(form);
+            form.submit();
+        }, 2000);
+    }

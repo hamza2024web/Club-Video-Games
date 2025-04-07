@@ -3,7 +3,7 @@ namespace App\Services;
 
 use App\Repository\TournamentsRepository;
 
-class TournamentsServices {
+class TournamentsServices extends PayementServices {
     protected $TournamentsRepository;
     public function __construct()
     {
@@ -15,6 +15,7 @@ class TournamentsServices {
         return $tournois;
     }
     public function Inscription($user_id,$tournoi_id){
+        $currentSolde = $this->validatePrice($user_id);
         $inscription = $this->TournamentsRepository->Inscription_Tournoi($user_id,$tournoi_id);
         return $inscription;
     }
