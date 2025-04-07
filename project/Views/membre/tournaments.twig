@@ -657,37 +657,6 @@
                     </button>
                 </div>
             </div>
-
-            <!-- Featured Tournament -->
-            <section class="mb-10 relative">
-                <div class="bg-indigo-900 rounded-xl overflow-hidden relative shadow-lg">
-                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-900/90 to-indigo-900/40"></div>
-                    <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406" alt="Featured Tournament" class="w-full h-72 object-cover">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="p-10 max-w-2xl">
-                            <div class="flex items-center mb-4">
-                                <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">En vedette</span>
-                                <span class="status-live bg-black/50 text-white text-xs px-3 py-1 rounded-full flex items-center">
-                                    EN DIRECT
-                                </span>
-                            </div>
-                            <h2 class="text-3xl font-bold text-white mb-2">Championnat Call of Duty 2025</h2>
-                            <p class="text-gray-200 mb-4">Affrontez les meilleurs joueurs et prouvez votre talent dans ce tournoi épique de Call of Duty. Prix total de 5000€!</p>
-                            <div class="flex space-x-4 items-center">
-                                <button class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2.5 rounded-lg flex items-center font-medium transition-colors">
-                                    <i class="fas fa-trophy mr-2"></i> S'inscrire maintenant
-                                </button>
-                                <div class="bg-black/30 text-white px-4 py-2 rounded-lg flex items-center text-sm">
-                                    <i class="fas fa-users mr-2"></i> 128 participants
-                                </div>
-                                <div class="bg-black/30 text-white px-4 py-2 rounded-lg flex items-center text-sm">
-                                    <i class="fas fa-calendar-alt mr-2"></i> Débute le 15 Avril
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
             
             <!-- Tournament Categories -->
             <section class="mb-8">
@@ -926,7 +895,7 @@
                                 <div class="info-row">
                                     <div class="info-item">
                                         <i class="fas fa-users"></i>
-                                        <span>{{ inscription.nombre_participants }} / {{ inscription.max_participants }}</span>
+                                        <span>{{ inscription.nombre_participants }} / {{ inscription.numbre_membre }}</span>
                                     </div>
                                     <div class="info-item">
                                         <i class="fas fa-trophy"></i>
@@ -936,7 +905,7 @@
                                 
                                 <div class="mt-3">
                                     <div class="progress-indicator">
-                                        <div class="progress-bar" style="width: {{ (inscription.nombre_participants / inscription.max_participants * 100)|round }}%"></div>
+                                        <div class="progress-bar" style="width: {{ (inscription.nombre_participants / inscription.numbre_membre * 100)|round }}%"></div>
                                     </div>
                                 </div>
                             </div>
