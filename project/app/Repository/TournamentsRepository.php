@@ -11,9 +11,12 @@ class TournamentsRepository {
         $this->conn = $db->getConnection();
     }
     public function getAllTournois(){
-        $sql = "SELECT SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.frais_inscription , tournoi.image , tournoi.numbre_membre 
+        $sql = "SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.frais_inscription , tournoi.image , tournoi.numbre_membre 
         ,tournoi.statut , tournoi.format_tournoi ,tournoi.regles , tournoi.description , tournoi.prix_total ,tournoi.premier_place , tournoi.deuxieme_place 
-        ,tournoi.troisieme_place ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.discord,tournoi.twitch FROM tournoi FROM tournoi";
+        ,tournoi.troisieme_place ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.discord,tournoi.twitch,COUNT(*) as nombre_participants ,jeux.nom_de_jeu as jeu FROM tournoi
+        LEFT JOIN inscription_tournoi ON inscription_tournoi.tournoi_id = tournoi.id
+        INNER JOIN jeux ON jeux.id = tournoi.jeu_id
+        GROUP BY  tournoi.id, tournoi.name, tournoi.date_de_debut, tournoi.frais_inscription, tournoi.image, tournoi.numbre_membre, tournoi.statut, tournoi.format_tournoi, tournoi.regles, tournoi.description, tournoi.prix_total, tournoi.premier_place, tournoi.deuxieme_place, tournoi.troisieme_place, tournoi.date_ouverture_inscription, tournoi.date_cloture_inscription, tournoi.discord, tournoi.twitch";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -39,7 +42,7 @@ class TournamentsRepository {
         }
     }
     public function getTournoiInscri($user_id){
-        $sql = "SELECT SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.frais_inscription , tournoi.image , tournoi.numbre_membre ,tournoi.statut , tournoi.format_tournoi ,tournoi.regles , tournoi.description , tournoi.prix_total ,tournoi.premier_place , tournoi.deuxieme_place ,tournoi.troisieme_place ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.discord,tournoi.twitch FROM tournoi
+        $sql = "SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.frais_inscription , tournoi.image , tournoi.numbre_membre ,tournoi.statut , tournoi.format_tournoi ,tournoi.regles , tournoi.description , tournoi.prix_total ,tournoi.premier_place , tournoi.deuxieme_place ,tournoi.troisieme_place ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.discord,tournoi.twitch FROM tournoi
         INNER JOIN inscription_tournoi ON inscription_tournoi.tournoi_id = tournoi.id
         INNER JOIN membre ON membre.id = inscription_tournoi.membre_id
         INNER JOIN users ON users.id = membre.user_id

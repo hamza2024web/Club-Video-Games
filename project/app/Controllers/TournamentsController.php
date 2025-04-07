@@ -26,7 +26,6 @@ class TournamentsController extends BaseController {
     public function inscriptionTournoi(){
         $user_id = $_SESSION["user_id"];
         $tournoi_id = $_POST["tournoi_id"];
-
         $inscription = $this->TournamentsServices->Inscription($user_id,$tournoi_id);
 
         if($inscription){
