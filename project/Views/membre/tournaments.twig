@@ -342,9 +342,13 @@
                                     <span class="text-gray-600">{{tournoi.format_tournoi}}</span>
                                 </div>
                             </div>
-                            <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
-                                S'inscrire
-                            </button>
+                            <form method="POST" action="/member/inscription">
+                                <input name="tournoi_id" value="{{tournoi.id}}" type="hidden"></input>
+                                <button class="mt-5 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors">
+                                    S'inscrire
+                                </button>
+                            </form>
+
                         </div>
                     </div>
                     {% endfor %}
