@@ -39,7 +39,7 @@ class TournamentsRepository {
         return $stmtInsert->execute();
     }
     public function getTournoiInscri($user_id){
-        $sql = "SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.image , tournoi.numbre_membre ,tournoi.statut , tournoi.format_tournoi ,tournoi.regles , tournoi.description , tournoi.prix_total ,tournoi.premier_place , tournoi.deuxieme_place ,tournoi.troisieme_place ,tournoi.discord,tournoi.twitch 
+        $sql = "SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.image , tournoi.numbre_membre , tournoi.frais_inscription ,tournoi.statut , tournoi.format_tournoi ,tournoi.regles , tournoi.description , tournoi.prix_total ,tournoi.premier_place , tournoi.deuxieme_place ,tournoi.troisieme_place ,tournoi.discord,tournoi.twitch 
         ,jeux.nom_de_jeu as jeu , count(inscription_tournoi.tournoi_id) as number_participants FROM tournoi
         INNER JOIN inscription_tournoi ON inscription_tournoi.tournoi_id = tournoi.id
         INNER JOIN jeux ON jeux.id = tournoi.jeu_id

@@ -6,19 +6,22 @@
     <title>GamersHub - Tournois</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../public/js/Tournement.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        
+
         body {
             font-family: 'Poppins', sans-serif;
         }
-        
+
+        /* ===== SIDEBAR STYLES ===== */
         .sidebar-item {
             position: relative;
             overflow: hidden;
+            transition: all 0.2s ease;
         }
-        
+
         .sidebar-item::after {
             content: '';
             position: absolute;
@@ -29,11 +32,20 @@
             background-color: white;
             transition: width 0.3s ease;
         }
-        
+
         .sidebar-item:hover::after {
             width: 100%;
         }
 
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-item.active {
+            background-color: rgba(139, 92, 246, 0.9);
+        }
+
+        /* ===== CARD STYLES ===== */
         .tournament-card {
             position: relative;
             overflow: hidden;
@@ -44,36 +56,57 @@
             background-color: white;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        
+
         .tournament-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             border-color: #d1d5db;
         }
-        
-        .custom-scrollbar::-webkit-scrollbar {
+
+        /* ===== SCROLLBAR STYLES ===== */
+        .custom-scrollbar::-webkit-scrollbar,
+        .overflow-y-auto::-webkit-scrollbar {
             width: 6px;
         }
-        
-        .custom-scrollbar::-webkit-scrollbar-track {
+
+        .custom-scrollbar::-webkit-scrollbar-track,
+        .overflow-y-auto::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 10px;
         }
-        
-        .custom-scrollbar::-webkit-scrollbar-thumb {
+
+        .custom-scrollbar::-webkit-scrollbar-thumb,
+        .overflow-y-auto::-webkit-scrollbar-thumb {
             background: #8b5cf6;
             border-radius: 10px;
         }
-        
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover,
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background: #7c3aed;
+        }
+
+        /* ===== TAB STYLES ===== */
         .tab-active {
             color: #6366F1;
             border-bottom: 2px solid #6366F1;
         }
-        
+
+        .tab-button,
+        .mini-tab {
+            transition: all 0.2s ease;
+        }
+
+        .tab-button.active,
+        .mini-tab.active {
+            font-weight: 600;
+        }
+
+        /* ===== STATUS INDICATORS ===== */
         .status-live {
             position: relative;
         }
-        
+
         .status-live::before {
             content: '';
             display: inline-block;
@@ -84,13 +117,14 @@
             margin-right: 6px;
             animation: blink 1.5s infinite;
         }
-        
+
         @keyframes blink {
             0% { opacity: 1; }
             50% { opacity: 0.4; }
             100% { opacity: 1; }
         }
-        
+
+        /* ===== BADGE STYLES ===== */
         .date-badge {
             position: absolute;
             top: 12px;
@@ -104,7 +138,7 @@
             display: flex;
             align-items: center;
         }
-        
+
         .status-badge {
             position: absolute;
             top: 12px;
@@ -116,74 +150,98 @@
             font-weight: 600;
             letter-spacing: 0.5px;
         }
-        
-        .status-open {
-            background-color: #10B981;
-            color: white;
-        }
-        
-        .status-pending {
-            background-color: #F59E0B;
-            color: white;
-        }
-        
-        .status-full {
-            background-color: #6366F1;
-            color: white;
-        }
-        
-        .status-in-progress {
-            background-color: #3B82F6;
-            color: white;
-        }
-        
-        .status-completed {
-            background-color: #6B7280;
-            color: white;
-        }
-        
-        .status-cancelled {
-            background-color: #EF4444;
-            color: white;
-        }
-        
+
+        .status-open { background-color: #10B981; color: white; }
+        .status-pending { background-color: #F59E0B; color: white; }
+        .status-full { background-color: #6366F1; color: white; }
+        .status-in-progress { background-color: #3B82F6; color: white; }
+        .status-completed { background-color: #6B7280; color: white; }
+        .status-cancelled { background-color: #EF4444; color: white; }
+
+        /* ===== TOURNAMENT CARD INFO ===== */
         .info-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             margin-bottom: 12px;
         }
-        
+
         .info-item {
             display: flex;
             align-items: center;
             font-size: 0.875rem;
             color: #4b5563;
         }
-        
+
         .info-item i {
             margin-right: 8px;
             width: 16px;
             text-align: center;
             color: #6d28d9;
         }
-        
+
         .progress-indicator {
-            margin-top: 12px;
             width: 100%;
             height: 6px;
             background-color: #e5e7eb;
             border-radius: 999px;
             overflow: hidden;
         }
-        
+
         .progress-bar {
             height: 100%;
             background-color: #8b5cf6;
             border-radius: 999px;
         }
-        
-        /* Modal Styles */
+
+        /* ===== TOURNAMENT BADGES ===== */
+        .tournament-format-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #EDE9FE;
+            color: #6D28D9;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin-right: 0.5rem;
+        }
+
+        .tournament-format-badge i {
+            margin-right: 0.25rem;
+        }
+
+        .tournament-fee-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #FEF3C7;
+            color: #D97706;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+
+        .tournament-fee-badge i {
+            margin-right: 0.25rem;
+        }
+
+        .tournament-free-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #DCFCE7;
+            color: #16A34A;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+
+        .tournament-free-badge i {
+            margin-right: 0.25rem;
+        }
+
+        /* ===== MODAL STYLES ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -198,8 +256,9 @@
             overflow-y: auto;
             padding: 1rem;
         }
-        
-        .modal-container {
+
+        .modal-container,
+        #modal-content-[id] {
             background-color: white;
             border-radius: 0.75rem;
             width: 100%;
@@ -212,28 +271,29 @@
             opacity: 0;
             transition: all 0.3s ease;
         }
-        
+
         .modal-overlay.active {
             display: flex;
         }
-        
-        .modal-overlay.active .modal-container {
+
+        .modal-overlay.active .modal-container,
+        #modal-content-[id].opacity-100 {
             transform: scale(1);
             opacity: 1;
         }
-        
+
         .modal-header {
             position: relative;
             height: 200px;
             overflow: hidden;
         }
-        
+
         .modal-header-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .modal-header-overlay {
             position: absolute;
             top: 0;
@@ -246,14 +306,14 @@
             justify-content: flex-end;
             padding: 1.5rem;
         }
-        
+
         .modal-title {
             color: white;
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
-        
+
         .modal-close {
             position: absolute;
             top: 1rem;
@@ -270,28 +330,28 @@
             z-index: 10;
             transition: all 0.2s ease;
         }
-        
+
         .modal-close:hover {
             background-color: white;
             transform: scale(1.1);
         }
-        
+
         .modal-body {
             padding: 1.5rem;
         }
-        
+
         .modal-section {
             margin-bottom: 1.5rem;
             padding-bottom: 1.5rem;
             border-bottom: 1px solid #e5e7eb;
         }
-        
+
         .modal-section:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
             border-bottom: none;
         }
-        
+
         .section-title {
             font-size: 1.1rem;
             font-weight: 600;
@@ -300,19 +360,19 @@
             display: flex;
             align-items: center;
         }
-        
+
         .section-title i {
             margin-right: 0.5rem;
             color: #6D28D9;
         }
-        
+
         .tournament-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 0.75rem;
             margin-bottom: 1rem;
         }
-        
+
         .meta-tag {
             display: flex;
             align-items: center;
@@ -322,18 +382,19 @@
             background-color: #F3F4F6;
             color: #4B5563;
         }
-        
+
         .meta-tag i {
             margin-right: 0.35rem;
         }
-        
+
+        /* ===== PRIZE STYLES ===== */
         .prize-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 0.75rem;
             margin-top: 1rem;
         }
-        
+
         .prize-card {
             background-color: #F9FAFB;
             border-radius: 0.5rem;
@@ -341,7 +402,7 @@
             text-align: center;
             border: 1px solid #E5E7EB;
         }
-        
+
         .prize-position {
             display: flex;
             align-items: center;
@@ -350,30 +411,31 @@
             font-weight: 600;
             color: #4B5563;
         }
-        
+
         .prize-position i {
             margin-right: 0.35rem;
         }
-        
+
         .prize-amount {
             font-size: 1.25rem;
             font-weight: 700;
             color: #6D28D9;
         }
-        
+
         .prize-total {
             margin-top: 1rem;
             text-align: center;
             font-size: 0.875rem;
             color: #6B7280;
         }
-        
+
         .prize-total span {
             font-size: 1.1rem;
             font-weight: 700;
             color: #6D28D9;
         }
-        
+
+        /* ===== RULES SECTION ===== */
         .rules-box {
             background-color: #F3F4F6;
             border-radius: 0.5rem;
@@ -382,30 +444,32 @@
             color: #4B5563;
             line-height: 1.5;
         }
-        
+
+        /* ===== PARTICIPANTS SECTION ===== */
         .participants-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 0.75rem;
         }
-        
+
         .participant-count {
             font-size: 0.875rem;
             color: #4B5563;
         }
-        
+
         .participant-count span {
             font-weight: 600;
             color: #1F2937;
         }
-        
+
+        /* ===== SOCIAL LINKS ===== */
         .social-links {
             display: flex;
             gap: 0.5rem;
             margin-top: 1rem;
         }
-        
+
         .social-button {
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
@@ -415,25 +479,26 @@
             align-items: center;
             transition: all 0.2s ease;
         }
-        
+
         .discord-button {
             background-color: #5865F2;
             color: white;
         }
-        
+
         .discord-button:hover {
             background-color: #4752c4;
         }
-        
+
         .twitch-button {
             background-color: #9146FF;
             color: white;
         }
-        
+
         .twitch-button:hover {
             background-color: #7b3ad6;
         }
-        
+
+        /* ===== REGISTRATION SECTION ===== */
         .registration-section {
             background-color: #F9FAFB;
             border-radius: 0.5rem;
@@ -442,7 +507,7 @@
             flex-direction: column;
             align-items: center;
         }
-        
+
         .registration-btn {
             width: 100%;
             max-width: 300px;
@@ -457,106 +522,66 @@
             cursor: pointer;
             border: none;
         }
-        
+
         .btn-register {
             background-color: #10B981;
             color: white;
         }
-        
+
         .btn-register:hover {
             background-color: #059669;
             transform: translateY(-2px);
         }
-        
+
         .btn-wait {
             background-color: #F59E0B;
             color: white;
         }
-        
+
         .btn-wait:hover {
             background-color: #D97706;
             transform: translateY(-2px);
         }
-        
+
         .btn-full {
             background-color: #6B7280;
             color: white;
             cursor: not-allowed;
         }
-        
+
         .btn-in-progress {
             background-color: #3B82F6;
             color: white;
         }
-        
+
         .btn-in-progress:hover {
             background-color: #2563EB;
             transform: translateY(-2px);
         }
-        
+
         .btn-completed {
             background-color: #6B7280;
             color: white;
             cursor: not-allowed;
         }
-        
+
         .btn-cancelled {
             background-color: #EF4444;
             color: white;
             cursor: not-allowed;
         }
-        
+
         .registration-info {
             margin-top: 0.75rem;
             font-size: 0.75rem;
             color: #6B7280;
             text-align: center;
         }
-        
-        .tournament-format-badge {
-            display: inline-flex;
-            align-items: center;
-            background-color: #EDE9FE;
-            color: #6D28D9;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            margin-right: 0.5rem;
-        }
-        
-        .tournament-format-badge i {
-            margin-right: 0.25rem;
-        }
-        
-        .tournament-fee-badge {
-            display: inline-flex;
-            align-items: center;
-            background-color: #FEF3C7;
-            color: #D97706;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-        }
-        
-        .tournament-fee-badge i {
-            margin-right: 0.25rem;
-        }
-        
-        .tournament-free-badge {
-            display: inline-flex;
-            align-items: center;
-            background-color: #DCFCE7;
-            color: #16A34A;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-        }
-        
-        .tournament-free-badge i {
-            margin-right: 0.25rem;
+
+        /* ===== COMPACT MODAL STYLES ===== */
+        /* Pour les modals compacts (mini-modals) */
+        .mini-content {
+            transition: all 0.2s ease;
         }
     </style>
 </head>
@@ -832,7 +857,6 @@
                 </div>
             </section>
             
-            <!-- Section Mes Inscriptions -->
             <section id="mes-inscriptions" class="hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold text-gray-800">Mes Inscriptions Actives</h2>
@@ -852,20 +876,20 @@
                 {% if inscriptions %}
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {% for inscription in inscriptions %}
-                        <div class="tournament-card" onclick="openTournamentModal('inscription-{{inscription.id}}')">
+                        <div class="tournament-card bg-white shadow-sm rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md hover:transform hover:scale-[1.02] cursor-pointer" onclick="openTournamentModal('inscription-{{inscription.id}}')">
                             <div class="relative">
                                 <img src="/{{inscription.image}}" alt="Tournament" class="w-full h-48 object-cover">
-                                <div class="date-badge">
-                                    <i class="fas fa-calendar-alt mr-1"></i> {{ inscription.date_de_debut }}
+                                <div class="absolute top-3 left-3 bg-white px-2 py-1 rounded-lg text-sm font-medium text-gray-800 shadow-sm">
+                                    <i class="fas fa-calendar-alt mr-1 text-purple-600"></i> {{ inscription.date_de_debut }}
                                 </div>
-                                <div class="status-badge 
-                                    {% if inscription.statut == 'Open' %}status-open
-                                    {% elseif inscription.statut == 'Pending' %}status-pending
-                                    {% elseif inscription.statut == 'Full' %}status-full
-                                    {% elseif inscription.statut == 'In Progress' %}status-in-progress
-                                    {% elseif inscription.statut == 'Completed' %}status-completed
-                                    {% elseif inscription.statut == 'Cancelled' %}status-cancelled
-                                    {% else %}status-pending{% endif %}">
+                                <div class="absolute top-3 right-3 px-2 py-1 rounded-lg text-xs font-semibold uppercase tracking-wider
+                                    {% if inscription.statut == 'Open' %} bg-green-100 text-green-800
+                                    {% elseif inscription.statut == 'Pending' %} bg-yellow-100 text-yellow-800
+                                    {% elseif inscription.statut == 'Full' %} bg-blue-100 text-blue-800
+                                    {% elseif inscription.statut == 'In Progress' %} bg-purple-100 text-purple-800
+                                    {% elseif inscription.statut == 'Completed' %} bg-gray-100 text-gray-800
+                                    {% elseif inscription.statut == 'Cancelled' %} bg-red-100 text-red-800
+                                    {% else %} bg-yellow-100 text-yellow-800{% endif %}">
                                     {% if inscription.statut == 'Open' %}Ouvert
                                     {% elseif inscription.statut == 'Pending' %}En attente
                                     {% elseif inscription.statut == 'Full' %}Complet
@@ -880,32 +904,49 @@
                                     <h3 class="text-lg font-bold text-gray-800">{{ inscription.name }}</h3>
                                     <div class="flex items-center">
                                         {% if inscription.frais_inscription > 0 %}
-                                        <span class="tournament-fee-badge">
-                                            <i class="fas fa-coins"></i> {{ inscription.frais_inscription }} €
+                                        <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-lg">
+                                            <i class="fas fa-coins mr-1"></i> {{ inscription.frais_inscription }} €
                                         </span>
                                         {% else %}
-                                        <span class="tournament-free-badge">
-                                            <i class="fas fa-ticket-alt"></i> Gratuit
+                                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-lg">
+                                            <i class="fas fa-ticket-alt mr-1"></i> Gratuit
                                         </span>
                                         {% endif %}
                                     </div>
                                 </div>
                                 <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ inscription.description }}</p>
                                 
-                                <div class="info-row">
-                                    <div class="info-item">
-                                        <i class="fas fa-users"></i>
-                                        <span>{{ inscription.nombre_participants }} / {{ inscription.numbre_membre }}</span>
+                                <div class="flex items-center justify-between text-sm text-gray-600 mb-3">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-gamepad mr-1.5 text-purple-500"></i>
+                                        <span>{{ inscription.jeu }}</span>
                                     </div>
-                                    <div class="info-item">
-                                        <i class="fas fa-trophy"></i>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-trophy mr-1.5 text-amber-500"></i>
                                         <span>{{ inscription.format_tournoi }}</span>
                                     </div>
                                 </div>
                                 
+                                <div class="flex items-center justify-between text-sm mb-3">
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-users mr-1.5 text-blue-500"></i>
+                                        <span>{{ inscription.nombre_participants }} / {{ inscription.numbre_membre }}</span>
+                                    </div>
+                                    {% if inscription.prix_total > 0 %}
+                                    <div class="flex items-center font-medium text-purple-600">
+                                        <i class="fas fa-award mr-1.5"></i>
+                                        <span>{{ inscription.prix_total }}€</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
                                 <div class="mt-3">
-                                    <div class="progress-indicator">
-                                        <div class="progress-bar" style="width: {{ (inscription.nombre_participants / inscription.numbre_membre * 100)|round }}%"></div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2 rounded-full" style="width: {{ (inscription.nombre_participants / inscription.numbre_membre * 100)|round }}%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-gray-500 mt-1.5">
+                                        <span>Participants: {{ inscription.nombre_participants }}/{{ inscription.numbre_membre }}</span>
+                                        <span>{{ (inscription.nombre_participants / inscription.numbre_membre * 100)|round }}% rempli</span>
                                     </div>
                                 </div>
                             </div>
@@ -924,6 +965,197 @@
                 {% endif %}
             </section>
 
+            <!-- Modal de détails du tournoi Inscription taille moyenne -->
+            {% for inscription in inscriptions %}
+                <div id="inscription-{{inscription.id}}" class="fixed inset-0 z-50 hidden">
+                    <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onclick="closeTournamentModal('inscription-{{inscription.id}}')"></div>
+                    <div class="fixed inset-0 flex items-center justify-center p-3">
+                        <!-- Modal taille moyenne -->
+                        <div class="relative bg-white rounded-lg shadow-lg w-full max-w-xl max-h-[90vh] transform transition-all opacity-0 scale-95 flex flex-col" id="modal-content-{{inscription.id}}">
+                            <!-- Header avec taille moyenne -->
+                            <div class="relative h-40 overflow-hidden rounded-t-lg flex-shrink-0">
+                                <img src="/{{inscription.image}}" alt="{{inscription.name}}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                                <button onclick="closeTournamentModal('inscription-{{inscription.id}}')" class="absolute top-3 right-3 bg-black/30 text-white p-2 rounded-full hover:bg-black/50 transition">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <div class="absolute bottom-3 left-4 right-4">
+                                    <h3 class="text-lg font-bold text-white truncate">{{ inscription.name }}</h3>
+                                    <div class="flex items-center gap-2 mt-2">
+                                        <span class="px-2 py-0.5 rounded text-xs font-medium
+                                            {% if inscription.statut == 'Open' %} bg-green-100 text-green-800
+                                            {% elseif inscription.statut == 'Pending' %} bg-yellow-100 text-yellow-800
+                                            {% elseif inscription.statut == 'Full' %} bg-blue-100 text-blue-800
+                                            {% elseif inscription.statut == 'In Progress' %} bg-purple-100 text-purple-800
+                                            {% elseif inscription.statut == 'Completed' %} bg-gray-100 text-gray-800
+                                            {% elseif inscription.statut == 'Cancelled' %} bg-red-100 text-red-800
+                                            {% else %} bg-yellow-100 text-yellow-800{% endif %}">
+                                            {% if inscription.statut == 'Open' %}Ouvert
+                                            {% elseif inscription.statut == 'Pending' %}En attente
+                                            {% elseif inscription.statut == 'Full' %}Complet
+                                            {% elseif inscription.statut == 'In Progress' %}En cours
+                                            {% elseif inscription.statut == 'Completed' %}Terminé
+                                            {% elseif inscription.statut == 'Cancelled' %}Annulé
+                                            {% else %}{{ inscription.statut }}{% endif %}
+                                        </span>
+                                        <div class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded">
+                                            <i class="fas fa-users text-xs mr-1"></i> {{inscription.nombre_participants}}/{{inscription.numbre_membre}}
+                                        </div>
+                                        {% if inscription.prix_total > 0 %}
+                                        <div class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded">
+                                            <i class="fas fa-award text-xs mr-1"></i> {{inscription.prix_total}}€
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Content avec tabs -->
+                            <div class="text-sm border-b">
+                                <div class="flex">
+                                    <button onclick="miniTab('info-{{inscription.id}}', this)" class="mini-tab active flex-1 py-3 font-medium border-b-2 border-purple-500 text-purple-600">Info</button>
+                                    <button onclick="miniTab('rules-{{inscription.id}}', this)" class="mini-tab flex-1 py-3 font-medium border-b-2 border-transparent text-gray-500">Règles</button>
+                                    <button onclick="miniTab('prizes-{{inscription.id}}', this)" class="mini-tab flex-1 py-3 font-medium border-b-2 border-transparent text-gray-500">Prix</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Content scrollable -->
+                            <div class="overflow-y-auto flex-grow p-4 text-sm">
+                                <!-- Tab Info -->
+                                <div id="info-{{inscription.id}}" class="mini-content">
+                                    <!-- Info grid -->
+                                    <div class="grid grid-cols-2 gap-3 mb-4">
+                                        <div class="bg-gray-50 rounded p-3">
+                                            <div class="text-gray-500 mb-1">Date du tournoi</div>
+                                            <div class="font-medium">{{inscription.date_de_debut}}</div>
+                                        </div>
+                                        <div class="bg-gray-50 rounded p-3">
+                                            <div class="text-gray-500 mb-1">Jeu</div>
+                                            <div class="font-medium truncate">{{inscription.jeu}}</div>
+                                        </div>
+                                        <div class="bg-gray-50 rounded p-3">
+                                            <div class="text-gray-500 mb-1">Format</div>
+                                            <div class="font-medium">{{inscription.format_tournoi}}</div>
+                                        </div>
+                                        <div class="bg-gray-50 rounded p-3">
+                                            <div class="text-gray-500 mb-1">Frais</div>
+                                            <div class="font-medium">
+                                                {% if inscription.frais_inscription > 0 %}
+                                                    {{inscription.frais_inscription}}€
+                                                {% else %}
+                                                    Gratuit
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Dates -->
+                                    <div class="flex gap-3 mb-4">
+                                        <div class="flex-1 bg-indigo-50 rounded p-3 text-center">
+                                            <div class="text-sm text-indigo-700 mb-1">Début inscriptions</div>
+                                            <div class="font-medium text-gray-800">{{inscription.date_ouverture_inscription}}</div>
+                                        </div>
+                                        <div class="flex-1 bg-blue-50 rounded p-3 text-center">
+                                            <div class="text-sm text-blue-700 mb-1">Fin inscriptions</div>
+                                            <div class="font-medium text-gray-800">{{inscription.date_cloture_inscription}}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Description -->
+                                    <div class="mb-4">
+                                        <div class="font-semibold mb-2">Description</div>
+                                        <div class="text-gray-600 max-h-32 overflow-y-auto bg-gray-50 p-3 rounded">
+                                            {{inscription.description|raw}}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Liens -->
+                                    <div class="flex gap-2">
+                                        {% if inscription.discord %}
+                                        <a href="{{inscription.discord}}" target="_blank" class="flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200">
+                                            <i class="fab fa-discord mr-1.5"></i> Discord
+                                        </a>
+                                        {% endif %}
+                                        {% if inscription.twitch %}
+                                        <a href="{{inscription.twitch}}" target="_blank" class="flex items-center px-3 py-1.5 bg-purple-100 text-purple-700 rounded hover:bg-purple-200">
+                                            <i class="fab fa-twitch mr-1.5"></i> Twitch
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Tab Règles -->
+                                <div id="rules-{{inscription.id}}" class="mini-content hidden">
+                                    <div class="text-gray-600 bg-gray-50 p-3 rounded">
+                                        {{inscription.regles|raw}}
+                                    </div>
+                                </div>
+                                
+                                <!-- Tab Prix -->
+                                <div id="prizes-{{inscription.id}}" class="mini-content hidden">
+                                    {% if inscription.prix_total > 0 %}
+                                    <div class="flex justify-center gap-3 mb-4">
+                                        {% if inscription.premier_place > 0 %}
+                                        <div class="flex-1 bg-gradient-to-b from-amber-50 to-amber-100 rounded p-3 text-center border border-amber-200">
+                                            <div class="w-8 h-8 bg-amber-500 text-white rounded-full flex items-center justify-center text-sm font-bold mx-auto mb-2">1</div>
+                                            <div class="text-amber-800 font-semibold text-base">{{inscription.premier_place}}€</div>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        {% if inscription.deuxieme_place > 0 %}
+                                        <div class="flex-1 bg-gradient-to-b from-gray-50 to-gray-100 rounded p-3 text-center border border-gray-200">
+                                            <div class="w-8 h-8 bg-gray-400 text-white rounded-full flex items-center justify-center text-sm font-bold mx-auto mb-2">2</div>
+                                            <div class="text-gray-700 font-semibold text-base">{{inscription.deuxieme_place}}€</div>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        {% if inscription.troisieme_place > 0 %}
+                                        <div class="flex-1 bg-gradient-to-b from-orange-50 to-orange-100 rounded p-3 text-center border border-orange-200">
+                                            <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold mx-auto mb-2">3</div>
+                                            <div class="text-orange-700 font-semibold text-base">{{inscription.troisieme_place}}€</div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="text-center font-medium text-base">
+                                        Prix total: <span class="text-purple-600">{{inscription.prix_total}}€</span>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-center py-6 text-gray-500 bg-gray-50 rounded">
+                                        <i class="fas fa-info-circle text-gray-400 text-2xl mb-2"></i>
+                                        <p>Aucun prix défini pour ce tournoi</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="p-3 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
+                                {% if inscription.statut == 'Open' or inscription.statut == 'Pending' %}
+                                <button class="px-3 py-1.5 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm">
+                                    <i class="fas fa-user-minus mr-1"></i> Désinscrire
+                                </button>
+                                {% else %}
+                                <div></div>
+                                {% endif %}
+                                
+                                <div class="flex gap-2">
+                                    <button onclick="closeTournamentModal('inscription-{{inscription.id}}')" class="px-3 py-1.5 border border-gray-300 rounded text-gray-700 hover:bg-gray-100 text-sm">
+                                        Fermer
+                                    </button>
+                                    
+                                    {% if inscription.discord %}
+                                    <a href="{{inscription.discord}}" target="_blank" class="px-3 py-1.5 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm">
+                                        <i class="fab fa-discord mr-1"></i> Discord
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
             <section id="tournois-termines" class="hidden mb-10">
                 <div class="bg-white rounded-xl shadow-sm p-10 text-center">
                     <i class="fas fa-history text-5xl text-gray-300 mb-4"></i>
@@ -941,7 +1173,7 @@
             </section>
 
             <!-- Create Tournament Banner -->
-            <section class="mb-10">
+            <section class="mb-10 mt-10">
                 <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-8 relative overflow-hidden shadow-lg">
                     <div class="absolute top-0 right-0 w-64 h-64 -mt-10 -mr-10">
                         <div class="absolute inset-0 bg-white opacity-10 rounded-full transform rotate-45"></div>
@@ -960,196 +1192,196 @@
 
     <!-- Tournament Modal Template -->
     {% for tournoi in tournois %}
-    <div id="modal-tournoi-{{tournoi.id}}" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <img src="/{{tournoi.image}}" alt="{{tournoi.name}}" class="modal-header-image">
-                <div class="modal-header-overlay">
-                    <div class="tournament-meta">
-                        <div class="status-badge 
-                            {% if tournoi.statut == 'Open' %}status-open
-                            {% elseif tournoi.statut == 'Pending' %}status-pending
-                            {% elseif tournoi.statut == 'Full' %}status-full
-                            {% elseif tournoi.statut == 'In Progress' %}status-in-progress
-                            {% elseif tournoi.statut == 'Completed' %}status-completed
-                            {% elseif tournoi.statut == 'Cancelled' %}status-cancelled
-                            {% else %}status-pending{% endif %}">
-                            {% if tournoi.statut == 'Open' %}Ouvert
-                            {% elseif tournoi.statut == 'Pending' %}En attente
-                            {% elseif tournoi.statut == 'Full' %}Complet
-                            {% elseif tournoi.statut == 'In Progress' %}En cours
-                            {% elseif tournoi.statut == 'Completed' %}Terminé
-                            {% elseif tournoi.statut == 'Cancelled' %}Annulé
-                            {% else %}{{ tournoi.statut }}{% endif %}
+        <div id="modal-tournoi-{{tournoi.id}}" class="modal-overlay">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <img src="/{{tournoi.image}}" alt="{{tournoi.name}}" class="modal-header-image">
+                    <div class="modal-header-overlay">
+                        <div class="tournament-meta">
+                            <div class="status-badge 
+                                {% if tournoi.statut == 'Open' %}status-open
+                                {% elseif tournoi.statut == 'Pending' %}status-pending
+                                {% elseif tournoi.statut == 'Full' %}status-full
+                                {% elseif tournoi.statut == 'In Progress' %}status-in-progress
+                                {% elseif tournoi.statut == 'Completed' %}status-completed
+                                {% elseif tournoi.statut == 'Cancelled' %}status-cancelled
+                                {% else %}status-pending{% endif %}">
+                                {% if tournoi.statut == 'Open' %}Ouvert
+                                {% elseif tournoi.statut == 'Pending' %}En attente
+                                {% elseif tournoi.statut == 'Full' %}Complet
+                                {% elseif tournoi.statut == 'In Progress' %}En cours
+                                {% elseif tournoi.statut == 'Completed' %}Terminé
+                                {% elseif tournoi.statut == 'Cancelled' %}Annulé
+                                {% else %}{{ tournoi.statut }}{% endif %}
+                            </div>
+                            <div class="meta-tag">
+                                <i class="fas fa-calendar-alt"></i> {{ tournoi.date_de_debut }}
+                            </div>
+                            <div class="meta-tag">
+                                <i class="fas fa-user-friends"></i> {{ tournoi.nombre_participants }}/{{ tournoi.numbre_membre }}
+                            </div>
                         </div>
-                        <div class="meta-tag">
-                            <i class="fas fa-calendar-alt"></i> {{ tournoi.date_de_debut }}
-                        </div>
-                        <div class="meta-tag">
-                            <i class="fas fa-user-friends"></i> {{ tournoi.nombre_participants }}/{{ tournoi.numbre_membre }}
-                        </div>
-                    </div>
-                    <h2 class="modal-title">{{ tournoi.name }}</h2>
-                    <div class="flex items-center">
-                        <span class="tournament-format-badge">
-                            <i class="fas fa-trophy"></i> {{ tournoi.format_tournoi }}
-                        </span>
-                        {% if tournoi.frais_inscription > 0 %}
-                        <span class="tournament-fee-badge">
-                            <i class="fas fa-coins"></i> {{ tournoi.frais_inscription }} €
-                        </span>
-                        {% else %}
-                        <span class="tournament-free-badge">
-                            <i class="fas fa-ticket-alt"></i> Gratuit
-                        </span>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="modal-close" onclick="closeTournamentModal('{{tournoi.id}}')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            
-            <div class="modal-body">
-                <!-- Description Section -->
-                <div class="modal-section">
-                    <h3 class="section-title"><i class="fas fa-info-circle"></i> Description</h3>
-                    <p class="text-gray-700">{{ tournoi.description }}</p>
-                </div>
-                
-                <!-- Prize Distribution Section -->
-                <div class="modal-section">
-                    <h3 class="section-title"><i class="fas fa-award"></i> Distribution des prix</h3>
-                    <div class="prize-grid">
-                        <div class="prize-card">
-                            <div class="prize-position"><i class="fas fa-medal text-yellow-500"></i> 1ère place</div>
-                            <div class="prize-amount">{{ tournoi.premier_place|default('-') }} €</div>
-                        </div>
-                        <div class="prize-card">
-                            <div class="prize-position"><i class="fas fa-medal text-gray-400"></i> 2ème place</div>
-                            <div class="prize-amount">{{ tournoi.deuxieme_place|default('-') }} €</div>
-                        </div>
-                        <div class="prize-card">
-                            <div class="prize-position"><i class="fas fa-medal text-yellow-700"></i> 3ème place</div>
-                            <div class="prize-amount">{{ tournoi.troisieme_place|default('-') }} €</div>
+                        <h2 class="modal-title">{{ tournoi.name }}</h2>
+                        <div class="flex items-center">
+                            <span class="tournament-format-badge">
+                                <i class="fas fa-trophy"></i> {{ tournoi.format_tournoi }}
+                            </span>
+                            {% if tournoi.frais_inscription > 0 %}
+                            <span class="tournament-fee-badge">
+                                <i class="fas fa-coins"></i> {{ tournoi.frais_inscription }} €
+                            </span>
+                            {% else %}
+                            <span class="tournament-free-badge">
+                                <i class="fas fa-ticket-alt"></i> Gratuit
+                            </span>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="prize-total">
-                        Prix total: <span>{{ tournoi.prix_total|default('0') }} €</span>
+                    <div class="modal-close" onclick="closeTournamentModal('{{tournoi.id}}')">
+                        <i class="fas fa-times"></i>
                     </div>
                 </div>
                 
-                <!-- Rules Section -->
-                <div class="modal-section">
-                    <h3 class="section-title"><i class="fas fa-gavel"></i> Règles et format</h3>
-                    <div class="rules-box">
-                        <p class="mb-3"><strong>Format:</strong> {{ tournoi.format_tournoi }}</p>
-                        <p>{{ tournoi.regles|default('Règles non spécifiées') }}</p>
+                <div class="modal-body">
+                    <!-- Description Section -->
+                    <div class="modal-section">
+                        <h3 class="section-title"><i class="fas fa-info-circle"></i> Description</h3>
+                        <p class="text-gray-700">{{ tournoi.description }}</p>
                     </div>
-                </div>
-                
-                <!-- Participants Section -->
-                <div class="modal-section">
-                    <h3 class="section-title"><i class="fas fa-users"></i> Participants</h3>
-                    <div class="participants-info">
-                        <div class="participant-count">
-                            <span>{{ tournoi.nombre_participants|default(0) }}</span> sur <span>{{ tournoi.numbre_membre }}</span> places prises
+                    
+                    <!-- Prize Distribution Section -->
+                    <div class="modal-section">
+                        <h3 class="section-title"><i class="fas fa-award"></i> Distribution des prix</h3>
+                        <div class="prize-grid">
+                            <div class="prize-card">
+                                <div class="prize-position"><i class="fas fa-medal text-yellow-500"></i> 1ère place</div>
+                                <div class="prize-amount">{{ tournoi.premier_place|default('-') }} €</div>
+                            </div>
+                            <div class="prize-card">
+                                <div class="prize-position"><i class="fas fa-medal text-gray-400"></i> 2ème place</div>
+                                <div class="prize-amount">{{ tournoi.deuxieme_place|default('-') }} €</div>
+                            </div>
+                            <div class="prize-card">
+                                <div class="prize-position"><i class="fas fa-medal text-yellow-700"></i> 3ème place</div>
+                                <div class="prize-amount">{{ tournoi.troisieme_place|default('-') }} €</div>
+                            </div>
+                        </div>
+                        <div class="prize-total">
+                            Prix total: <span>{{ tournoi.prix_total|default('0') }} €</span>
                         </div>
                     </div>
-                    <div class="progress-indicator">
-                        <div class="progress-bar" style="width: {{ (tournoi.nombre_participants / tournoi.numbre_membre * 100)|round }}%"></div>
+                    
+                    <!-- Rules Section -->
+                    <div class="modal-section">
+                        <h3 class="section-title"><i class="fas fa-gavel"></i> Règles et format</h3>
+                        <div class="rules-box">
+                            <p class="mb-3"><strong>Format:</strong> {{ tournoi.format_tournoi }}</p>
+                            <p>{{ tournoi.regles|default('Règles non spécifiées') }}</p>
+                        </div>
                     </div>
-                </div>
-                
-                <!-- Social Links Section -->
-                {% if tournoi.discord or tournoi.twitch %}
-                <div class="modal-section">
-                    <h3 class="section-title"><i class="fas fa-share-alt"></i> Liens utiles</h3>
-                    <div class="social-links">
-                        {% if tournoi.discord %}
-                        <a href="{{ tournoi.discord }}" target="_blank" class="social-button discord-button">
-                            <i class="fab fa-discord mr-1"></i> Discord
-                        </a>
-                        {% endif %}
-                        
-                        {% if tournoi.twitch %}
-                        <a href="{{ tournoi.twitch }}" target="_blank" class="social-button twitch-button">
-                            <i class="fab fa-twitch mr-1"></i> Twitch
-                        </a>
-                        {% endif %}
+                    
+                    <!-- Participants Section -->
+                    <div class="modal-section">
+                        <h3 class="section-title"><i class="fas fa-users"></i> Participants</h3>
+                        <div class="participants-info">
+                            <div class="participant-count">
+                                <span>{{ tournoi.nombre_participants|default(0) }}</span> sur <span>{{ tournoi.numbre_membre }}</span> places prises
+                            </div>
+                        </div>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: {{ (tournoi.nombre_participants / tournoi.numbre_membre * 100)|round }}%"></div>
+                        </div>
                     </div>
-                </div>
-                {% endif %}
-                
-                <!-- Registration Section -->
-                <div class="registration-section">
-                    <form method="POST" action="/member/inscription" class="w-full">
-                        <input name="tournoi_id" value="{{tournoi.id}}" type="hidden">
-                        
-                        {% if tournoi.statut == 'Open' %}
-                        <form method="POST" action="/member/inscription">
-                            <input name="tournoi_id" value="{{tournoi.id}}" type="hidden"></input>
-                            <button type="submit" class="registration-btn btn-register">
-                                <i class="fas fa-user-plus mr-1"></i> S'inscrire au tournoi
+                    
+                    <!-- Social Links Section -->
+                    {% if tournoi.discord or tournoi.twitch %}
+                    <div class="modal-section">
+                        <h3 class="section-title"><i class="fas fa-share-alt"></i> Liens utiles</h3>
+                        <div class="social-links">
+                            {% if tournoi.discord %}
+                            <a href="{{ tournoi.discord }}" target="_blank" class="social-button discord-button">
+                                <i class="fab fa-discord mr-1"></i> Discord
+                            </a>
+                            {% endif %}
+                            
+                            {% if tournoi.twitch %}
+                            <a href="{{ tournoi.twitch }}" target="_blank" class="social-button twitch-button">
+                                <i class="fab fa-twitch mr-1"></i> Twitch
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Registration Section -->
+                    <div class="registration-section">
+                        <form method="POST" action="/member/inscription" class="w-full">
+                            <input name="tournoi_id" value="{{tournoi.id}}" type="hidden">
+                            
+                            {% if tournoi.statut == 'Open' %}
+                            <form method="POST" action="/member/inscription">
+                                <input name="tournoi_id" value="{{tournoi.id}}" type="hidden"></input>
+                                <button type="submit" class="registration-btn btn-register">
+                                    <i class="fas fa-user-plus mr-1"></i> S'inscrire au tournoi
+                                </button>
+                            </form>
+                            <div class="registration-info">
+                                L'inscription est ouverte jusqu'au {{ tournoi.date_cloture_inscription|default('date non spécifiée') }}
+                            </div>
+                            
+                            {% elseif tournoi.statut == 'Pending' %}
+                            <button type="submit" class="registration-btn btn-wait">
+                                <i class="fas fa-clock mr-1"></i> S'inscrire en liste d'attente
                             </button>
+                            <div class="registration-info">
+                                Le tournoi n'est pas encore ouvert aux inscriptions
+                            </div>
+                            
+                            {% elseif tournoi.statut == 'Full' %}
+                            <button disabled class="registration-btn btn-full">
+                                <i class="fas fa-users-slash mr-1"></i> Complet
+                            </button>
+                            <div class="registration-info">
+                                Le tournoi a atteint sa capacité maximale
+                            </div>
+                            
+                            {% elseif tournoi.statut == 'In Progress' %}
+                            <button type="submit" class="registration-btn btn-in-progress">
+                                <i class="fas fa-eye mr-1"></i> Voir le tournoi en direct
+                            </button>
+                            <div class="registration-info">
+                                Le tournoi est actuellement en cours
+                            </div>
+                            
+                            {% elseif tournoi.statut == 'Completed' %}
+                            <button disabled class="registration-btn btn-completed">
+                                <i class="fas fa-flag-checkered mr-1"></i> Tournoi terminé
+                            </button>
+                            <div class="registration-info">
+                                Ce tournoi est désormais terminé
+                            </div>
+                            
+                            {% elseif tournoi.statut == 'Cancelled' %}
+                            <button disabled class="registration-btn btn-cancelled">
+                                <i class="fas fa-ban mr-1"></i> Tournoi annulé
+                            </button>
+                            <div class="registration-info">
+                                Ce tournoi a été annulé
+                            </div>
+                            
+                            {% else %}
+                            <button disabled class="registration-btn btn-wait">
+                                <i class="fas fa-question-circle mr-1"></i> Statut inconnu
+                            </button>
+                            <div class="registration-info">
+                                Contactez l'administrateur pour plus d'informations
+                            </div>
+                            {% endif %}
                         </form>
-                        <div class="registration-info">
-                            L'inscription est ouverte jusqu'au {{ tournoi.date_cloture_inscription|default('date non spécifiée') }}
-                        </div>
-                        
-                        {% elseif tournoi.statut == 'Pending' %}
-                        <button type="submit" class="registration-btn btn-wait">
-                            <i class="fas fa-clock mr-1"></i> S'inscrire en liste d'attente
-                        </button>
-                        <div class="registration-info">
-                            Le tournoi n'est pas encore ouvert aux inscriptions
-                        </div>
-                        
-                        {% elseif tournoi.statut == 'Full' %}
-                        <button disabled class="registration-btn btn-full">
-                            <i class="fas fa-users-slash mr-1"></i> Complet
-                        </button>
-                        <div class="registration-info">
-                            Le tournoi a atteint sa capacité maximale
-                        </div>
-                        
-                        {% elseif tournoi.statut == 'In Progress' %}
-                        <button type="submit" class="registration-btn btn-in-progress">
-                            <i class="fas fa-eye mr-1"></i> Voir le tournoi en direct
-                        </button>
-                        <div class="registration-info">
-                            Le tournoi est actuellement en cours
-                        </div>
-                        
-                        {% elseif tournoi.statut == 'Completed' %}
-                        <button disabled class="registration-btn btn-completed">
-                            <i class="fas fa-flag-checkered mr-1"></i> Tournoi terminé
-                        </button>
-                        <div class="registration-info">
-                            Ce tournoi est désormais terminé
-                        </div>
-                        
-                        {% elseif tournoi.statut == 'Cancelled' %}
-                        <button disabled class="registration-btn btn-cancelled">
-                            <i class="fas fa-ban mr-1"></i> Tournoi annulé
-                        </button>
-                        <div class="registration-info">
-                            Ce tournoi a été annulé
-                        </div>
-                        
-                        {% else %}
-                        <button disabled class="registration-btn btn-wait">
-                            <i class="fas fa-question-circle mr-1"></i> Statut inconnu
-                        </button>
-                        <div class="registration-info">
-                            Contactez l'administrateur pour plus d'informations
-                        </div>
-                        {% endif %}
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {% endfor %}
 
     <!-- Modal de rechargement -->
@@ -1236,217 +1468,7 @@
     </button>
     
     <script>
-        // Tournament modal handling
-        function openTournamentModal(tournamentId) {
-            const modal = document.getElementById(`modal-tournoi-${tournamentId}`);
-            if (modal) {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling
-            }
-        }
-        
-        function closeTournamentModal(tournamentId) {
-            const modal = document.getElementById(`modal-tournoi-${tournamentId}`);
-            if (modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = 'auto'; // Re-enable scrolling
-            }
-        }
-        
-        // Close modal when clicking outside of it
-        document.addEventListener('click', function(event) {
-            const modals = document.querySelectorAll('.modal-overlay');
-            modals.forEach(modal => {
-                if (event.target === modal) {
-                    modal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-        });
-        
-        // Close modal with escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                const activeModal = document.querySelector('.modal-overlay.active');
-                if (activeModal) {
-                    activeModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            }
-        });
-        
-        // Tabs functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const tabs = document.querySelectorAll('.tournament-tabs button');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs
-                    tabs.forEach(t => t.classList.remove('tab-active'));
-                    
-                    // Add active class to clicked tab
-                    this.classList.add('tab-active');
-                    
-                    // Hide all sections
-                    document.querySelectorAll('section[id]').forEach(section => {
-                        if (section.id === 'all-tournaments' || 
-                            section.id === 'mes-inscriptions' || 
-                            section.id === 'tournois-termines' || 
-                            section.id === 'calendrier') {
-                            section.classList.add('hidden');
-                        }
-                    });
-                    
-                    // Show the corresponding section
-                    const targetId = this.getAttribute('data-tab');
-                    const targetSection = document.getElementById(targetId);
-                    
-                    if (targetSection) {
-                        targetSection.classList.remove('hidden');
-                    }
-                });
-            });
-            
-            // Recharge modal functionality
-            const rechargeBtn = document.querySelector('.sidebar-footer button');
-            const rechargeModal = document.getElementById('recharge-modal');
-            const closeModalBtn = document.getElementById('close-recharge-modal');
-            
-            // Function to open the modal
-            function openRechargeModal() {
-                if (rechargeModal) {
-                    rechargeModal.classList.remove('hidden');
-                    rechargeModal.classList.add('flex');
-                }
-            }
-            
-            // Function to close the modal
-            function closeRechargeModal() {
-                if (rechargeModal) {
-                    rechargeModal.classList.add('hidden');
-                    rechargeModal.classList.remove('flex');
-                }
-            }
-            
-            // Add an event click to the "Recharger" button
-            if (rechargeBtn) {
-                rechargeBtn.addEventListener('click', openRechargeModal);
-            }
-            
-            // Add an event click to the close button
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', closeRechargeModal);
-            }
-            
-            // Close the modal when clicking outside
-            if (rechargeModal) {
-                rechargeModal.addEventListener('click', function(e) {
-                    if (e.target === rechargeModal) {
-                        closeRechargeModal();
-                    }
-                });
-            }
-            
-            // Handle recharge form submission
-            const rechargeForm = document.getElementById('recharge-form');
-            
-            // Event handler for form submission
-            if (rechargeForm) {
-                rechargeForm.addEventListener('submit', function(e) {
-                    // Prevent default form submission
-                    e.preventDefault();
-                    
-                    // Get the entered amount
-                    const amount = document.getElementById('recharge-amount').value;
-                    
-                    // Show loading alert
-                    Swal.fire({
-                        title: 'Rechargement en cours',
-                        text: `Rechargement de ${amount} € en cours...`,
-                        icon: 'info',
-                        showConfirmButton: false,
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                    
-                    // Submit the form after a short delay to show the animation
-                    setTimeout(() => {
-                        rechargeForm.submit();
-                    }, 1500);
-                });
-            }
-            
-            // Check for URL success parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const currentPath = window.location.pathname;
-            
-            if (urlParams.has('Rechargement_de_votre_solde_réussite')) {
-                Swal.fire({
-                    title: 'Succès!',
-                    text: 'Rechargement de votre solde réussi',
-                    icon: 'success',
-                    confirmButtonColor: '#8b5cf6'
-                }).then(() => {
-                    // Redirect to the same page but without query parameters
-                    window.history.replaceState({}, document.title, currentPath);
-                });
-            }
-            
-            // Check for URL failure parameter
-            if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
-                Swal.fire({
-                    title: 'Échec',
-                    text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
-                    icon: 'error',
-                    confirmButtonColor: '#8b5cf6'
-                }).then(() => {
-                    // Redirect to the same page but without query parameters
-                    window.history.replaceState({}, document.title, currentPath);
-                });
-            }
-            
-            // Tournament registration result handling
-            if (urlParams.has('Inscription_succefully')) {
-                Swal.fire({
-                    title: "Succès !",
-                    text: "L'inscription au tournament a été effectuée avec succès !",
-                    icon: "success",
-                    confirmButtonText: "OK",
-                    confirmButtonColor: '#8b5cf6',
-                    timer: 3000 
-                }).then(() => {
-                    // Clean the URL
-                    const url = new URL(window.location.href);
-                    url.search = '';
-                    window.history.replaceState({}, document.title, url);
-                });
-            }
-            
-            if (urlParams.has('error') && urlParams.get('error') === 'Inscription_failed') {
-                Swal.fire({
-                    title: 'Erreur',
-                    text: "L'inscription au tournament a échoué",
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#8b5cf6'
-                }).then(() => {
-                    // Clean the URL
-                    const url = new URL(window.location.href);
-                    url.search = '';
-                    window.history.replaceState({}, document.title, url);
-                });
-            }
-        });
-        
-        // Function to redirect to tournaments tab
-        function redirectToTournaments() {
-            const allTournamentsTab = document.querySelector('button[data-tab="all-tournaments"]');
-            if (allTournamentsTab) {
-                allTournamentsTab.click();
-            }
-        }
+
     </script>
 </body>
 </html>
