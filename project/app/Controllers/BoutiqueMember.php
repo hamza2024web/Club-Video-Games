@@ -29,7 +29,9 @@ class BoutiqueMember extends BaseController{
         foreach ($jeuxAchetes as $jeu) {
             $jeuxAchetesIds[] = $jeu['jeu_id'];
         }
-        return $this->renderOrg('boutiqueMember', compact('jeux', 'profile', 'genres', 'jeuxAchetesIds','my_solde'));
+        var_dump($profile);
+        exit();
+        return $this->renderMem('boutique', compact('jeux', 'profile', 'genres', 'jeuxAchetesIds','my_solde'));
     }
 }
 ?>
