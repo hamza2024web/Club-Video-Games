@@ -16,6 +16,7 @@ class TournamentsRepository {
         ,tournoi.troisieme_place ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.discord,tournoi.twitch,COUNT(inscription_tournoi.id) as nombre_participants ,jeux.nom_de_jeu as jeu FROM tournoi
         LEFT JOIN inscription_tournoi ON inscription_tournoi.tournoi_id = tournoi.id
         INNER JOIN jeux ON jeux.id = tournoi.jeu_id
+        WHERE tournoi.statut != 'cancelled'
         GROUP BY  tournoi.id, tournoi.name, tournoi.date_de_debut, tournoi.frais_inscription, tournoi.image, tournoi.numbre_membre, tournoi.statut, tournoi.format_tournoi, tournoi.regles, tournoi.description, tournoi.prix_total, tournoi.premier_place, tournoi.deuxieme_place, tournoi.troisieme_place, tournoi.date_ouverture_inscription, tournoi.date_cloture_inscription, tournoi.discord, tournoi.twitch";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
