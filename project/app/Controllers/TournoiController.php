@@ -59,7 +59,8 @@ class TournoiController extends BaseController{
         } elseif ($currentDate <= $registration_end) {
             $status = 'Open';
         } else {
-            $status = 'Closed'; 
+            
+            $status = 'Cancelled'; 
         }
         
         $saveTournoi = $this->TournoiServices->setTournoi($user_id,$name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo);
