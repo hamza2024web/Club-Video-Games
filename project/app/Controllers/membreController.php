@@ -15,7 +15,8 @@ class membreController extends BaseController{
     public function dashboard (){
         $user_id = $_SESSION["user_id"];
         $member = $this->MembreServices->getProfileMembre($user_id);
-        $this->renderMem('dashboard',compact('member'));
+        $my_solde = $this->solde($user_id);
+        $this->renderMem('dashboard',compact('member','my_solde'));
     }
 
     
