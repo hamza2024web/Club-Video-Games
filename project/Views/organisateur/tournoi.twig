@@ -1256,6 +1256,17 @@
                         });
                         return;
                     }
+
+                    // Vérification que le nombre maximum de participants ne dépasse pas 16
+                    if (parseInt(maxParticipants) > 16) {
+                        Swal.fire({
+                            title: 'Nombre de participants trop élevé',
+                            text: 'Le nombre de participants ne peut pas dépasser 16',
+                            icon: 'error',
+                            confirmButtonColor: '#8b5cf6'
+                        });
+                        return;
+                    }
                     
                     // Check that end date is after start date
                     if (new Date(endDate) <= new Date(startDate)) {
