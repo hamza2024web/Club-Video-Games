@@ -1330,15 +1330,6 @@
                             <div class="registration-info">
                                 Le tournoi n'est pas encore ouvert aux inscriptions
                             </div>
-                            
-                            {% elseif tournoi.statut == 'Full' %}
-                            <button disabled class="registration-btn btn-full">
-                                <i class="fas fa-users-slash mr-1"></i> Complet
-                            </button>
-                            <div class="registration-info">
-                                Le tournoi a atteint sa capacité maximale
-                            </div>
-                            
                             {% elseif tournoi.statut == 'In Progress' %}
                             <button type="submit" class="registration-btn btn-in-progress">
                                 <i class="fas fa-eye mr-1"></i> Voir le tournoi en direct
@@ -1346,7 +1337,6 @@
                             <div class="registration-info">
                                 Le tournoi est actuellement en cours
                             </div>
-                            
                             {% elseif tournoi.statut == 'Completed' %}
                             <button disabled class="registration-btn btn-completed">
                                 <i class="fas fa-flag-checkered mr-1"></i> Tournoi terminé
@@ -1354,15 +1344,6 @@
                             <div class="registration-info">
                                 Ce tournoi est désormais terminé
                             </div>
-                            
-                            {% elseif tournoi.statut == 'Cancelled' %}
-                            <button disabled class="registration-btn btn-cancelled">
-                                <i class="fas fa-ban mr-1"></i> Tournoi annulé
-                            </button>
-                            <div class="registration-info">
-                                Ce tournoi a été annulé
-                            </div>
-                            
                             {% else %}
                             <button disabled class="registration-btn btn-wait">
                                 <i class="fas fa-question-circle mr-1"></i> Statut inconnu

@@ -8,7 +8,7 @@ use App\Services\TournoiServices;
 session_start();
 
 class TournoiController extends BaseController{
-    protected $TournnoiServices;
+    protected $TournoiServices;
     protected $ProfileServices;
     protected $JeuxServices;
     
@@ -17,7 +17,7 @@ class TournoiController extends BaseController{
         parent::__construct();
         $this->ProfileServices = new ProfileServices();
         $this->JeuxServices = new JeuxServices();
-        $this->TournnoiServices = new TournoiServices();
+        $this->TournoiServices = new TournoiServices();
     }
 
     public function index(){
@@ -25,14 +25,13 @@ class TournoiController extends BaseController{
         $my_solde = $this->solde($user_id);
         $profile = $this->ProfileServices->getProfileUser($user_id);
         $jeux = $this->JeuxServices->getGame($user_id);
-        $tournois = $this->TournnoiServices->getTournoi($user_id);
+        $tournois = $this->TournoiServices->getTournoi($user_id);
         return $this->renderOrg('tournoi',compact('profile','jeux','tournois','my_solde'));
     }
     public function addTournoi(){
         $user_id = $_SESSION["user_id"];
         $name = $_POST["name"];
         $game = $_POST["game"];
-        $status = $_POST["status"];
         $format = $_POST["format"];
         $start_date = $_POST["start_date"];
         $end_date = $_POST["end_date"];
@@ -52,8 +51,13 @@ class TournoiController extends BaseController{
         $image = $_FILES["tournament_photo"] ?? null ;
         
         $tournament_photo = $this->generateImage($image,$currentImage);
-
-        $saveTournoi = $this->TournnoiServices->setTournoi($user_id,$name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo);
+        $currentDate = date('Y-m-d');
+        if ($currentDate < $registration_start){
+            $status = 'Pending';
+        } elseif ($currentDate < $registration_end){
+            $status = 'Open';
+        }
+        $saveTournoi = $this->TournoiServices->setTournoi($user_id,$name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo);
 
         if ($saveTournoi){
             header("location: /tournoi?Tournoi Created successfully!=1");
@@ -65,7 +69,7 @@ class TournoiController extends BaseController{
         $id = $_POST["tournoi_id"];
         $new_statut = $_POST["new_status"];
 
-        $statut = $this->TournnoiServices->updateStatus($id,$new_statut);
+        $statut = $this->TournoiServices->updateStatus($id,$new_statut);
         if($statut){
             header("location: /tournoi?Status_Updated_Succefully=1");
         } else {

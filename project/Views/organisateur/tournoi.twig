@@ -733,7 +733,7 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        </div>  
                     </div>
 
                     </div>
@@ -799,17 +799,6 @@
                                     <option value="double-elimination">Double élimination</option>
                                 </select>
                             </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Statut du tournoi</label>
-                                <select name="status" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                    <option value="Pending">En attente</option>
-                                    <option value="Open">Ouvert</option>
-                                    <option value="Full">Complet</option>
-                                    <option value="In Progress">En cours</option>
-                                    <option value="Completed">Terminé</option>
-                                </select>
-                            </div>  
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
@@ -1252,14 +1241,13 @@
                     // Get required fields
                     const tournamentName = this.querySelector('input[name="name"]').value;
                     const game = this.querySelector('select[name="game"]').value;
-                    const status = this.querySelector('select[name="status"]').value;
                     const format = this.querySelector('select[name="format"]').value;
                     const startDate = this.querySelector('input[name="start_date"]').value;
                     const endDate = this.querySelector('input[name="end_date"]').value;
                     const maxParticipants = this.querySelector('input[name="max_participants"]').value;
                     
                     // Simple validation
-                    if (!tournamentName || !game || !format || !status || !startDate || !endDate || !maxParticipants) {
+                    if (!tournamentName || !game || !format || !startDate || !endDate || !maxParticipants) {
                         Swal.fire({
                             title: 'Formulaire incomplet',
                             text: 'Veuillez remplir tous les champs obligatoires',
@@ -1343,84 +1331,6 @@
                     window.history.replaceState({}, document.title, url);
                 });
             }
-        });
-
-        // Initialize status form submission with loading state
-        document.addEventListener('DOMContentLoaded', function() {
-            // Existing code...
-            
-            // Handle status form submission
-            const statusForm = document.getElementById('statusForm');
-            if (statusForm) {
-                statusForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Show loading state
-                    Swal.fire({
-                        title: 'Traitement en cours',
-                        text: 'Mise à jour du statut...',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        willOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                    
-                    // Submit the form
-                    this.submit();
-                });
-            }
-            
-            // Check for URL parameters for status update notifications
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            if (urlParams.has('Status_Updated_Succefully')) {
-                Swal.fire({
-                    title: "Succès !",
-                    text: "Le statut du tournoi a été mis à jour avec succès !",
-                    icon: "success",
-                    confirmButtonText: "OK",
-                    confirmButtonColor: '#8b5cf6',
-                    timer: 3000 
-                }).then(() => {
-                    // Clean the URL
-                    const url = new URL(window.location.href);
-                    url.search = '';
-                    window.history.replaceState({}, document.title, url);
-                });
-            }
-            
-            if (urlParams.has('error') && urlParams.get('error') === 'update_failed') {
-                Swal.fire({
-                    title: 'Erreur',
-                    text: 'La mise à jour du statut a échoué',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#8b5cf6'
-                }).then(() => {
-                    // Clean the URL
-                    const url = new URL(window.location.href);
-                    url.search = '';
-                    window.history.replaceState({}, document.title, url);
-                });
-            }
-            
-            // Initialize Status Modal Close on Outside Click
-            const statusModal = document.getElementById('statusModal');
-            if (statusModal) {
-                statusModal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeStatusModal();
-                    }
-                });
-            }
-            
-            // Close status modal with ESC key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && !statusModal.classList.contains('hidden')) {
-                    closeStatusModal();
-                }
-            });
         });
 
         document.addEventListener('DOMContentLoaded', function() {
