@@ -259,7 +259,7 @@
             if (urlParams.has('error') && urlParams.get('error') === 'Inscription_failed') {
                 Swal.fire({
                     title: 'Erreur',
-                    text: "L'inscription au tournament a échoué",
+                    text: "L'inscription au tournament a échoué , Please Verify Your Solde !",
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#8b5cf6'
@@ -278,7 +278,7 @@
             });
         });
 
-        
+
     // Fonction pour afficher le formulaire de paiement
     function showPaymentForm(tournoiId, fraisInscription, tournoiName) {
         // Mettre à jour les informations de paiement

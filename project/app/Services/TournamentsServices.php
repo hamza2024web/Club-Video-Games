@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Repository\TournamentsRepository;
+use Exception;
 
 class TournamentsServices extends PayementServices {
     protected $TournamentsRepository;
@@ -19,8 +20,21 @@ class TournamentsServices extends PayementServices {
         $currentSolde = (float)$currentSoldeData;
         $price = (float)$frais_inscription;
         if ($price <= $currentSolde){
-            $inscription = $this->TournamentsRepository->Inscription_Tournoi($user_id,$tournoi_id);
-            return $inscription;
+            try{
+                $inscription = $this->TournamentsRepository->Inscription_Tournoi($user_id,$tournoi_id);
+                if($inscription){
+                    $newSolde = $currentSolde - $price;
+                    $newCompteSolde = $this->PaymentRepository->updateUserSolde($user_id,$newSolde);
+                    return $inscription;
+                } else {
+                    return false;
+                }
+            } catch (Exception $e){
+                error_log("Inscription error :" .$e->getMessage());
+                return false;
+            }
+        } else {
+            return false;
         }
         $inscription = $this->TournamentsRepository->Inscription_Tournoi($user_id,$tournoi_id);
         return $inscription;
