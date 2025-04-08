@@ -14,8 +14,14 @@ class TournamentsServices extends PayementServices {
         $tournois = $this->TournamentsRepository->getAllTournois();
         return $tournois;
     }
-    public function Inscription($user_id,$tournoi_id){
-        $currentSolde = $this->validatePrice($user_id);
+    public function Inscription($user_id,$tournoi_id,$frais_inscription){
+        $currentSoldeData = $this->validatePrice($user_id);
+        $currentSolde = (float)$currentSoldeData;
+        $price = (float)$frais_inscription;
+        if ($price <= $currentSolde){
+            $inscription = $this->TournamentsRepository->Inscription_Tournoi($user_id,$tournoi_id);
+            return $inscription;
+        }
         $inscription = $this->TournamentsRepository->Inscription_Tournoi($user_id,$tournoi_id);
         return $inscription;
     }

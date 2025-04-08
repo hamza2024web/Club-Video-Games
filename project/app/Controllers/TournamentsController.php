@@ -26,7 +26,9 @@ class TournamentsController extends BaseController {
     public function inscriptionTournoi(){
         $user_id = $_SESSION["user_id"];
         $tournoi_id = $_POST["tournoi_id"];
-        $inscription = $this->TournamentsServices->Inscription($user_id,$tournoi_id);
+        $frais_inscription = $_POST["frais_inscription"];
+ 
+        $inscription = $this->TournamentsServices->Inscription($user_id,$tournoi_id,$frais_inscription);
 
         if($inscription){
             header("location: /member/tournaments?Inscription_succefully=1");
