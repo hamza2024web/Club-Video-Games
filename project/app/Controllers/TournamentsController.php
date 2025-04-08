@@ -33,7 +33,7 @@ class TournamentsController extends BaseController {
         if($inscription){
             header("location: /member/tournaments?Inscription_succefully=1");
         } else {
-            header("location: /member/tournaments?Inscription_failed=1");
+            header("location: /member/tournaments?inscription_error=1");
         }
     }
 }

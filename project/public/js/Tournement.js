@@ -256,10 +256,10 @@
                 }).then(cleanURL);
             }
             
-            if (urlParams.has('error') && urlParams.get('error') === 'Inscription_failed') {
+            if (urlParams.has('inscription_error')) {
                 Swal.fire({
                     title: 'Erreur',
-                    text: "L'inscription au tournament a échoué , Please Verify Your Solde !",
+                    text: "L'inscription au tournoi a échoué. Veuillez vérifier votre solde !",
                     icon: 'error',
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#8b5cf6'

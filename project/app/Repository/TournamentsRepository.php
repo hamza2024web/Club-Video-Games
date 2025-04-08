@@ -22,7 +22,7 @@ class TournamentsRepository {
         $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $tournois;
     }
-    public function Inscription_Tournoi($user_id,$tournoi_id){
+    public function Inscription_Tournoi($user_id,$tournoi_id,$price){
         $sqlMember = "SELECT id FROM membre WHERE user_id = :user_id";
         $stmtMember = $this->conn->prepare($sqlMember);
         $stmtMember->bindParam(":user_id", $user_id);
@@ -32,10 +32,11 @@ class TournamentsRepository {
             return false;
         }
         $member_id = $member['id'];
-        $sqlInscription = "INSERT INTO inscription_tournoi (tournoi_id, membre_id) VALUES (:tournoi_id, :member_id)";
+        $sqlInscription = "INSERT INTO inscription_tournoi (tournoi_id, membre_id,frais_inscription) VALUES (:tournoi_id, :member_id,:frais_inscription)";
         $stmtInsert = $this->conn->prepare($sqlInscription);
         $stmtInsert->bindParam(":tournoi_id", $tournoi_id);
         $stmtInsert->bindParam(":member_id", $member_id);
+        $stmtInsert->bindParam(":frais_inscription",$price);
         return $stmtInsert->execute();
     }
     public function getTournoiInscri($user_id){
