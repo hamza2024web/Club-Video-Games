@@ -43,7 +43,9 @@ function addToCart(id,name, price, image) {
     });
 }
 function removeFromCart(id) {
-    const index = cart.findIndex(item => item.id === id);
+    const stringId = String(id);
+    const index = cart.findIndex(item => String(item.id) === stringId);
+    
     if (index !== -1) {
         const removedItem = cart[index];
         cart.splice(index, 1);
@@ -142,15 +144,15 @@ function updateCartUI() {
         const imgSrc = item.image.startsWith('http') ? item.image : `/${item.image}`;
         
         cartItem.innerHTML = `
-            <img src="${imgSrc}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
-            <div class="ml-3 flex-1">
-                <h4 class="font-medium text-gray-800">${item.name}</h4>
-                <p class="text-purple-600 font-semibold">${item.price === 0 ? 'Gratuit' : item.price.toFixed(2) + ' €'}</p>
-            </div>
-            <button onclick="removeFromCart(${item.id})" class="text-gray-400 hover:text-red-500">
-                <i class="fas fa-trash"></i>
-            </button>
-        `;
+        <img src="${imgSrc}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+        <div class="ml-3 flex-1">
+            <h4 class="font-medium text-gray-800">${item.name}</h4>
+            <p class="text-purple-600 font-semibold">${item.price === 0 ? 'Gratuit' : item.price.toFixed(2) + ' €'}</p>
+        </div>
+        <button onclick="removeFromCart('${item.id}')" class="text-gray-400 hover:text-red-500">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
         cartItemsContainer.appendChild(cartItem);
     });
 }
