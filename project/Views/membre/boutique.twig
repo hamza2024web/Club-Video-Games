@@ -1393,6 +1393,7 @@
                 document.getElementById('overlay').classList.add('hidden');
             });
         });
+
         function saveCartToLocalStorage(){
             localStorage.setItem('gamesmember',JSON.stringify(cart));
         }
@@ -1404,6 +1405,7 @@
                 loadedCart.forEach(item => cart.push(item));
             }
         }
+        
     </script>
 </body>
 </html>
