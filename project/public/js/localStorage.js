@@ -1,7 +1,7 @@
 // Initialize the cart UI on page load
 document.addEventListener('DOMContentLoaded', () => {
-            loadCartFromLocalStorage();
-            updateCartUI();
+        loadCartFromLocalStorage();
+        updateCartUI();
             
         // Close cart when clicking on overlay
         document.getElementById('overlay').addEventListener('click', () => {
