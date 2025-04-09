@@ -1,6 +1,6 @@
 // Initialize the cart UI on page load
 document.addEventListener('DOMContentLoaded', () => {
-        loadCartFromLocalStorage();
+        loadCartFromLocalStorage(identifier);
         updateCartUI();
             
         // Close cart when clicking on overlay
@@ -10,14 +10,30 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('overlay').classList.add('hidden');
     });
 });
-function saveCartToLocalStorage(){
-    localStorage.setItem('gamersHubCart',JSON.stringify(cart));
-}
-function loadCartFromLocalStorage (){
-    const savedCart = localStorage.getItem('gamersHubCart');
-    if (savedCart){
-        cart.length = 0;
-        const loadedCart = JSON.parse(savedCart);
-        loadedCart.forEach(item => cart.push(item));
+function saveCartToLocalStorage(identifier){
+    if (identifier == 2){
+        localStorage.setItem('gamersMember',JSON.stringify(cart));    
+    } 
+    if (identifier == 1){
+        localStorage.setItem('gamersHubCart',JSON.stringify(cart));
     }
+}
+function loadCartFromLocalStorage (identifier){
+    const savedCartOrgan = localStorage.getItem('gamersHubCart');
+    const savedCartMem = localStorage.getItem('gamersMember');
+    if (identifier == 1) {
+        if (savedCartOrgan){
+            cart.length = 0;
+            const loadedCart = JSON.parse(savedCartOrgan);
+            loadedCart.forEach(item => cart.push(item));
+        }
+    } 
+    if (identifier == 2){
+        if (savedCartMem){
+            cart.length = 0;
+            const loadedCart = JSON.parse(savedCartMem);
+            loadedCart.forEach(item => cart.push(item));
+        }
+    }
+
 }

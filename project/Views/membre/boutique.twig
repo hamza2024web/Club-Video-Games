@@ -518,10 +518,10 @@
             <!-- Zone de contenu -->
             <div class="p-6">
                 <!-- Section Carousel héros -->
-                <section class="mb-8 rounded-2xl overflow-hidden shadow-md">
-                    <div class="carousel-container">
+                <div class="mb-6 rounded-2xl overflow-hidden shadow-md">
+                    <div class="carousel-container relative">
                         <div class="carousel">
-                            <!-- Élément 1 du carousel -->
+                            <!-- Carousel item 1 -->
                             <div class="carousel-item relative">
                                 <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406" alt="Game Promotion" class="w-full h-80 object-cover">
                                 <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
@@ -534,7 +534,7 @@
                                                 <button class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg flex items-center transition-colors">
                                                     <i class="fas fa-info-circle mr-2"></i> Détails
                                                 </button>
-                                                <button onclick="addToCart('1', 'Call of Duty: Black Ops 6', 69.99, 'https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406')" class="bg-white hover:bg-gray-100 text-purple-700 px-6 py-2 rounded-lg flex items-center transition-colors">
+                                                <button onclick="addToCart('Call of Duty: Black Ops 6', 69.99, 'https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406')" class="bg-white hover:bg-gray-100 text-purple-700 px-6 py-2 rounded-lg flex items-center transition-colors">
                                                     <i class="fas fa-shopping-cart mr-2"></i> Précommander
                                                 </button>
                                             </div>
@@ -543,7 +543,7 @@
                                 </div>
                             </div>
                             
-                            <!-- Élément 2 du carousel -->
+                            <!-- Carousel item 2 -->
                             <div class="carousel-item relative">
                                 <img src="https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70070000023212/a0009b79158fb57944bccf96b3fed690790cbb0de4e660128d39b28dd4311f92" alt="Game Promotion" class="w-full h-80 object-cover">
                                 <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
@@ -556,7 +556,7 @@
                                                 <span class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm font-bold flex items-center">
                                                     <i class="fas fa-tags mr-1"></i> -20%
                                                 </span>
-                                                <button onclick="addToCart('2', 'FIFA 25 Ultimate Edition', 79.99, 'https://cdn.akamai.steamstatic.com/steam/apps/2394790/header.jpg')" class="bg-white hover:bg-gray-100 text-purple-700 px-6 py-2 rounded-lg flex items-center transition-colors">
+                                                <button onclick="addToCart('FIFA 25 Ultimate Edition', 79.99, 'https://cdn.akamai.steamstatic.com/steam/apps/2394790/header.jpg')" class="bg-white hover:bg-gray-100 text-purple-700 px-6 py-2 rounded-lg flex items-center transition-colors">
                                                     <i class="fas fa-shopping-cart mr-2"></i> Ajouter
                                                 </button>
                                             </div>
@@ -565,9 +565,9 @@
                                 </div>
                             </div>
                             
-                            <!-- Élément 3 du carousel -->
+                            <!-- Carousel item 3 -->
                             <div class="carousel-item relative">
-                                <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/990080/header.jpg" alt="Game Promotion" class="w-full h-80 object-cover">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShtZ4-blVSiLEDsFzDeKNFrJUl_XDygpIMqA&s" alt="Game Promotion" class="w-full h-80 object-cover">
                                 <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
                                     <div class="p-10 max-w-xl">
                                         <div class="text-white">
@@ -575,7 +575,7 @@
                                             <h2 class="text-3xl font-bold mt-3">Hogwarts Legacy</h2>
                                             <p class="mt-2 text-gray-200">Embarquez pour une aventure dans le monde magique de Harry Potter avec ce jeu de rôle immersif.</p>
                                             <div class="mt-4 flex space-x-3">
-                                                <button onclick="addToCart('3', 'Hogwarts Legacy', 49.99, 'https://cdn.cloudflare.steamstatic.com/steam/apps/990080/header.jpg')" class="bg-white hover:bg-gray-100 text-purple-700 px-6 py-2 rounded-lg flex items-center transition-colors">
+                                                <button onclick="addToCart('Hogwarts Legacy', 49.99, 'https://cdn.cloudflare.steamstatic.com/steam/apps/990080/header.jpg')" class="bg-white hover:bg-gray-100 text-purple-700 px-6 py-2 rounded-lg flex items-center transition-colors">
                                                     <i class="fas fa-shopping-cart mr-2"></i> Ajouter
                                                 </button>
                                                 <span class="text-gray-200 text-sm flex items-center">
@@ -588,7 +588,7 @@
                             </div>
                         </div>
                         
-                        <!-- Contrôles du carousel -->
+                        <!-- Carousel Controls -->
                         <div class="carousel-arrow prev" onclick="moveCarousel(-1)">
                             <i class="fas fa-chevron-left"></i>
                         </div>
@@ -596,14 +596,14 @@
                             <i class="fas fa-chevron-right"></i>
                         </div>
                         
-                        <!-- Points indicateurs du carousel -->
+                        <!-- Carousel Dots -->
                         <div class="carousel-dots absolute bottom-4 w-full">
                             <div class="carousel-dot active" onclick="setCarouselSlide(0)"></div>
                             <div class="carousel-dot" onclick="setCarouselSlide(1)"></div>
                             <div class="carousel-dot" onclick="setCarouselSlide(2)"></div>
                         </div>
                     </div>
-                </section>
+                </div>
 
                 <!-- Section Recherche et filtres -->
                 <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
@@ -697,7 +697,7 @@
                                                 <i class="fas fa-check mr-1"></i> Acheté
                                             </button>
                                         {% else %}
-                                            <button onclick="addToCart('{{jeu.id}}', '{{jeu.nom_de_jeu}}', {{jeu.prix}}, '{{jeu.image}}')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
+                                            <button onclick="addToCart('{{jeu.id}}', '{{jeu.nom_de_jeu}}', {{jeu.prix}}, '{{jeu.image}}', '2')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
                                                 <i class="fas fa-plus mr-1"></i> Ajouter
                                             </button>
                                         {% endif %}
@@ -1261,7 +1261,7 @@
             }, 5000); // Changer les slides toutes les 5 secondes
             
             // Initialiser le panier et les favoris
-            loadCartFromLocalStorage();
+            loadCartFromLocalStorage(2);
             updateCartUI();
             
             // Modal de rechargement
@@ -1334,7 +1334,7 @@
                 }).then(() => {
                     // Vider le panier après un paiement réussi
                     cart.length = 0;
-                    saveCartToLocalStorage();
+                    saveCartToLocalStorage(1);
                     updateCartUI();
                     
                     // Rediriger pour enlever les paramètres d'URL
@@ -1383,7 +1383,7 @@
 
         // Initialize the cart UI on page load
         document.addEventListener('DOMContentLoaded', () => {
-            loadCartFromLocalStorage();
+            loadCartFromLocalStorage(2);
             updateCartUI();
                     
                 // Close cart when clicking on overlay
@@ -1393,18 +1393,6 @@
                 document.getElementById('overlay').classList.add('hidden');
             });
         });
-
-        function saveCartToLocalStorage(){
-            localStorage.setItem('gamesmember',JSON.stringify(cart));
-        }
-        function loadCartFromLocalStorage (){
-            const savedCart = localStorage.getItem('gamesmember');
-            if (savedCart){
-                cart.length = 0;
-                const loadedCart = JSON.parse(savedCart);
-                loadedCart.forEach(item => cart.push(item));
-            }
-        }
         
     </script>
 </body>

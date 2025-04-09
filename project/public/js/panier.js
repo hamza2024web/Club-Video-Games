@@ -1,6 +1,6 @@
 const cart = [];
 
-function addToCart(id,name, price, image) {
+function addToCart(id,name, price, image , identifier) {
     // Check if the game is already in the cart
     const existingItem = cart.find(item => item.name === name);
     
@@ -24,12 +24,13 @@ function addToCart(id,name, price, image) {
         name,
         price,
         image,
-        order_id: Date.now() // Simple unique identifier
+        order_id: Date.now(), // Simple unique identifier
+        identifier
     });
     
     // Update cart UI
     updateCartUI();
-    saveCartToLocalStorage();
+    saveCartToLocalStorage(identifier);
     
     // Show success notification
     Swal.fire({
@@ -42,7 +43,7 @@ function addToCart(id,name, price, image) {
         showConfirmButton: false
     });
 }
-function removeFromCart(id) {
+function removeFromCart(id,identifier) {
     const stringId = String(id);
     const index = cart.findIndex(item => String(item.id) === stringId);
     
@@ -50,7 +51,7 @@ function removeFromCart(id) {
         const removedItem = cart[index];
         cart.splice(index, 1);
         updateCartUI();
-        saveCartToLocalStorage();
+        saveCartToLocalStorage(identifier);
         
         // Show notification
         Swal.fire({
@@ -149,7 +150,7 @@ function updateCartUI() {
             <h4 class="font-medium text-gray-800">${item.name}</h4>
             <p class="text-purple-600 font-semibold">${item.price === 0 ? 'Gratuit' : item.price.toFixed(2) + ' €'}</p>
         </div>
-        <button onclick="removeFromCart('${item.id}')" class="text-gray-400 hover:text-red-500">
+        <button onclick="removeFromCart('${item.id}','${item.identifier}')" class="text-gray-400 hover:text-red-500">
             <i class="fas fa-trash"></i>
         </button>
     `;
