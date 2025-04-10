@@ -1,6 +1,6 @@
 const cart = [];
 
-function addToCart(id,name, price, image , identifier) {
+function addToCart(id,name, price, image , storageKey) {
     // Check if the game is already in the cart
     const existingItem = cart.find(item => item.name === name);
     
@@ -25,12 +25,11 @@ function addToCart(id,name, price, image , identifier) {
         price,
         image,
         order_id: Date.now(), // Simple unique identifier
-        identifier
     });
     
     // Update cart UI
     updateCartUI();
-    saveCartToLocalStorage(identifier);
+    saveCartToLocalStorage(storageKey);
     
     // Show success notification
     Swal.fire({
@@ -43,15 +42,14 @@ function addToCart(id,name, price, image , identifier) {
         showConfirmButton: false
     });
 }
-function removeFromCart(id,identifier) {
-    const stringId = String(id);
-    const index = cart.findIndex(item => String(item.id) === stringId);
-    
+
+function removeFromCart(id, storageKey) {
+    const index = cart.findIndex(item => item.id === id);
     if (index !== -1) {
         const removedItem = cart[index];
         cart.splice(index, 1);
         updateCartUI();
-        saveCartToLocalStorage(identifier);
+        saveCartToLocalStorage(storageKey);
         
         // Show notification
         Swal.fire({
@@ -66,7 +64,42 @@ function removeFromCart(id,identifier) {
     }
 }
 
-function clearCart() {
+
+function saveCartToLocalStorage(storageKey) {
+    localStorage.setItem(storageKey, JSON.stringify(cart));
+}
+
+function loadCartFromLocalStorage(storageKey) {
+    const savedCart = localStorage.getItem(storageKey);
+    if (savedCart) {
+        cart.length = 0; // Clear current cart
+        const loadedCart = JSON.parse(savedCart);
+        loadedCart.forEach(item => cart.push(item));
+    }
+}
+
+function removeFromCart(id, storageKey) {
+    const index = cart.findIndex(item => item.id === id);
+    if (index !== -1) {
+        const removedItem = cart[index];
+        cart.splice(index, 1);
+        updateCartUI();
+        saveCartToLocalStorage(storageKey);
+        
+        // Show notification
+        Swal.fire({
+            title: 'Retiré du panier',
+            text: `${removedItem.name} a été retiré de votre panier`,
+            icon: 'info',
+            confirmButtonColor: '#8b5cf6',
+            timer: 1500,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+    }
+}
+
+function clearCart(storageKey) {
     if (cart.length === 0) return;
     
     Swal.fire({
@@ -82,7 +115,7 @@ function clearCart() {
         if (result.isConfirmed) {
             cart.length = 0;
             updateCartUI();
-            saveCartToLocalStorage();
+            saveCartToLocalStorage(storageKey);
         }
     });
 }

@@ -57,7 +57,7 @@ if (document.getElementById('shopping-cart').classList.contains('translate-x-ful
     }, 300);
 }
         
-function processPayment() {
+function processPayment(storageKey) {
     // Simulate payment processing
     const paymentModal = document.getElementById('payment-modal');
     const overlay = document.getElementById('overlay');
@@ -72,60 +72,64 @@ function processPayment() {
         }
     });
     
-    // Charger le panier depuis le localStorage
-    let cartItems = loadCartFromLocalStorage();
-    
-    if (cartItems && cartItems.length > 0) {
-        // Vous pouvez également créer un objet combiné si nécessaire
-        let orderDetails = cartItems.map(item => ({
+    // Get the cart items directly from the current cart in memory
+    // No need to reload from localStorage as we're working with the active cart
+    if (cart && cart.length > 0) {
+        // Map cart items to the format needed for the order
+        let orderDetails = cart.map(item => ({
             game_id: item.id,
-            order_id: item.order_id,
+            order_id: item.id, // Using item.id as order_id or you can generate a new one
             price: item.price
         }));
                 
-        // Créer un formulaire caché pour soumettre les données
+        // Create a hidden form to submit the data
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '/payer';
         form.style.display = 'none';
         
-        // Ajouter un champ caché pour les IDs des jeux
+        // Add a hidden field for game IDs
         const gameIdsInput = document.createElement('input');
         gameIdsInput.type = 'hidden';
         gameIdsInput.name = 'games_id';
         gameIdsInput.value = JSON.stringify(orderDetails.map(item => item.game_id));
         form.appendChild(gameIdsInput);
         
-        // Ajouter un champ caché pour les order_IDs
+        // Add a hidden field for order IDs
         const orderIdsInput = document.createElement('input');
         orderIdsInput.type = 'hidden';
         orderIdsInput.name = 'order_id';
         orderIdsInput.value = JSON.stringify(orderDetails.map(item => item.order_id));
         form.appendChild(orderIdsInput);
 
-        // Ajouter un champ caché pour les prix individuels
+        // Add a hidden field for individual prices
         const priceInput = document.createElement('input');
         priceInput.type = 'hidden';
         priceInput.name = 'price';
         priceInput.value = JSON.stringify(orderDetails.map(item => item.price));
         form.appendChild(priceInput);
         
-        // Ajouter un champ caché pour le montant total
+        // Add a hidden field for the total amount
         const totalAmountInput = document.createElement('input');
         totalAmountInput.type = 'hidden';
         totalAmountInput.name = 'total_amount';
         totalAmountInput.value = cartTotal.toFixed(2);
         form.appendChild(totalAmountInput);
         
-        // Ajouter le formulaire au document
+        // Add the form to the document
         document.body.appendChild(form);
         
-        // Soumettre le formulaire
+        // Submit the form
         form.submit();
+        
+        // After submission, clear the cart
+        cart.length = 0;
+        saveCartToLocalStorage(storageKey);
+        updateCartUI();
     } else {
         console.log("Le panier est vide");
         
-        // Simulate payment delay
+        // Show error message for empty cart
         setTimeout(() => {
             Swal.fire({
                 title: 'Panier vide',
@@ -141,11 +145,3 @@ function processPayment() {
     }
 }
 
-// Fonction pour charger le panier depuis le localStorage
-function loadCartFromLocalStorage() {
-    const savedCart = localStorage.getItem('gamersHubCart');
-    if (savedCart) {
-        return JSON.parse(savedCart);
-    }
-    return [];
-}

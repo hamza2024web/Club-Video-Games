@@ -697,7 +697,7 @@
                                                 <i class="fas fa-check mr-1"></i> Acheté
                                             </button>
                                         {% else %}
-                                            <button onclick="addToCart('{{jeu.id}}', '{{jeu.nom_de_jeu}}', {{jeu.prix}}, '{{jeu.image}}', '2')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
+                                            <button onclick="addToCart('{{jeu.id}}', '{{jeu.nom_de_jeu}}', {{jeu.prix}}, '{{jeu.image}}', 'gamersMember')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
                                                 <i class="fas fa-plus mr-1"></i> Ajouter
                                             </button>
                                         {% endif %}
@@ -989,10 +989,10 @@
                 
                 <!-- Boutons d'action -->
                 <div class="mt-4 space-y-3">
-                    <button id="checkout-btn" onclick="checkout()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                    <button id="checkout-btn" onclick="checkout(document.body.dataset.storageKey)" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                         Procéder au paiement
                     </button>
-                    <button onclick="clearCart()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg font-medium transition-colors">
+                    <button onclick="clearCart(document.body.dataset.storageKey)" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg font-medium transition-colors">
                         Vider le panier
                     </button>
                 </div>
@@ -1047,7 +1047,7 @@
             
             <!-- Pied du modal avec bouton de paiement -->
             <div class="p-5 border-t border-gray-200">
-                <button onclick="processPayment()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 rounded-lg font-medium shadow-md transition-all duration-200 hover:shadow-lg flex items-center justify-center">
+                <button onclick="processPayment('2')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 rounded-lg font-medium shadow-md transition-all duration-200 hover:shadow-lg flex items-center justify-center">
                     Payer <span id="payment-button-total">0.00 €</span>
                 </button>
                 <p class="text-center text-sm text-gray-500 mt-3">
