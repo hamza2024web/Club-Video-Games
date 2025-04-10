@@ -5,12 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (window.location.pathname.includes('/member/')) {
         currentStorageKey = 'gamersMember';
-    } else if (window.location.pathname.includes('/organisateur/')) {
+    } else  {
         currentStorageKey = 'gamersHubCart';
-    } else {
-        // Default
-        currentStorageKey = 'gamersMember';
-    }
+    } 
 
     document.body.dataset.storageKey = currentStorageKey;
 

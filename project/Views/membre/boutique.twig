@@ -15,6 +15,7 @@
     <script src="../../public/js/payment.js"></script>
     <script src="../../public/js/searchBoutique.js"></script>
     <script src="../../public/js/favorite.js"></script>
+    <script src="../../public/js/localStorage.js"></script>
     
     <!-- Styles personnalisés -->
     <style>
@@ -1047,7 +1048,7 @@
             
             <!-- Pied du modal avec bouton de paiement -->
             <div class="p-5 border-t border-gray-200">
-                <button onclick="processPayment('2')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 rounded-lg font-medium shadow-md transition-all duration-200 hover:shadow-lg flex items-center justify-center">
+                <button onclick="processPayment('gamersMember')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 rounded-lg font-medium shadow-md transition-all duration-200 hover:shadow-lg flex items-center justify-center">
                     Payer <span id="payment-button-total">0.00 €</span>
                 </button>
                 <p class="text-center text-sm text-gray-500 mt-3">
