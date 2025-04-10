@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadCartFromLocalStorage(currentStorageKey);
     updateCartUI();
             
-    // Close cart when clicking on overlay
     document.getElementById('overlay').addEventListener('click', () => {
     document.getElementById('shopping-cart').classList.add('translate-x-full');
     document.getElementById('payment-modal').classList.add('hidden');

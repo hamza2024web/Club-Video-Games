@@ -21,11 +21,11 @@ class PaymentController {
         $total = $_POST["total_amount"];
 
         $saveOrder = $this->PayementServices->saveOrder($user_id,$game_id,$order_id,$price,$total);
-
+        $referer = isset($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH) : '/boutique';
         if ($saveOrder){
-            header("location: /boutique?paiment_réussite=1");
+            header("location:" . $referer ."?paiment_réussite=1");
         } else {
-            header("location: /boutique?paiment_échouée=1");
+            header("location:" .$referer ."?paiment_échouée=1");
         }
     }
 }

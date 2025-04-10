@@ -42,42 +42,6 @@ function addToCart(id,name, price, image , storageKey) {
         showConfirmButton: false
     });
 }
-
-function removeFromCart(id, storageKey) {
-    const index = cart.findIndex(item => item.id === id);
-    if (index !== -1) {
-        const removedItem = cart[index];
-        cart.splice(index, 1);
-        updateCartUI();
-        saveCartToLocalStorage(storageKey);
-        
-        // Show notification
-        Swal.fire({
-            title: 'Retiré du panier',
-            text: `${removedItem.name} a été retiré de votre panier`,
-            icon: 'info',
-            confirmButtonColor: '#8b5cf6',
-            timer: 1500,
-            timerProgressBar: true,
-            showConfirmButton: false
-        });
-    }
-}
-
-
-function saveCartToLocalStorage(storageKey) {
-    localStorage.setItem(storageKey, JSON.stringify(cart));
-}
-
-function loadCartFromLocalStorage(storageKey) {
-    const savedCart = localStorage.getItem(storageKey);
-    if (savedCart) {
-        cart.length = 0; // Clear current cart
-        const loadedCart = JSON.parse(savedCart);
-        loadedCart.forEach(item => cart.push(item));
-    }
-}
-
 function removeFromCart(id, storageKey) {
     const index = cart.findIndex(item => item.id === id);
     if (index !== -1) {
@@ -183,7 +147,7 @@ function updateCartUI() {
             <h4 class="font-medium text-gray-800">${item.name}</h4>
             <p class="text-purple-600 font-semibold">${item.price === 0 ? 'Gratuit' : item.price.toFixed(2) + ' €'}</p>
         </div>
-        <button onclick="removeFromCart('${item.id}','${item.identifier}')" class="text-gray-400 hover:text-red-500">
+        <button onclick="removeFromCart('${item.id}')" class="text-gray-400 hover:text-red-500">
             <i class="fas fa-trash"></i>
         </button>
     `;
