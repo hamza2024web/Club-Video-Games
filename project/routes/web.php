@@ -34,6 +34,7 @@ Route::post('member/password/change','ProfileMembre@UpdatePassword');
 Route::get('/member/tournaments','TournamentsController@index');
 Route::post('/member/inscription','TournamentsController@inscriptionTournoi');
 Route::get('/member/boutique','BoutiqueMember@index');
+Route::get('/member/games','JeuxMember@index');
 
 // organisateur
 Route::get('homePage','OrganisateurController@organisateur');
@@ -47,6 +48,7 @@ Route::get('boutique','BoutiqueController@index');
 Route::get('jeux','jeuxController@index');
 Route::post('organisateur/addTournoi','TournoiController@addTournoi');
 Route::post('/organisateur/updateTournoiStatus','TournoiController@updateTournoiStatus');
+
 // payment 
 Route::post('payer','PaymentController@payer');
 // compte

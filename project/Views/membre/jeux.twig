@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamersHub - Mes Jeux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8faff;
+        }
+        
+        /* Animated gradient background */
+        .animated-gradient {
+            background: linear-gradient(-45deg, #6366F1, #8B5CF6, #EC4899, #8B5CF6);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .game-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.15);
+        }
+        
+        .game-card img {
+            transition: all 0.5s ease;
+        }
+        
+        .game-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .sidebar-item {
+            position: relative;
+            transition: all 0.2s ease;
+            border-radius: 12px;
+            margin: 3px 0;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(139, 92, 246, 0.9);
+        }
+        
+        .sidebar-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover .sidebar-icon {
+            transform: translateX(5px);
+        }
+        
+        .game-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .overlay-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            color: white;
+            padding: 25px 15px 15px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .game-card:hover .overlay-info {
+            opacity: 1;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #d4d4d8;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa;
+        }
+        
+        /* Filter pill active state */
+        .filter-pill {
+            transition: all 0.3s ease;
+            border-radius: 30px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filter-pill:hover:not(.active) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background-color: #f9fafb;
+        }
+        
+        .filter-pill.active {
+            background-color: #8B5CF6;
+            color: white;
+            box-shadow: 0 4px 6px rgba(139, 92, 246, 0.25);
+        }
+        
+        /* Empty state animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Status badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .status-installed {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .status-available {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #8B5CF6, #6366F1);
+            color: white;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #6366F1;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E5E7EB;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-color: #D1D5DB;
+        }
+        
+        /* Game statistics */
+        .stat-item {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            background-color: white;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Game details modal */
+        .modal-content {
+            border-radius: 16px;
+            overflow: hidden;
+            max-width: 800px;
+            width: 90%;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #e5e7eb;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #8B5CF6, #6366F1);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Sidebar profile section */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10B981;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .badge-profile {
+            position: absolute;
+            right: -2px;
+            bottom: -2px;
+            width: 14px;
+            height: 14px;
+            background-color: #8B5CF6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 8px;
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar Navigation -->
+    <div class="flex">
+                <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
+            <!-- En-tête de la barre latérale -->
+            <div class="mb-8 text-center">
+                <div class="flex justify-center mb-3">
+                    <i class="fas fa-gamepad text-4xl text-purple-300"></i>
+                </div>
+                <h1 class="text-2xl font-bold">GamersHub</h1>
+                <p class="text-sm text-purple-200">Espace Membre</p>
+            </div>
+
+            <!-- Menu de navigation -->
+            <nav class="flex-grow">
+                <ul class="space-y-1">
+                    <li><a href="/member/dashboard" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-home mr-3 text-purple-300"></i>Tableau de bord</a></li>
+                    <li><a href="/member/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournois</a></li>
+                    <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
+                    <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Mes Jeux</a></li>
+                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Amis</a></li>
+                    <li><a href="/member/messages" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition">
+                        <i class="fas fa-envelope mr-3 text-purple-300"></i>Messages
+                        <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
+                    </a></li>
+                    <li><a href="/member/rewards" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gift mr-3 text-purple-300"></i>Récompenses</a></li>
+                    <li><a href="/member/profile" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profil</a></li>
+                    <li><a href="/member/settings" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-cog mr-3 text-purple-300"></i>Paramètres</a></li>
+                </ul>
+            </nav>
+
+            <!-- Pied de page de la barre latérale (profil et solde) -->
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <!-- Profil de l'utilisateur -->
+                <div class="flex items-center space-x-2 mb-3 p-2 rounded-lg bg-indigo-800/50">
+                    <div class="relative">
+                        <img src="/{{profile.profile_photo}}" class="rounded-full border-2 border-purple-300 h-10 w-10" alt="Member Profile">
+                        <div class="badge-profile">
+                            <i class="fas fa-check text-xs"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">{{profile.name}}</p>
+                        <div class="flex items-center">
+                            <span class="status-dot mr-1"></span>
+                            <p class="text-xs text-purple-300">En ligne</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Solde du compte -->
+                <div class="p-3 border-t border-indigo-800 sidebar-footer">
+                    <div class="bg-indigo-800 rounded-lg p-2 text-center">
+                        <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
+                        <button class="recharge-btn mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                            Recharger
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Bouton de déconnexion -->
+                <a href="/logout">
+                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center mt-2">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Déconnexion
+                    </button>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm sticky top-0 z-30">
+                <div class="flex justify-between items-center px-6 py-4">
+                    <div class="flex items-center">
+                        <h1 class="text-2xl font-bold text-gray-800">Ma Bibliothèque de Jeux</h1>
+                        <div class="ml-4 text-sm bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
+                            <i class="fas fa-gamepad mr-1"></i> {{jeuxAchetes|length}} jeux achetés
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-5">
+                        <a href="/boutique" class="btn-secondary flex items-center">
+                            <i class="fas fa-store mr-2"></i> Visiter la boutique
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="p-6">
+                <!-- Statistics Row -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="stat-item">
+                        <div class="flex items-center">
+                            <div class="bg-indigo-100 p-3 rounded-xl mr-4">
+                                <i class="fas fa-gamepad text-indigo-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Total des jeux</p>
+                                <p class="text-xl font-bold text-gray-800">{{jeuxAchetes|length}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 p-3 rounded-xl mr-4">
+                                <i class="fas fa-download text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Jeux installés</p>
+                                <p class="text-xl font-bold text-gray-800">{{jeuxInstalled|length|default(3)}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="flex items-center">
+                            <div class="bg-blue-100 p-3 rounded-xl mr-4">
+                                <i class="fas fa-clock text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Heures de jeu</p>
+                                <p class="text-xl font-bold text-gray-800">{{totalHeures|default(127)}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-3 rounded-xl mr-4">
+                                <i class="fas fa-trophy text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-500 text-sm">Succès débloqués</p>
+                                <p class="text-xl font-bold text-gray-800">{{totalAchievements|default(45)}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search and Filters -->
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                        <div class="w-full md:w-1/3">
+                            <div class="relative">
+                                <input type="text" id="search-input" placeholder="Rechercher dans ma bibliothèque..." 
+                                       class="pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full shadow-sm transition-all duration-200 hover:shadow">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                                <button id="clear-search" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                            <button class="filter-pill active" data-filter="all">
+                                Tous les jeux
+                            </button>
+                            <button class="filter-pill" data-filter="installed">
+                                <i class="fas fa-check-circle mr-1"></i> Installés
+                            </button>
+                            <button class="filter-pill" data-filter="not-installed">
+                                <i class="fas fa-download mr-1"></i> Non installés
+                            </button>
+                            {% for genre in genres %}
+                                <button class="filter-pill" data-filter="{{ genre.name }}">
+                                    {{ genre.name }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                        
+                        <div>
+                            <select id="sort-games" class="px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm">
+                                <option value="recent">Achat récent</option>
+                                <option value="alpha">Alphabétique (A-Z)</option>
+                                <option value="alpha-desc">Alphabétique (Z-A)</option>
+                                <option value="playtime">Temps de jeu</option>
+                                <option value="size">Taille du jeu</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Games Grid -->
+                <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Si aucun jeu n'est acheté, afficher un message -->
+                    {% if jeuxAchetes|length == 0 %}
+                        <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                            <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-4 float-animation">
+                                <i class="fas fa-gamepad text-5xl text-purple-400"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold text-gray-800 mb-2">Aucun jeu dans votre bibliothèque</h2>
+                            <p class="text-gray-600 mb-6 max-w-md">Vous n'avez pas encore acheté de jeux. Visitez notre boutique pour découvrir notre catalogue.</p>
+                            <a href="/boutique" class="btn-primary py-3 px-6 flex items-center">
+                                <i class="fas fa-shopping-cart mr-2"></i> Explorer la boutique
+                            </a>
+                        </div>
+                    {% else %}
+                        <!-- Affichage dynamique des jeux achetés -->
+                        {% for jeu in jeuxAchetes %}
+                            <div class="game-card" data-category="{{ jeu.genre }}" data-installed="{{ jeu.installed ? 'yes' : 'no' }}">
+                                <div class="relative">
+                                    <img src="/{{ jeu.image }}" alt="{{ jeu.nom_de_jeu }}" class="w-full h-48 object-cover">
+                                    <div class="game-badge bg-purple-600">{{ jeu.genre }}</div>
+                                    <div class="overlay-info">
+                                        <div class="flex items-center mb-1">
+                                            <i class="fas fa-desktop mr-2"></i>
+                                            <span>{{ jeu.plateforme }}</span>
+                                        </div>
+                                        <div class="flex items-center mb-1">
+                                            <i class="fas fa-code-branch mr-2"></i>
+                                            <span>{{ jeu.developpeur }}</span>
+                                        </div>
+                                        <div class="flex items-center mb-1">
+                                            <i class="fas fa-calendar-alt mr-2"></i>
+                                            <span>{{ jeu.date_de_sortie }}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-shopping-cart mr-2"></i>
+                                            <span>Acheté le: {{ jeu.date_achat|date('d/m/Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h3 class="text-lg font-bold text-gray-800">{{ jeu.nom_de_jeu }}</h3>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <span class="ml-1 text-sm font-semibold">{{ jeu.rating|default('4.5') }}</span>
+                                        </div>
+                                    </div>
+                                    {% if jeu.installed %}
+                                        <div class="mb-3">
+                                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                                <span>Temps de jeu:</span>
+                                                <span class="font-medium">{{ jeu.temps_jeu|default('0') }}h</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: {{ (jeu.temps_jeu/100 * 100)|default(0) }}%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="status-badge status-installed">
+                                                <i class="fas fa-check-circle mr-1"></i> Installé
+                                            </span>
+                                            <button onclick="getGameDetails({{ jeu.id }})" class="btn-secondary py-1.5 px-3 text-sm">
+                                                <i class="fas fa-play mr-1"></i> Jouer
+                                            </button>
+                                        </div>
+                                    {% else %}
+                                        <div class="mb-3">
+                                            <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                                <span>Taille du jeu:</span>
+                                                <span class="font-medium">{{ jeu.taille|default('45.2') }} GB</span>
+                                            </div>
+                                            <div class="flex items-center text-xs text-gray-500">
+                                                <i class="fas fa-hdd mr-1"></i> Espace libre: 120.3 GB
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="status-badge status-available">
+                                                <i class="fas fa-download mr-1"></i> Non installé
+                                            </span>
+                                            <button onclick="installGame({{ jeu.id }})" class="btn-primary py-1.5 px-3 text-sm">
+                                                <i class="fas fa-download mr-1"></i> Installer
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Game Details Modal -->
+    <div id="game-details-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="modal-content transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+                <div id="modal-loading" class="p-8 text-center bg-white rounded-xl">
+                    <div class="inline-block w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+                    <p class="mt-4 text-gray-600">Chargement des détails...</p>
+                </div>
+                
+                <div id="modal-data" class="hidden">
+                    <!-- Contenu du modal sera injecté ici via JavaScript -->
+                    <div class="bg-white rounded-t-xl overflow-hidden">
+                        <div class="relative">
+                            <img src="https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg" alt="Game Banner" class="w-full h-64 object-cover">
+                            <button id="close-modal" class="absolute top-4 right-4 bg-black bg-opacity-50 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-opacity-70 transition-colors">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent">
+                                <h2 class="text-3xl font-bold text-white">Valorant</h2>
+                                <div class="flex items-center mt-2">
+                                    <span class="bg-purple-600 text-white text-xs px-2 py-1 rounded mr-2">FPS</span>
+                                    <span class="text-white text-sm"><i class="fas fa-calendar-alt mr-1"></i> 2 juin 2020</span>
+                                    <span class="text-white text-sm ml-4"><i class="fas fa-code-branch mr-1"></i> Riot Games</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                                <div class="flex items-center mb-4 md:mb-0">
+                                    <div class="bg-indigo-100 p-3 rounded-xl mr-4">
+                                        <i class="fas fa-gamepad text-indigo-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 text-sm">Temps de jeu total</p>
+                                        <p class="text-2xl font-bold text-gray-800">46h 23min</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center mb-4 md:mb-0">
+                                    <div class="bg-green-100 p-3 rounded-xl mr-4">
+                                        <i class="fas fa-trophy text-green-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 text-sm">Succès débloqués</p>
+                                        <p class="text-2xl font-bold text-gray-800">16/25</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <div class="bg-purple-100 p-3 rounded-xl mr-4">
+                                        <i class="fas fa-users text-purple-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 text-sm">Amis qui jouent</p>
+                                        <p class="text-2xl font-bold text-gray-800">8</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-lg font-bold text-gray-800 mb-2">Description</h3>
+                                <p class="text-gray-600">Valorant est un jeu de tir tactique free-to-play développé et édité par Riot Games. Le jeu met l'accent sur la précision des tirs et les capacités spéciales uniques des personnages, appelés Agents. Chaque Agent a ses propres compétences qui nécessitent des charges ou une accumulation de points à travers les éliminations, les morts ou les actions d'objectif.</p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-lg font-bold text-gray-800 mb-2">Derniers succès</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="bg-gray-50 p-3 rounded-lg flex items-center">
+                                        <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                                            <i class="fas fa-medal text-purple-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-800">Ace Perfectionniste</p>
+                                            <p class="text-xs text-gray-500">Il y a 2 jours</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded-lg flex items-center">
+                                        <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                                            <i class="fas fa-medal text-purple-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-800">50 victoires</p>
+                                            <p class="text-xs text-gray-500">Il y a 5 jours</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded-lg flex items-center">
+                                        <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                                            <i class="fas fa-medal text-purple-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-800">MVP x10</p>
+                                            <p class="text-xs text-gray-500">Il y a 1 semaine</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800 mb-2">Informations techniques</h3>
+                                    <ul class="space-y-2 text-gray-600">
+                                        <li class="flex items-center">
+                                            <i class="fas fa-hdd mr-2 w-5 text-gray-400"></i> 
+                                            <span>Taille: 16.2 GB</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <i class="fas fa-microchip mr-2 w-5 text-gray-400"></i> 
+                                            <span>Processeur requis: Intel Core i3-4150</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <i class="fas fa-memory mr-2 w-5 text-gray-400"></i> 
+                                            <span>Mémoire RAM: 4 GB</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <i class="fas fa-desktop mr-2 w-5 text-gray-400"></i> 
+                                            <span>Carte graphique: GeForce GT 730</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800 mb-2">Statistiques de jeu</h3>
+                                    <ul class="space-y-2 text-gray-600">
+                                        <li class="flex items-center">
+                                            <i class="fas fa-crosshairs mr-2 w-5 text-gray-400"></i> 
+                                            <span>Précision moyenne: 32%</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <i class="fas fa-skull mr-2 w-5 text-gray-400"></i> 
+                                            <span>K/D Ratio: 1.76</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <i class="fas fa-trophy mr-2 w-5 text-gray-400"></i> 
+                                            <span>Matchs gagnés: 78</span>
+                                        </li>
+                                        <li class="flex items-center">
+                                            <i class="fas fa-user-friends mr-2 w-5 text-gray-400"></i> 
+                                            <span>Joueurs rencontrés: 346</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-6 rounded-b-xl flex justify-between items-center">
+                            <button onclick="uninstallGame(1)" class="bg-red-50 text-red-600 hover:bg-red-100 py-2 px-4 rounded-lg flex items-center transition-colors">
+                                <i class="fas fa-trash-alt mr-2"></i> Désinstaller
+                            </button>
+                            
+                            <div class="flex space-x-3">
+                                <button class="btn-secondary">
+                                    <i class="fas fa-cog mr-2"></i> Options
+                                </button>
+                                <button class="btn-primary">
+                                    <i class="fas fa-play mr-2"></i> Lancer le jeu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de rechargement -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+                <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                    <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="p-5">
+                    <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                        <div>
+                            <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-euro-sign"></i>
+                                </span>
+                                <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-credit-card"></i>
+                                </span>
+                                <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </span>
+                                    <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="MM/AA">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="w-full btn-primary py-3 rounded-lg font-medium flex items-center justify-center mt-4">
+                            <i class="fas fa-credit-card mr-2"></i> Recharger mon compte
+                        </button>
+                        
+                        <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                            <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                            Paiement 100% sécurisé
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Activation des filtres
+            const filterPills = document.querySelectorAll('.filter-pill');
+            const gameCards = document.querySelectorAll('.game-card');
+            const searchInput = document.getElementById('search-input');
+            const clearSearchButton = document.getElementById('clear-search');
+            const gameDetailsModal = document.getElementById('game-details-modal');
+            const modalContent = document.getElementById('modal-content');
+            const closeModalButton = document.getElementById('close-modal');
+            
+            // Gestion des filtres
+            filterPills.forEach(pill => {
+                pill.addEventListener('click', function() {
+                    // Retirer la classe active de tous les pilules
+                    filterPills.forEach(p => p.classList.remove('active'));
+                    
+                    // Ajouter la classe active à la pilule cliquée
+                    this.classList.add('active');
+                    
+                    // Récupérer la valeur du filtre
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Filtrer les cartes de jeux
+                    gameCards.forEach(card => {
+                        if (filter === 'all') {
+                            card.style.display = 'block';
+                        } else if (filter === 'installed') {
+                            if (card.getAttribute('data-installed') === 'yes') {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        } else if (filter === 'not-installed') {
+                            if (card.getAttribute('data-installed') === 'no' || card.getAttribute('data-installed') === 'installing') {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        } else {
+                            // Filtre par genre
+                            if (card.getAttribute('data-category') === filter) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Recherche de jeux
+            if (searchInput && clearSearchButton) {
+                searchInput.addEventListener('input', function() {
+                    const searchValue = this.value.toLowerCase();
+                    
+                    // Afficher ou masquer le bouton d'effacement
+                    if (searchValue.length > 0) {
+                        clearSearchButton.classList.remove('hidden');
+                    } else {
+                        clearSearchButton.classList.add('hidden');
+                    }
+                    
+                    // Filtrer les cartes de jeux
+                    gameCards.forEach(card => {
+                        const gameName = card.querySelector('h3').textContent.toLowerCase();
+                        
+                        if (gameName.includes(searchValue)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+                
+                clearSearchButton.addEventListener('click', function() {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                    this.classList.add('hidden');
+                });
+            }
+            
+            // Tri des jeux
+            const sortSelect = document.getElementById('sort-games');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', function() {
+                    const sortValue = this.value;
+                    const gameCards = Array.from(document.querySelectorAll('.game-card'));
+                    const gamesGrid = document.querySelector('#games-grid');
+                    
+                    // Trier les cartes
+                    gameCards.sort((a, b) => {
+                        const aName = a.querySelector('h3').textContent;
+                        const bName = b.querySelector('h3').textContent;
+                        
+                        switch (sortValue) {
+                            case 'alpha':
+                                return aName.localeCompare(bName);
+                            case 'alpha-desc':
+                                return bName.localeCompare(aName);
+                            case 'playtime':
+                                // Trouver les temps de jeu
+                                const aPlaytime = a.querySelector('span:contains("Temps de jeu")') 
+                                    ? parseInt(a.querySelector('span:contains("Temps de jeu")').nextElementSibling.textContent) 
+                                    : 0;
+                                const bPlaytime = b.querySelector('span:contains("Temps de jeu")') 
+                                    ? parseInt(b.querySelector('span:contains("Temps de jeu")').nextElementSibling.textContent) 
+                                    : 0;
+                                return bPlaytime - aPlaytime;
+                            case 'size':
+                                // Trouver les tailles de jeu
+                                const aSize = a.querySelector('span:contains("Taille du jeu")') 
+                                    ? parseFloat(a.querySelector('span:contains("Taille du jeu")').nextElementSibling.textContent) 
+                                    : 0;
+                                const bSize = b.querySelector('span:contains("Taille du jeu")') 
+                                    ? parseFloat(b.querySelector('span:contains("Taille du jeu")').nextElementSibling.textContent) 
+                                    : 0;
+                                return bSize - aSize;
+                            default: // Achat récent
+                                return 0;
+                        }
+                    });
+                    
+                    // Réorganiser les cartes dans la grille
+                    gameCards.forEach(card => {
+                        card.remove();
+                    });
+                    gameCards.forEach(card => {
+                        gamesGrid.appendChild(card);
+                    });
+                });
+            }
+            
+            // Fonctions pour les jeux
+            window.getGameDetails = function(gameId) {
+                // Afficher le modal
+                gameDetailsModal.classList.remove('hidden');
+                document.getElementById('modal-loading').classList.remove('hidden');
+                document.getElementById('modal-data').classList.add('hidden');
+                
+                // Animation
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                    
+                    // Simuler le chargement
+                    setTimeout(() => {
+                        document.getElementById('modal-loading').classList.add('hidden');
+                        document.getElementById('modal-data').classList.remove('hidden');
+                    }, 800);
+                }, 10);
+            };
+            
+            window.installGame = function(gameId) {
+                Swal.fire({
+                    title: 'Installation',
+                    html: 'Préparation de l\'installation...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                // Simuler le début de l'installation
+                setTimeout(() => {
+                    Swal.fire({
+                        title: 'Installation démarrée',
+                        icon: 'success',
+                        text: 'Le jeu est en cours d\'installation. Vous pouvez suivre la progression dans votre bibliothèque.',
+                        confirmButtonColor: '#8B5CF6'
+                    });
+                }, 1500);
+            };
+            
+            window.cancelInstall = function(gameId) {
+                Swal.fire({
+                    title: 'Suspendre l\'installation ?',
+                    text: 'Vous pourrez reprendre l\'installation plus tard.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#8B5CF6',
+                    cancelButtonColor: '#d1d5db',
+                    confirmButtonText: 'Suspendre',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Installation suspendue',
+                            icon: 'info',
+                            text: 'L\'installation a été mise en pause.',
+                            confirmButtonColor: '#8B5CF6'
+                        });
+                    }
+                });
+            };
+            
+            window.uninstallGame = function(gameId) {
+                Swal.fire({
+                    title: 'Désinstaller le jeu ?',
+                    text: 'Vous pourrez le réinstaller plus tard. Vos sauvegardes seront conservées.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#EF4444',
+                    cancelButtonColor: '#d1d5db',
+                    confirmButtonText: 'Désinstaller',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Fermer le modal
+                        closeGameDetailsModal();
+                        
+                        // Afficher le message de confirmation
+                        setTimeout(() => {
+                            Swal.fire({
+                                title: 'Jeu désinstallé',
+                                icon: 'success',
+                                text: 'Le jeu a été désinstallé avec succès.',
+                                confirmButtonColor: '#8B5CF6'
+                            });
+                        }, 300);
+                    }
+                });
+            };
+            
+            // Fermer le modal de détails
+            function closeGameDetailsModal() {
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                
+                setTimeout(() => {
+                    gameDetailsModal.classList.add('hidden');
+                }, 300);
+            }
+            
+            // Ajouter l'événement de fermeture au bouton
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', closeGameDetailsModal);
+            }
+            
+            // Fermer le modal en cliquant sur l'arrière-plan
+            gameDetailsModal.addEventListener('click', function(e) {
+                if (e.target === gameDetailsModal) {
+                    closeGameDetailsModal();
+                }
+            });
+            
+            // Gestion du modal de rechargement
+            const rechargeButton = document.querySelector('.balance-container button');
+            const rechargeModal = document.getElementById('recharge-modal');
+            const closeRechargeButton = document.getElementById('close-recharge-modal');
+            
+            if (rechargeButton && rechargeModal && closeRechargeButton) {
+                rechargeButton.addEventListener('click', function() {
+                    rechargeModal.classList.remove('hidden');
+                });
+                
+                closeRechargeButton.addEventListener('click', function() {
+                    rechargeModal.classList.add('hidden');
+                });
+                
+                // Fermer le modal en cliquant sur l'arrière-plan
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        rechargeModal.classList.add('hidden');
+                    }
+                });
+                
+                // Soumission du formulaire
+                const rechargeForm = document.getElementById('recharge-form');
+                if (rechargeForm) {
+                    rechargeForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const amount = document.getElementById('recharge-amount').value;
+                        
+                        Swal.fire({
+                            title: 'Traitement du paiement',
+                            html: '<div class="flex flex-col items-center"><div class="spinner mb-4"></div>Veuillez patienter...</div>',
+                            allowOutsideClick: false,
+                            showConfirmButton: false
+                        });
+                        
+                        // Simuler le paiement
+                        setTimeout(() => {
+                            rechargeModal.classList.add('hidden');
+                            
+                            Swal.fire({
+                                title: 'Rechargement réussi !',
+                                text: `Votre compte a été rechargé de ${amount} €.`,
+                                icon: 'success',
+                                confirmButtonColor: '#8B5CF6'
+                            });
+                        }, 2000);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
