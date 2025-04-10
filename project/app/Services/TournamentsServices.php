@@ -7,12 +7,10 @@ use Exception;
 
 class TournamentsServices {
     protected $TournamentsRepository;
-    protected $PaymentServices;
     protected $PaymentRepository;
     public function __construct()
     {
         $this->TournamentsRepository = new TournamentsRepository();
-        $this->PaymentServices = new PayementServices();
         $this->PaymentRepository = new PaymentRepository();
     }
 
@@ -20,8 +18,7 @@ class TournamentsServices {
         $tournois = $this->TournamentsRepository->getAllTournois();
         return $tournois;
     }
-    public function Inscription($user_id, $tournoi_id, $frais_inscription) {
-        $currentSoldeData = $this->PaymentServices->validatePrice($user_id);
+    public function Inscription($user_id, $tournoi_id, $frais_inscription, $currentSoldeData) {
         $currentSolde = (float)$currentSoldeData;
         $price = (float)$frais_inscription;
         if ($price <= $currentSolde) {

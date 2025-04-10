@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 use App\Services\MembreServices;
+use App\Services\PayementServices;
 use App\Services\TournamentsServices;
 
 session_start();
@@ -8,10 +9,13 @@ session_start();
 class TournamentsController extends BaseController {
     protected $MembreServices;
     protected $TournamentsServices;
+    protected $PaymentServices;
+
     public function __construct()
     {
         parent::__construct();
         $this->MembreServices = new MembreServices();
+        $this->PaymentServices = new PayementServices();
         $this->TournamentsServices = new TournamentsServices();
     }
 
@@ -27,8 +31,9 @@ class TournamentsController extends BaseController {
         $user_id = $_SESSION["user_id"];
         $tournoi_id = $_POST["tournoi_id"];
         $frais_inscription = $_POST["frais_inscription"];
- 
-        $inscription = $this->TournamentsServices->Inscription($user_id,$tournoi_id,$frais_inscription);
+        $currentSoldeData = $this->PaymentServices->validatePrice($user_id);
+
+        $inscription = $this->TournamentsServices->Inscription($user_id,$tournoi_id,$frais_inscription, $currentSoldeData);
 
         if($inscription){
             header("location: /member/tournaments?Inscription_succefully=1");
