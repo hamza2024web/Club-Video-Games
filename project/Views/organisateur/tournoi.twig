@@ -1061,41 +1061,6 @@
             }
         }
         
-        // Function to open status modal
-        function openStatutModal(tournoiId) {
-            const modal = document.getElementById('statusModal');
-            const modalContent = document.getElementById('statusModalContent');
-            const tournoiIdInput = document.getElementById('tournoi_id');
-            
-            // Set the tournament ID in the form
-            tournoiIdInput.value = tournoiId;
-            
-            // Show the modal
-            modal.classList.remove('hidden');
-            
-            // Animation
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-        
-        // Function to close status modal
-        function closeStatusModal() {
-            const modal = document.getElementById('statusModal');
-            const modalContent = document.getElementById('statusModalContent');
-            
-            // Animation
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            
-            // Hide modal after animation
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
-    
-        
         // Initialize sidebar
         function initSidebar() {
             const toggleButton = document.getElementById('sidebar-toggle');
