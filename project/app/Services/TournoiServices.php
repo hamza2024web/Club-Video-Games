@@ -17,10 +17,6 @@ class TournoiServices {
         $putTournoi = $this->TournoiRepository->addTounroi($user_id,$name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo);
         return $putTournoi;
     }
-    public function updateStatus($id,$new_statut){
-        $new_status = $this->TournoiRepository->setNewStatus($id,$new_statut);
-        return $new_status;
-    }
 
 }
 ?>

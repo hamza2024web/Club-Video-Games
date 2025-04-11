@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 use App\Controllers\BaseController;
+use App\Services\EvenementServices;
 use App\Services\JeuxServices;
 use App\Services\ProfileServices;
 
@@ -16,6 +17,7 @@ class EvenementController extends BaseController{
         parent::__construct();
         $this->ProfileServices = new ProfileServices();
         $this->JeuxServices = new JeuxServices();
+        $this->EvenementServices = new EvenementServices();
     }
     public function index(){
         $user_id = $_SESSION["user_id"];
