@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GamersHub - Gestion de Tournoi</title>
+    <title>GamersHub - Gestion d'Événements</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -51,30 +51,30 @@
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
         }
         
-        .tournament-card {
+        .event-card {
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
             cursor: pointer;
         }
         
-        .tournament-card:hover {
+        .event-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
         
-        .tournament-card.status-upcoming {
+        .event-card.status-upcoming {
             border-left-color: #3b82f6;
         }
         
-        .tournament-card.status-active {
+        .event-card.status-active {
             border-left-color: #10b981;
         }
         
-        .tournament-card.status-completed {
+        .event-card.status-completed {
             border-left-color: #8b5cf6;
         }
         
-        .tournament-card.status-canceled {
+        .event-card.status-canceled {
             border-left-color: #ef4444;
         }
         
@@ -149,7 +149,7 @@
             border-radius: 20px;
         }
         
-        /* Tournament card detail styles */
+        /* Event card detail styles */
         .card-details {
             max-height: 0;
             overflow: hidden;
@@ -253,16 +253,57 @@
         .card-expanded .card-details {
             max-height: 650px; /* Allow enough height for banner + scrollable content */
         }
-        .card-details {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .card-expanded .card-details {
-            max-height: 650px;
+        
+        /* Event timeline styles */
+        .timeline {
+            position: relative;
         }
         
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 12px;
+            width: 2px;
+            background-color: #e5e7eb;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .timeline-point {
+            position: absolute;
+            left: 0;
+            top: 3px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #8b5cf6;
+            z-index: 1;
+        }
+        
+        .timeline-item.completed .timeline-point {
+            background-color: #8b5cf6;
+        }
+        
+        /* Event categories chips */
+        .category-chip {
+            transition: all 0.2s ease;
+        }
+        
+        .category-chip:hover {
+            transform: translateY(-2px);
+        }
+        
+        .category-chip.active {
+            background-color: #8b5cf6;
+            color: white;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -316,11 +357,11 @@
                 <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
                     Événements
                 </div>
-                <a href="organisateur/evenement" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                <a href="#" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
                     <i class="fas fa-calendar-alt w-5 sidebar-icon text-purple-300"></i>
                     <span class="sidebar-text ml-2 text-sm">Événement</span>
                 </a>
-                <a href="tournoi" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
+                <a href="tournoi" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
                     <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
                     <span class="sidebar-text ml-2 text-sm">Tournois</span>
                 </a>
@@ -351,7 +392,7 @@
             <div class="p-3 border-t border-indigo-800 sidebar-footer">
                 <div class="bg-indigo-800 rounded-lg p-2 text-center">
                     <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
-                    <button class="mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                    <button class="mt-2 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
                         Recharger
                     </button>
                 </div>
@@ -363,7 +404,7 @@
             <!-- Top Navigation -->
             <header class="bg-white shadow-sm">
                 <div class="flex justify-between items-center px-6 py-4">
-                    <h1 class="text-2xl font-bold text-gray-800">Gestion des Tournois</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">Gestion des Événements</h1>
                     <div class="flex items-center space-x-4">
                         <button class="text-gray-500 hover:text-gray-700 relative">
                             <i class="fas fa-bell text-lg"></i>
@@ -384,15 +425,15 @@
                     <div class="stat-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-blue-500">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-500 text-sm font-medium">Tournois actifs</p>
-                                <p class="text-3xl font-bold text-gray-800">3</p>
+                                <p class="text-gray-500 text-sm font-medium">Événements actifs</p>
+                                <p class="text-3xl font-bold text-gray-800">4</p>
                             </div>
                             <div class="bg-blue-100 p-3 rounded-lg">
-                                <i class="fas fa-trophy text-blue-600 text-xl"></i>
+                                <i class="fas fa-calendar-alt text-blue-600 text-xl"></i>
                             </div>
                         </div>
                         <div class="flex items-center mt-2">
-                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>1</span>
+                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>2</span>
                             <span class="text-gray-500 text-sm ml-2">vs mois dernier</span>
                         </div>
                     </div>
@@ -401,14 +442,14 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-500 text-sm font-medium">Participants</p>
-                                <p class="text-3xl font-bold text-gray-800">128</p>
+                                <p class="text-3xl font-bold text-gray-800">189</p>
                             </div>
                             <div class="bg-green-100 p-3 rounded-lg">
                                 <i class="fas fa-users text-green-600 text-xl"></i>
                             </div>
                         </div>
                         <div class="flex items-center mt-2">
-                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>24</span>
+                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>35</span>
                             <span class="text-gray-500 text-sm ml-2">vs mois dernier</span>
                         </div>
                     </div>
@@ -416,15 +457,15 @@
                     <div class="stat-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-purple-500">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-500 text-sm font-medium">Matchs programmés</p>
-                                <p class="text-3xl font-bold text-gray-800">42</p>
+                                <p class="text-gray-500 text-sm font-medium">Taux d'engagement</p>
+                                <p class="text-3xl font-bold text-gray-800">78%</p>
                             </div>
                             <div class="bg-purple-100 p-3 rounded-lg">
-                                <i class="fas fa-gamepad text-purple-600 text-xl"></i>
+                                <i class="fas fa-chart-line text-purple-600 text-xl"></i>
                             </div>
                         </div>
                         <div class="flex items-center mt-2">
-                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>8</span>
+                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>12%</span>
                             <span class="text-gray-500 text-sm ml-2">cette semaine</span>
                         </div>
                     </div>
@@ -432,15 +473,15 @@
                     <div class="stat-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-amber-500">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-500 text-sm font-medium">Prix total</p>
-                                <p class="text-3xl font-bold text-gray-800">2500 €</p>
+                                <p class="text-gray-500 text-sm font-medium">Budget alloué</p>
+                                <p class="text-3xl font-bold text-gray-800">3500 €</p>
                             </div>
                             <div class="bg-amber-100 p-3 rounded-lg">
-                                <i class="fas fa-coins text-amber-600 text-xl"></i>
+                                <i class="fas fa-euro-sign text-amber-600 text-xl"></i>
                             </div>
                         </div>
                         <div class="flex items-center mt-2">
-                            <span class="text-red-500 text-sm"><i class="fas fa-arrow-down mr-1"></i>300 €</span>
+                            <span class="text-green-500 text-sm"><i class="fas fa-arrow-up mr-1"></i>500 €</span>
                             <span class="text-gray-500 text-sm ml-2">vs dernier trimestre</span>
                         </div>
                     </div>
@@ -448,20 +489,20 @@
 
                 <!-- Actions Button -->
                 <div class="flex justify-between items-center mb-6">
-                    <button id="create-tournament-btn" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-lg flex items-center shadow-sm transition duration-300 ease-in-out transform hover:scale-105">
-                        <i class="fas fa-plus-circle mr-2"></i> Créer un tournoi
+                    <button id="create-event-btn" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-lg flex items-center shadow-sm transition duration-300 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-plus-circle mr-2"></i> Créer un événement
                     </button>
                     
                     <div class="flex space-x-2">
                         <div class="relative">
-                            <input type="text" placeholder="Rechercher un tournoi..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <input type="text" placeholder="Rechercher un événement..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
                         </div>
                         
                         <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white">
-                            <option value="all">Tous les tournois</option>
+                            <option value="all">Tous les événements</option>
                             <option value="upcoming">À venir</option>
                             <option value="active">En cours</option>
                             <option value="completed">Terminés</option>
@@ -469,11 +510,42 @@
                         </select>
                         
                         <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white">
-                            {% for jeu in jeux %}
-                                <option value="{{jeu.id}}">{{ jeu.nom_de_jeu }}</option>
-                            {% endfor %}
+                            <option value="all">Toutes les catégories</option>
+                            <option value="tournament">Tournois</option>
+                            <option value="meeting">Rencontres</option>
+                            <option value="workshop">Ateliers</option>
+                            <option value="party">Soirées</option>
+                            <option value="launch">Lancements</option>
                         </select>
                     </div>
+                </div>
+
+                <!-- Event Categories -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <button class="category-chip active px-4 py-2 bg-white hover:bg-gray-50 text-gray-800 rounded-full shadow-sm transition flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-purple-500 mr-2"></span>
+                        Tous
+                    </button>
+                    <button class="category-chip px-4 py-2 bg-white hover:bg-gray-50 text-gray-800 rounded-full shadow-sm transition flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span>
+                        Tournois
+                    </button>
+                    <button class="category-chip px-4 py-2 bg-white hover:bg-gray-50 text-gray-800 rounded-full shadow-sm transition flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                        Rencontres
+                    </button>
+                    <button class="category-chip px-4 py-2 bg-white hover:bg-gray-50 text-gray-800 rounded-full shadow-sm transition flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 mr-2"></span>
+                        Ateliers
+                    </button>
+                    <button class="category-chip px-4 py-2 bg-white hover:bg-gray-50 text-gray-800 rounded-full shadow-sm transition flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-pink-500 mr-2"></span>
+                        Soirées
+                    </button>
+                    <button class="category-chip px-4 py-2 bg-white hover:bg-gray-50 text-gray-800 rounded-full shadow-sm transition flex items-center">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500 mr-2"></span>
+                        Lancements
+                    </button>
                 </div>
 
                 <!-- Tabs -->
@@ -481,7 +553,7 @@
                     <div class="border-b border-gray-200">
                         <div class="flex">
                             <button class="tab-button active px-6 py-4 font-medium text-purple-600 focus:outline-none">
-                                Mes tournois
+                                Mes événements
                             </button>
                             <button class="tab-button px-6 py-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
                                 À venir
@@ -495,64 +567,45 @@
                         </div>
                     </div>
 
-                    <!-- Updated Tournament Cards with Improved Styling -->
+                    <!-- Event Cards -->
                     <div class="p-6">
                         <div class="grid grid-cols-1 gap-4">
-                            <!-- Improved Tournament Cards -->
-                            {% for tournoi in tournois %}
-                            <div id="tournoi-{{ tournoi.id }}" class="tournament-card bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
-                                <!-- Tournament Summary (Always visible) -->
+                            <!-- Event Card 1 -->
+                            <div class="event-card status-active bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
+                                <!-- Event Summary (Always visible) -->
                                 <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
                                     <div class="flex items-center space-x-4 mb-3 sm:mb-0">
                                         <div class="flex-shrink-0">
-                                            <!-- Use tournament image if available, otherwise show default icon -->
-                                            {% if tournoi.image %}
+                                            <!-- Event image -->
                                             <div class="w-14 h-14 rounded-lg overflow-hidden">
-                                                <img src="/{{ tournoi.image }}" alt="{{ tournoi.name }}" class="w-full h-full object-cover">
+                                                <img src="https://via.placeholder.com/56x56.png?text=LAN" alt="LAN Party" class="w-full h-full object-cover">
                                             </div>
-                                            {% else %}
-                                            <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
-                                                <i class="fas fa-trophy text-white text-xl"></i>
-                                            </div>
-                                            {% endif %}
                                         </div>
                                         <div>
-                                            <h3 class="font-bold text-lg text-gray-800">{{ tournoi.name }}</h3>
+                                            <h3 class="font-bold text-lg text-gray-800">LAN Party - Printemps 2025</h3>
                                             <div class="flex items-center text-sm text-gray-500 mt-1">
                                                 <i class="far fa-calendar-alt mr-2"></i>
-                                                <span>{{ tournoi.date_de_debut }}</span>
+                                                <span>15 avril 2025 - 18:00</span>
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
                                         <!-- Status Badge -->
-                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full 
-                                            {% if tournoi.statut == 'Open' %}
-                                                bg-green-100 text-green-800
-                                            {% elseif tournoi.statut == 'Completed' %}
-                                                bg-blue-100 text-blue-800
-                                            {% elseif tournoi.statut == 'Cancelled' %}
-                                                bg-red-100 text-red-800
-                                            {% elseif tournoi.statut == 'In Progress' %}
-                                                bg-amber-100 text-amber-800
-                                            {% else %}
-                                                bg-purple-100 text-purple-800
-                                            {% endif %}
-                                        ">
-                                            {{ tournoi.statut }}
+                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                            En cours
                                         </span>
                                         
                                         <!-- Participants Counter -->
                                         <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
                                             <i class="fas fa-users mr-1.5"></i>
-                                            <span class="text-xs font-medium">{{ tournoi.numbre_membre }}</span>
+                                            <span class="text-xs font-medium">48/50</span>
                                         </div>
                                         
-                                        <!-- Game Icon -->
+                                        <!-- Category Icon -->
                                         <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-gamepad mr-1.5"></i>
-                                            <span class="text-xs font-medium">{{ tournoi.nom_de_jeu }}</span>
+                                            <i class="fas fa-laptop mr-1.5"></i>
+                                            <span class="text-xs font-medium">LAN Party</span>
                                         </div>
                                         
                                         <!-- Action buttons -->
@@ -560,7 +613,7 @@
                                             <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
                                                 <i class="fas fa-chart-line"></i>
                                             </button>
-                                            <button onclick="openStatutModal('{{ tournoi.id }}'); event.stopPropagation();" class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
+                                            <button class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
@@ -570,18 +623,16 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Tournament Details (Hidden by default, toggles on click) -->
+                                <!-- Event Details (Hidden by default, toggles on click) -->
                                 <div class="card-details border-t border-gray-200 hidden">
-                                    <!-- Tournament Banner Image (larger version) -->
-                                    {% if tournoi.image %}
+                                    <!-- Event Banner Image -->
                                     <div class="w-full h-48 overflow-hidden">
-                                        <img src="/{{ tournoi.image }}" alt="{{ tournoi.name }}" class="w-full h-full object-cover">
+                                        <img src="https://via.placeholder.com/800x300.png?text=LAN+Party" alt="LAN Party" class="w-full h-full object-cover">
                                     </div>
-                                    {% endif %}
                                     
                                     <!-- Scrollable content area with max height -->
                                     <div class="p-5 overflow-y-auto max-h-[400px] custom-scrollbar">
-                                        <!-- Tournament Details Row -->
+                                        <!-- Event Details Row -->
                                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
                                             <div class="flex items-center p-4 bg-indigo-50 rounded-lg">
                                                 <div class="mr-3 p-2.5 bg-indigo-100 rounded-full">
@@ -589,88 +640,89 @@
                                                 </div>
                                                 <div>
                                                     <p class="text-xs text-indigo-600 font-medium">Participants</p>
-                                                    <p class="text-sm font-bold text-gray-800">{{ tournoi.numbre_membre }} Max</p>
+                                                    <p class="text-sm font-bold text-gray-800">48/50 Inscrits</p>
                                                 </div>
                                             </div>
                                             
                                             <div class="flex items-center p-4 bg-purple-50 rounded-lg">
                                                 <div class="mr-3 p-2.5 bg-purple-100 rounded-full">
-                                                    <i class="fas fa-trophy text-purple-600"></i>
+                                                    <i class="fas fa-map-marker-alt text-purple-600"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs text-purple-600 font-medium">Prix Total</p>
-                                                    <p class="text-sm font-bold text-gray-800">{{ tournoi.prix_total }} €</p>
+                                                    <p class="text-xs text-purple-600 font-medium">Lieu</p>
+                                                    <p class="text-sm font-bold text-gray-800">Salle Polyvalente</p>
                                                 </div>
                                             </div>
                                             
                                             <div class="flex items-center p-4 bg-green-50 rounded-lg">
                                                 <div class="mr-3 p-2.5 bg-green-100 rounded-full">
-                                                    <i class="fas fa-gamepad text-green-600"></i>
+                                                    <i class="fas fa-euro-sign text-green-600"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs text-green-600 font-medium">Jeu</p>
-                                                    <p class="text-sm font-bold text-gray-800">{{ tournoi.nom_de_jeu }}</p>
+                                                    <p class="text-xs text-green-600 font-medium">Tarif</p>
+                                                    <p class="text-sm font-bold text-gray-800">15€ / personne</p>
                                                 </div>
                                             </div>
                                         </div>
                                         
                                         <!-- Description Section -->
-                                        {% if tournoi.description %}
                                         <div class="mt-5 pt-4 border-t border-gray-200">
                                             <div class="flex items-center mb-2">
                                                 <i class="fas fa-info-circle text-blue-500 mr-2"></i>
                                                 <h4 class="font-medium text-gray-900">Description</h4>
                                             </div>
                                             <div class="bg-blue-50 p-4 rounded-lg text-sm text-gray-700">
-                                                {{ tournoi.description }}
+                                                <p>Rejoignez-nous pour la plus grande LAN Party du printemps ! Apportez votre PC et affrontez d'autres joueurs dans différents tournois (Valorant, League of Legends, CS2).</p>
+                                                <p class="mt-2">Nous fournissons l'électricité, une connexion internet fibre et un espace convivial. Boissons et snacks disponibles sur place.</p>
                                             </div>
                                         </div>
-                                        {% endif %}
                                         
-                                        <!-- Rules Section -->
-                                        {% if tournoi.regles %}
+                                        <!-- Timeline Section -->
                                         <div class="mt-5 pt-4 border-t border-gray-200">
-                                            <div class="flex items-center mb-2">
-                                                <i class="fas fa-gavel text-amber-500 mr-2"></i>
-                                                <h4 class="font-medium text-gray-900">Règles</h4>
+                                            <div class="flex items-center mb-4">
+                                                <i class="fas fa-clock text-amber-500 mr-2"></i>
+                                                <h4 class="font-medium text-gray-900">Programme</h4>
                                             </div>
-                                            <div class="bg-amber-50 p-4 rounded-lg text-sm text-gray-700">
-                                                {{ tournoi.regles }}
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        
-                                        <!-- Additional Information -->
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-5 pt-4 border-t border-gray-200">
-                                            <div class="text-gray-700">
-                                                <div class="flex items-center mb-1">
-                                                    <i class="far fa-calendar-check text-indigo-500 mr-2"></i>
-                                                    <span class="font-medium text-gray-900">Période d'inscription</span>
+                                            <div class="timeline pl-2">
+                                                <div class="timeline-item completed">
+                                                    <div class="timeline-point"></div>
+                                                    <div class="bg-amber-50 p-3 rounded-lg">
+                                                        <div class="font-medium text-amber-800">18:00 - Installation</div>
+                                                        <div class="text-sm text-gray-600">Arrivée des participants et installation du matériel</div>
+                                                    </div>
                                                 </div>
-                                                <p class="text-sm pl-6">{{ tournoi.date_ouverture_inscription }} - {{ tournoi.date_cloture_inscription }}</p>
-                                            </div>
-                                            
-                                            <div class="text-gray-700">
-                                                <div class="flex items-center mb-1">
-                                                    <i class="fas fa-euro-sign text-green-500 mr-2"></i>
-                                                    <span class="font-medium text-gray-900">Frais d'inscription</span>
+                                                <div class="timeline-item completed">
+                                                    <div class="timeline-point"></div>
+                                                    <div class="bg-amber-50 p-3 rounded-lg">
+                                                        <div class="font-medium text-amber-800">19:30 - Début des tournois</div>
+                                                        <div class="text-sm text-gray-600">Lancement des premiers matchs et jeux libres</div>
+                                                    </div>
                                                 </div>
-                                                <p class="text-sm pl-6">{% if tournoi.frais_inscription %}{{ tournoi.frais_inscription }} €{% else %}Gratuit{% endif %}</p>
+                                                <div class="timeline-item">
+                                                    <div class="timeline-point"></div>
+                                                    <div class="bg-amber-50 p-3 rounded-lg">
+                                                        <div class="font-medium text-amber-800">22:00 - Pause pizza</div>
+                                                        <div class="text-sm text-gray-600">Livraison groupée de pizzas pour les participants</div>
+                                                    </div>
+                                                </div>
+                                                <div class="timeline-item">
+                                                    <div class="timeline-point"></div>
+                                                    <div class="bg-amber-50 p-3 rounded-lg">
+                                                        <div class="font-medium text-amber-800">00:00 - Tournois nocturnes</div>
+                                                        <div class="text-sm text-gray-600">Lancement des mini-tournois spéciaux</div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         
                                         <!-- Social Links -->
                                         <div class="flex flex-wrap items-center gap-3 mt-5">
-                                            {% if tournoi.discord %}
-                                            <a href="{{ tournoi.discord }}" class="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-all">
+                                            <a href="#" class="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-all">
                                                 <i class="fab fa-discord mr-2"></i> Discord
                                             </a>
-                                            {% endif %}
-                                            {% if tournoi.twitch %}
-                                            <a href="{{ tournoi.twitch }}" class="flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all">
+                                            <a href="#" class="flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all">
                                                 <i class="fab fa-twitch mr-2"></i> Twitch
                                             </a>
-                                            {% endif %}
                                             
                                             <!-- Action Button -->
                                             <div class="ml-auto">
@@ -683,11 +735,11 @@
                                                             <i class="fas fa-eye mr-3 text-gray-500"></i> Voir détails
                                                         </a>
                                                         <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                            <i class="fas fa-file-export mr-3 text-gray-500"></i> Exporter les résultats
+                                                            <i class="fas fa-file-export mr-3 text-gray-500"></i> Exporter la liste
                                                         </a>
                                                         <div class="border-t border-gray-100 my-1"></div>
                                                         <a href="#" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                                            <i class="fas fa-ban mr-3"></i> Annuler le tournoi
+                                                            <i class="fas fa-ban mr-3"></i> Annuler l'événement
                                                         </a>
                                                     </div>
                                                 </div>
@@ -696,64 +748,183 @@
                                     </div>
                                 </div>
                             </div>
-                            {% endfor %}
-                        </div>
-
-                        <!-- Status Change Modal - Outside the loop -->
-                        <div id="statusModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-                            <div id="statusModalContent" class="bg-white rounded-xl shadow-lg p-6 transform transition-all scale-95 opacity-0 w-full max-w-md">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="text-lg font-bold text-gray-800">Modifier le statut</h3>
-                                    <button onclick="closeStatusModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                                
-                                <form id="statusForm" action="/organisateur/updateTournoiStatus" method="POST">
-                                    <input type="hidden" id="tournoi_id" name="tournoi_id" value="">
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nouveau statut</label>
-                                        <select name="new_status" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                            <option value="Pending">En attente</option>
-                                            <option value="Open">Ouvert</option>
-                                            <option value="In Progress">En cours</option>
-                                            <option value="Completed">Terminé</option>
-                                            <option value="Cancelled">Annulé</option>
-                                            <option value="Full">Complet</option>
-                                        </select>
+                            
+                            <!-- Event Card 2 -->
+                            <div class="event-card status-upcoming bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
+                                <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
+                                    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-14 h-14 rounded-lg overflow-hidden">
+                                                <img src="https://via.placeholder.com/56x56.png?text=CS2" alt="CS2 Workshop" class="w-full h-full object-cover">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-lg text-gray-800">Workshop CS2 Pro Tips</h3>
+                                            <div class="flex items-center text-sm text-gray-500 mt-1">
+                                                <i class="far fa-calendar-alt mr-2"></i>
+                                                <span>22 avril 2025 - 14:00</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     
-                                    <div class="flex justify-end space-x-3">
-                                        <button type="button" onclick="closeStatusModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg">
-                                            Annuler
-                                        </button>
-                                        <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg">
-                                            Enregistrer
-                                        </button>
+                                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                            À venir
+                                        </span>
+                                        
+                                        <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
+                                            <i class="fas fa-users mr-1.5"></i>
+                                            <span class="text-xs font-medium">25/30</span>
+                                        </div>
+                                        
+                                        <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
+                                            <i class="fas fa-chalkboard-teacher mr-1.5"></i>
+                                            <span class="text-xs font-medium">Workshop</span>
+                                        </div>
+                                        
+                                        <div class="flex items-center gap-2 ml-auto">
+                                            <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
+                                                <i class="fas fa-chart-line"></i>
+                                            </button>
+                                            <button class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
+                                                <i class="fas fa-chevron-down rotate-icon"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                </form>
+                                </div>
+                                
+                                <!-- Hidden details section -->
+                                <div class="card-details border-t border-gray-200 hidden">
+                                    <!-- Content here, similar to Event Card 1 -->
+                                </div>
                             </div>
-                        </div>  
-                    </div>
-
+                            
+                            <!-- Event Card 3 -->
+                            <div class="event-card status-upcoming bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
+                                <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
+                                    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-14 h-14 rounded-lg overflow-hidden">
+                                                <img src="https://via.placeholder.com/56x56.png?text=Launch" alt="Game Launch" class="w-full h-full object-cover">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-lg text-gray-800">Soirée Launch Party - Black Ops 6</h3>
+                                            <div class="flex items-center text-sm text-gray-500 mt-1">
+                                                <i class="far fa-calendar-alt mr-2"></i>
+                                                <span>30 avril 2025 - 20:00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                            À venir
+                                        </span>
+                                        
+                                        <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
+                                            <i class="fas fa-users mr-1.5"></i>
+                                            <span class="text-xs font-medium">42/70</span>
+                                        </div>
+                                        
+                                        <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
+                                            <i class="fas fa-glass-cheers mr-1.5"></i>
+                                            <span class="text-xs font-medium">Launch Party</span>
+                                        </div>
+                                        
+                                        <div class="flex items-center gap-2 ml-auto">
+                                            <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
+                                                <i class="fas fa-chart-line"></i>
+                                            </button>
+                                            <button class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
+                                                <i class="fas fa-chevron-down rotate-icon"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hidden details section -->
+                                <div class="card-details border-t border-gray-200 hidden">
+                                    <!-- Content here, similar to Event Card 1 -->
+                                </div>
+                            </div>
+                            
+                            <!-- Event Card 4 (Completed) -->
+                            <div class="event-card status-completed bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
+                                <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
+                                    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-14 h-14 rounded-lg overflow-hidden">
+                                                <img src="https://via.placeholder.com/56x56.png?text=Meet" alt="Meet & Greet" class="w-full h-full object-cover">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-lg text-gray-800">Meet & Greet - Équipe eSport</h3>
+                                            <div class="flex items-center text-sm text-gray-500 mt-1">
+                                                <i class="far fa-calendar-alt mr-2"></i>
+                                                <span>5 mars 2025 - 15:00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full bg-purple-100 text-purple-800">
+                                            Terminé
+                                        </span>
+                                        
+                                        <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
+                                            <i class="fas fa-users mr-1.5"></i>
+                                            <span class="text-xs font-medium">74/80</span>
+                                        </div>
+                                        
+                                        <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
+                                            <i class="fas fa-handshake mr-1.5"></i>
+                                            <span class="text-xs font-medium">Rencontre</span>
+                                        </div>
+                                        
+                                        <div class="flex items-center gap-2 ml-auto">
+                                            <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
+                                                <i class="fas fa-chart-line"></i>
+                                            </button>
+                                            <button class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Voir le bilan">
+                                                <i class="fas fa-file-alt"></i>
+                                            </button>
+                                            <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
+                                                <i class="fas fa-chevron-down rotate-icon"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hidden details section -->
+                                <div class="card-details border-t border-gray-200 hidden">
+                                    <!-- Content here, similar to Event Card 1 -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </main>
     </div>
 
-    <!-- Create Tournament Modal -->
-    <div id="tournamentModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+    <!-- Create Event Modal -->
+    <div id="eventModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
         <div id="modalContent" class="bg-white rounded-xl shadow-lg p-8 transform transition-all scale-95 opacity-0 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-indigo-800">Créer un nouveau tournoi</h3>
+                <h3 class="text-xl font-bold text-indigo-800">Créer un nouvel événement</h3>
                 <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 focus:outline-none">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
             
-            <form action="organisateur/addTournoi" method="POST" enctype="multipart/form-data">
+            <form action="/organisateur/addEvenement" method="POST" enctype="multipart/form-data">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Basic Info Section -->
                     <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
@@ -763,17 +934,17 @@
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nom du tournoi</label>
-                                <input type="text" name="name" placeholder="Ex: Championnat Valorant 2025" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nom de l'événement</label>
+                                <input type="text" name="name" placeholder="Ex: LAN Party - Printemps 2025" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
 
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Photo du tournoi 
+                                    Image de l'événement 
                                     <span class="text-gray-500 text-xs ml-2">(Optionnel, max 5MB)</span>
                                 </label>
                                 <div class="flex items-center space-x-4">
-                                    <input type="file" name="tournament_photo" accept="image/*" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5">
+                                    <input type="file" name="event_photo" accept="image/*" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5">
                                     <div class="text-sm text-gray-600">
                                         <p>Format: JPG, PNG</p>
                                         <p>Taille max: 5MB</p>
@@ -782,130 +953,121 @@
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Jeu</label>
-                                <select name="game" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                    <option value="">Sélectionner un jeu</option>
-                                    {% for jeu in jeux %}
-                                    <option value="{{jeu.id}}">{{ jeu.nom_de_jeu }}</option>
-                                    {% endfor %}
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                                <select name="category" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="">Sélectionner une catégorie</option>
+                                    <option value="lan">LAN Party</option>
+                                    <option value="tournament">Tournoi</option>
+                                    <option value="workshop">Atelier</option>
+                                    <option value="meeting">Rencontre</option>
+                                    <option value="launch">Lancement</option>
+                                    <option value="party">Soirée</option>
                                 </select>
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Format du tournoi</label>
-                                <select name="format" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                    <option value="">Sélectionner un format</option>
-                                    <option value="single-elimination">Élimination simple</option>
-                                    <option value="double-elimination">Double élimination</option>
-                                </select>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Lieu</label>
+                                <input type="text" name="location" placeholder="Ex: Salle Polyvalente" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
-                                <input type="date" name="start_date" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                                <input type="date" name="event_date" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
-                                <input type="date" name="end_date" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+                                <input type="time" name="event_time" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre max. de participants</label>
-                                <input type="number" name="max_participants" min="2" max="256" placeholder="Ex: 32" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <input type="number" name="max_participants" min="1" placeholder="Ex: 50" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Prix d'entrée (€)</label>
+                                <input type="number" name="entry_fee" min="0" placeholder="Ex: 15" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Prize & Registration Section -->
-                    <div class="col-span-2 md:col-span-1 bg-gray-50 p-4 rounded-lg">
-                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-trophy text-purple-500 mr-2"></i> 
-                            Prix et récompenses
-                        </h4>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Prix total (€)</label>
-                                <input type="number" name="prix_total" min="0" placeholder="Ex: 1000" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Répartition des prix</label>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <input type="text" name="prize_first" placeholder="1er place %" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <input type="text" name="prize_second" placeholder="2ème place %" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <input type="text" name="prize_third" placeholder="3ème place %" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
-                    
-                    <!-- Registration Settings -->
-                    <div class="col-span-2 md:col-span-1 bg-gray-50 p-4 rounded-lg">
-                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-user-plus text-purple-500 mr-2"></i> 
-                            Paramètres d'inscription
-                        </h4>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Date d'ouverture des inscriptions</label>
-                                <input type="date" name="registration_start" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Date de clôture des inscriptions</label>
-                                <input type="date" name="registration_end" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            </div>
-                            
-                            <div class="flex items-center">
-                                <input id="registration_fee_toggle" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                                <label for="registration_fee_toggle" class="ml-2 block text-sm text-gray-700">Frais d'inscription</label>
-                            </div>
-                            
-                            <div id="fee_input" class="hidden">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Montant (€)</label>
-                                <input type="number" name="registration_fee" placeholder="Ex: 10" min="0" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            </div>
-                            
-                        </div>
-                    </div>
-                    
-                    <!-- Rules & Settings Section -->
+                    <!-- Description & Details Section -->
                     <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
                         <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-gavel text-purple-500 mr-2"></i> 
-                            Règles et paramètres
+                            <i class="fas fa-align-left text-purple-500 mr-2"></i> 
+                            Description et détails
                         </h4>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Description du tournoi</label>
-                                <textarea name="description" rows="3" placeholder="Décrivez votre tournoi..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description de l'événement</label>
+                                <textarea name="description" rows="3" placeholder="Décrivez votre événement..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Règles spécifiques</label>
-                                <textarea name="rules" rows="4" placeholder="Règles du tournoi..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Équipement requis</label>
+                                <textarea name="requirements" rows="2" placeholder="Matériel à apporter, configuration requise..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timeline Section -->
+                    <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-clock text-purple-500 mr-2"></i> 
+                            Programme de l'événement
+                        </h4>
+                        
+                        <div id="timeline-items" class="space-y-3 mb-3">
+                            <div class="timeline-item-input grid grid-cols-12 gap-2">
+                                <div class="col-span-2">
+                                    <input type="time" name="timeline_time[]" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                                </div>
+                                <div class="col-span-3">
+                                    <input type="text" name="timeline_title[]" placeholder="Titre" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                                </div>
+                                <div class="col-span-6">
+                                    <input type="text" name="timeline_desc[]" placeholder="Description de l'activité" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                                </div>
+                                <div class="col-span-1 flex items-center justify-center">
+                                    <button type="button" class="p-1.5 rounded-lg text-red-500 hover:bg-red-50 remove-timeline-item">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="add-timeline-item" class="mt-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition flex items-center text-sm">
+                            <i class="fas fa-plus mr-2"></i> Ajouter une étape
+                        </button>
+                    </div>
+                    
+                    <!-- Social & Links Section -->
+                    <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-link text-purple-500 mr-2"></i> 
+                            Liens et réseaux sociaux
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Discord</label>
+                                <input type="url" name="discord_url" placeholder="https://discord.gg/..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Stream du tournoi</label>
-                                    <input type="url" name="stream_url" placeholder="https://twitch.tv/..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Discord du tournoi</label>
-                                    <input type="url" name="discord_url" placeholder="https://discord.gg/..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Twitch</label>
+                                <input type="url" name="twitch_url" placeholder="https://twitch.tv/..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Formulaire d'inscription externe</label>
+                                <input type="url" name="registration_url" placeholder="https://..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Site web</label>
+                                <input type="url" name="website_url" placeholder="https://..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -916,7 +1078,7 @@
                         Annuler
                     </button>
                     <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg shadow-sm transition duration-300 flex items-center">
-                        <i class="fas fa-plus-circle mr-2"></i> Créer le tournoi
+                        <i class="fas fa-plus-circle mr-2"></i> Créer l'événement
                     </button>
                 </div>
             </form>
@@ -1003,27 +1165,26 @@
     
     <!-- JavaScript Logic -->
     <script>
-        // Assign unique IDs to tournament cards for toggle functionality
+        // Document ready function
         document.addEventListener('DOMContentLoaded', function() {
-            // Assign IDs to cards
-            const tournamentCards = document.querySelectorAll('.tournament-card');
-            tournamentCards.forEach((card, index) => {
-                card.id = 'tournament-card-' + index;
-            });
-            
             // Initialize collapsible sidebar
             initSidebar();
             
-            // Fix the tournament modal
-            initTournamentModal();
+            // Initialize the event modal
+            initEventModal();
             
-            // Fix the registration fee toggle
-            initRegistrationFeeToggle();
+            // Initialize the timeline item functionality
+            initTimelineItems();
+            
+            // Initialize tab buttons
+            initTabButtons();
+            
+            // Initialize category chips
+            initCategoryChips();
         });
         
         // Function to toggle card details
         function toggleCardDetails(card) {
-            // Check if card exists before proceeding
             if (!card) {
                 console.error('Card element not found');
                 return;
@@ -1097,15 +1258,15 @@
             }
         }
         
-        // Initialize tournament modal
-        function initTournamentModal() {
-            const createButton = document.getElementById('create-tournament-btn');
+        // Initialize event modal
+        function initEventModal() {
+            const createButton = document.getElementById('create-event-btn');
             const closeButton = document.getElementById('close-modal-btn');
             const cancelButton = document.getElementById('cancel-button');
-            const modal = document.getElementById('tournamentModal');
+            const modal = document.getElementById('eventModal');
             const modalContent = document.getElementById('modalContent');
             
-            function openTournamentModal() {
+            function openEventModal() {
                 if (modal && modalContent) {
                     modal.classList.remove('hidden');
                     setTimeout(() => {
@@ -1115,7 +1276,7 @@
                 }
             }
             
-            function closeTournamentModal() {
+            function closeEventModal() {
                 if (modal && modalContent) {
                     modalContent.classList.remove('scale-100', 'opacity-100');
                     modalContent.classList.add('scale-95', 'opacity-0');
@@ -1128,62 +1289,89 @@
             if (createButton) {
                 createButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    openTournamentModal();
+                    openEventModal();
                 });
             }
             
             if (closeButton) {
                 closeButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    closeTournamentModal();
+                    closeEventModal();
                 });
             }
             
             if (cancelButton) {
                 cancelButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    closeTournamentModal();
+                    closeEventModal();
                 });
             }
             
             // Close modal when clicking outside
-            modal.addEventListener('click', function(e) {
+            modal?.addEventListener('click', function(e) {
                 if (e.target === modal) {
-                    closeTournamentModal();
+                    closeEventModal();
                 }
             });
             
             // Close modal with ESC key
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                    closeTournamentModal();
+                if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+                    closeEventModal();
                 }
             });
         }
         
-        // Initialize registration fee toggle
-        function initRegistrationFeeToggle() {
-            const feeToggle = document.getElementById('registration_fee_toggle');
-            const feeInput = document.getElementById('fee_input');
+        // Initialize timeline items
+        function initTimelineItems() {
+            const addButton = document.getElementById('add-timeline-item');
+            const timelineContainer = document.getElementById('timeline-items');
             
-            if (feeToggle && feeInput) {
-                feeToggle.addEventListener('change', function() {
-                    if (this.checked) {
-                        feeInput.classList.remove('hidden');
-                    } else {
-                        feeInput.classList.add('hidden');
-                        // Reset value when hidden
-                        const feeInputField = document.querySelector('input[name="registration_fee"]');
-                        if (feeInputField) {
-                            feeInputField.value = '0';
-                        }
+            if (addButton && timelineContainer) {
+                // Add timeline item
+                addButton.addEventListener('click', function() {
+                    const newItem = document.createElement('div');
+                    newItem.className = 'timeline-item-input grid grid-cols-12 gap-2';
+                    newItem.innerHTML = `
+                        <div class="col-span-2">
+                            <input type="time" name="timeline_time[]" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                        </div>
+                        <div class="col-span-3">
+                            <input type="text" name="timeline_title[]" placeholder="Titre" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                        </div>
+                        <div class="col-span-6">
+                            <input type="text" name="timeline_desc[]" placeholder="Description de l'activité" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                        </div>
+                        <div class="col-span-1 flex items-center justify-center">
+                            <button type="button" class="p-1.5 rounded-lg text-red-500 hover:bg-red-50 remove-timeline-item">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    timelineContainer.appendChild(newItem);
+                    
+                    // Add event listener to the new remove button
+                    const removeButton = newItem.querySelector('.remove-timeline-item');
+                    if (removeButton) {
+                        removeButton.addEventListener('click', function() {
+                            newItem.remove();
+                        });
                     }
+                });
+                
+                // Initialize existing remove buttons
+                const removeButtons = timelineContainer.querySelectorAll('.remove-timeline-item');
+                removeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        this.closest('.timeline-item-input').remove();
+                    });
                 });
             }
         }
         
-        // Tab switching logic
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tab buttons
+        function initTabButtons() {
             const tabButtons = document.querySelectorAll('.tab-button');
             
             tabButtons.forEach(button => {
@@ -1195,120 +1383,21 @@
                     this.classList.add('active');
                 });
             });
+        }
+        
+        // Initialize category chips
+        function initCategoryChips() {
+            const categoryChips = document.querySelectorAll('.category-chip');
             
-            // Form validation
-            const tournamentForm = document.querySelector('form[action="organisateur/addTournoi"]');
-            
-            if (tournamentForm) {
-                tournamentForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Get required fields
-                    const tournamentName = this.querySelector('input[name="name"]').value;
-                    const game = this.querySelector('select[name="game"]').value;
-                    const format = this.querySelector('select[name="format"]').value;
-                    const startDate = this.querySelector('input[name="start_date"]').value;
-                    const endDate = this.querySelector('input[name="end_date"]').value;
-                    const maxParticipants = this.querySelector('input[name="max_participants"]').value;
-                    
-                    // Simple validation
-                    if (!tournamentName || !game || !format || !startDate || !endDate || !maxParticipants) {
-                        Swal.fire({
-                            title: 'Formulaire incomplet',
-                            text: 'Veuillez remplir tous les champs obligatoires',
-                            icon: 'error',
-                            confirmButtonColor: '#8b5cf6'
-                        });
-                        return;
-                    }
+            categoryChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    categoryChips.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
 
-                    // Vérification que le nombre maximum de participants ne dépasse pas 16
-                    if (parseInt(maxParticipants) > 16) {
-                        Swal.fire({
-                            title: 'Nombre de participants trop élevé',
-                            text: 'Le nombre de participants ne peut pas dépasser 16',
-                            icon: 'error',
-                            confirmButtonColor: '#8b5cf6'
-                        });
-                        return;
-                    }
-                    
-                    // Check that end date is after start date
-                    if (new Date(endDate) <= new Date(startDate)) {
-                        Swal.fire({
-                            title: 'Erreur de date',
-                            text: 'La date de fin doit être postérieure à la date de début',
-                            icon: 'error',
-                            confirmButtonColor: '#8b5cf6'
-                        });
-                        return;
-                    }
-                    
-                    // If feeToggle is checked but no amount is provided
-                    const feeToggle = document.getElementById('registration_fee_toggle');
-                    if (feeToggle && feeToggle.checked) {
-                        const feeAmount = this.querySelector('input[name="registration_fee"]').value;
-                        if (!feeAmount || feeAmount <= 0) {
-                            Swal.fire({
-                                title: 'Frais d\'inscription invalides',
-                                text: 'Veuillez indiquer un montant valide pour les frais d\'inscription',
-                                icon: 'error',
-                                confirmButtonColor: '#8b5cf6'
-                            });
-                            return;
-                        }
-                    }
-                    
-                    // Show loading state
-                    Swal.fire({
-                        title: 'Création en cours',
-                        text: 'Veuillez patienter pendant que nous créons votre tournoi...',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        willOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                    
-                    // Submit the form
-                    this.submit();
-                });
-            }
-            
-            // Check for URL parameters for notifications
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            if (urlParams.has('Tournoi%20Created%20successfully!') || urlParams.has('Tournoi Created successfully!')) {
-                Swal.fire({
-                    title: "Succès !",
-                    text: "Tournoi créé avec succès !",
-                    icon: "success",
-                    confirmButtonText: "OK",
-                    confirmButtonColor: '#8b5cf6',
-                    timer: 3000 
-                }).then(() => {
-                    // Clean the URL
-                    const url = new URL(window.location.href);
-                    url.search = '';
-                    window.history.replaceState({}, document.title, url);
-                });
-            }
-            
-            if (urlParams.has('Creation%20de%20votre%20tournoi%20echouée') || urlParams.has('Creation de votre tournoi echouée')) {
-                Swal.fire({
-                    title: 'Erreur de création',
-                    text: 'La création de votre tournoi a échoué',
-                    icon: 'error',
-                    confirmButtonColor: '#8b5cf6'
-                }).then(() => {
-                    // Clean the URL
-                    const url = new URL(window.location.href);
-                    url.search = '';
-                    window.history.replaceState({}, document.title, url);
-                });
-            }
-        });
-
+        // Recharge functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Find the recharge button
             const rechargeButton = Array.from(document.querySelectorAll('button')).find(
@@ -1318,11 +1407,6 @@
             const rechargeModal = document.getElementById('recharge-modal');
             const closeModalButton = document.getElementById('close-recharge-modal');
             const rechargeForm = document.getElementById('recharge-form');
-
-            // Input formatting
-            const cardNumberInput = document.getElementById('card-number');
-            const cardExpiryInput = document.getElementById('card-expiry');
-            const cardCvvInput = document.getElementById('card-cvv');
 
             // Show modal function
             function showModal() {
@@ -1356,43 +1440,7 @@
                     e.preventDefault();
                     const amount = document.getElementById('recharge-amount').value;
                     
-                    // Simulate recharge process
-                    Swal.fire({
-                        title: 'Rechargement en cours',
-                        text: `Rechargement de ${amount} € en cours`,
-                        icon: 'info',
-                        confirmButtonColor: '#8b5cf6'
-                    }).then(() => {
-                        // Close modal after submission
-                        hideModal();
-                    });
-                });
-            }
-
-            if (rechargeModal) {
-                rechargeModal.addEventListener('click', function(e) {
-                    if (e.target === rechargeModal) {
-                        hideModal();
-                    }
-                });
-            }
-
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Trouver le formulaire de rechargement
-            const rechargeForm = document.getElementById('recharge-form');
-            
-            // Gestionnaire d'événement pour la soumission du formulaire
-            if (rechargeForm) {
-                rechargeForm.addEventListener('submit', function(e) {
-                    // Empêcher la soumission par défaut du formulaire
-                    e.preventDefault();
-                    
-                    // Récupérer le montant saisi
-                    const amount = document.getElementById('recharge-amount').value;
-                    
-                    // Afficher l'alerte de chargement
+                    // Simulate payment processing
                     Swal.fire({
                         title: 'Rechargement en cours',
                         text: `Rechargement de ${amount} € en cours...`,
@@ -1404,7 +1452,7 @@
                         }
                     });
                     
-                    // Soumettre le formulaire après un court délai pour montrer l'animation
+                    // Submit the form after a short delay
                     setTimeout(() => {
                         rechargeForm.submit();
                     }, 1500);
@@ -1444,6 +1492,17 @@
                     window.history.replaceState({}, document.title, currentPath);
                 });
             }
+ 
+            
+            // Close modal when clicking outside
+            if (rechargeModal) {
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        hideModal();
+                    }
+                });
+            }
         });
     </script>
 </body>
+</html>

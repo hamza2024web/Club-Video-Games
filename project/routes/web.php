@@ -47,8 +47,7 @@ Route::get('tournoi','TournoiController@index');
 Route::get('boutique','BoutiqueController@index');
 Route::get('jeux','jeuxController@index');
 Route::post('organisateur/addTournoi','TournoiController@addTournoi');
-Route::post('/organisateur/updateTournoiStatus','TournoiController@updateTournoiStatus');
-
+Route::get('organisateur/evenement','EvenementController@index');
 // payment 
 Route::post('payer','PaymentController@payer');
 // compte
