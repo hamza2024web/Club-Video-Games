@@ -357,11 +357,11 @@
                 <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
                     Événements
                 </div>
-                <a href="#" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
+                <a href="organisateur/evenement" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
                     <i class="fas fa-calendar-alt w-5 sidebar-icon text-purple-300"></i>
                     <span class="sidebar-text ml-2 text-sm">Événement</span>
                 </a>
-                <a href="tournoi" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                <a href="/tournoi" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
                     <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
                     <span class="sidebar-text ml-2 text-sm">Tournois</span>
                 </a>
@@ -1020,8 +1020,124 @@
             
             // Initialize category chips
             initCategoryChips();
+            
+            // Validation du formulaire d'événement
+            const eventForm = document.querySelector('form[action="/organisateur/addEvenement"]');
+            
+            if (eventForm) {
+                eventForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get required fields
+                    const eventName = this.querySelector('input[name="name"]').value;
+                    const category = this.querySelector('select[name="category"]').value;
+                    const eventDate = this.querySelector('input[name="event_date"]').value;
+                    const eventTime = this.querySelector('input[name="event_time"]').value;
+                    const location = this.querySelector('input[name="location"]').value;
+                    const maxParticipants = this.querySelector('input[name="max_participants"]').value;
+                    
+                    // Simple validation
+                    if (!eventName || !category || !eventDate || !eventTime || !location || !maxParticipants) {
+                        Swal.fire({
+                            title: 'Formulaire incomplet',
+                            text: 'Veuillez remplir tous les champs obligatoires',
+                            icon: 'error',
+                            confirmButtonColor: '#8b5cf6'
+                        });
+                        return;
+                    }
+                    
+                    // Check registration dates if provided
+                    const registrationStart = this.querySelector('input[name="registration_start"]').value;
+                    const registrationEnd = this.querySelector('input[name="registration_end"]').value;
+                    
+                    if (registrationStart && registrationEnd) {
+                        if (new Date(registrationEnd) <= new Date(registrationStart)) {
+                            Swal.fire({
+                                title: 'Erreur de date',
+                                text: 'La date de clôture des inscriptions doit être postérieure à la date d\'ouverture',
+                                icon: 'error',
+                                confirmButtonColor: '#8b5cf6'
+                            });
+                            return;
+                        }
+                    }
+                    
+                    // Vérification que le nombre maximum de participants est raisonnable
+                    if (parseInt(maxParticipants) > 500) {
+                        Swal.fire({
+                            title: 'Nombre de participants trop élevé',
+                            text: 'Le nombre de participants semble anormalement élevé',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#8b5cf6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Continuer quand même',
+                            cancelButtonText: 'Corriger'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                submitForm();
+                            }
+                        });
+                        return;
+                    }
+                    
+                    // If everything is valid, show loading state and submit
+                    submitForm();
+                    
+                    function submitForm() {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Création en cours',
+                            text: 'Veuillez patienter pendant que nous créons votre événement...',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        // Submit the form
+                        eventForm.submit();
+                    }
+                });
+            }
         });
+
+        // Ajouter cette vérification des URL parameters juste après la fonction DOMContentLoaded
+        // Check for URL parameters for notifications
+        const urlParams = new URLSearchParams(window.location.search);
         
+        if (urlParams.has('Evenement%20Created%20successfully!') || urlParams.has('Evenement Created successfully!')) {
+            Swal.fire({
+                title: "Succès !",
+                text: "Événement créé avec succès !",
+                icon: "success",
+                confirmButtonText: "OK",
+                confirmButtonColor: '#8b5cf6',
+                timer: 3000 
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+        
+        if (urlParams.has('Creation%20de%20votre%20evenement%20echouée') || urlParams.has('Creation de votre evenement echouée')) {
+            Swal.fire({
+                title: 'Erreur de création',
+                text: 'La création de votre événement a échoué',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
         // Function to toggle card details
         function toggleCardDetails(card) {
             if (!card) {
