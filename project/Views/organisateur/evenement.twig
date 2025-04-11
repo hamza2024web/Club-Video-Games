@@ -1108,7 +1108,7 @@
         // Check for URL parameters for notifications
         const urlParams = new URLSearchParams(window.location.search);
         
-        if (urlParams.has('Evenement%20Created%20successfully!') || urlParams.has('Evenement Created successfully!')) {
+        if (urlParams.has('evenement Created successfully') || urlParams.has('Evenement Created successfully!')) {
             Swal.fire({
                 title: "Succès !",
                 text: "Événement créé avec succès !",
@@ -1124,7 +1124,7 @@
             });
         }
         
-        if (urlParams.has('Creation%20de%20votre%20evenement%20echouée') || urlParams.has('Creation de votre evenement echouée')) {
+        if (urlParams.has('Creation de votre evenement echouée') || urlParams.has('Creation de votre evenement echouée')) {
             Swal.fire({
                 title: 'Erreur de création',
                 text: 'La création de votre événement a échoué',

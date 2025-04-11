@@ -62,7 +62,7 @@ class EvenementController extends BaseController{
         $saveEvent = $this->EvenementServices->setEvent($user_id,$name_event,$registration_start,$registration_end,$type_event,$status,$location,$event_date,$event_time,$event_photo,$max_participants,$entry_fee,$description,$requirements,$timeline_time,$timeline_title,$timeline_desc,$discord_url,$twitch_url);
 
         if($saveEvent){
-            header("location: /organisateur/evenement?evenement Created successfully!=1");
+            header("location: /organisateur/evenement?evenement Created successfully=1");
         } else {
             header("location: organisateur/evenement?Creation de votre evenement echouée=1");
         }
