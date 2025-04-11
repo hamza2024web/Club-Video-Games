@@ -1335,7 +1335,7 @@
                 }).then(() => {
                     // Vider le panier après un paiement réussi
                     cart.length = 0;
-                    saveCartToLocalStorage(1);
+                    saveCartToLocalStorage('gamersMember');
                     updateCartUI();
                     
                     // Rediriger pour enlever les paramètres d'URL
@@ -1384,7 +1384,7 @@
 
         // Initialize the cart UI on page load
         document.addEventListener('DOMContentLoaded', () => {
-            loadCartFromLocalStorage(2);
+            loadCartFromLocalStorage('gamersMember');
             updateCartUI();
                     
                 // Close cart when clicking on overlay

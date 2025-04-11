@@ -8,11 +8,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
         
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8faff;
+            background-color: #f5f7ff;
         }
         
         /* Animated gradient background */
@@ -29,38 +29,44 @@
         }
         
         .game-card {
-            transition: all 0.3s ease;
-            border-radius: 16px;
+            transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.04);
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
         
         .game-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(99, 102, 241, 0.15), 0 4px 10px rgba(99, 102, 241, 0.1);
         }
         
         .game-card img {
-            transition: all 0.5s ease;
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transform: scale(1.01);
         }
         
         .game-card:hover img {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
         
         .sidebar-item {
             position: relative;
-            transition: all 0.2s ease;
-            border-radius: 12px;
+            transition: all 0.25s ease;
+            border-radius: 14px;
             margin: 3px 0;
+            transform: translateZ(0);
         }
         
         .sidebar-item:hover {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.18);
+            transform: translateX(3px);
         }
         
         .sidebar-item.active {
             background-color: rgba(139, 92, 246, 0.9);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         .sidebar-icon {
@@ -73,16 +79,16 @@
         
         .game-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 12px;
+            right: 12px;
             z-index: 10;
-            padding: 6px 10px;
-            border-radius: 10px;
+            padding: 6px 12px;
+            border-radius: 12px;
             font-size: 0.65rem;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
             text-transform: uppercase;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
         }
         
         .overlay-info {
@@ -90,15 +96,18 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.5), transparent);
             color: white;
-            padding: 25px 15px 15px;
+            padding: 30px 18px 18px;
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            transform: translateY(10px);
+            backdrop-filter: blur(1px);
         }
         
         .game-card:hover .overlay-info {
             opacity: 1;
+            transform: translateY(0);
         }
         
         /* Custom scrollbar */
@@ -124,78 +133,101 @@
         .filter-pill {
             transition: all 0.3s ease;
             border-radius: 30px;
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.2rem;
             font-size: 0.875rem;
             font-weight: 500;
             background-color: #f3f4f6;
             color: #4b5563;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border: 1px solid transparent;
         }
         
         .filter-pill:hover:not(.active) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
             background-color: #f9fafb;
+            border-color: #e5e7eb;
         }
         
         .filter-pill.active {
-            background-color: #8B5CF6;
+            background: linear-gradient(135deg, #8B5CF6, #6366F1);
             color: white;
-            box-shadow: 0 4px 6px rgba(139, 92, 246, 0.25);
+            box-shadow: 0 6px 12px rgba(139, 92, 246, 0.25);
+            border-color: rgba(255, 255, 255, 0.1);
         }
         
         /* Empty state animation */
         @keyframes float {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-15px); }
             100% { transform: translateY(0px); }
         }
         
         .float-animation {
-            animation: float 3s ease-in-out infinite;
+            animation: float 3.5s ease-in-out infinite;
         }
         
         /* Status badges */
         .status-badge {
-            padding: 0.25rem 0.75rem;
+            padding: 0.35rem 0.9rem;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
+            transform: translateZ(0);
+            transition: all 0.3s ease;
+        }
+        
+        .status-badge i {
+            margin-right: 0.35rem;
         }
         
         .status-installed {
             background-color: #dcfce7;
             color: #16a34a;
+            box-shadow: 0 2px 6px rgba(22, 163, 74, 0.15);
+        }
+        
+        .status-badge:hover {
+            transform: translateY(-1px);
         }
         
         .status-available {
             background-color: #e0e7ff;
             color: #4f46e5;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.15);
         }
         
         .btn-primary {
-            background: linear-gradient(to right, #8B5CF6, #6366F1);
+            background: linear-gradient(135deg, #8B5CF6, #6366F1);
             color: white;
             font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.35);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(99, 102, 241, 0.2);
         }
         
         .btn-secondary {
             background: white;
             color: #6366F1;
             font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
             transition: all 0.3s ease;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             border: 1px solid #E5E7EB;
@@ -203,34 +235,41 @@
         
         .btn-secondary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             border-color: #D1D5DB;
+            background-color: #F9FAFB;
+        }
+        
+        .btn-secondary:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
         /* Game statistics */
         .stat-item {
-            transition: all 0.3s ease;
-            border-radius: 12px;
+            transition: all 0.35s ease;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 4px rgba(0, 0, 0, 0.02);
+            padding: 1.2rem;
             background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.02);
         }
         
         .stat-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06), 0 3px 6px rgba(0, 0, 0, 0.03);
         }
         
         /* Game details modal */
         .modal-content {
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             max-width: 800px;
             width: 90%;
             margin: 0 auto;
             background-color: white;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
         }
         
         .progress-bar {
@@ -238,6 +277,7 @@
             border-radius: 5px;
             background-color: #e5e7eb;
             overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         
         .progress-fill {
@@ -245,6 +285,7 @@
             background: linear-gradient(to right, #8B5CF6, #6366F1);
             border-radius: 5px;
             transition: width 0.5s ease;
+            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
         }
         
         /* Sidebar profile section */
@@ -254,14 +295,22 @@
             background-color: #10B981;
             border-radius: 50%;
             display: inline-block;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
         
         .badge-profile {
             position: absolute;
             right: -2px;
             bottom: -2px;
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             background-color: #8B5CF6;
             border-radius: 50%;
             display: flex;
@@ -270,13 +319,105 @@
             color: white;
             font-size: 8px;
             border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Enhanced header shadow */
+        .header-shadow {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+        
+        /* Search input styling */
+        .search-input {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        
+        .search-input:focus {
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            border-color: #8B5CF6;
+        }
+        
+        .search-input:hover:not(:focus) {
+            border-color: #d1d5db;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Sidebar fade gradient for scrollable content */
+        .sidebar-fade {
+            background: linear-gradient(to bottom, rgba(67, 56, 202, 0) 0%, rgba(76, 29, 149, 1) 100%);
+            height: 40px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+        }
+        
+        /* Recharge button glow effect */
+        .recharge-btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .recharge-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+            z-index: -1;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            20%, 100% { transform: translateX(100%) rotate(45deg); }
+        }
+                /* Styles pour le compte et la déconnexion */
+        .account-balance {
+            background: rgba(79, 70, 229, 0.4);
+            border-radius: 12px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .balance-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin: 0.5rem 0;
+        }
+
+        .logout-button {
+            background-color: #EC4899;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-button:hover {
+            background-color: #DB2777;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
 <body class="bg-gray-50">
     <!-- Sidebar Navigation -->
     <div class="flex">
-                <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
+        <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
             <!-- En-tête de la barre latérale -->
             <div class="mb-8 text-center">
                 <div class="flex justify-center mb-3">
@@ -291,9 +432,9 @@
                 <ul class="space-y-1">
                     <li><a href="/member/dashboard" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-home mr-3 text-purple-300"></i>Tableau de bord</a></li>
                     <li><a href="/member/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournois</a></li>
-                    <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
-                    <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Mes Jeux</a></li>
-                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Amis</a></li>
+                    <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
+                    <li><a href="/member/games" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Mes Jeux</a></li>
+                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>friends</a></li>
                     <li><a href="/member/messages" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition">
                         <i class="fas fa-envelope mr-3 text-purple-300"></i>Messages
                         <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
@@ -307,9 +448,9 @@
             <!-- Pied de page de la barre latérale (profil et solde) -->
             <div class="absolute bottom-0 left-0 right-0 p-4">
                 <!-- Profil de l'utilisateur -->
-                <div class="flex items-center space-x-2 mb-3 p-2 rounded-lg bg-indigo-800/50">
+                <div class="flex items-center space-x-2 mb-3 p-2 rounded-lg bg-indigo-800/50 hover:bg-indigo-800/70 transition-colors">
                     <div class="relative">
-                        <img src="/{{profile.profile_photo}}" class="rounded-full border-2 border-purple-300 h-10 w-10" alt="Member Profile">
+                        <img src="/{{profile.profile_photo}}" class="rounded-full border-2 border-purple-300 h-10 w-10 object-cover" alt="Member Profile">
                         <div class="badge-profile">
                             <i class="fas fa-check text-xs"></i>
                         </div>
@@ -324,8 +465,8 @@
                 </div>
                 
                 <!-- Solde du compte -->
-                <div class="p-3 border-t border-indigo-800 sidebar-footer">
-                    <div class="bg-indigo-800 rounded-lg p-2 text-center">
+                <div class="p-3 border-t border-indigo-800/40 sidebar-footer">
+                    <div class="bg-indigo-800 rounded-lg p-2 text-center hover:bg-indigo-700 transition-colors shadow-lg">
                         <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
                         <button class="recharge-btn mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
                             Recharger
@@ -335,7 +476,7 @@
                 
                 <!-- Bouton de déconnexion -->
                 <a href="/logout">
-                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center mt-2">
+                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center mt-2 shadow-md">
                         <i class="fas fa-sign-out-alt mr-2"></i>
                         Déconnexion
                     </button>
@@ -344,18 +485,18 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="ml-64 flex-1">
+        <main class="flex-1">
             <!-- Top Navigation -->
-            <header class="bg-white shadow-sm sticky top-0 z-30">
+            <header class="bg-white header-shadow sticky top-0 z-30">
                 <div class="flex justify-between items-center px-6 py-4">
                     <div class="flex items-center">
                         <h1 class="text-2xl font-bold text-gray-800">Ma Bibliothèque de Jeux</h1>
-                        <div class="ml-4 text-sm bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
+                        <div class="ml-4 text-sm bg-purple-100 text-purple-800 px-3 py-1 rounded-full shadow-sm">
                             <i class="fas fa-gamepad mr-1"></i> {{jeuxAchetes|length}} jeux achetés
                         </div>
                     </div>
                     <div class="flex items-center space-x-5">
-                        <a href="/boutique" class="btn-secondary flex items-center">
+                        <a href="/member/boutique" class="btn-secondary flex items-center shadow-sm">
                             <i class="fas fa-store mr-2"></i> Visiter la boutique
                         </a>
                     </div>
@@ -368,7 +509,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                     <div class="stat-item">
                         <div class="flex items-center">
-                            <div class="bg-indigo-100 p-3 rounded-xl mr-4">
+                            <div class="bg-indigo-100 p-3 rounded-xl mr-4 shadow-sm">
                                 <i class="fas fa-gamepad text-indigo-600 text-xl"></i>
                             </div>
                             <div>
@@ -380,7 +521,7 @@
                     
                     <div class="stat-item">
                         <div class="flex items-center">
-                            <div class="bg-green-100 p-3 rounded-xl mr-4">
+                            <div class="bg-green-100 p-3 rounded-xl mr-4 shadow-sm">
                                 <i class="fas fa-download text-green-600 text-xl"></i>
                             </div>
                             <div>
@@ -392,7 +533,7 @@
                     
                     <div class="stat-item">
                         <div class="flex items-center">
-                            <div class="bg-blue-100 p-3 rounded-xl mr-4">
+                            <div class="bg-blue-100 p-3 rounded-xl mr-4 shadow-sm">
                                 <i class="fas fa-clock text-blue-600 text-xl"></i>
                             </div>
                             <div>
@@ -404,7 +545,7 @@
                     
                     <div class="stat-item">
                         <div class="flex items-center">
-                            <div class="bg-purple-100 p-3 rounded-xl mr-4">
+                            <div class="bg-purple-100 p-3 rounded-xl mr-4 shadow-sm">
                                 <i class="fas fa-trophy text-purple-600 text-xl"></i>
                             </div>
                             <div>
@@ -416,12 +557,12 @@
                 </div>
 
                 <!-- Search and Filters -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-100">
                     <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
                         <div class="w-full md:w-1/3">
                             <div class="relative">
                                 <input type="text" id="search-input" placeholder="Rechercher dans ma bibliothèque..." 
-                                       class="pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full shadow-sm transition-all duration-200 hover:shadow">
+                                       class="search-input pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full shadow-sm transition-all duration-200">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-search text-gray-400"></i>
                                 </div>
@@ -465,12 +606,12 @@
                     <!-- Si aucun jeu n'est acheté, afficher un message -->
                     {% if jeuxAchetes|length == 0 %}
                         <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
-                            <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-4 float-animation">
+                            <div class="w-36 h-36 bg-purple-100 rounded-full flex items-center justify-center mb-6 float-animation shadow-xl">
                                 <i class="fas fa-gamepad text-5xl text-purple-400"></i>
                             </div>
-                            <h2 class="text-2xl font-bold text-gray-800 mb-2">Aucun jeu dans votre bibliothèque</h2>
-                            <p class="text-gray-600 mb-6 max-w-md">Vous n'avez pas encore acheté de jeux. Visitez notre boutique pour découvrir notre catalogue.</p>
-                            <a href="/boutique" class="btn-primary py-3 px-6 flex items-center">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-3">Aucun jeu dans votre bibliothèque</h2>
+                            <p class="text-gray-600 mb-8 max-w-md">Vous n'avez pas encore acheté de jeux. Visitez notre boutique pour découvrir notre catalogue.</p>
+                            <a href="/boutique" class="btn-primary py-3 px-8 flex items-center shadow-lg">
                                 <i class="fas fa-shopping-cart mr-2"></i> Explorer la boutique
                             </a>
                         </div>
@@ -480,17 +621,17 @@
                             <div class="game-card" data-category="{{ jeu.genre }}" data-installed="{{ jeu.installed ? 'yes' : 'no' }}">
                                 <div class="relative">
                                     <img src="/{{ jeu.image }}" alt="{{ jeu.nom_de_jeu }}" class="w-full h-48 object-cover">
-                                    <div class="game-badge bg-purple-600">{{ jeu.genre }}</div>
+                                    <div class="game-badge bg-purple-600 shadow-md">{{ jeu.genre }}</div>
                                     <div class="overlay-info">
-                                        <div class="flex items-center mb-1">
+                                        <div class="flex items-center mb-2">
                                             <i class="fas fa-desktop mr-2"></i>
                                             <span>{{ jeu.plateforme }}</span>
                                         </div>
-                                        <div class="flex items-center mb-1">
+                                        <div class="flex items-center mb-2">
                                             <i class="fas fa-code-branch mr-2"></i>
                                             <span>{{ jeu.developpeur }}</span>
                                         </div>
-                                        <div class="flex items-center mb-1">
+                                        <div class="flex items-center mb-2">
                                             <i class="fas fa-calendar-alt mr-2"></i>
                                             <span>{{ jeu.date_de_sortie }}</span>
                                         </div>
@@ -500,8 +641,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="p-4">
-                                    <div class="flex justify-between items-start mb-2">
+                                <div class="p-5">
+                                    <div class="flex justify-between items-start mb-3">
                                         <h3 class="text-lg font-bold text-gray-800">{{ jeu.nom_de_jeu }}</h3>
                                         <div class="flex items-center">
                                             <i class="fas fa-star text-yellow-400"></i>
@@ -520,10 +661,10 @@
                                         </div>
                                         <div class="flex justify-between items-center">
                                             <span class="status-badge status-installed">
-                                                <i class="fas fa-check-circle mr-1"></i> Installé
+                                                <i class="fas fa-check-circle"></i> Installé
                                             </span>
-                                            <button onclick="getGameDetails({{ jeu.id }})" class="btn-secondary py-1.5 px-3 text-sm">
-                                                <i class="fas fa-play mr-1"></i> Jouer
+                                            <button onclick="getGameDetails({{ jeu.id }})" class="btn-secondary py-1.5 px-3 text-sm transition-all">
+                                                <i class="fas fa-play"></i> Jouer
                                             </button>
                                         </div>
                                     {% else %}
@@ -538,10 +679,10 @@
                                         </div>
                                         <div class="flex justify-between items-center">
                                             <span class="status-badge status-available">
-                                                <i class="fas fa-download mr-1"></i> Non installé
+                                                <i class="fas fa-download"></i> Non installé
                                             </span>
-                                            <button onclick="installGame({{ jeu.id }})" class="btn-primary py-1.5 px-3 text-sm">
-                                                <i class="fas fa-download mr-1"></i> Installer
+                                            <button onclick="installGame({{ jeu.id }})" class="btn-primary py-1.5 px-3 text-sm transition-all">
+                                                <i class="fas fa-download"></i> Installer
                                             </button>
                                         </div>
                                     {% endif %}
@@ -556,7 +697,7 @@
 
     <!-- Game Details Modal -->
     <div id="game-details-modal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="modal-content transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
                 <div id="modal-loading" class="p-8 text-center bg-white rounded-xl">
@@ -569,13 +710,13 @@
                     <div class="bg-white rounded-t-xl overflow-hidden">
                         <div class="relative">
                             <img src="https://cdn.vox-cdn.com/thumbor/VXQoHWqxliy66N1W8h2F_o2wi9I=/0x0:3840x2160/1200x800/filters:focal(1613x773:2227x1387)/cdn.vox-cdn.com/uploads/chorus_image/image/66789638/VALORANT_key_art.0.jpg" alt="Game Banner" class="w-full h-64 object-cover">
-                            <button id="close-modal" class="absolute top-4 right-4 bg-black bg-opacity-50 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-opacity-70 transition-colors">
+                            <button id="close-modal" class="absolute top-4 right-4 bg-black bg-opacity-50 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-opacity-70 transition-colors">
                                 <i class="fas fa-times"></i>
                             </button>
                             <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent">
                                 <h2 class="text-3xl font-bold text-white">Valorant</h2>
                                 <div class="flex items-center mt-2">
-                                    <span class="bg-purple-600 text-white text-xs px-2 py-1 rounded mr-2">FPS</span>
+                                    <span class="bg-purple-600 text-white text-xs px-3 py-1 rounded-lg mr-3 shadow-md">FPS</span>
                                     <span class="text-white text-sm"><i class="fas fa-calendar-alt mr-1"></i> 2 juin 2020</span>
                                     <span class="text-white text-sm ml-4"><i class="fas fa-code-branch mr-1"></i> Riot Games</span>
                                 </div>
@@ -583,9 +724,9 @@
                         </div>
                         
                         <div class="p-6">
-                            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
                                 <div class="flex items-center mb-4 md:mb-0">
-                                    <div class="bg-indigo-100 p-3 rounded-xl mr-4">
+                                    <div class="bg-indigo-100 p-3 rounded-xl mr-4 shadow-sm">
                                         <i class="fas fa-gamepad text-indigo-600 text-xl"></i>
                                     </div>
                                     <div>
@@ -595,7 +736,7 @@
                                 </div>
                                 
                                 <div class="flex items-center mb-4 md:mb-0">
-                                    <div class="bg-green-100 p-3 rounded-xl mr-4">
+                                    <div class="bg-green-100 p-3 rounded-xl mr-4 shadow-sm">
                                         <i class="fas fa-trophy text-green-600 text-xl"></i>
                                     </div>
                                     <div>
@@ -605,7 +746,7 @@
                                 </div>
                                 
                                 <div class="flex items-center">
-                                    <div class="bg-purple-100 p-3 rounded-xl mr-4">
+                                    <div class="bg-purple-100 p-3 rounded-xl mr-4 shadow-sm">
                                         <i class="fas fa-users text-purple-600 text-xl"></i>
                                     </div>
                                     <div>
@@ -623,7 +764,7 @@
                             <div class="mb-6">
                                 <h3 class="text-lg font-bold text-gray-800 mb-2">Derniers succès</h3>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div class="bg-gray-50 p-3 rounded-lg flex items-center">
+                                    <div class="bg-gray-50 p-3 rounded-lg flex items-center shadow-sm hover:shadow transition-shadow">
                                         <div class="bg-purple-100 p-2 rounded-lg mr-3">
                                             <i class="fas fa-medal text-purple-600"></i>
                                         </div>
@@ -632,7 +773,7 @@
                                             <p class="text-xs text-gray-500">Il y a 2 jours</p>
                                         </div>
                                     </div>
-                                    <div class="bg-gray-50 p-3 rounded-lg flex items-center">
+                                    <div class="bg-gray-50 p-3 rounded-lg flex items-center shadow-sm hover:shadow transition-shadow">
                                         <div class="bg-purple-100 p-2 rounded-lg mr-3">
                                             <i class="fas fa-medal text-purple-600"></i>
                                         </div>
@@ -641,7 +782,7 @@
                                             <p class="text-xs text-gray-500">Il y a 5 jours</p>
                                         </div>
                                     </div>
-                                    <div class="bg-gray-50 p-3 rounded-lg flex items-center">
+                                    <div class="bg-gray-50 p-3 rounded-lg flex items-center shadow-sm hover:shadow transition-shadow">
                                         <div class="bg-purple-100 p-2 rounded-lg mr-3">
                                             <i class="fas fa-medal text-purple-600"></i>
                                         </div>
@@ -656,21 +797,21 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <h3 class="text-lg font-bold text-gray-800 mb-2">Informations techniques</h3>
-                                    <ul class="space-y-2 text-gray-600">
-                                        <li class="flex items-center">
-                                            <i class="fas fa-hdd mr-2 w-5 text-gray-400"></i> 
+                                    <ul class="space-y-3 text-gray-600">
+                                        <li class="flex items-center bg-gray-50 p-2 rounded-lg">
+                                            <i class="fas fa-hdd mr-2 w-5 text-indigo-500"></i> 
                                             <span>Taille: 16.2 GB</span>
                                         </li>
-                                        <li class="flex items-center">
-                                            <i class="fas fa-microchip mr-2 w-5 text-gray-400"></i> 
+                                        <li class="flex items-center bg-gray-50 p-2 rounded-lg">
+                                            <i class="fas fa-microchip mr-2 w-5 text-indigo-500"></i> 
                                             <span>Processeur requis: Intel Core i3-4150</span>
                                         </li>
-                                        <li class="flex items-center">
-                                            <i class="fas fa-memory mr-2 w-5 text-gray-400"></i> 
+                                        <li class="flex items-center bg-gray-50 p-2 rounded-lg">
+                                            <i class="fas fa-memory mr-2 w-5 text-indigo-500"></i> 
                                             <span>Mémoire RAM: 4 GB</span>
                                         </li>
-                                        <li class="flex items-center">
-                                            <i class="fas fa-desktop mr-2 w-5 text-gray-400"></i> 
+                                        <li class="flex items-center bg-gray-50 p-2 rounded-lg">
+                                            <i class="fas fa-desktop mr-2 w-5 text-indigo-500"></i> 
                                             <span>Carte graphique: GeForce GT 730</span>
                                         </li>
                                     </ul>
@@ -678,21 +819,21 @@
                                 
                                 <div>
                                     <h3 class="text-lg font-bold text-gray-800 mb-2">Statistiques de jeu</h3>
-                                    <ul class="space-y-2 text-gray-600">
-                                        <li class="flex items-center">
-                                            <i class="fas fa-crosshairs mr-2 w-5 text-gray-400"></i> 
+                                    <ul class="space-y-3 text-gray-600">
+                                        <li class="flex items-center bg-gray-50 p-2 rounded-lg">
+                                            <i class="fas fa-crosshairs mr-2 w-5 text-indigo-500"></i> 
                                             <span>Précision moyenne: 32%</span>
                                         </li>
-                                        <li class="flex items-center">
-                                            <i class="fas fa-skull mr-2 w-5 text-gray-400"></i> 
+                                        <li class="flex items-center bg-gray-50 p-2 rounded-lg">
+                                            <i class="fas fa-skull mr-2 w-5 text-indigo-500"></i> 
                                             <span>K/D Ratio: 1.76</span>
                                         </li>
-                                        <li class="flex items-center">
-                                            <i class="fas fa-trophy mr-2 w-5 text-gray-400"></i> 
+                                        <li class="flex items-center bg-gray-50 p-2 rounded-lg">
+                                            <i class="fas fa-trophy mr-2 w-5 text-indigo-500"></i> 
                                             <span>Matchs gagnés: 78</span>
                                         </li>
-                                        <li class="flex items-center">
-                                            <i class="fas fa-user-friends mr-2 w-5 text-gray-400"></i> 
+                                        <li class="flex items-center bg-gray-50 p-2 rounded-lg">
+                                            <i class="fas fa-user-friends mr-2 w-5 text-indigo-500"></i> 
                                             <span>Joueurs rencontrés: 346</span>
                                         </li>
                                     </ul>
@@ -701,7 +842,7 @@
                         </div>
                         
                         <div class="bg-gray-50 p-6 rounded-b-xl flex justify-between items-center">
-                            <button onclick="uninstallGame(1)" class="bg-red-50 text-red-600 hover:bg-red-100 py-2 px-4 rounded-lg flex items-center transition-colors">
+                            <button onclick="uninstallGame(1)" class="bg-red-50 text-red-600 hover:bg-red-100 py-2 px-4 rounded-lg flex items-center transition-colors shadow-sm">
                                 <i class="fas fa-trash-alt mr-2"></i> Désinstaller
                             </button>
                             
@@ -722,12 +863,12 @@
     
     <!-- Modal de rechargement -->
     <div id="recharge-modal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
         <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10 transform transition-all duration-300">
                 <div class="p-5 border-b border-gray-200 flex justify-between items-center">
                     <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
-                    <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700 rounded-full h-8 w-8 flex items-center justify-center hover:bg-gray-100 transition-colors">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -735,58 +876,58 @@
                 <div class="p-5">
                     <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
                         <div>
-                            <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                            <label for="recharge-amount" class="block text-sm text-gray-600 mb-2 font-medium">Montant à recharger (10-500 €)</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                                     <i class="fas fa-euro-sign"></i>
                                 </span>
-                                <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                                <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" min="10" max="500" required placeholder="Entrez le montant">
                             </div>
                         </div>
                         
                         <div>
-                            <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                            <label for="card-holder" class="block text-sm text-gray-600 mb-2 font-medium">Nom du titulaire de la carte</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                                     <i class="fas fa-user"></i>
                                 </span>
-                                <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                                <input type="text" id="card-holder" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" required placeholder="Nom complet">
                             </div>
                         </div>
                         
                         <div>
-                            <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                            <label for="card-number" class="block text-sm text-gray-600 mb-2 font-medium">Numéro de carte</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                                     <i class="fas fa-credit-card"></i>
                                 </span>
-                                <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                                <input type="text" id="card-number" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
                             </div>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                                <label for="card-expiry" class="block text-sm text-gray-600 mb-2 font-medium">Date d'expiration</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
-                                    <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="MM/AA">
+                                    <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="MM/AA">
                                 </div>
                             </div>
                             
                             <div>
-                                <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                                <label for="card-cvv" class="block text-sm text-gray-600 mb-2 font-medium">CVV</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                                         <i class="fas fa-lock"></i>
                                     </span>
-                                    <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                                    <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
                                 </div>
                             </div>
                         </div>
                         
-                        <button type="submit" class="w-full btn-primary py-3 rounded-lg font-medium flex items-center justify-center mt-4">
+                        <button type="submit" class="w-full btn-primary py-3 rounded-lg font-medium flex items-center justify-center mt-4 shadow-md">
                             <i class="fas fa-credit-card mr-2"></i> Recharger mon compte
                         </button>
                         
@@ -1049,23 +1190,36 @@
             });
             
             // Gestion du modal de rechargement
-            const rechargeButton = document.querySelector('.balance-container button');
+            const rechargeButton = document.querySelector('.recharge-btn');
             const rechargeModal = document.getElementById('recharge-modal');
             const closeRechargeButton = document.getElementById('close-recharge-modal');
-            
+
             if (rechargeButton && rechargeModal && closeRechargeButton) {
                 rechargeButton.addEventListener('click', function() {
                     rechargeModal.classList.remove('hidden');
+                    // Animation d'entrée
+                    const modalContent = rechargeModal.querySelector('.transform');
+                    setTimeout(() => {
+                        modalContent.classList.add('scale-100', 'opacity-100');
+                        modalContent.classList.remove('scale-95', 'opacity-0');
+                    }, 10);
                 });
                 
                 closeRechargeButton.addEventListener('click', function() {
-                    rechargeModal.classList.add('hidden');
+                    // Animation de sortie
+                    const modalContent = rechargeModal.querySelector('.transform');
+                    modalContent.classList.remove('scale-100', 'opacity-100');
+                    modalContent.classList.add('scale-95', 'opacity-0');
+                    
+                    setTimeout(() => {
+                        rechargeModal.classList.add('hidden');
+                    }, 300);
                 });
                 
                 // Fermer le modal en cliquant sur l'arrière-plan
                 rechargeModal.addEventListener('click', function(e) {
-                    if (e.target === rechargeModal) {
-                        rechargeModal.classList.add('hidden');
+                    if (e.target === rechargeModal || e.target.classList.contains('absolute')) {
+                        closeRechargeButton.click();
                     }
                 });
                 
@@ -1079,26 +1233,65 @@
                         
                         Swal.fire({
                             title: 'Traitement du paiement',
-                            html: '<div class="flex flex-col items-center"><div class="spinner mb-4"></div>Veuillez patienter...</div>',
+                            html: `
+                                <div class="flex flex-col items-center">
+                                    <div class="inline-block w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
+                                    <p>Veuillez patienter...</p>
+                                </div>
+                            `,
                             allowOutsideClick: false,
-                            showConfirmButton: false
+                            showConfirmButton: false,
+                            customClass: {
+                                popup: 'rounded-xl'
+                            }
                         });
                         
                         // Simuler le paiement
                         setTimeout(() => {
-                            rechargeModal.classList.add('hidden');
+                            closeRechargeButton.click();
                             
                             Swal.fire({
                                 title: 'Rechargement réussi !',
                                 text: `Votre compte a été rechargé de ${amount} €.`,
                                 icon: 'success',
-                                confirmButtonColor: '#8B5CF6'
+                                confirmButtonColor: '#8B5CF6',
+                                customClass: {
+                                    popup: 'rounded-xl',
+                                    confirmButton: 'rounded-lg'
+                                }
                             });
                         }, 2000);
                     });
                 }
             }
+            
+            // Animation des cartes de jeu
+            const animateCards = () => {
+                const cards = document.querySelectorAll('.game-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100 * index);
+                });
+            };
+            
+            // Initialiser les cartes avec une opacité de 0 et une translation vers le bas
+            const initCards = () => {
+                const cards = document.querySelectorAll('.game-card');
+                cards.forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)';
+                });
+                
+                // Démarrer l'animation après un court délai
+                setTimeout(animateCards, 300);
+            };
+            
+            // Initialiser les animations au chargement de la page
+            initCards();
         });
     </script>
 </body>
-</html> 
+</html>                                        
