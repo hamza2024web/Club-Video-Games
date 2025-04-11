@@ -49,6 +49,14 @@ class MembreAndOrgan {
             $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
             $stmt->execute([$userId]);
             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Après avoir inséré dans la table users et récupéré l'ID
+
+            // Initialiser le compte avec un solde de 0
+            $sql = "INSERT INTO compte (user_id, solde) VALUES (:user_id, 0.00)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
     
             return new Users($userData['email'], $userData['password'], $role, $userData['status']);
         } catch (\PDOException $e) {

@@ -111,8 +111,9 @@
             <nav class="flex-grow">
                 <ul class="space-y-1">
                     <li><a href="/member/dashboard" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-home mr-3 text-purple-300"></i>Dashboard</a></li>
-                    <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>My Games</a></li>
                     <li><a href="/member/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournaments</a></li>
+                    <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
+                    <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>My Games</a></li>
                     <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Friends</a></li>
                     <li><a href="/member/messages" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition">
                         <i class="fas fa-envelope mr-3 text-purple-300"></i>Messages
@@ -133,6 +134,16 @@
                             <i class="fas fa-circle text-green-500 mr-1 text-xs"></i>
                             <p class="text-xs text-purple-300">Online</p>
                         </div>
+                        <p class="text-xs text-purple-300 mt-1">Solde: {{my_solde}} €</p>
+                    </div>
+                </div>
+                <!-- Mini Account Balance -->
+                <div class="p-3 border-t border-indigo-800 sidebar-footer">
+                    <div class="bg-indigo-800 rounded-lg p-2 text-center">
+                        <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
+                        <button class="mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                            Recharger
+                        </button>
                     </div>
                 </div>
                 <a href="/logout">

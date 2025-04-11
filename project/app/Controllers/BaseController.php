@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Services\CompteServices;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Extension\DebugExtension;
@@ -14,6 +15,7 @@ class BaseController
     protected $twigAuth;
     protected $twigOrg;
     protected $twigMem;
+    protected $compteServices;
 
     public function __construct()
     {
@@ -22,6 +24,8 @@ class BaseController
         $this->twigAuth = $this->initTwig(__DIR__ . '/../../Views/auth');
         $this->twigOrg = $this->initTwig(__DIR__ . '/../../Views/organisateur');
         $this->twigMem = $this->initTwig(__DIR__ . '/../../Views/membre');
+        $this->compteServices = new CompteServices();
+
     }
 
     private function initTwig($path)
@@ -85,4 +89,20 @@ class BaseController
 
         return $currentImage;
     }
+    public function solde($user_id = null) {
+        if ($user_id === null) {
+        if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+        }
+
+        if (!isset($_SESSION["user_id"])) {
+        throw new Exception("Aucun utilisateur connecté");
+        }
+
+        $user_id = $_SESSION["user_id"];
+        }
+
+        return $this->compteServices->getSolde($user_id);
+    }
+
 }

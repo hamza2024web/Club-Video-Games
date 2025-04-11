@@ -53,78 +53,94 @@
 <body class="bg-gray-100">
     <!-- Sidebar Navigation -->
     <div class="flex">
-        <aside class="bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white w-64 min-h-screen flex flex-col fixed">
-            <div class="p-4 border-b border-indigo-800">
-                <div class="flex items-center">
-                    <i class="fas fa-gamepad text-2xl mr-3 text-purple-300"></i>
-                    <h2 class="text-xl font-bold">GamersHub</h2>
+                <aside class="sidebar-expanded bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white h-screen flex flex-col fixed z-30 transition-all duration-300 overflow-hidden w-60">
+            <!-- Sidebar Header - Compact -->
+            <div class="flex items-center justify-between p-3 border-b border-indigo-800">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-gamepad text-xl text-purple-300"></i>
+                    <h2 class="text-lg font-bold sidebar-header-text">GamersHub</h2>
+                </div>
+                <button id="sidebar-toggle" class="p-1 rounded-full bg-indigo-800 text-white hover:bg-indigo-700 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- User Info - More Compact -->
+            <div class="p-3 border-b border-indigo-800 flex items-center">
+                <img src="/{{profile.profile_image}}" alt="Avatar" class="w-8 h-8 rounded-full bg-gray-500 border-2 border-purple-300">
+                <div class="sidebar-header-text ml-2">
+                    <p class="font-medium text-sm">{{profile.name}}</p>
+                    <p class="text-xs text-purple-200">{{profile.gamer_tag}}</p>
                 </div>
             </div>
             
-            <div class="p-4 border-b border-indigo-800">
-                <div class="flex items-center space-x-3">
-                    <img src="/{{profile.profile_image}}" alt="Avatar" class="w-10 h-10 rounded-full bg-gray-500 border-2 border-purple-300">
-                    <div>
-                        <p class="font-semibold">{{profile.name}}</p>
-                        <p class="text-sm text-purple-200">Gamer Tag : {{profile.gamer_tag}}</p>
-                    </div>
+            <!-- Navigation - Reduced Padding -->
+            <nav class="flex-1 overflow-y-auto sidebar-scroll py-2">
+                <!-- Dashboard -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text">
+                    Menu
                 </div>
-            </div>
-            
-            <nav class="mt-6 flex-1 px-2">
-                <div class="px-4 py-2 text-xs text-purple-300 uppercase tracking-wider font-semibold">
-                    Tableau de bord
-                </div>
-                <a href="#" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-tachometer-alt w-6 sidebar-icon text-purple-300"></i>
-                    <span>Vue d'ensemble</span>
+                <a href="#" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-tachometer-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Vue d'ensemble</span>
                 </a>
                 
-                <div class="px-4 py-2 text-xs text-purple-300 uppercase tracking-wider font-semibold">
-                    Gestion
-                </div>
-                <a href="#" class="sidebar-item active flex items-center px-4 py-3 text-white rounded-lg mb-1">
-                    <i class="fas fa-users w-6 sidebar-icon text-purple-300"></i>
-                    <span>Gestion du club</span>
+                <!-- Management -->
+                <a href="ClubManagement" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
+                    <i class="fas fa-users w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Gestion du club</span>
                 </a>
-
-                <a href="/profile" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-user w-6 sidebar-icon text-purple-300"></i>
-                    <span>Profil</span>
+                <a href="/profile" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-user w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Profil</span>
                 </a>
                 
-                <div class="px-4 py-2 text-xs text-purple-300 uppercase tracking-wider font-semibold">
+                <!-- Events -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
                     Événements
                 </div>
-                <a href="#" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-calendar-alt w-6 sidebar-icon text-purple-300"></i>
-                    <span>Événement</span>
+                <a href="#" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-calendar-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Événement</span>
                 </a>
-                <a href="tournoi" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-trophy w-6 sidebar-icon text-purple-300"></i>
-                    <span>Tournois</span>
+                <a href="tournoi" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Tournois</span>
                 </a>
-                <a href="/boutique" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-store w-6 sidebar-icon text-purple-300"></i>
-                    <span>Boutique</span>
+                <a href="/boutique" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-store w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Boutique</span>
                 </a>
-                <a href="/jeux" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-gamepad w-6 sidebar-icon text-purple-300"></i>
-                    <span>Jeux</span>
+                <a href="/jeux" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-gamepad w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Jeux</span>
                 </a>
                 
-                <div class="px-4 py-2 text-xs text-purple-300 uppercase tracking-wider font-semibold">
-                    Paramètres
+                <!-- Settings - Combined into one section -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
+                    Compte
                 </div>
-                <a href="#" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-cog w-6 sidebar-icon text-purple-300"></i>
-                    <span>Configuration</span>
+                <a href="#" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-cog w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Configuration</span>
                 </a>
-                <a href="/logout" class="sidebar-item flex items-center px-4 py-3 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-sign-out-alt w-6 sidebar-icon text-purple-300"></i>
-                    <span>Déconnexion</span>
+                <a href="/logout" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-sign-out-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Déconnexion</span>
                 </a>
             </nav>
+            
+            <!-- Mini Account Balance -->
+            <div class="p-3 border-t border-indigo-800 sidebar-footer">
+                <div class="bg-indigo-800 rounded-lg p-2 text-center">
+                    <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
+                    <button class="mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                        Recharger
+                    </button>
+                </div>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -379,6 +395,84 @@
             </div>
         </main>
     </div>
+        
+    <!-- Modal de rechargement -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                    <div>
+                        <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                            <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"   placeholder="MM/AA">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4">
+                        Recharger mon compte
+                    </button>
+                    
+                    <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                        Paiement 100% sécurisé
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -439,7 +533,198 @@
                 closeAnnonces();
             }
         });
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('sidebar-toggle');
+            const sidebar = document.querySelector('.sidebar-expanded');
+            const mainContent = document.querySelector('main');
 
+            if (toggleButton && sidebar && mainContent) {
+                // Function to toggle sidebar
+                function toggleSidebar() {
+                    sidebar.classList.toggle('sidebar-collapsed');
+                    sidebar.classList.toggle('sidebar-expanded');
+                    mainContent.classList.toggle('ml-64');
+                    mainContent.classList.toggle('ml-20');
+
+                    // Update localStorage
+                    const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+                    localStorage.setItem('sidebarCollapsed', isCollapsed);
+                }
+
+                // Add click event listener to toggle button
+                toggleButton.addEventListener('click', toggleSidebar);
+
+                // Check and apply initial state from localStorage
+                const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (sidebarCollapsed) {
+                    sidebar.classList.add('sidebar-collapsed');
+                    sidebar.classList.remove('sidebar-expanded');
+                    mainContent.classList.remove('ml-64');
+                    mainContent.classList.add('ml-20');
+                }
+            }
+        });
+
+        // Additional CSS to support sidebar collapse
+        const sidebarStyle = document.createElement('style');
+        sidebarStyle.textContent = `
+        .sidebar-collapsed {
+            width: 80px;
+        }
+
+        .sidebar-collapsed .sidebar-header-text,
+        .sidebar-collapsed .sidebar-text,
+        .sidebar-collapsed .sidebar-footer {
+            display: none;
+        }
+
+        .sidebar-collapsed .sidebar-item {
+            justify-content: center;
+        }
+
+        .sidebar-collapsed .sidebar-item i {
+            margin-right: 0 !important;
+        }
+        `;
+        document.head.appendChild(sidebarStyle);
+        
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find the recharge button
+            const rechargeButton = Array.from(document.querySelectorAll('button')).find(
+                button => button.textContent.trim() === 'Recharger'
+            );
+            
+            const rechargeModal = document.getElementById('recharge-modal');
+            const closeModalButton = document.getElementById('close-recharge-modal');
+            const rechargeForm = document.getElementById('recharge-form');
+
+            // Input formatting
+            const cardNumberInput = document.getElementById('card-number');
+            const cardExpiryInput = document.getElementById('card-expiry');
+            const cardCvvInput = document.getElementById('card-cvv');
+
+            // Show modal function
+            function showModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.remove('hidden');
+                    rechargeModal.classList.add('flex');
+                }
+            }
+
+            // Hide modal function
+            function hideModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.add('hidden');
+                    rechargeModal.classList.remove('flex');
+                }
+            }
+
+            // Add click event to recharge button
+            if (rechargeButton) {
+                rechargeButton.addEventListener('click', showModal);
+            }
+
+            // Close modal button event
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', hideModal);
+            }
+
+            // Form submission
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Simulate recharge process
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours`,
+                        icon: 'info',
+                        confirmButtonColor: '#8b5cf6'
+                    }).then(() => {
+                        // Close modal after submission
+                        hideModal();
+                    });
+                });
+            }
+
+            if (rechargeModal) {
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        hideModal();
+                    }
+                });
+            }
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trouver le formulaire de rechargement
+            const rechargeForm = document.getElementById('recharge-form');
+            
+            // Gestionnaire d'événement pour la soumission du formulaire
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    // Empêcher la soumission par défaut du formulaire
+                    e.preventDefault();
+                    
+                    // Récupérer le montant saisi
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Afficher l'alerte de chargement
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours...`,
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Soumettre le formulaire après un court délai pour montrer l'animation
+                    setTimeout(() => {
+                        rechargeForm.submit();
+                    }, 1500);
+                });
+            }
+            
+            // Vérifier si l'URL contient le paramètre de succès (vérifier les deux formats possibles)
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Obtenir le chemin de base sans les paramètres de query
+            const currentPath = window.location.pathname;
+            
+            if (urlParams.get('message') === 'Rechargement de votre solde réussite' || 
+                urlParams.has('Rechargement_de_votre_solde_réussite')) {
+                Swal.fire({
+                    title: 'Succès!',
+                    text: 'Rechargement de votre solde réussi',
+                    icon: 'success',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                    // Si vous souhaitez rafraîchir la page pour montrer le nouveau solde, décommentez la ligne suivante
+                    // window.location.reload();
+                });
+            }
+            
+            // Vérifier si l'URL contient un message d'échec
+            if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+                Swal.fire({
+                    title: 'Échec',
+                    text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                });
+            }
+        });
     </script>
 </body>
 </html>

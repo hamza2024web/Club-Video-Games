@@ -1,6 +1,6 @@
 const cart = [];
 
-function addToCart(id,name, price, image) {
+function addToCart(id,name, price, image , storageKey) {
     // Check if the game is already in the cart
     const existingItem = cart.find(item => item.name === name);
     
@@ -24,12 +24,12 @@ function addToCart(id,name, price, image) {
         name,
         price,
         image,
-        order_id: Date.now() // Simple unique identifier
+        order_id: Date.now(), // Simple unique identifier
     });
     
     // Update cart UI
     updateCartUI();
-    saveCartToLocalStorage();
+    saveCartToLocalStorage(storageKey);
     
     // Show success notification
     Swal.fire({
@@ -42,13 +42,13 @@ function addToCart(id,name, price, image) {
         showConfirmButton: false
     });
 }
-function removeFromCart(id) {
+function removeFromCart(id, storageKey) {
     const index = cart.findIndex(item => item.id === id);
     if (index !== -1) {
         const removedItem = cart[index];
         cart.splice(index, 1);
         updateCartUI();
-        saveCartToLocalStorage();
+        saveCartToLocalStorage(storageKey);
         
         // Show notification
         Swal.fire({
@@ -63,7 +63,7 @@ function removeFromCart(id) {
     }
 }
 
-function clearCart() {
+function clearCart(storageKey) {
     if (cart.length === 0) return;
     
     Swal.fire({
@@ -79,7 +79,7 @@ function clearCart() {
         if (result.isConfirmed) {
             cart.length = 0;
             updateCartUI();
-            saveCartToLocalStorage();
+            saveCartToLocalStorage(storageKey);
         }
     });
 }
@@ -142,15 +142,15 @@ function updateCartUI() {
         const imgSrc = item.image.startsWith('http') ? item.image : `/${item.image}`;
         
         cartItem.innerHTML = `
-            <img src="${imgSrc}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
-            <div class="ml-3 flex-1">
-                <h4 class="font-medium text-gray-800">${item.name}</h4>
-                <p class="text-purple-600 font-semibold">${item.price === 0 ? 'Gratuit' : item.price.toFixed(2) + ' €'}</p>
-            </div>
-            <button onclick="removeFromCart(${item.id})" class="text-gray-400 hover:text-red-500">
-                <i class="fas fa-trash"></i>
-            </button>
-        `;
+        <img src="${imgSrc}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+        <div class="ml-3 flex-1">
+            <h4 class="font-medium text-gray-800">${item.name}</h4>
+            <p class="text-purple-600 font-semibold">${item.price === 0 ? 'Gratuit' : item.price.toFixed(2) + ' €'}</p>
+        </div>
+        <button onclick="removeFromCart('${item.id}')" class="text-gray-400 hover:text-red-500">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
         cartItemsContainer.appendChild(cartItem);
     });
 }

@@ -1,0 +1,26 @@
+<?php
+namespace App\Services;
+
+use App\Repository\TournoiRepository;
+
+class TournoiServices {
+    protected $TournoiRepository;
+    public function __construct()
+    {
+        $this->TournoiRepository = new TournoiRepository();
+    }
+    public function getTournoi($user_id){
+        $tournoi = $this->TournoiRepository->getTournoiInformations($user_id);
+        return $tournoi;
+    }
+    public function setTournoi($user_id,$name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo){
+        $putTournoi = $this->TournoiRepository->addTounroi($user_id,$name,$start_date,$end_date,$max_participants,$status,$rules,$game,$format,$description,$prix_total,$prize_first,$prize_second,$prize_third,$registration_start,$registration_end,$registration_fee,$discord_url,$stream_url,$tournament_photo);
+        return $putTournoi;
+    }
+    public function updateStatus($id,$new_statut){
+        $new_status = $this->TournoiRepository->setNewStatus($id,$new_statut);
+        return $new_status;
+    }
+
+}
+?>

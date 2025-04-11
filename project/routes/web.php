@@ -31,6 +31,10 @@ Route::get('member/dashboard','membreController@dashboard');
 Route::get('member/profile','ProfileMembre@profile');
 Route::post('member/profile/edit','ProfileMembre@updateProfile');
 Route::post('member/password/change','ProfileMembre@UpdatePassword');
+Route::get('/member/tournaments','TournamentsController@index');
+Route::post('/member/inscription','TournamentsController@inscriptionTournoi');
+Route::get('/member/boutique','BoutiqueMember@index');
+Route::get('/member/games','JeuxMember@index');
 
 // organisateur
 Route::get('homePage','OrganisateurController@organisateur');
@@ -42,6 +46,10 @@ Route::post('clubForm','ClubController@updateClub');
 Route::get('tournoi','TournoiController@index');
 Route::get('boutique','BoutiqueController@index');
 Route::get('jeux','jeuxController@index');
+Route::post('organisateur/addTournoi','TournoiController@addTournoi');
+Route::get('organisateur/evenement','EvenementController@index');
 // payment 
 Route::post('payer','PaymentController@payer');
+// compte
+Route::post('rechargeCompte','CompteController@rechargeCompte');
 ?>
