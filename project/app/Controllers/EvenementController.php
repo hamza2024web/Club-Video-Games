@@ -24,5 +24,47 @@ class EvenementController extends BaseController{
         $jeux = $this->JeuxServices->getGame($user_id);
         return $this->renderOrg('evenement',compact('profile','jeux','my_solde'));
     }
+    public function addEvenement(){
+        $user_id = $_SESSION["user_id"];
+        $name_event = $_POST["name"];
+        $registration_start = $_POST["registration_start"];
+        $registration_end = $_POST["registration_end"];
+        $type_event = $_POST["category"];
+        $location = $_POST["location"];
+        $event_date = $_POST["event_date"];
+        $event_time = $_POST["event_time"];
+        $max_participants = $_POST["max_participants"];
+        $entry_fee = $_POST["entry_fee"];
+        $description = $_POST["description"];
+        $requirements = $_POST["requirements"];
+        $timeline_time = $_POST["timeline_time"];
+        $timeline_title = $_POST["timeline_title"];
+        $timeline_desc = $_POST["timeline_desc"];
+        $discord_url = $_POST["discord_url"];
+        $twitch_url = $_POST["twitch_url"];
+        $currentImage = 'public/uploads/default.jpg';
+        $image = $_FILES["event_photo"] ?? null; 
+
+        $event_photo = $this->generateImage($image,$currentImage);
+        $currentDate = date('Y-m-d');
+
+        // Logique corrigée pour définir le statut
+        if ($currentDate < $registration_start) {
+            $status = 'Pending';
+        } elseif ($currentDate <= $registration_end) {
+            $status = 'Open';
+        } else {
+            $status = 'Cancelled'; 
+        }
+
+        $saveEvent = $this->EvenementServices->setEvent($user_id,$name_event,$registration_start,$registration_end,$type_event,$status,$location,$event_date,$event_time,$event_photo,$max_participants,$entry_fee,$description,$requirements,$timeline_time,$timeline_title,$timeline_desc,$discord_url,$twitch_url);
+
+        if($saveEvent){
+
+        } else {
+
+        }
+    }
+
 }
 ?>
