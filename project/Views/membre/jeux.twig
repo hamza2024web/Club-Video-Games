@@ -861,82 +861,88 @@
         </div>
     </div>
     
-    <!-- Modal de rechargement -->
-    <div id="recharge-modal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10 transform transition-all duration-300">
-                <div class="p-5 border-b border-gray-200 flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
-                    <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700 rounded-full h-8 w-8 flex items-center justify-center hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-times"></i>
+    <!-- Modal de rechargement de compte -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <!-- En-tête du modal -->
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Formulaire de rechargement -->
+            <div class="p-5">
+                <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                    <!-- Montant du rechargement -->
+                    <div>
+                        <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                            <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                        </div>
+                    </div>
+                    
+                    <!-- Nom du titulaire -->
+                    <div>
+                        <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                        </div>
+                    </div>
+                    
+                    <!-- Numéro de carte -->
+                    <div>
+                        <label for="card-number-recharge" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <input type="text" id="card-number-recharge" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                        </div>
+                    </div>
+                    
+                    <!-- Date d'expiration et CVV -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="card-expiry-recharge" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="text" id="card-expiry-recharge" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="MM/AA">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-cvv-recharge" class="block text-sm text-gray-600 mb-2">CVV</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="card-cvv-recharge" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bouton de soumission -->
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 rounded-lg transition-colors duration-300 mt-4">
+                        Recharger mon compte
                     </button>
-                </div>
-                
-                <div class="p-5">
-                    <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
-                        <div>
-                            <label for="recharge-amount" class="block text-sm text-gray-600 mb-2 font-medium">Montant à recharger (10-500 €)</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                                    <i class="fas fa-euro-sign"></i>
-                                </span>
-                                <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" min="10" max="500" required placeholder="Entrez le montant">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label for="card-holder" class="block text-sm text-gray-600 mb-2 font-medium">Nom du titulaire de la carte</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                                    <i class="fas fa-user"></i>
-                                </span>
-                                <input type="text" id="card-holder" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" required placeholder="Nom complet">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label for="card-number" class="block text-sm text-gray-600 mb-2 font-medium">Numéro de carte</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                                    <i class="fas fa-credit-card"></i>
-                                </span>
-                                <input type="text" id="card-number" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="card-expiry" class="block text-sm text-gray-600 mb-2 font-medium">Date d'expiration</label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </span>
-                                    <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" placeholder="MM/AA">
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <label for="card-cvv" class="block text-sm text-gray-600 mb-2 font-medium">CVV</label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-                                        <i class="fas fa-lock"></i>
-                                    </span>
-                                    <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="w-full btn-primary py-3 rounded-lg font-medium flex items-center justify-center mt-4 shadow-md">
-                            <i class="fas fa-credit-card mr-2"></i> Recharger mon compte
-                        </button>
-                        
-                        <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
-                            <i class="fas fa-shield-alt mr-2 text-green-500"></i>
-                            Paiement 100% sécurisé
-                        </div>
-                    </form>
-                </div>
+                    
+                    <!-- Message de sécurité -->
+                    <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                        Paiement 100% sécurisé
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -1189,82 +1195,6 @@
                 }
             });
             
-            // Gestion du modal de rechargement
-            const rechargeButton = document.querySelector('.recharge-btn');
-            const rechargeModal = document.getElementById('recharge-modal');
-            const closeRechargeButton = document.getElementById('close-recharge-modal');
-
-            if (rechargeButton && rechargeModal && closeRechargeButton) {
-                rechargeButton.addEventListener('click', function() {
-                    rechargeModal.classList.remove('hidden');
-                    // Animation d'entrée
-                    const modalContent = rechargeModal.querySelector('.transform');
-                    setTimeout(() => {
-                        modalContent.classList.add('scale-100', 'opacity-100');
-                        modalContent.classList.remove('scale-95', 'opacity-0');
-                    }, 10);
-                });
-                
-                closeRechargeButton.addEventListener('click', function() {
-                    // Animation de sortie
-                    const modalContent = rechargeModal.querySelector('.transform');
-                    modalContent.classList.remove('scale-100', 'opacity-100');
-                    modalContent.classList.add('scale-95', 'opacity-0');
-                    
-                    setTimeout(() => {
-                        rechargeModal.classList.add('hidden');
-                    }, 300);
-                });
-                
-                // Fermer le modal en cliquant sur l'arrière-plan
-                rechargeModal.addEventListener('click', function(e) {
-                    if (e.target === rechargeModal || e.target.classList.contains('absolute')) {
-                        closeRechargeButton.click();
-                    }
-                });
-                
-                // Soumission du formulaire
-                const rechargeForm = document.getElementById('recharge-form');
-                if (rechargeForm) {
-                    rechargeForm.addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        
-                        const amount = document.getElementById('recharge-amount').value;
-                        
-                        Swal.fire({
-                            title: 'Traitement du paiement',
-                            html: `
-                                <div class="flex flex-col items-center">
-                                    <div class="inline-block w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
-                                    <p>Veuillez patienter...</p>
-                                </div>
-                            `,
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            customClass: {
-                                popup: 'rounded-xl'
-                            }
-                        });
-                        
-                        // Simuler le paiement
-                        setTimeout(() => {
-                            closeRechargeButton.click();
-                            
-                            Swal.fire({
-                                title: 'Rechargement réussi !',
-                                text: `Votre compte a été rechargé de ${amount} €.`,
-                                icon: 'success',
-                                confirmButtonColor: '#8B5CF6',
-                                customClass: {
-                                    popup: 'rounded-xl',
-                                    confirmButton: 'rounded-lg'
-                                }
-                            });
-                        }, 2000);
-                    });
-                }
-            }
-            
             // Animation des cartes de jeu
             const animateCards = () => {
                 const cards = document.querySelectorAll('.game-card');
@@ -1292,6 +1222,114 @@
             // Initialiser les animations au chargement de la page
             initCards();
         });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Vérifier si l'URL contient le paramètre de réussite
+        const currentUrl = window.location.href;
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Approche plus robuste pour vérifier le paramètre dans l'URL
+        if (currentUrl.includes('Rechargement_de_votre_solde_réussite') || 
+            urlParams.get('message') === 'Rechargement de votre solde réussite' || 
+            urlParams.has('Rechargement_de_votre_solde_réussite')) {
+            
+            
+            // Afficher la notification de succès
+            Swal.fire({
+                title: 'Succès!',
+                text: 'Rechargement de votre solde réussi',
+                icon: 'success',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Nettoyer l'URL
+                const cleanUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            });
+        }
+        
+        // Vérification pour l'échec de rechargement
+        if (currentUrl.includes('Rechargement_de_votre_solde_échouée') || 
+            urlParams.has('Rechargement_de_votre_solde_échouée')) {
+            
+            
+            Swal.fire({
+                title: 'Échec',
+                text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                const cleanUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            });
+        }
+        
+        // Gestion du modal de rechargement
+        const rechargeButtons = document.querySelectorAll('.recharge-btn');
+        const rechargeModal = document.getElementById('recharge-modal');
+        const closeRechargeModal = document.getElementById('close-recharge-modal');
+        
+        // Ouvrir le modal de rechargement
+        rechargeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (rechargeModal) {
+                    rechargeModal.classList.remove('hidden');
+                    rechargeModal.classList.add('flex');
+                } else {
+                    console.error("Le modal de rechargement n'existe pas");
+                }
+            });
+        });
+        
+        // Fermer le modal de rechargement
+        if (closeRechargeModal) {
+            closeRechargeModal.addEventListener('click', function() {
+                rechargeModal.classList.add('hidden');
+                rechargeModal.classList.remove('flex');
+            });
+        }
+        
+        // Traitement du formulaire de rechargement
+        const rechargeForm = document.getElementById('recharge-form');
+        if (rechargeForm) {
+            rechargeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Récupérer le montant
+                const amount = document.getElementById('recharge-amount').value;
+                
+                // Afficher l'animation de chargement
+                Swal.fire({
+                    title: 'Rechargement en cours',
+                    text: `Rechargement de ${amount} € en cours...`,
+                    icon: 'info',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                // Soumettre le formulaire après un délai
+                setTimeout(() => {
+                    rechargeForm.submit();
+                }, 1500);
+            });
+        } else {
+            console.error("Le formulaire de rechargement n'existe pas");
+        }
+        
+        // Gestion des clics sur l'overlay si l'élément existe
+        const overlay = document.getElementById('overlay');
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                const cart = document.getElementById('shopping-cart');
+                const paymentModal = document.getElementById('payment-modal');
+                
+                if (cart) cart.classList.add('translate-x-full');
+                if (paymentModal) paymentModal.classList.add('hidden');
+                overlay.classList.add('hidden');
+            });
+        }
+    });
     </script>
 </body>
 </html>                                        
