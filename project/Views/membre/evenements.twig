@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GamersHub - Member Events</title>
+    <title>GamersHub - Events</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -15,13 +15,15 @@
         
         .event-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #f1f1f1;
         }
         
         .event-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar-item {
@@ -60,12 +62,13 @@
             }
         }
 
-        .event-status {
+        .stat-card {
             position: relative;
             overflow: hidden;
+            border-radius: 12px;
         }
 
-        .event-status::before {
+        .stat-card::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -79,7 +82,7 @@
             transition: opacity 0.6s ease;
         }
 
-        .event-status:hover::before {
+        .stat-card:hover::before {
             opacity: 1;
         }
         
@@ -96,56 +99,332 @@
             background: #8b5cf6;
             border-radius: 10px;
         }
-        
-        .calendar-day {
-            transition: all 0.2s ease;
+
+        /* Event Specific Styles */
+        .date-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
         }
         
-        .calendar-day:hover:not(.calendar-day-inactive) {
-            background-color: #f3f0ff;
-            color: #6d28d9;
+        .category-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
         
-        .calendar-day-event {
-            border-bottom: 2px solid #8b5cf6;
+        .category-gaming {
+            background: rgba(124, 58, 237, 0.9);
+            color: white;
         }
         
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+        .category-competition {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+        
+        .category-workshop {
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+        }
+        
+        .category-social {
+            background: rgba(59, 130, 246, 0.9);
+            color: white;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .info-item i {
+            margin-right: 5px;
+            color: #8b5cf6;
+        }
+        
+        .event-fee-badge {
+            background: #8b5cf6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-free-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .attendance-indicator {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
             overflow: hidden;
         }
-
-        .bg-gradient-to-r {
-            background-image: linear-gradient(to right, var(--tw-gradient-stops));
+        
+        .attendance-bar {
+            height: 100%;
+            background: linear-gradient(to right, #8b5cf6, #6366f1);
+            border-radius: 3px;
+        }
+        
+        .event-action-btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .event-action-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+            z-index: -1;
+            transition: all 0.6s ease;
+        }
+        
+        .event-action-btn:hover::after {
+            left: 100%;
+        }
+        
+        .status-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-upcoming {
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+        }
+        
+        .status-live {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-ended {
+            background: rgba(107, 114, 128, 0.9);
+            color: white;
+        }
+        
+        .status-full {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
         }
 
-        .from-purple-500 {
-            --tw-gradient-from: #8b5cf6;
-            --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(139, 92, 246, 0));
+            /* Event Card Styles */
+        .event-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #f1f1f1;
+            margin-bottom: 1rem;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .date-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .category-gaming {
+            background: rgba(124, 58, 237, 0.9);
+            color: white;
+        }
+        
+        .category-competition {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+        
+        .category-workshop {
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+        }
+        
+        .category-social {
+            background: rgba(59, 130, 246, 0.9);
+            color: white;
+        }
+        
+        .status-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-open, .status-upcoming {
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+        }
+        
+        .status-pending {
+            background: rgba(139, 92, 246, 0.9);
+            color: white;
+        }
+        
+        .status-in-progress, .status-live {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-completed, .status-ended {
+            background: rgba(107, 114, 128, 0.9);
+            color: white;
+        }
+        
+        .status-full {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+        }
+        
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .info-item i {
+            margin-right: 5px;
+            color: #8b5cf6;
+        }
+        
+        .event-fee-badge {
+            background: #8b5cf6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-free-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .attendance-indicator {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .attendance-bar {
+            height: 100%;
+            background: linear-gradient(to right, #8b5cf6, #6366f1);
+            border-radius: 3px;
+        }
+        
+        .event-action-btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .event-action-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+            z-index: -1;
+            transition: all 0.6s ease;
+        }
+        
+        .event-action-btn:hover::after {
+            left: 100%;
+        }
+        
+        .programme-chevron {
+            transition: transform 0.3s ease;
         }
 
-        .to-indigo-600 {
-            --tw-gradient-to: #4f46e5;
-        }
-
-        .backdrop-blur-sm {
-            backdrop-filter: blur(4px);
-        }
-
-        .bg-black\/70 {
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
-        .bg-white\/90 {
-            background-color: rgba(255, 255, 255, 0.9);
-        }
     </style>
 </head>
 <body class="bg-gray-100">
     <div class="flex min-h-screen">
-        <!-- Sidebar - Same as dashboard -->
+        <!-- Sidebar -->
         <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
             <div class="mb-8 text-center">
                 <div class="flex justify-center mb-3">
@@ -177,18 +456,18 @@
                 <div class="flex items-center space-x-2 mb-3 p-2 rounded-lg bg-indigo-800/50">
                     <img src="/{{member.profile_photo}}" class="rounded-full border-2 border-purple-300 h-20 w-20" alt="Member Profile">
                     <div>
-                        <p class="text-sm font-medium">{{member.name|default('hamza2024web')}}</p>
+                        <p class="text-sm font-medium">{{member.name}}</p>
                         <div class="flex items-center">
                             <i class="fas fa-circle text-green-500 mr-1 text-xs"></i>
                             <p class="text-xs text-purple-300">Online</p>
                         </div>
-                        <p class="text-xs text-purple-300 mt-1">Solde: {{my_solde|default('120')}} €</p>
+                        <p class="text-xs text-purple-300 mt-1">Solde: {{my_solde}} €</p>
                     </div>
                 </div>
                 <!-- Mini Account Balance -->
                 <div class="p-3 border-t border-indigo-800 sidebar-footer">
                     <div class="bg-indigo-800 rounded-lg p-2 text-center">
-                        <div class="text-xs">Solde: <span class="font-bold">{{my_solde|default('120')}} €</span></div>
+                        <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
                         <button class="mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
                             Recharger
                         </button>
@@ -208,12 +487,12 @@
             <!-- Header -->
             <header class="flex justify-between items-center mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Gaming Events</h1>
-                    <p class="text-gray-500">Discover, register and participate in exciting gaming events!</p>
+                    <h1 class="text-2xl font-bold text-gray-800">Community Events</h1>
+                    <p class="text-gray-500">Discover and participate in exciting gaming events!</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="relative">
-                        <input type="text" placeholder="Search events..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
+                        <input type="text" placeholder="Search events, workshops..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
                         <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     </div>
                     <div class="relative">
@@ -224,899 +503,548 @@
                     </div>
                 </div>
             </header>
-
-            <!-- Event Stats Overview -->
-            <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="event-status bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="text-gray-500 text-sm font-medium">Upcoming Events</h3>
-                            <p class="text-3xl font-bold text-gray-800">12</p>
-                            <p class="text-xs text-green-500 mt-1">↑ 3 new this week</p>
-                        </div>
-                        <div class="bg-green-100 p-3 rounded-lg">
-                            <i class="fas fa-calendar-plus text-green-600 text-2xl"></i>
-                        </div>
+            
+            <!-- Event Category Filters -->
+            <section class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-700">Filter by Category</h2>
+                    <div class="flex space-x-2">
+                        <button class="text-sm px-4 py-2 text-indigo-600 hover:text-indigo-800 transition">
+                            <i class="fas fa-redo-alt mr-1"></i> Reset Filters
+                        </button>
                     </div>
                 </div>
-                <div class="event-status bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="text-gray-500 text-sm font-medium">My Registrations</h3>
-                            <p class="text-3xl font-bold text-gray-800">5</p>
-                            <p class="text-xs text-purple-500 mt-1">↑ 2 new registrations</p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-500 hover:shadow-md transition flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-gamepad text-purple-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Gaming</span>
                         </div>
-                        <div class="bg-purple-100 p-3 rounded-lg">
-                            <i class="fas fa-clipboard-check text-purple-600 text-2xl"></i>
+                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">12</span>
+                    </button>
+                    
+                    <button class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-red-500 hover:shadow-md transition flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-red-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-trophy text-red-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Competitions</span>
+                        </div>
+                        <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">8</span>
+                    </button>
+                    
+                    <button class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500 hover:shadow-md transition flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-chalkboard-teacher text-green-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Workshops</span>
+                        </div>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">5</span>
+                    </button>
+                    
+                    <button class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500 hover:shadow-md transition flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-glass-cheers text-blue-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Social</span>
+                        </div>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">7</span>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Stats Overview -->
+            <section class="mb-10">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Your Event Statistics</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="stat-card bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-gray-500 text-sm font-medium">Events Attended</h3>
+                                <p class="text-3xl font-bold text-gray-800">14</p>
+                                <p class="text-xs text-green-500 mt-1">↑ 3 this month</p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-lg">
+                                <i class="fas fa-calendar-check text-purple-600 text-2xl"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="event-status bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="text-gray-500 text-sm font-medium">Events Attended</h3>
-                            <p class="text-3xl font-bold text-gray-800">18</p>
-                            <p class="text-xs text-blue-500 mt-1">↑ 3 in the last month</p>
-                        </div>
-                        <div class="bg-blue-100 p-3 rounded-lg">
-                            <i class="fas fa-history text-blue-600 text-2xl"></i>
+                    <div class="stat-card bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-gray-500 text-sm font-medium">Upcoming RSVPs</h3>
+                                <p class="text-3xl font-bold text-gray-800">5</p>
+                                <p class="text-xs text-green-500 mt-1">↑ 2 new confirmations</p>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-lg">
+                                <i class="fas fa-calendar-alt text-green-600 text-2xl"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="event-status bg-white p-6 rounded-xl shadow-sm border-l-4 border-amber-500">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="text-gray-500 text-sm font-medium">Event Rewards</h3>
-                            <p class="text-3xl font-bold text-gray-800">350</p>
-                            <p class="text-xs text-amber-500 mt-1">↑ 75 points earned</p>
+                    <div class="stat-card bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-gray-500 text-sm font-medium">Achievements</h3>
+                                <p class="text-3xl font-bold text-gray-800">8</p>
+                                <p class="text-xs text-green-500 mt-1">↑ 1 new this month</p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-lg">
+                                <i class="fas fa-medal text-blue-600 text-2xl"></i>
+                            </div>
                         </div>
-                        <div class="bg-amber-100 p-3 rounded-lg">
-                            <i class="fas fa-medal text-amber-600 text-2xl"></i>
+                    </div>
+                    <div class="stat-card bg-white p-6 rounded-xl shadow-sm border-l-4 border-yellow-500">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="text-gray-500 text-sm font-medium">Event Points</h3>
+                                <p class="text-3xl font-bold text-gray-800">530</p>
+                                <p class="text-xs text-green-500 mt-1">↑ 85 this month</p>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-lg">
+                                <i class="fas fa-star text-yellow-600 text-2xl"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-
-            <!-- Main Content Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Left Column - Events -->
-                <div class="lg:col-span-2 space-y-8">
-                    <!-- Event Categories Tabs -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-xl font-bold text-gray-800 flex items-center">
-                                <i class="fas fa-layer-group mr-2 text-purple-600"></i>
-                                Event Categories
-                            </h2>
+            
+            <!-- Featured Event -->
+            <section class="mb-10">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Featured Event</h2>
+                <div class="bg-white rounded-xl overflow-hidden shadow-md relative">
+                    <div class="absolute top-0 left-0 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1 rounded-br-lg font-medium text-sm">
+                        FEATURED
+                    </div>
+                    <div class="flex flex-col md:flex-row">
+                        <div class="md:w-1/3 relative">
+                            <img src="/api/placeholder/800/500" alt="Summer Gaming Festival" class="h-full w-full object-cover">
+                            <div class="date-badge">
+                                <i class="fas fa-calendar-alt mr-1"></i> June 15, 2025
+                            </div>
+                            <div class="category-badge category-gaming">
+                                Gaming Festival
+                            </div>
                         </div>
-                        
-                        <div class="flex space-x-2 overflow-x-auto pb-2">
-                            <button class="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg text-sm whitespace-nowrap">
-                                <i class="fas fa-globe mr-2"></i> All Events
-                            </button>
-                            <button class="flex items-center px-4 py-2 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-lg text-sm whitespace-nowrap transition">
-                                <i class="fas fa-trophy mr-2"></i> Tournaments
-                            </button>
-                            <button class="flex items-center px-4 py-2 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-lg text-sm whitespace-nowrap transition">
-                                <i class="fas fa-users mr-2"></i> Community Meetups
-                            </button>
-                            <button class="flex items-center px-4 py-2 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-lg text-sm whitespace-nowrap transition">
-                                <i class="fas fa-chalkboard-teacher mr-2"></i> Workshops
-                            </button>
-                            <button class="flex items-center px-4 py-2 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-lg text-sm whitespace-nowrap transition">
-                                <i class="fas fa-headset mr-2"></i> Livestreams
-                            </button>
-                            <button class="flex items-center px-4 py-2 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-lg text-sm whitespace-nowrap transition">
-                                <i class="fas fa-gamepad mr-2"></i> Game Launches
-                            </button>
-                        </div>
-                    </section>
-                    
-                    <!-- Featured Event -->
-                    <section class="relative overflow-hidden rounded-xl shadow-sm h-64 group">
-                        <img src="/api/placeholder/800/400" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-105" alt="Featured Event">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                        <div class="absolute top-4 left-4">
-                            <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">FEATURED</span>
-                        </div>
-                        <div class="absolute bottom-6 left-6 right-6">
-                            <h2 class="text-2xl font-bold text-white mb-2">Summer Gaming Championship 2025</h2>
-                            <div class="flex items-center space-x-4 mb-4">
-                                <div class="flex items-center text-white/90 text-sm">
-                                    <i class="far fa-calendar mr-1"></i>
-                                    April 28-30, 2025
-                                </div>
-                                <div class="flex items-center text-white/90 text-sm">
-                                    <i class="far fa-clock mr-1"></i>
-                                    All Day
-                                </div>
-                                <div class="flex items-center text-white/90 text-sm">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>
-                                    Virtual & Paris
+                        <div class="md:w-2/3 p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-2xl font-bold text-gray-800">Summer Gaming Festival 2025</h3>
+                                <div class="flex items-center">
+                                    <span class="event-fee-badge">
+                                        <i class="fas fa-ticket-alt mr-1"></i> 25 €
+                                    </span>
                                 </div>
                             </div>
-                            <div class="flex items-center space-x-3">
-                                <button class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm transition">
-                                    Register Now
-                                </button>
-                                <button class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm rounded-lg text-sm transition">
-                                    <i class="far fa-calendar-plus mr-1"></i> Add to Calendar
+                            
+                            <p class="text-gray-600 mb-4">Join us for the biggest gaming event of the summer! Three days of non-stop gaming, competitions, workshops, and exclusive game previews. Meet your favorite streamers and win amazing prizes!</p>
+                            
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                <div class="bg-gray-50 p-3 rounded-lg text-center">
+                                    <i class="fas fa-map-marker-alt text-purple-600 mb-1"></i>
+                                    <p class="text-sm font-medium text-gray-800">Paris Expo</p>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg text-center">
+                                    <i class="fas fa-clock text-purple-600 mb-1"></i>
+                                    <p class="text-sm font-medium text-gray-800">3-Day Event</p>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg text-center">
+                                    <i class="fas fa-users text-purple-600 mb-1"></i>
+                                    <p class="text-sm font-medium text-gray-800">285/500 Spots</p>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-lg text-center">
+                                    <i class="fas fa-star text-purple-600 mb-1"></i>
+                                    <p class="text-sm font-medium text-gray-800">+50 Points</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center mt-4">
+                                <div class="text-sm text-gray-500 flex items-center">
+                                    <i class="fas fa-user-friends mr-1 text-purple-500"></i>
+                                    15 of your friends are attending
+                                </div>
+                                <button class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition shadow-md event-action-btn flex items-center">
+                                    <i class="fas fa-ticket-alt mr-2"></i> Reserve Spot
                                 </button>
                             </div>
                         </div>
-                    </section>
-                    
-                    <!-- Organizer Events - Grid Layout -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-xl font-bold text-gray-800 flex items-center">
-                                <i class="fas fa-calendar-day mr-2 text-purple-600"></i>
-                                Organizer Events
-                            </h2>
-                            <div class="flex items-center">
-                                <div class="mr-4">
-                                    <select class="text-sm bg-gray-100 border-0 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none">
-                                        <option>All Games</option>
-                                        <option>Fortnite</option>
-                                        <option>Call of Duty</option>
-                                        <option>Minecraft</option>
-                                        <option>League of Legends</option>
-                                    </select>
-                                </div>
-                                <button class="flex items-center text-sm text-gray-500 hover:text-gray-800 transition">
-                                    <i class="fas fa-sliders-h mr-1"></i> Filters
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Event Cards Grid -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <!-- Event Card 1 -->
-                            <div class="event-card bg-gray-50 rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all duration-300">
-                                <!-- Card Header with Image -->
-                                <div class="relative">
-                                    <img src="/api/placeholder/500/300" alt="Fortnite Battle Royale" class="w-full h-48 object-cover">
-                                    
-                                    <!-- Date Badge -->
-                                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1.5 rounded-full flex items-center shadow-sm">
-                                        <i class="fas fa-calendar-alt mr-1.5 text-purple-600"></i> 15 Avr 2025
-                                    </div>
-                                    
-                                    <!-- Status Badge -->
-                                    <div class="absolute top-3 right-3 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm bg-green-100 text-green-800 border border-green-200">
-                                        <span class="flex items-center">
-                                            <i class="fas fa-door-open mr-1"></i> Ouvert
-                                        </span>
-                                    </div>
-                                    
-                                    <!-- Organizer Badge -->
-                                    <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full flex items-center shadow-sm">
-                                        <i class="fas fa-user-tie mr-1.5"></i> TournamentPros
-                                    </div>
-                                </div>
-                                
-                                <!-- Event Content -->
-                                <div class="p-5">
-                                    <div class="flex justify-between items-start mb-3">
-                                        <h3 class="text-lg font-bold text-gray-800 hover:text-purple-600 transition">Fortnite Battle Royale Weekly</h3>
-                                        <div class="flex items-center">
-                                            <span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">
-                                                <i class="fas fa-ticket-alt mr-1"></i> Gratuit
-                                            </span>
-                                        </div>
-                                    </div>
-                                    
-                                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">Rejoignez notre tournoi hebdomadaire Fortnite et affrontez les meilleurs joueurs pour des prix incroyables et la gloire. Format solo, soyez au top de votre jeu!</p>
-                                    
-                                    <!-- Event Info -->
-                                    <div class="grid grid-cols-2 gap-2 mb-4">
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="far fa-clock mr-1.5 text-purple-500"></i> 18:00
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-map-marker-alt mr-1.5 text-purple-500"></i> En ligne
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-users mr-1.5 text-purple-500"></i> 42/64
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-gamepad mr-1.5 text-purple-500"></i> Solo
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Registration Progress Bar -->
-                                    <div class="mt-3 mb-4">
-                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                            <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2.5 rounded-full" 
-                                                style="width: 65%"></div>
-                                        </div>
-                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                            <span>Places disponibles</span>
-                                            <span>42/64</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Action Buttons -->
-                                    <div class="flex items-center justify-between mt-2">
-                                        <div class="flex -space-x-2">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <span class="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white bg-gray-200 text-xs font-medium">+21</span>
-                                            <span class="text-xs text-gray-500 ml-2">24 amis inscrits</span>
-                                        </div>
-                                        <div class="flex">
-                                            <button onclick="openTournamentModal('1')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-medium transition">
-                                                S'inscrire
-                                            </button>
-                                            <button class="ml-2 p-1.5 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition">
-                                                <i class="far fa-calendar-plus"></i>
-                                            </button>
-                                            <button class="ml-1 p-1.5 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition">
-                                                <i class="far fa-bookmark"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Event Card 2 -->
-                            <div class="event-card bg-gray-50 rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all duration-300">
-                                <!-- Card Header with Image -->
-                                <div class="relative">
-                                    <img src="/api/placeholder/500/300" alt="Minecraft Build Battle" class="w-full h-48 object-cover">
-                                    
-                                    <!-- Date Badge -->
-                                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1.5 rounded-full flex items-center shadow-sm">
-                                        <i class="fas fa-calendar-alt mr-1.5 text-purple-600"></i> 18-20 Avr 2025
-                                    </div>
-                                    
-                                    <!-- Status Badge -->
-                                    <div class="absolute top-3 right-3 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm bg-amber-100 text-amber-800 border border-amber-200">
-                                        <span class="flex items-center">
-                                            <i class="fas fa-clock mr-1"></i> Bientôt complet
-                                        </span>
-                                    </div>
-                                    
-                                    <!-- Organizer Badge -->
-                                    <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full flex items-center shadow-sm">
-                                        <i class="fas fa-user-tie mr-1.5"></i> GamersUnite
-                                    </div>
-                                </div>
-                                
-                                <!-- Event Content -->
-                                <div class="p-5">
-                                    <div class="flex justify-between items-start mb-3">
-                                        <h3 class="text-lg font-bold text-gray-800 hover:text-purple-600 transition">Minecraft Build Battle</h3>
-                                        <div class="flex items-center">
-                                            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2.5 py-1 rounded-full border border-purple-200">
-                                                <i class="fas fa-coins mr-1"></i> 10€ / équipe
-                                            </span>
-                                        </div>
-                                    </div>
-                                    
-                                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">Montrez votre créativité dans notre compétition de construction Minecraft de trois jours. Formez une équipe de 2 à 4 joueurs et créez des structures étonnantes basées sur notre thème surprise!</p>
-                                    
-                                    <!-- Event Info -->
-                                    <div class="grid grid-cols-2 gap-2 mb-4">
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="far fa-clock mr-1.5 text-purple-500"></i> Toute la journée
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-map-marker-alt mr-1.5 text-purple-500"></i> En ligne
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-users mr-1.5 text-purple-500"></i> 28/32
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-gamepad mr-1.5 text-purple-500"></i> Équipe
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Registration Progress Bar -->
-                                    <div class="mt-3 mb-4">
-                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                            <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2.5 rounded-full" 
-                                                style="width: 88%"></div>
-                                        </div>
-                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                            <span>Places disponibles</span>
-                                            <span>28/32</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Action Buttons -->
-                                    <div class="flex items-center justify-between mt-2">
-                                        <div class="flex -space-x-2">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <span class="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white bg-gray-200 text-xs font-medium">+8</span>
-                                            <span class="text-xs text-gray-500 ml-2">11 amis inscrits</span>
-                                        </div>
-                                        <div class="flex">
-                                            <button onclick="openTournamentModal('2')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-medium transition">
-                                                Équipe
-                                            </button>
-                                            <button class="ml-2 p-1.5 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition">
-                                                <i class="far fa-calendar-plus"></i>
-                                            </button>
-                                            <button class="ml-1 p-1.5 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition">
-                                                <i class="far fa-bookmark"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Event Card 3 -->
-                            <div class="event-card bg-gray-50 rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all duration-300">
-                                <!-- Card Header with Image -->
-                                <div class="relative">
-                                    <img src="/api/placeholder/500/300" alt="League of Legends Workshop" class="w-full h-48 object-cover">
-                                    
-                                    <!-- Date Badge -->
-                                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1.5 rounded-full flex items-center shadow-sm">
-                                        <i class="fas fa-calendar-alt mr-1.5 text-purple-600"></i> 22 Avr 2025
-                                    </div>
-                                    
-                                    <!-- Status Badge -->
-                                    <div class="absolute top-3 right-3 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm bg-green-100 text-green-800 border border-green-200">
-                                        <span class="flex items-center">
-                                            <i class="fas fa-door-open mr-1"></i> Ouvert
-                                        </span>
-                                    </div>
-                                    
-                                    <!-- Organizer Badge -->
-                                    <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full flex items-center shadow-sm">
-                                        <i class="fas fa-user-tie mr-1.5"></i> E-Sports League
-                                    </div>
-                                </div>
-                                
-                                <!-- Event Content -->
-                                <div class="p-5">
-                                    <div class="flex justify-between items-start mb-3">
-                                        <h3 class="text-lg font-bold text-gray-800 hover:text-purple-600 transition">League of Legends Workshop</h3>
-                                        <div class="flex items-center">
-                                            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2.5 py-1 rounded-full border border-purple-200">
-                                                <i class="fas fa-coins mr-1"></i> 15€
-                                            </span>
-                                        </div>
-                                    </div>
-                                    
-                                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">Apprenez des stratégies et techniques avancées auprès de joueurs professionnels de League of Legends. Cet atelier couvre la composition d'équipe, le contrôle de carte et les tactiques de fin de partie.</p>
-                                    
-                                    <!-- Event Info -->
-                                    <div class="grid grid-cols-2 gap-2 mb-4">
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="far fa-clock mr-1.5 text-purple-500"></i> 19:00
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-map-marker-alt mr-1.5 text-purple-500"></i> En ligne
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-users mr-1.5 text-purple-500"></i> 15/30
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-gamepad mr-1.5 text-purple-500"></i> Workshop
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Registration Progress Bar -->
-                                    <div class="mt-3 mb-4">
-                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                            <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2.5 rounded-full" 
-                                                style="width: 50%"></div>
-                                        </div>
-                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                            <span>Places disponibles</span>
-                                            <span>15/30</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Action Buttons -->
-                                    <div class="flex items-center justify-between mt-2">
-                                        <div class="flex -space-x-2">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <span class="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white bg-gray-200 text-xs font-medium">+5</span>
-                                            <span class="text-xs text-gray-500 ml-2">8 amis inscrits</span>
-                                        </div>
-                                        <div class="flex">
-                                            <button onclick="openTournamentModal('3')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-medium transition">
-                                                S'inscrire
-                                            </button>
-                                            <button class="ml-2 p-1.5 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition">
-                                                <i class="far fa-calendar-plus"></i>
-                                            </button>
-                                            <button class="ml-1 p-1.5 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition">
-                                                <i class="far fa-bookmark"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Event Card 4 -->
-                            <div class="event-card bg-gray-50 rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all duration-300">
-                                <!-- Card Header with Image -->
-                                <div class="relative">
-                                    <img src="/api/placeholder/500/300" alt="Call of Duty Marathon" class="w-full h-48 object-cover">
-                                    
-                                    <!-- Date Badge -->
-                                    <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1.5 rounded-full flex items-center shadow-sm">
-                                        <i class="fas fa-calendar-alt mr-1.5 text-purple-600"></i> 25 Avr 2025
-                                    </div>
-                                    
-                                    <!-- Status Badge -->
-                                    <div class="absolute top-3 right-3 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm bg-green-100 text-green-800 border border-green-200">
-                                        <span class="flex items-center">
-                                            <i class="fas fa-door-open mr-1"></i> Ouvert
-                                        </span>
-                                    </div>
-                                    
-                                    <!-- Organizer Badge -->
-                                    <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full flex items-center shadow-sm">
-                                        <i class="fas fa-user-tie mr-1.5"></i> GameZone Paris
-                                    </div>
-                                </div>
-                                
-                                <!-- Event Content -->
-                                <div class="p-5">
-                                    <div class="flex justify-between items-start mb-3">
-                                        <h3 class="text-lg font-bold text-gray-800 hover:text-purple-600 transition">Call of Duty Marathon</h3>
-                                        <div class="flex items-center">
-                                            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2.5 py-1 rounded-full border border-purple-200">
-                                                <i class="fas fa-coins mr-1"></i> 20€
-                                            </span>
-                                        </div>
-                                    </div>
-                                    
-                                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">Rejoignez-nous pour un marathon épique de 12 heures Call of Duty avec toutes les dernières cartes et modes de jeu. Nourriture et boissons incluses!</p>
-                                    
-                                    <!-- Event Info -->
-                                    <div class="grid grid-cols-2 gap-2 mb-4">
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="far fa-clock mr-1.5 text-purple-500"></i> 20:00
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-map-marker-alt mr-1.5 text-purple-500"></i> Paris Gaming Center
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-users mr-1.5 text-purple-500"></i> 35/50
-                                        </div>
-                                        <div class="flex items-center text-sm text-gray-500">
-                                            <i class="fas fa-gamepad mr-1.5 text-purple-500"></i> Marathon
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Registration Progress Bar -->
-                                    <div class="mt-3 mb-4">
-                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                            <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-2.5 rounded-full" 
-                                                style="width: 70%"></div>
-                                        </div>
-                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                            <span>Places disponibles</span>
-                                            <span>35/50</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Action Buttons -->
-                                    <div class="flex items-center justify-between mt-2">
-                                        <div class="flex -space-x-2">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <img class="w-7 h-7 rounded-full border-2 border-white" src="/api/placeholder/30/30" alt="Friend avatar">
-                                            <span class="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white bg-gray-200 text-xs font-medium">+9</span>
-                                            <span class="text-xs text-gray-500 ml-2">12 amis inscrits</span>
-                                        </div>
-                                        <div class="flex">
-                                            <button onclick="openTournamentModal('4')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-medium transition">
-                                                S'inscrire
-                                            </button>
-                                            <button class="ml-2 p-1.5 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition">
-                                                <i class="far fa-calendar-plus"></i>
-                                            </button>
-                                            <button class="ml-1 p-1.5 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition">
-                                                <i class="far fa-bookmark"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Load More Button -->
-                        <div class="text-center">
-                            <button class="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition flex items-center justify-center mx-auto">
-                                <i class="fas fa-sync-alt mr-2"></i> Voir plus d'événements
-                            </button>
-                        </div>
-                    </section>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- All Events -->
+            <section id="all-events" class="mb-10">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Upcoming Events</h2>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-500 mr-3">Sort by:</span>
+                        <select class="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>Date (Nearest)</option>
+                            <option>Popularity</option>
+                            <option>Price: Low to High</option>
+                            <option>Price: High to Low</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <!-- Right Column - Sidebar Content -->
-                <div class="space-y-8">
-                    <!-- My Upcoming Events -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-xl font-bold text-gray-800 flex items-center">
-                                <i class="fas fa-calendar-check mr-2 text-purple-600"></i>
-                                My Events
-                            </h2>
-                            <a href="/member/events/my-events" class="text-sm text-purple-600 hover:text-purple-800 transition">View All</a>
-                        </div>
-                        
-                        <div class="space-y-4">
-                            <!-- My Event 1 -->
-                            <div class="flex items-center p-3 bg-purple-50 rounded-xl border border-purple-100">
-                                <div class="mr-4 text-center">
-                                    <div class="text-xl font-bold text-purple-800">15</div>
-                                    <div class="text-xs text-purple-600">APR</div>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-bold text-gray-900">Fortnite Weekly Tournament</h3>
-                                    <p class="text-xs text-gray-500">
-                                        <i class="far fa-clock mr-1"></i> 6:00 PM
-                                    </p>
-                                </div>
-                                <div>
-                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full flex items-center">
-                                        <i class="fas fa-check-circle mr-1"></i> Registered
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <!-- My Event 2 -->
-                            <div class="flex items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
-                                <div class="mr-4 text-center">
-                                    <div class="text-xl font-bold text-purple-800">18</div>
-                                    <div class="text-xs text-purple-600">APR</div>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-bold text-gray-900">Minecraft Build Battle</h3>
-                                    <p class="text-xs text-gray-500">
-                                        <i class="far fa-clock mr-1"></i> All Day
-                                    </p>
-                                </div>
-                                <div>
-                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full flex items-center">
-                                        <i class="fas fa-check-circle mr-1"></i> Team Captain
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <!-- My Event 3 -->
-                            <div class="flex items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
-                                <div class="mr-4 text-center">
-                                    <div class="text-xl font-bold text-purple-800">22</div>
-                                    <div class="text-xs text-purple-600">APR</div>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-bold text-gray-900">League of Legends Workshop</h3>
-                                    <p class="text-xs text-gray-500">
-                                        <i class="far fa-clock mr-1"></i> 7:00 PM
-                                    </p>
-                                </div>
-                                <div>
-                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full flex items-center">
-                                        <i class="fas fa-hourglass-half mr-1"></i> Payment Pending
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <!-- My Event 4 -->
-                            <div class="flex items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
-                                <div class="mr-4 text-center">
-                                    <div class="text-xl font-bold text-purple-800">28</div>
-                                    <div class="text-xs text-purple-600">APR</div>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-bold text-gray-900">Summer Gaming Championship</h3>
-                                    <p class="text-xs text-gray-500">
-                                        <i class="far fa-clock mr-1"></i> All Day
-                                    </p>
-                                </div>
-                                <div>
-                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full flex items-center">
-                                        <i class="fas fa-check-circle mr-1"></i> Registered
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    
-                    <!-- Mini Calendar -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-xl font-bold text-gray-800 flex items-center">
-                                <i class="far fa-calendar mr-2 text-purple-600"></i>
-                                Calendar
-                            </h2>
-                            <div class="flex items-center space-x-1">
-                                <button class="p-1 hover:bg-gray-100 rounded">
-                                    <i class="fas fa-chevron-left text-gray-500"></i>
-                                </button>
-                                <span class="text-sm font-medium">April 2025</span>
-                                <button class="p-1 hover:bg-gray-100 rounded">
-                                    <i class="fas fa-chevron-right text-gray-500"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Calendar Grid -->
-                        <div class="grid grid-cols-7 gap-1 text-center mb-1">
-                            <div class="text-xs font-medium text-gray-500">Su</div>
-                            <div class="text-xs font-medium text-gray-500">Mo</div>
-                            <div class="text-xs font-medium text-gray-500">Tu</div>
-                            <div class="text-xs font-medium text-gray-500">We</div>
-                            <div class="text-xs font-medium text-gray-500">Th</div>
-                            <div class="text-xs font-medium text-gray-500">Fr</div>
-                            <div class="text-xs font-medium text-gray-500">Sa</div>
-                        </div>
-                        
-                        <div class="grid grid-cols-7 gap-1 text-center">
-                            <!-- Days from previous month - inactive -->
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs text-gray-400 calendar-day-inactive">30</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs text-gray-400 calendar-day-inactive">31</div>
-                            <!-- Days in current month -->
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">1</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">2</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">3</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">4</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">5</div>
-                            
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">6</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">7</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">8</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">9</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">10</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">11</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">12</div>
-                            
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-800 calendar-day-event">13</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">14</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-800 calendar-day-event">15</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">16</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">17</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-800 calendar-day-event">18</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-800 calendar-day-event">19</div>
-                            
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-800 calendar-day-event">20</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">21</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-800 calendar-day-event">22</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">23</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">24</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">25</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">26</div>
-                            
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs">27</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-800 calendar-day-event">28</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-800 calendar-day-event">29</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-800 calendar-day-event">30</div>
-                            <!-- Days from next month - inactive -->
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs text-gray-400 calendar-day-inactive">1</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs text-gray-400 calendar-day-inactive">2</div>
-                            <div class="calendar-day h-8 w-8 rounded-full flex items-center justify-center text-xs text-gray-400 calendar-day-inactive">3</div>
-                        </div>
-                        
-                        <div class="mt-4 flex justify-between text-xs text-gray-600">
-                            <div class="flex items-center">
-                                <div class="w-3 h-3 bg-purple-100 rounded-full mr-1"></div>
-                                <span>Event scheduled</span>
-                            </div>
-                            <a href="/member/calendar" class="text-purple-600 hover:text-purple-800">View Full Calendar</a>
-                        </div>
-                    </section>
-                    
-                    <!-- Event Types -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                            <i class="fas fa-tags mr-2 text-purple-600"></i>
-                            Event Types
-                        </h2>
-                        
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center mr-3">
-                                        <i class="fas fa-trophy text-red-600"></i>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Event Cards -->
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 gap-4">
+                                {% if events|length == 0 %}
+                                    <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                                        <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-4 float-animation">
+                                            <i class="fas fa-gamepad text-5xl text-purple-400"></i>
+                                        </div>
+                                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Aucun Evenement dans votre Club</h2>
+                                        <p class="text-gray-600 mb-6 max-w-md">Vous n'avez pas encore ajouté un Evenement.</p>
                                     </div>
-                                    <div>
-                                        <h3 class="text-sm font-semibold text-gray-900">Tournaments</h3>
-                                        <p class="text-xs text-gray-500">Competitive gaming events</p>
-                                    </div>
-                                </div>
-                                <div class="px-2 py-1 bg-red-50 text-red-700 text-xs rounded-full">
-                                    8 events
-                                </div>
-                            </div>
-                            
-                            <div class="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                        <i class="fas fa-users text-blue-600"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-sm font-semibold text-gray-900">Community Meetups</h3>
-                                        <p class="text-xs text-gray-500">Social gatherings for gamers</p>
-                                    </div>
-                                </div>
-                                <div class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
-                                    4 events
-                                </div>
-                            </div>
-                            
-                            <div class="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center mr-3">
-                                        <i class="fas fa-chalkboard-teacher text-green-600"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-sm font-semibold text-gray-900">Workshops</h3>
-                                        <p class="text-xs text-gray-500">Learn from gaming pros</p>
-                                    </div>
-                                </div>
-                                <div class="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full">
-                                    6 events
-                                </div>
-                            </div>
-                            
-                            <div class="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center mr-3">
-                                        <i class="fas fa-headset text-purple-600"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-sm font-semibold text-gray-900">Livestreams</h3>
-                                        <p class="text-xs text-gray-500">Watch gaming experts live</p>
-                                    </div>
-                                </div>
-                                <div class="px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded-full">
-                                    3 events
-                                </div>
-                            </div>
-                            
-                            <div class="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center mr-3">
-                                        <i class="fas fa-gamepad text-amber-600"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-sm font-semibold text-gray-900">Game Launches</h3>
-                                        <p class="text-xs text-gray-500">New game release parties</p>
-                                    </div>
-                                </div>
-                                <div class="px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded-full">
-                                    2 events
-                                </div>
+                                {% else %}
+                                    {% for event in events %}
+                                        <div class="event-card shadow-sm">
+                                            <!-- Card Header with Image -->
+                                            <div class="relative">
+                                                <img src="/{{event.event_photo}}" alt="{{event.name}}" class="w-full h-48 object-cover">
+                                                
+                                                <div class="date-badge">
+                                                    <i class="fas fa-calendar-alt mr-1"></i> {{event.date_debut}}
+                                                </div>
+                                                
+                                                <div class="category-badge 
+                                                    {% if event.type_evenement == 'Social' %}category-social
+                                                    {% elseif event.type_evenement == 'Competition' %}category-competition
+                                                    {% elseif event.type_evenement == 'Workshop' %}category-workshop
+                                                    {% elseif event.type_evenement == 'Gaming' %}category-gaming
+                                                    {% else %}category-social{% endif %}">
+                                                    {{event.type_evenement}}
+                                                </div>
+                                                
+                                                <div class="status-badge 
+                                                    {% if event.statut == 'Open' %}status-open
+                                                    {% elseif event.statut == 'Pending' %}status-pending
+                                                    {% elseif event.statut == 'Full' %}status-full
+                                                    {% elseif event.statut == 'In Progress' %}status-in-progress
+                                                    {% elseif event.statut == 'Completed' %}status-completed
+                                                    {% elseif event.statut == 'Cancelled' %}status-cancelled
+                                                    {% else %}status-pending{% endif %}">
+                                                    {% if event.statut == 'Open' %}Ouvert
+                                                    {% elseif event.statut == 'Pending' %}En attente
+                                                    {% elseif event.statut == 'Full' %}Complet
+                                                    {% elseif event.statut == 'In Progress' %}En cours
+                                                    {% elseif event.statut == 'Completed' %}Terminé
+                                                    {% elseif event.statut == 'Cancelled' %}Annulé
+                                                    {% else %}{{ event.statut }}{% endif %}
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Event Information -->
+                                            <div class="p-5">
+                                                <div class="flex justify-between items-start mb-3">
+                                                    <h3 class="text-lg font-bold text-gray-800">{{event.name}}</h3>
+                                                    <div class="flex items-center">
+                                                        {% if event.entry_fee > 0 %}
+                                                        <span class="event-fee-badge">
+                                                            <i class="fas fa-coins mr-1"></i> {{event.entry_fee}} €
+                                                        </span>
+                                                        {% else %}
+                                                        <span class="event-free-badge">
+                                                            <i class="fas fa-ticket-alt mr-1"></i> Gratuit
+                                                        </span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                
+                                                <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{event.description}}</p>
+                                                
+                                                <!-- Event Stats -->
+                                                <div class="info-row">
+                                                    <div class="info-item">
+                                                        <i class="fas fa-clock"></i>
+                                                        <span>{{event.event_time}}</span>
+                                                    </div>
+                                                    <div class="info-item">
+                                                        <i class="fas fa-map-marker-alt"></i>
+                                                        <span>{{event.location|default('À confirmer')}}</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="info-row">
+                                                    <div class="info-item">
+                                                        <i class="fas fa-users"></i>
+                                                        <span>{{event.nombre_participants|default(0)}}/{{event.numbre_membre}}</span>
+                                                    </div>
+                                                    <div class="info-item">
+                                                        <i class="fas fa-gamepad"></i>
+                                                        <span>{{event.type_evenement}}</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Attendance Progress Bar -->
+                                                <div class="mt-3">
+                                                    <div class="attendance-indicator">
+                                                        <div class="attendance-bar" style="width: {{ (event.nombre_participants / event.numbre_membre * 100)|round }}%"></div>
+                                                    </div>
+                                                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                                        <span>Attendance</span>
+                                                        <span>{{event.nombre_participants|default(0)}}/{{event.numbre_membre}}</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Toggle button for Programme -->
+                                                <div class="mt-4 mb-2">
+                                                    <button onclick="toggleProgramme(this)" class="w-full text-left text-sm text-purple-600 hover:text-purple-800 transition flex items-center justify-between px-2 py-1 rounded hover:bg-purple-50">
+                                                        <span><i class="fas fa-calendar-day mr-2"></i> Voir le programme</span>
+                                                        <i class="fas fa-chevron-down programme-chevron"></i>
+                                                    </button>
+                                                </div>
+                                                
+                                                <!-- Programme Section (Hidden by default) -->
+                                                <div class="programme-section hidden mt-3 border-t border-gray-200 pt-3">
+                                                    <!-- Timeline with styling -->
+                                                    <div class="relative pl-8 before:content-[''] before:absolute before:left-3 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-purple-300 before:to-purple-100 max-h-40 overflow-y-auto custom-scrollbar pr-1">
+                                                        {% if event.programme and event.programme|length > 0 %}
+                                                            {% for item in event.programme %}
+                                                                <div class="mb-3 relative">
+                                                                    <!-- Timeline Point with effect -->
+                                                                    <div class="absolute left-[-20px] top-1.5 w-5 h-5 bg-white rounded-full border-2 border-purple-400 z-10 flex items-center justify-center">
+                                                                        <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                                                    </div>
+                                                                    
+                                                                    <!-- Content -->
+                                                                    <div class="bg-purple-50 p-2 rounded-lg shadow-sm border border-purple-100">
+                                                                        <!-- Time Badge -->
+                                                                        <div class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full mb-1">
+                                                                            <i class="far fa-clock mr-1"></i>
+                                                                            {{ item.timeline_time }}
+                                                                        </div>
+                                                                        
+                                                                        <!-- Event Title -->
+                                                                        <h5 class="text-purple-900 font-bold text-sm">{{ item.timeline_title }}</h5>
+                                                                        
+                                                                        <!-- Event Description (limited height) -->
+                                                                        <p class="text-gray-600 text-xs leading-relaxed line-clamp-2">{{ item.timeline_desc }}</p>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            <!-- Empty state -->
+                                                            <div class="text-center py-3 px-3 bg-purple-50 rounded-lg border border-purple-100">
+                                                                <i class="fas fa-calendar-times text-purple-300 text-lg mb-1"></i>
+                                                                <p class="text-purple-600 text-xs">Programme non disponible</p>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Action Button -->
+                                                {% if event.statut == 'Open' or event.statut == 'Pending' %}
+                                                    <button class="w-full mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition flex items-center justify-center event-action-btn">
+                                                        <i class="fas fa-calendar-check mr-2"></i> S'inscrire
+                                                    </button>
+                                                {% elseif event.statut == 'Full' %}
+                                                    <button class="w-full mt-4 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition flex items-center justify-center event-action-btn" disabled>
+                                                        <i class="fas fa-user-times mr-2"></i> Complet
+                                                    </button>
+                                                {% elseif event.statut == 'In Progress' %}
+                                                    <div class="w-full mt-4 px-4 py-2 bg-green-600 text-white rounded-lg flex items-center justify-center">
+                                                        <i class="fas fa-play mr-2"></i> En cours
+                                                    </div>
+                                                {% elseif event.statut == 'Completed' %}
+                                                    <button class="w-full mt-4 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition flex items-center justify-center event-action-btn">
+                                                        <i class="fas fa-photo-video mr-2"></i> Voir les photos
+                                                    </button>
+                                                {% elseif event.statut == 'Cancelled' %}
+                                                    <div class="w-full mt-4 px-4 py-2 bg-red-500 text-white rounded-lg flex items-center justify-center">
+                                                        <i class="fas fa-ban mr-2"></i> Annulé
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
-                    </section>
-                    
-                    <!-- Event Organizers -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                            <i class="fas fa-user-tie mr-2 text-purple-600"></i>
-                            Top Organizers
-                        </h2>
-                        
-                        <div class="space-y-4">
-                            <div class="flex items-center">
-                                <img src="/api/placeholder/50/50" alt="Organizer" class="w-10 h-10 rounded-full mr-3">
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-semibold text-gray-900">TournamentPros</h3>
-                                    <p class="text-xs text-gray-500">Professional tournament organization</p>
-                                </div>
-                                <button class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded text-xs transition">
-                                    Follow
-                                </button>
-                            </div>
-                            
-                            <div class="flex items-center">
-                                <img src="/api/placeholder/50/50" alt="Organizer" class="w-10 h-10 rounded-full mr-3">
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-semibold text-gray-900">GamersUnite</h3>
-                                    <p class="text-xs text-gray-500">Community-driven gaming events</p>
-                                </div>
-                                <button class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded text-xs transition">
-                                    Follow
-                                </button>
-                            </div>
-                            
-                            <div class="flex items-center">
-                                <img src="/api/placeholder/50/50" alt="Organizer" class="w-10 h-10 rounded-full mr-3">
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-semibold text-gray-900">E-Sports League</h3>
-                                    <p class="text-xs text-gray-500">Professional competitive gaming</p>
-                                </div>
-                                <button class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded text-xs transition">
-                                    Follow
-                                </button>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Current Date & Last Login Info -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                            <i class="fas fa-clock mr-2 text-purple-600"></i>
-                            Session Info
-                        </h2>
-                        
-                        <div class="space-y-3">
-                            <div class="flex items-start p-3 bg-gray-50 rounded-lg">
-                                <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center mr-3">
-                                    <i class="fas fa-calendar-day text-purple-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-sm font-semibold text-gray-900">Current Date</h3>
-                                    <p class="text-xs text-gray-500">2025-04-13 16:44:16 UTC</p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start p-3 bg-gray-50 rounded-lg">
-                                <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center mr-3">
-                                    <i class="fas fa-user-clock text-indigo-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-sm font-semibold text-gray-900">Account</h3>
-                                    <p class="text-xs text-gray-500">Logged in as: hamza2024web</p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
                 </div>
-            </div>
+                
+                <div class="flex justify-center mt-8">
+                    <button class="px-6 py-3 bg-white border border-gray-300 rounded-lg text-purple-600 hover:bg-gray-50 transition flex items-center font-medium">
+                        Load More Events <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Create Your Own Event Section -->
+            <section class="mb-10">
+                <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl overflow-hidden shadow-lg">
+                    <div class="p-8 flex flex-col md:flex-row items-center">
+                        <div class="md:w-2/3 mb-6 md:mb-0 md:pr-6">
+                            <h2 class="text-2xl font-bold text-white mb-3">Create Your Own Community Event</h2>
+                            <p class="text-purple-100 mb-6">Have an idea for a gaming event? Propose it to our community and become an event organizer. Get support, resources, and gain valuable event hosting experience!</p>
+                            <div class="flex flex-wrap gap-4">
+                                <button class="px-6 py-2.5 bg-white text-purple-700 font-medium rounded-lg hover:bg-gray-100 transition shadow-md event-action-btn">
+                                    Create Event Proposal
+                                </button>
+                                <button class="px-6 py-2.5 bg-purple-800 bg-opacity-50 text-white font-medium rounded-lg hover:bg-opacity-70 transition shadow-md event-action-btn border border-purple-300 border-opacity-50">
+                                    See Organizer Guidelines
+                                </button>
+                            </div>
+                        </div>
+                        <div class="md:w-1/3 flex justify-center">
+                            <div class="w-48 h-48 bg-purple-800 bg-opacity-50 rounded-full flex items-center justify-center">
+                                <i class="fas fa-calendar-plus text-white text-6xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Past Events -->
+            <section class="mb-10">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Past Events</h2>
+                    <a href="/member/events/past" class="text-sm text-purple-600 hover:text-purple-800 transition">
+                        View All Past Events
+                    </a>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Past Event Card 1 -->
+                    <div class="event-card shadow-sm opacity-80 hover:opacity-100 transition">
+                        <div class="relative">
+                            <img src="/api/placeholder/400/250" alt="Call of Duty Tournament" class="w-full h-48 object-cover filter grayscale-[30%]">
+                            
+                            <div class="date-badge">
+                                <i class="fas fa-calendar-alt mr-1"></i> March 15, 2025
+                            </div>
+                            
+                            <div class="category-badge category-competition">
+                                Competition
+                            </div>
+                            
+                            <div class="status-badge status-ended">
+                                Ended
+                            </div>
+                        </div>
+                        
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-lg font-bold text-gray-800">Call of Duty Tournament</h3>
+                                <div class="flex items-center">
+                                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full flex items-center">
+                                        <i class="fas fa-check-circle mr-1"></i> Attended
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-sm text-gray-600 mb-4">Team-based tournament with 16 teams competing for the championship title and prizes.</p>
+                            
+                            <div class="mt-4 flex justify-between">
+                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                                    <i class="fas fa-photo-video mr-2"></i> View Gallery
+                                </button>
+                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                                    <i class="fas fa-trophy mr-2"></i> Results
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Past Event Card 2 -->
+                    <div class="event-card shadow-sm opacity-80 hover:opacity-100 transition">
+                        <div class="relative">
+                            <img src="/api/placeholder/400/250" alt="Gaming Industry Talk" class="w-full h-48 object-cover filter grayscale-[30%]">
+                            
+                            <div class="date-badge">
+                                <i class="fas fa-calendar-alt mr-1"></i> February 28, 2025
+                            </div>
+                            
+                            <div class="category-badge category-workshop">
+                                Talk
+                            </div>
+                            
+                            <div class="status-badge status-ended">
+                                Ended
+                            </div>
+                        </div>
+                        
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-lg font-bold text-gray-800">Gaming Industry Talk</h3>
+                                <div class="flex items-center">
+                                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full flex items-center">
+                                        <i class="fas fa-check-circle mr-1"></i> Attended
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-sm text-gray-600 mb-4">Industry professionals discussed the future of gaming and emerging technologies.</p>
+                            
+                            <div class="mt-4 flex justify-between">
+                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                                    <i class="fas fa-video mr-2"></i> Watch Recording
+                                </button>
+                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                                    <i class="fas fa-file-alt mr-2"></i> Notes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Past Event Card 3 -->
+                    <div class="event-card shadow-sm opacity-80 hover:opacity-100 transition">
+                        <div class="relative">
+                            <img src="/api/placeholder/400/250" alt="Game Launch Party" class="w-full h-48 object-cover filter grayscale-[30%]">
+                            
+                            <div class="date-badge">
+                                <i class="fas fa-calendar-alt mr-1"></i> February 10, 2025
+                            </div>
+                            
+                            <div class="category-badge category-social">
+                                Launch Party
+                            </div>
+                            
+                            <div class="status-badge status-ended">
+                                Ended
+                            </div>
+                        </div>
+                        
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-lg font-bold text-gray-800">Elden Ring 2 Launch Party</h3>
+                                <div class="flex items-center">
+                                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full flex items-center">
+                                        <i class="fas fa-check-circle mr-1"></i> Attended
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-sm text-gray-600 mb-4">Celebrated the launch of Elden Ring 2 with exclusive gameplay, giveaways, and more.</p>
+                            
+                            <div class="mt-4 flex justify-between">
+                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                                    <i class="fas fa-photo-video mr-2"></i> View Gallery
+                                </button>
+                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                                    <i class="fas fa-star mr-2"></i> Highlights
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
     
     <!-- Quick Action Button -->
-    <button class="fixed bottom-6 right-6 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full shadow-lg hover:from-purple-700 hover:to-indigo-700 transition z-50 group">
-        <i class="fas fa-calendar-plus"></i>
-        <span class="absolute right-full mr-2 px-2 py-1 rounded-lg bg-white text-purple-800 font-medium text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md">Add Event</span>
+    <button class="fixed bottom-6 right-6 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full shadow-lg hover:from-purple-700 hover:to-indigo-700 transition z-50">
+        <i class="fas fa-plus"></i>
     </button>
     
-    <!-- Tournament Modal - Hidden by default -->
-    <div id="tournamentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="p-6 border-b border-gray-200">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold text-gray-900" id="modalTitle">Tournament Registration</h3>
-                    <button onclick="closeTournamentModal()" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="p-6" id="modalContent">
-                <!-- Modal content will be loaded here dynamically -->
-                <div class="animate-pulse">
-                    <div class="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
-                    <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                    <div class="h-4 bg-gray-200 rounded w-5/6 mb-6"></div>
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="h-12 bg-gray-200 rounded"></div>
-                        <div class="h-12 bg-gray-200 rounded"></div>
-                        <div class="h-12 bg-gray-200 rounded"></div>
-                        <div class="h-12 bg-gray-200 rounded"></div>
-                    </div>
-                    
-                    <div class="h-32 bg-gray-200 rounded mb-6"></div>
-                    
-                    <div class="flex justify-end space-x-3">
-                        <div class="h-10 bg-gray-200 rounded w-24"></div>
-                        <div class="h-10 bg-purple-200 rounded w-32"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
     <script>
-        // JavaScript for interactive features
+        // You can add JavaScript for interactive features here
         document.addEventListener('DOMContentLoaded', function() {
             // Example: Toggle mobile navigation
             const mobileMenuButton = document.querySelector('.mobile-menu-button');
@@ -1128,98 +1056,19 @@
                 });
             }
         });
-        
-        // Tournament modal functions
-        function openTournamentModal(eventId) {
-            const modal = document.getElementById('tournamentModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalContent = document.getElementById('modalContent');
+
+        // Function to toggle programme visibility
+         function toggleProgramme(button) {
+            const programmeSection = button.parentNode.nextElementSibling;
+            const chevron = button.querySelector('.programme-chevron');
             
-            // Show modal
-            modal.classList.remove('hidden');
-            
-            // In a real application, you would fetch the event details with AJAX
-            // and populate the modal content accordingly
-            setTimeout(function() {
-                // Simulate loading data
-                let eventNames = {
-                    '1': 'Fortnite Battle Royale Weekly',
-                    '2': 'Minecraft Build Battle',
-                    '3': 'League of Legends Workshop',
-                    '4': 'Call of Duty Marathon'
-                };
-                
-                modalTitle.textContent = 'Register for ' + (eventNames[eventId] || 'Event');
-                
-                // Replace loading animation with form
-                modalContent.innerHTML = `
-                    <form id="registrationForm">
-                        <p class="text-gray-600 mb-4">Complete your registration for this event. Please verify all details before submitting.</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Participant Name</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" value="hamza2024web" readonly>
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Gamer Tag</label>
-                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter your in-game name">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Platform</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                    <option>PC</option>
-                                    <option>PlayStation</option>
-                                    <option>Xbox</option>
-                                    <option>Nintendo Switch</option>
-                                    <option>Mobile</option>
-                                </select>
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700">Region</label>
-                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                    <option>Europe</option>
-                                    <option>North America</option>
-                                    <option>Asia</option>
-                                    <option>South America</option>
-                                    <option>Oceania</option>
-                                    <option>Africa</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-2 mb-6">
-                            <label class="text-sm font-medium text-gray-700">Additional Notes</label>
-                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" rows="3" placeholder="Any additional information you want to share with the organizers..."></textarea>
-                        </div>
-                        
-                        <div class="flex items-center mb-6">
-                            <input type="checkbox" id="termsCheck" class="rounded text-purple-600 focus:ring-purple-500 h-4 w-4">
-                            <label for="termsCheck" class="ml-2 text-sm text-gray-600">I agree to the <a href="#" class="text-purple-600 hover:text-purple-800">Terms & Conditions</a> and <a href="#" class="text-purple-600 hover:text-purple-800">Rules</a> of this event</label>
-                        </div>
-                        
-                        <div class="flex justify-end space-x-3">
-                            <button type="button" onclick="closeTournamentModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition">
-                                Cancel
-                            </button>
-                            <button type="button" onclick="submitRegistration(${eventId})" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
-                                Complete Registration
-                            </button>
-                        </div>
-                    </form>
-                `;
-            }, 1000); // Simulate loading delay
-        }
-        
-        function closeTournamentModal() {
-            const modal = document.getElementById('tournamentModal');
-            modal.classList.add('hidden');
-        }
-        
-        function submitRegistration(eventId) {
-            // In a real application, you would submit the form data to your server
-            alert('Registration submitted successfully! You will receive a confirmation email shortly.');
-            closeTournamentModal();
+            if (programmeSection.classList.contains('hidden')) {
+                programmeSection.classList.remove('hidden');
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                programmeSection.classList.add('hidden');
+                chevron.style.transform = 'rotate(0deg)';
+            }
         }
     </script>
 </body>
