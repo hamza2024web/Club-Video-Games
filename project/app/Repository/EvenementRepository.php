@@ -112,26 +112,20 @@ class EvenementRepository {
             $sqlProgramme = "INSERT INTO evenement_programme (timeline_time, timeline_title, timeline_desc, event_id) VALUES (:timeline_time, :timeline_title, :timeline_desc, :event_id)";
             $stmt = $this->conn->prepare($sqlProgramme);
             
-            // Traitement des tableaux pour chaque élément de programme
             for ($i = 0; $i < count($timeline_time); $i++) {
                 if (isset($timeline_time[$i]) && isset($timeline_title[$i]) && isset($timeline_desc[$i])) {
-                    // Formatage du temps en fonction du type de colonne dans la base de données
                     if (strpos(strtolower($columnType), 'datetime') !== false || strpos(strtolower($columnType), 'date') !== false) {
-                        // Si c'est une colonne de type DATE ou DATETIME, on combine la date de l'événement avec l'heure
                         $formattedTime = date('Y-m-d', strtotime($event_date)) . ' ' . $timeline_time[$i];
                     } elseif (strpos(strtolower($columnType), 'time') !== false) {
-                        // Si c'est une colonne de type TIME, on s'assure que le format est correct (HH:MM:SS)
                         $timeValue = $timeline_time[$i];
-                        if (strlen($timeValue) === 5) { // Format HH:MM, ajouter :00 pour les secondes
+                        if (strlen($timeValue) === 5) { 
                             $formattedTime = $timeValue . ':00';
                         } else {
                             $formattedTime = $timeValue;
                         }
                     } else {
-                        // Pour tout autre type de colonne, on utilise l'heure telle quelle (comme chaîne)
                         $formattedTime = $timeline_time[$i];
                     }
-                    
                     $stmt->bindParam(":timeline_time", $formattedTime);
                     $stmt->bindParam(":timeline_title", $timeline_title[$i]);
                     $stmt->bindParam(":timeline_desc", $timeline_desc[$i]);
@@ -149,6 +143,32 @@ class EvenementRepository {
             echo "</pre>";
             echo "timeline_time" . $columnType;
             return false;
+        }
+    }
+
+    public function cancelEvenement($user_id,$event_id){
+        $query = "SELECT club_id FROM organisateur WHERE user_id=:user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":user_id", $user_id);
+        $stmt->execute();
+        $club_idd = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$club_idd) {
+            return false; 
+        }
+        
+        $club_id = $club_idd["club_id"];
+
+        $sqlCancel = "UPDATE evenement SET statut = :statut WHERE club_id = :club_id";
+        $stmt = $this->conn->prepare($sqlCancel);
+        $stmt->bindParam(":club_id",$club_id);
+        $stmt->execute();
+        $canceled = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$canceled){
+            return null;
+        } else {
+            return true;
         }
     }
 }

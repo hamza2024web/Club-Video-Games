@@ -72,8 +72,16 @@ class EvenementController extends BaseController{
     }
 
     public function cancelEvent(){
+        $user_id = $_SESSION["user_id"];
         $event_id = $_POST["event_id"];
+
+        $cancelEvent = $this->EvenementServices->CancelAnEvent($user_id,$event_id);
         
+        if($cancelEvent){
+            header("location: organisateur/evenement?Evenement_Canceled_Succefully=1");
+        } else {
+            header("location: organisateur/evenement?Evenement_Canceled_failed=1");
+        }
     }
 
 }

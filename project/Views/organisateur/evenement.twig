@@ -789,7 +789,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {% endfor %}
+                                {% endfor %}
                             {% endif %}
                         </div>
                     </div>
@@ -1521,7 +1521,6 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Show loading state
                     Swal.fire({
                         title: 'Annulation en cours...',
                         text: 'Veuillez patienter pendant que nous traitons votre demande',
@@ -1531,12 +1530,11 @@
                             Swal.showLoading();
                         }
                     });
-                                        
-                    // Submit the form
-                    form.submit();
+                    
                 }
             });
         }
+
         // Check URL parameters for notifications
         const urlParams = new URLSearchParams(window.location.search);
         const currentPath = window.location.pathname;
@@ -1546,19 +1544,19 @@
         }
             
         // Gestion des notifications
-        if (urlParams.has('Rechargement_de_votre_solde_réussite')) {
+        if (urlParams.has('Evenement_Canceled_Succefully')) {
             Swal.fire({
                 title: 'Succès!',
-                text: 'Rechargement de votre solde réussi',
+                text: 'Annulation de votre evenement a été avec succès',
                 icon: 'success',
                 confirmButtonColor: '#8b5cf6'
             }).then(cleanURL);
         }
-    
-        if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+
+        if (urlParams.has('Evenement_Canceled_failed')) {
             Swal.fire({
                 title: 'Échec',
-                text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                text: 'Annulation de votre evenment a échoué. Veuillez réessayer.',
                 icon: 'error',
                 confirmButtonColor: '#8b5cf6'
             }).then(cleanURL);
