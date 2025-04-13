@@ -88,7 +88,6 @@ class EvenementRepository {
         }
     }
     
-    // Ajout du paramètre event_date pour combiner avec timeline_time
     private function attachEventToProgramme($event_id, $timeline_time, $timeline_title, $timeline_desc, $event_date){
         try {
             // Si les tableaux de timeline sont vides
