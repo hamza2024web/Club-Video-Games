@@ -78,9 +78,9 @@ class EvenementController extends BaseController{
         $cancelEvent = $this->EvenementServices->CancelAnEvent($user_id,$event_id);
         
         if($cancelEvent){
-            header("location: organisateur/evenement?Evenement_Canceled_Succefully=1");
+            header("location: /organisateur/evenement?Evenement_Canceled_Succefully=1");
         } else {
-            header("location: organisateur/evenement?Evenement_Canceled_failed=1");
+            header("location: /organisateur/evenement?Evenement_Canceled_failed=1");
         }
     }
 

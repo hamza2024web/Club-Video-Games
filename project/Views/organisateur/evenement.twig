@@ -778,7 +778,7 @@
                                                 <div class="flex-grow"></div>
                                                 
                                                 <!-- Cancel Button with improved styling -->
-                                                <form action="organisateur/cancelEvent" method="POST">
+                                                <form action="/organisateur/cancelEvent" method="POST" id="cancelEventForm">
                                                     <input type="hidden" name="event_id" value="{{event.id}}">
                                                     <button 
                                                         onclick="confirmCancelEvent('{{ event.name }}')" 
@@ -1501,67 +1501,8 @@
                 });
             }
         });
-
-        function confirmCancelEvent(eventId, eventName) {
-            Swal.fire({
-                title: 'Êtes-vous sûr ?',
-                html: `Voulez-vous vraiment annuler <strong>${eventName}</strong> ?<br><span class="text-gray-500 text-sm">Cette action ne peut pas être annulée.</span>`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Oui, annuler',
-                cancelButtonText: 'Non, conserver',
-                customClass: {
-                    popup: 'rounded-xl',
-                    title: 'text-xl font-bold text-gray-800',
-                    htmlContainer: 'my-4',
-                    confirmButton: 'rounded-lg font-medium',
-                    cancelButton: 'rounded-lg font-medium'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'Annulation en cours...',
-                        text: 'Veuillez patienter pendant que nous traitons votre demande',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        willOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                    
-                }
-            });
-        }
-
-        // Check URL parameters for notifications
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentPath = window.location.pathname;
-
-        function cleanURL() {
-            window.history.replaceState({}, document.title, currentPath);
-        }
-            
-        // Gestion des notifications
-        if (urlParams.has('Evenement_Canceled_Succefully')) {
-            Swal.fire({
-                title: 'Succès!',
-                text: 'Annulation de votre evenement a été avec succès',
-                icon: 'success',
-                confirmButtonColor: '#8b5cf6'
-            }).then(cleanURL);
-        }
-
-        if (urlParams.has('Evenement_Canceled_failed')) {
-            Swal.fire({
-                title: 'Échec',
-                text: 'Annulation de votre evenment a échoué. Veuillez réessayer.',
-                icon: 'error',
-                confirmButtonColor: '#8b5cf6'
-            }).then(cleanURL);
-        }
     </script>
+
 
 </body>
 </html>
