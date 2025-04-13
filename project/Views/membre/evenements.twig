@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GamersHub - Events</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -809,31 +810,6 @@
                 </div>
             </section>
             
-            <!-- Create Your Own Event Section -->
-            <section class="mb-10">
-                <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl overflow-hidden shadow-lg">
-                    <div class="p-8 flex flex-col md:flex-row items-center">
-                        <div class="md:w-2/3 mb-6 md:mb-0 md:pr-6">
-                            <h2 class="text-2xl font-bold text-white mb-3">Create Your Own Community Event</h2>
-                            <p class="text-purple-100 mb-6">Have an idea for a gaming event? Propose it to our community and become an event organizer. Get support, resources, and gain valuable event hosting experience!</p>
-                            <div class="flex flex-wrap gap-4">
-                                <button class="px-6 py-2.5 bg-white text-purple-700 font-medium rounded-lg hover:bg-gray-100 transition shadow-md event-action-btn">
-                                    Create Event Proposal
-                                </button>
-                                <button class="px-6 py-2.5 bg-purple-800 bg-opacity-50 text-white font-medium rounded-lg hover:bg-opacity-70 transition shadow-md event-action-btn border border-purple-300 border-opacity-50">
-                                    See Organizer Guidelines
-                                </button>
-                            </div>
-                        </div>
-                        <div class="md:w-1/3 flex justify-center">
-                            <div class="w-48 h-48 bg-purple-800 bg-opacity-50 rounded-full flex items-center justify-center">
-                                <i class="fas fa-calendar-plus text-white text-6xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
             <!-- Past Events -->
             <section class="mb-10">
                 <div class="flex justify-between items-center mb-6">
@@ -975,6 +951,84 @@
     <button class="fixed bottom-6 right-6 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full shadow-lg hover:from-purple-700 hover:to-indigo-700 transition z-50">
         <i class="fas fa-plus"></i>
     </button>
+
+    <!-- Modal de rechargement -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                    <div>
+                        <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                            <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="MM/AA">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4">
+                        Recharger mon compte
+                    </button>
+                    
+                    <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                        Paiement 100% sécurisé
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Payment Modal -->
     <div id="payment-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -1165,6 +1219,127 @@
                 form.submit();
             }, 2000);
         }
+
+                    
+            // Recharge modal functionality
+            const rechargeBtn = document.querySelector('.sidebar-footer button');
+            const rechargeModal = document.getElementById('recharge-modal');
+            const closeModalBtn = document.getElementById('close-recharge-modal');
+            
+            // Function to open the modal
+            function openRechargeModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.remove('hidden');
+                    rechargeModal.classList.add('flex');
+                }
+            }
+            
+            // Function to close the modal
+            function closeRechargeModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.add('hidden');
+                    rechargeModal.classList.remove('flex');
+                }
+            }
+            
+            // Add an event click to the "Recharger" button
+            if (rechargeBtn) {
+                rechargeBtn.addEventListener('click', openRechargeModal);
+            }
+            
+            // Add an event click to the close button
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', closeRechargeModal);
+            }
+            
+            // Close the modal when clicking outside
+            if (rechargeModal) {
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        closeRechargeModal();
+                    }
+                });
+            }
+            
+            // Handle recharge form submission
+            const rechargeForm = document.getElementById('recharge-form');
+            
+            // Event handler for form submission
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    // Prevent default form submission
+                    e.preventDefault();
+                    
+                    // Get the entered amount
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Show loading alert
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours...`,
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Submit the form after a short delay to show the animation
+                    setTimeout(() => {
+                        rechargeForm.submit();
+                    }, 1500);
+                });
+            }
+            
+            // Check URL parameters for notifications
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentPath = window.location.pathname;
+            
+            // Fonction pour nettoyer l'URL
+            function cleanURL() {
+                window.history.replaceState({}, document.title, currentPath);
+            }
+            
+            // Gestion des notifications
+            if (urlParams.has('Rechargement_de_votre_solde_réussite')) {
+                Swal.fire({
+                    title: 'Succès!',
+                    text: 'Rechargement de votre solde réussi',
+                    icon: 'success',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(cleanURL);
+            }
+            
+            if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+                Swal.fire({
+                    title: 'Échec',
+                    text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(cleanURL);
+            }
+            
+            if (urlParams.has('Inscription_succefully')) {
+                Swal.fire({
+                    title: "Succès !",
+                    text: "L'inscription au Evenement a été effectuée avec succès !",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: '#8b5cf6',
+                    timer: 3000 
+                }).then(cleanURL);
+            }
+            
+            if (urlParams.has('inscription_error')) {
+                Swal.fire({
+                    title: 'Erreur',
+                    text: "L'inscription au Evenement a échoué. Veuillez vérifier votre solde !",
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(cleanURL);
+            }
     </script>
 </body>
 </html>

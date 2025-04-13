@@ -42,6 +42,11 @@ class EvenetsMemberController extends BaseController {
 
         $inscription = $this->EvenetsMemberServices->inscriptionEvent($user_id,$event_id,$frais_inscription,$currentSoldeData);
 
+        if ($inscription){
+            header("location: /member/events?Inscription_succefully=1");
+        } else {
+            header("location: /member/events?inscription_error=1");
+        }
     }
 }
 ?>
