@@ -14,12 +14,13 @@ class EvenementRepository {
         $this->conn = $db->getConnection();
     }
     public function fetchAllEvents($user_id){
-        $sql = "SELECT evenement.id , evenement.name , evenement.date_debut , evenement.date_fin , evenement.lieu , evenement.statut ,evenement.description,evenement.type_evenement,evenement.numbre_membre,evenement.registration_start,evenement.registration_end,evenement.event_time,evenement.event_photo,evenement.entry_fee,evenement.requirements,evenement.discord_url,evenement.twitch_url,evenement_programme.timeline_time,evenement_programme.timeline_title,evenement_programme.timeline_desc
+        $sql = "SELECT evenement.id , evenement.name , evenement.date_debut , evenement.date_fin , evenement.lieu , evenement.statut ,evenement.description,evenement.type_evenement,evenement.numbre_membre,evenement.registration_start,evenement.registration_end,evenement.event_time,evenement.event_photo,evenement.entry_fee,evenement.requirements,evenement.discord_url,evenement.twitch_url,GROUP_CONCAT(evenement_programme.timeline_time),GROUP_CONCAT(evenement_programme.timeline_title),GROUP_CONCAT(evenement_programme.timeline_desc)
         FROM evenement
         INNER JOIN club ON evenement.club_id = club.id
         INNER JOIN evenement_programme ON evenement_programme.event_id = evenement.id
         INNER JOIN organisateur ON organisateur.club_id = evenement.club_id
-        WHERE organisateur.user_id = :user_id";
+        WHERE organisateur.user_id = :user_id
+        GROUP BY evenement.id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":user_id",$user_id);
         $stmt->execute();
@@ -28,7 +29,6 @@ class EvenementRepository {
     }
 
     public function addEvent($user_id, $name_event, $registration_start, $registration_end, $type_event, $status, $location, $event_date, $event_time, $event_photo, $max_participants, $entry_fee, $description, $requirements, $timeline_time, $timeline_title, $timeline_desc, $discord_url, $twitch_url){
-        // Récupérer le club_id de l'organisateur
         $query = "SELECT club_id FROM organisateur WHERE user_id=:user_id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":user_id", $user_id);

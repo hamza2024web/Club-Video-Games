@@ -10,19 +10,24 @@ session_start();
 class EvenementController extends BaseController{
     protected $EvenementServices;
     protected $ProfileServices;
+    protected $EvenementProgrammeService;
     
     public function __construct()
     {
         parent::__construct();
         $this->ProfileServices = new ProfileServices();
         $this->EvenementServices = new EvenementServices();
+        $this->EvenementProgrammeService = new EvenementProgrammeService();
     }
     public function index(){
         $user_id = $_SESSION["user_id"];
         $my_solde = $this->solde($user_id);
         $profile = $this->ProfileServices->getProfileUser($user_id);
         $events = $this->EvenementServices->getMyEvents($user_id);
-        return $this->renderOrg('evenement',compact('profile','jeux','my_solde','events'));
+        foreach ($events as $event){
+            $event['programme'] = $this->EvenementProgrammeService->getByEvenementId($event['id']);
+        }
+        return $this->renderOrg('evenement',compact('profile','my_solde','events'));
     }
     public function addEvenement(){
         $user_id = $_SESSION["user_id"];
