@@ -71,5 +71,10 @@ class EvenementController extends BaseController{
         }
     }
 
+    public function cancelEvent(){
+        $event_id = $_POST["event_id"];
+        
+    }
+
 }
 ?>

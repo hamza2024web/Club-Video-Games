@@ -49,6 +49,7 @@ Route::get('jeux','jeuxController@index');
 Route::post('organisateur/addTournoi','TournoiController@addTournoi');
 Route::get('organisateur/evenement','EvenementController@index');
 Route::post('organisateur/addEvenement','EvenementController@addEvenement');
+Route::post('organisateur/cancelEvent','EvenementController@cancelEvent');
 // payment 
 Route::post('payer','PaymentController@payer');
 // compte
