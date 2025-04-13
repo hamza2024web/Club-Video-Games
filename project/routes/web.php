@@ -35,6 +35,7 @@ Route::get('/member/tournaments','TournamentsController@index');
 Route::post('/member/inscription','TournamentsController@inscriptionTournoi');
 Route::get('/member/boutique','BoutiqueMember@index');
 Route::get('/member/games','JeuxMember@index');
+Route::get('/member/events','EvenetsMemberController@index');
 
 // organisateur
 Route::get('homePage','OrganisateurController@organisateur');
