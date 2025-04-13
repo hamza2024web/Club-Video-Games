@@ -685,23 +685,54 @@
                                                 <p>{{event.description}}</p>
                                             </div>
                                         </div>
-                                        
-                                        <!-- Timeline Section -->
-                                        <div class="mt-5 pt-4 border-t border-gray-200">
-                                            <div class="flex items-center mb-4">
-                                                <i class="fas fa-clock text-amber-500 mr-2"></i>
-                                                <h4 class="font-medium text-gray-900">Programme</h4>
+
+                                        <!-- Section Header -->
+                                        <div class="flex items-center mb-5">
+                                            <div class="bg-amber-100 p-2.5 rounded-full mr-3 shadow-sm">
+                                                <i class="fas fa-clock text-amber-600 text-lg"></i>
                                             </div>
-                                            <div class="timeline pl-2">
-                                                <div class="timeline-item">
-                                                    <div class="timeline-point"></div>
-                                                    <div class="bg-amber-50 p-3 rounded-lg">
-                                                        <div class="font-medium text-amber-800">{{event.timeline_time}} - {{event.timeline_title}}</div>
-                                                        <div class="text-sm text-gray-600">{{event.timeline_desc}}</div>
+                                            <h4 class="font-semibold text-gray-900 text-lg">Programme</h4>
+                                        </div>
+                                        
+                                        <!-- Timeline Container -->
+                                        <div class="relative pl-8 before:content-[''] before:absolute before:left-3 before:top-0 before:bottom-0 before:w-0.5 before:bg-amber-200">
+                                            <!-- Timeline Items -->
+                                            {% for item in event.programme %}
+                                                <div class="mb-6 relative">
+                                                    <!-- Timeline Point & Line -->
+                                                    <div class="absolute left-[-29px] top-2 w-6 h-6 bg-white rounded-full border-2 border-amber-400 z-10 flex items-center justify-center shadow-sm">
+                                                        <div class="w-2.5 h-2.5 bg-amber-500 rounded-full"></div>
+                                                    </div>
+                                                    
+                                                    <!-- Content Card -->
+                                                    <div class="bg-gradient-to-r from-amber-50 to-white p-4 rounded-xl shadow-sm border border-amber-100 hover:shadow-md transition-shadow duration-300 transform hover:-translate-y-1 hover:border-amber-200">
+                                                        <!-- Time Badge -->
+                                                        <div class="inline-block bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-full mb-2.5 shadow-sm">
+                                                            <i class="far fa-clock mr-1"></i>
+                                                            {{ item.timeline_time }}
+                                                        </div>
+                                                        
+                                                        <!-- Event Title -->
+                                                        <h5 class="text-amber-900 font-bold text-base mb-1.5">{{ item.timeline_title }}</h5>
+                                                        
+                                                        <!-- Event Description -->
+                                                        <p class="text-gray-600 text-sm leading-relaxed">{{ item.timeline_desc }}</p>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            {% endfor %}
+                                            
+                                            <!-- Empty State If No Items -->
+                                            {% if event.programme|length == 0 %}
+                                                <div class="text-center py-5 px-4 bg-amber-50 rounded-lg border border-amber-100">
+                                                    <div class="text-amber-400 mb-2">
+                                                        <i class="fas fa-calendar-times text-3xl"></i>
+                                                    </div>
+                                                    <p class="text-amber-800 font-medium">Aucun détail de programme disponible</p>
+                                                    <p class="text-amber-600 text-sm mt-1">Les informations seront ajoutées prochainement.</p>
+                                                </div>
+                                            {% endif %}
                                         </div>
+                                    </div>
                                         
                                         <!-- Social Links -->
                                         <div class="flex flex-wrap items-center gap-3 mt-5">

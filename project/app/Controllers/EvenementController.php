@@ -2,8 +2,8 @@
 namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\EvenementServices;
-use App\Services\JeuxServices;
 use App\Services\ProfileServices;
+use App\Services\EvenementProgrammeServices;
 
 session_start();
 
@@ -17,14 +17,14 @@ class EvenementController extends BaseController{
         parent::__construct();
         $this->ProfileServices = new ProfileServices();
         $this->EvenementServices = new EvenementServices();
-        $this->EvenementProgrammeService = new EvenementProgrammeService();
+        $this->EvenementProgrammeService = new EvenementProgrammeServices();
     }
     public function index(){
         $user_id = $_SESSION["user_id"];
         $my_solde = $this->solde($user_id);
         $profile = $this->ProfileServices->getProfileUser($user_id);
         $events = $this->EvenementServices->getMyEvents($user_id);
-        foreach ($events as $event){
+        foreach ($events as &$event){
             $event['programme'] = $this->EvenementProgrammeService->getByEvenementId($event['id']);
         }
         return $this->renderOrg('evenement',compact('profile','my_solde','events'));
