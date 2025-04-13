@@ -776,7 +776,7 @@
                                     
                                     <!-- Action Button -->
                                     {% if event.statut == 'Open' or event.statut == 'Pending' %}
-                                        <button class="w-full mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition flex items-center justify-center event-action-btn">
+                                        <button onclick="showPaymentForm('{{event.id}}', '{{event.entry_fee}}', '{{event.name}}')" class="w-full mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition flex items-center justify-center event-action-btn">
                                             <i class="fas fa-calendar-check mr-2"></i> S'inscrire
                                         </button>
                                     {% elseif event.statut == 'Full' %}
@@ -975,9 +975,65 @@
     <button class="fixed bottom-6 right-6 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full shadow-lg hover:from-purple-700 hover:to-indigo-700 transition z-50">
         <i class="fas fa-plus"></i>
     </button>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div id="payment-modal-content" class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 opacity-0 scale-95">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Confirmation d'inscription</h3>
+                <button onclick="closePaymentModal()" class="p-2 text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="border-t border-b border-gray-200 py-4 mb-4">
+                <div class="mb-4">
+                    <p class="text-gray-600 text-sm mb-1">Événement:</p>
+                    <p id="payment-tournament-name" class="font-semibold text-gray-800"></p>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Frais d'inscription:</span>
+                    <span id="payment-amount" class="text-lg font-bold text-purple-600"></span>
+                </div>
+            </div>
+            
+            <form id="payment-form" onsubmit="processPayment(); return false;">
+                <input type="hidden" id="payment-tournoi-id" name="event_id" value="">
+                <input type="hidden" id="payment-frais" name="frais_inscription" value="">
+                
+                <!-- Payment confirmation message -->
+                <div class="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-100">
+                    <p class="text-sm text-gray-700">
+                        En confirmant votre inscription, vous acceptez de participer à cet événement selon les conditions définies par l'organisateur.
+                    </p>
+                    
+                    <!-- Free event notice or payment options -->
+                    <div id="payment-free-notice" class="hidden mt-2 text-sm text-green-600">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Cet événement est gratuit. Aucun frais ne sera débité.
+                    </div>
+                    
+                    <div id="payment-paid-notice" class="hidden mt-2 text-sm text-purple-600">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Le montant sera débité de votre solde GamersHub.
+                    </div>
+                </div>
+                
+                <div class="flex space-x-3">
+                    <button type="button" onclick="closePaymentModal()" class="flex-1 py-2.5 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition">
+                        Annuler
+                    </button>
+                    <button type="submit" class="flex-1 py-2.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg shadow transition">
+                        Confirmer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     
     <script>
-        // You can add JavaScript for interactive features here
+        // JavaScript for interactive features
         document.addEventListener('DOMContentLoaded', function() {
             // Example: Toggle mobile navigation
             const mobileMenuButton = document.querySelector('.mobile-menu-button');
@@ -991,7 +1047,7 @@
         });
 
         // Function to toggle programme visibility
-         function toggleProgramme(button) {
+        function toggleProgramme(button) {
             const programmeSection = button.parentNode.nextElementSibling;
             const chevron = button.querySelector('.programme-chevron');
             
@@ -1002,6 +1058,112 @@
                 programmeSection.classList.add('hidden');
                 chevron.style.transform = 'rotate(0deg)';
             }
+        }
+
+        // Function to show payment form
+        function showPaymentForm(eventId, fraisInscription, eventName) {
+            // Update payment information
+            document.getElementById('payment-tournament-name').textContent = eventName;
+            
+            // Show price
+            const frais = parseFloat(fraisInscription);
+            if (frais > 0) {
+                document.getElementById('payment-amount').textContent = `${frais.toFixed(2)} €`;
+                document.getElementById('payment-free-notice').classList.add('hidden');
+                document.getElementById('payment-paid-notice').classList.remove('hidden');
+            } else {
+                document.getElementById('payment-amount').textContent = 'Gratuit';
+                document.getElementById('payment-free-notice').classList.remove('hidden');
+                document.getElementById('payment-paid-notice').classList.add('hidden');
+            }
+            
+            // Update hidden form values
+            document.getElementById('payment-tournoi-id').value = eventId;
+            document.getElementById('payment-frais').value = fraisInscription;
+            
+            // Show modal
+            const modal = document.getElementById('payment-modal');
+            const modalContent = document.getElementById('payment-modal-content');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Entry animation
+            setTimeout(() => {
+                modalContent.classList.remove('opacity-0', 'scale-95');
+                modalContent.classList.add('opacity-100', 'scale-100');
+            }, 10);
+            
+            // Disable page scrolling
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to close payment modal
+        function closePaymentModal() {
+            const modal = document.getElementById('payment-modal');
+            const modalContent = document.getElementById('payment-modal-content');
+            
+            // Exit animation
+            modalContent.classList.remove('opacity-100', 'scale-100');
+            modalContent.classList.add('opacity-0', 'scale-95');
+            
+            // Hide modal after animation
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                
+                // Re-enable page scrolling
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Function to process payment
+        function processPayment() {
+            // Show loading message
+            const loadingMessage = 'Veuillez patienter pendant le traitement...';
+            
+            // Check if SweetAlert2 is available
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Traitement en cours',
+                    text: loadingMessage,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            } else {
+                alert(loadingMessage);
+            }
+            
+            // Simulate processing delay (2 seconds)
+            setTimeout(() => {
+                // Get form data
+                const eventId = document.getElementById('payment-tournoi-id').value;
+                const fraisInscription = document.getElementById('payment-frais').value;
+                
+                // Create form to submit data
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/member/eventInscription';
+                
+                // Add necessary fields
+                const inputEventId = document.createElement('input');
+                inputEventId.type = 'hidden';
+                inputEventId.name = 'event_id';
+                inputEventId.value = eventId;
+                form.appendChild(inputEventId);
+                
+                const inputFrais = document.createElement('input');
+                inputFrais.type = 'hidden';
+                inputFrais.name = 'frais_inscription';
+                inputFrais.value = fraisInscription;
+                form.appendChild(inputFrais);
+                
+                // Add form to document and submit
+                document.body.appendChild(form);
+                form.submit();
+            }, 2000);
         }
     </script>
 </body>

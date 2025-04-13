@@ -24,5 +24,23 @@ class EventsMemberRepository {
         $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $events;
     }
+
+    public function inscription_event($user_id,$event_id,$price){
+        $sqlMember = "SELECT id FROM membre WHERE user_id = :user_id";
+        $stmtMember = $this->conn->prepare($sqlMember);
+        $stmtMember->bindParam(":user_id", $user_id);
+        $stmtMember->execute();
+        $member = $stmtMember->fetch(PDO::FETCH_ASSOC);
+        if (!$member) {
+            return false;
+        }
+        $member_id = $member['id'];
+        $sqlInscription = "INSERT INTO inscription_evenement (evenement_id, membre_id,frais_inscription) VALUES (:event_id, :member_id,:frais_inscription)";
+        $stmtInsert = $this->conn->prepare($sqlInscription);
+        $stmtInsert->bindParam(":event_id", $event_id);
+        $stmtInsert->bindParam(":member_id", $member_id);
+        $stmtInsert->bindParam(":frais_inscription",$price);
+        return $stmtInsert->execute();
+    }
 }
 ?>
