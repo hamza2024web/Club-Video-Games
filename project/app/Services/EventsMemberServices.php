@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 use App\Repository\EventsMemberRepository;
+use App\Repository\PaymentRepository;
 use Exception;
 
 class EventsMemberServices {
@@ -10,6 +11,7 @@ class EventsMemberServices {
     public function __construct()
     {
         $this->EventsMemberRepository = new EventsMemberRepository();
+        $this->PaymentRepository = new PaymentRepository();
     }
 
     public function getAllEvents(){
@@ -37,6 +39,11 @@ class EventsMemberServices {
         } else {
             return false ;
         }
+    }
+
+    public function getInscriptionEvent($user_id){
+        $inscription = $this->EventsMemberRepository->GEtinscription_events($user_id);
+        return $inscription;
     }
 }
 ?>
