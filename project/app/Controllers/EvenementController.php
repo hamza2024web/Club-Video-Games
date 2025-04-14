@@ -75,19 +75,21 @@ class EvenementController extends BaseController{
         $user_id = $_SESSION["user_id"];
         $event_id = $_POST["event_id"];
         $refundType = $_POST["refundType"];
-
-        if ($refundType = "rembourse"){
+        
+        if ($refundType == "rembourse"){
             $cancelEventRemoborse = $this->EvenementServices->cancelEventWithRemborse($user_id,$event_id);
             if($cancelEventRemoborse === true){ 
                 header("location: /organisateur/evenement?Evenement_Canceled_Succefully_And_Participants_Reumbourse=1");
             } else {
                 header("location: /organisateur/evenement?Evenement_Canceled_failed=1");
             }
-        } 
-
-        else {
-            // $cancelEvent = $this->EvenementServices->CancelAnEvent($user_id,$event_id);
-
+        } elseif ($refundType == "sans_rembourse"){
+            $cancelEvent = $this->EvenementServices->CancelAnEventWithoutRemonourse($user_id,$event_id);
+            if($cancelEvent === true){ 
+                header("location: /organisateur/evenement?Evenement_Canceled_Succefully_Without_Reumbousing_Participants=1");
+            } else {
+                header("location: /organisateur/evenement?Evenement_Canceled_failed_Without_Reumbousing_Participants=1");
+            }
         }
     }
 

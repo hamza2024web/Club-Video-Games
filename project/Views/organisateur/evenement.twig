@@ -1316,6 +1316,33 @@
             });
         }
 
+        if (urlParams.has('Evenement_Canceled_Succefully_Without_Reumbousing_Participants')) {
+            Swal.fire({
+                title: 'Succès!',
+                text: 'Annulation de votre evenement a été avec succès Mais La reumboussement Des Participants Pas Fait',
+                icon: 'success',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        if (urlParams.has('Evenement_Canceled_failed_Without_Reumbousing_Participants')) {
+            Swal.fire({
+                title: 'Échec',
+                text: 'Annulation de votre evenment a échoué. Veuillez réessayer.',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
         // Make sure the function is defined in the global scope
         window.toggleCardDetails = function(card) {
             if (!card) {

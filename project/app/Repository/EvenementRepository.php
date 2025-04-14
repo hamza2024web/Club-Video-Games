@@ -242,17 +242,13 @@ class EvenementRepository {
 
             $transaction_type = 'reimbursement';
 
-            $amount_formatted = number_format((float)$frais_inscription, 2, '.', '');
-            $old_balance_formatted = number_format((float)$current_solde, 2, '.', '');
-            $new_balance_formatted = number_format((float)$new_solde, 2, '.', '');
-
             $sql = "INSERT INTO transaction_log (member_id, event_id, amount, old_balance, new_balance, transaction_type, created_by) VALUES (:member_id, :event_id, :amount, :old_balance, :new_balance, :transaction_type, :created_by)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":member_id", $member_id);
             $stmt->bindParam(":event_id", $event_id);
-            $stmt->bindParam(":amount", $amount_formatted, PDO::PARAM_STR);
-            $stmt->bindParam(":old_balance", $old_balance_formatted, PDO::PARAM_STR);
-            $stmt->bindParam(":new_balance", $new_balance_formatted, PDO::PARAM_STR);
+            $stmt->bindParam(":amount", $frais_inscription);
+            $stmt->bindParam(":old_balance", $current_solde);
+            $stmt->bindParam(":new_balance", $new_solde);
             $stmt->bindParam(":transaction_type", $transaction_type);
             $stmt->bindParam(":created_by", $organisateur_id);
             $result = $stmt->execute();
@@ -304,5 +300,6 @@ class EvenementRepository {
         $stmt->execute();
         return $stmt->rowCount() > 0; 
     }
+
 }
 ?>

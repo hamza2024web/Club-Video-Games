@@ -38,5 +38,10 @@ class EvenementServices {
         $is_canceled = $this->EventRepository->cancelEvenement($user_id,$event_id);
         return $is_canceled;
     }
+
+    public function CancelAnEventWithoutRemonourse($user_id,$event_id){
+        $is_canceled = $this->EventRepository->cancelEvenement($user_id,$event_id);
+        return $is_canceled;
+    }
 }
 ?>
