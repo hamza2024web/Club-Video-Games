@@ -778,9 +778,10 @@
                                                 <div class="flex-grow"></div>
                                                 
                                                 <!-- Cancel Button with improved styling -->
-                                                <form action="/organisateur/cancelEvent" method="POST" id="cancelEventForm">
+                                                <form action="/organisateur/cancelEvent" method="POST" id="cancelEventForm-{{ event.id }}">
                                                     <input type="hidden" name="event_id" value="{{event.id}}">
                                                     <button 
+                                                        type="button" <!-- Add type="button" to prevent automatic form submission 
                                                         onclick="confirmCancelEvent('{{ event.id }}','{{ event.name }}')" 
                                                         class="flex items-center px-5 py-2.5 bg-gradient-to-r from-red-50 to-red-100 text-red-600 rounded-lg hover:from-red-100 hover:to-red-200 transition-all shadow-sm border border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
                                                         <i class="fas fa-ban mr-2.5"></i> Annuler l'événement
@@ -1183,6 +1184,9 @@
         }
 
         function confirmCancelEvent(eventId, eventName) {
+            // Prevent the default form submission
+            event.preventDefault();
+            
             Swal.fire({
                 title: 'Êtes-vous sûr ?',
                 html: `Voulez-vous vraiment annuler <strong>${eventName}</strong> ?<br><span class="text-gray-500 text-sm">Cette action ne peut pas être annulée.</span>`,
@@ -1202,25 +1206,98 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire({
-                        title: 'Annulation en cours...',
-                        text: 'Veuillez patienter pendant que nous traitons votre demande',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        willOpen: () => {
-                            Swal.showLoading();
+                        title: "Veuillez choisir la méthode de l'annulation:",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: "Avec remboursement des participants",
+                        cancelButtonText: "Sans remboursement des participants",
+                        customClass: {
+                            popup: 'rounded-xl',
+                            title: 'text-xl font-bold text-gray-800',
+                            confirmButton: 'rounded-lg font-medium',
+                            cancelButton: 'rounded-lg font-medium'
+                        }
+                    }).then((refundResult) => {
+                        if (refundResult.isDismissed && refundResult.dismiss === Swal.DismissReason.cancel) {
+                            const refundValue = "sans_rembourse";
+                            processFormSubmission(eventId, refundValue);
+                        } else if (refundResult.isConfirmed) {
+                            const refundValue = "rembourse";
+                            processFormSubmission(eventId, refundValue);
+                        } else {
+                            Swal.fire({
+                                title: 'Annulation interrompue',
+                                text: "L'opération d'annulation a été interrompue.",
+                                icon: 'info',
+                                confirmButtonColor: '#8b5cf6'
+                            });
                         }
                     });
-
-                    // Get the form using the event ID
-                    const form = document.getElementById(`cancelEventForm-${eventId}`);
-                    if (form) {
-                        setTimeout(() => form.submit(), 5000); // délai pour laisser le loader s'afficher
-                    } else {
-                        console.error("Formulaire introuvable pour l'événement ID:", eventId);
-                    }
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: 'Action annulée',
+                        text: 'Votre événement a été conservé.',
+                        icon: 'info',
+                        confirmButtonColor: '#8b5cf6'
+                    });
                 }
             });
         }
+
+        function processFormSubmission(eventId, refundValue) {
+            console.log("Processing submission with eventId:", eventId, "and refundValue:", refundValue);
+            
+            // Get the form - make sure the ID matches what's in your HTML
+            const form = document.getElementById(`cancelEventForm-${eventId}`);
+            if (!form) {
+                console.error("Formulaire introuvable pour l'événement ID:", eventId);
+                // Try the alternative ID as fallback
+                const altForm = document.getElementById('cancelEventForm');
+                if (altForm) {
+                    console.log("Found form with alternate ID");
+                    form = altForm;
+                } else {
+                    Swal.fire({
+                        title: 'Erreur',
+                        text: "Impossible de traiter votre demande. Formulaire non trouvé.",
+                        icon: 'error'
+                    });
+                    return;
+                }
+            }
+
+            // Create or update the refundType input
+            let refundInput = form.querySelector('input[name="refundType"]');
+            if (!refundInput) {
+                refundInput = document.createElement('input');
+                refundInput.type = 'hidden';
+                refundInput.name = 'refundType';
+                form.appendChild(refundInput);
+            }
+            
+            refundInput.value = refundValue;
+            console.log("Form to be submitted:", form);
+            console.log("Form elements:", form.elements);
+            console.log("refundType value:", refundInput.value);
+
+            Swal.fire({
+                title: 'Annulation en cours...',
+                text: 'Veuillez patienter pendant que nous traitons votre demande',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            setTimeout(() => {
+                console.log("Submitting form now");
+                form.submit();
+            }, 1500);
+        }
+
 
         if (urlParams.has('Evenement_Canceled_Succefully')) {
             Swal.fire({

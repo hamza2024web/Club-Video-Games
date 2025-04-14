@@ -74,6 +74,9 @@ class EvenementController extends BaseController{
     public function cancelEvent(){
         $user_id = $_SESSION["user_id"];
         $event_id = $_POST["event_id"];
+        $refundType = $_POST["refundType"];
+        var_dump($refundType);
+        exit();
 
         $cancelEvent = $this->EvenementServices->CancelAnEvent($user_id,$event_id);
 
