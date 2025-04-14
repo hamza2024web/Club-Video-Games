@@ -19,6 +19,15 @@ class EvenementServices {
         return $is_inserted;
     }
 
+    public function cancelEventWithRemborse($user_id,$event_id){
+        $montant = $this->thPriceOfInscriptions($user_id,$event_id);
+    }
+
+    private function thPriceOfInscriptions($user_id,$event_id){
+        $theAllPrice = $this->EventRepository->FetchThePriceOfInscriptions($user_id,$event_id);
+        return $theAllPrice;
+    }
+
     public function CancelAnEvent($user_id,$event_id){
         $is_canceled = $this->EventRepository->cancelEvenement($user_id,$event_id);
         return $is_canceled;

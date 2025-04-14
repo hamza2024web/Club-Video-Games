@@ -170,5 +170,16 @@ class EvenementRepository {
             return false; 
         }
     }
+
+    public function FetchThePriceOfInscriptions($user_id,$event_id){
+        $sqlMember = "SELECT id FROM membre WHERE user_id = :user_id";
+        $stmt = $this->conn->prepare($sqlMember);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $member_idd = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $member_id = $member_idd["id"];
+        
+    }
 }
 ?>

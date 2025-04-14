@@ -1150,7 +1150,6 @@
         });
 
         // Ajouter cette vérification des URL parameters juste après la fonction DOMContentLoaded
-        // Check for URL parameters for notifications
         const urlParams = new URLSearchParams(window.location.search);
         
         if (urlParams.has('evenement Created successfully') || urlParams.has('Evenement Created successfully!')) {
@@ -1184,7 +1183,6 @@
         }
 
         function confirmCancelEvent(eventId, eventName) {
-            // Prevent the default form submission
             event.preventDefault();
             
             Swal.fire({
@@ -1247,9 +1245,6 @@
         }
 
         function processFormSubmission(eventId, refundValue) {
-            console.log("Processing submission with eventId:", eventId, "and refundValue:", refundValue);
-            
-            // Get the form - make sure the ID matches what's in your HTML
             const form = document.getElementById(`cancelEventForm-${eventId}`);
             if (!form) {
                 console.error("Formulaire introuvable pour l'événement ID:", eventId);
@@ -1268,7 +1263,6 @@
                 }
             }
 
-            // Create or update the refundType input
             let refundInput = form.querySelector('input[name="refundType"]');
             if (!refundInput) {
                 refundInput = document.createElement('input');
@@ -1278,10 +1272,7 @@
             }
             
             refundInput.value = refundValue;
-            console.log("Form to be submitted:", form);
-            console.log("Form elements:", form.elements);
-            console.log("refundType value:", refundInput.value);
-
+            
             Swal.fire({
                 title: 'Annulation en cours...',
                 text: 'Veuillez patienter pendant que nous traitons votre demande',
@@ -1297,7 +1288,6 @@
                 form.submit();
             }, 1500);
         }
-
 
         if (urlParams.has('Evenement_Canceled_Succefully')) {
             Swal.fire({
