@@ -178,7 +178,7 @@ class EvenementRepository {
         }
     }
 
-    public function withoutreimburseMembersForEvent($user_id,$event_id){
+    public function withoutreimburseMembersForEvent($user_id, $event_id) {
         try {
             $this->conn->beginTransaction();
             
@@ -188,6 +188,7 @@ class EvenementRepository {
             $stmt->execute();
             $inscription_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $success_count = 0;
+            
             foreach ($inscription_data as $data) {
                 $member_id = $data['membre_id'];
                 $sqlEvents = "SELECT frais_inscription FROM inscription_evenement WHERE membre_id = :member_id AND evenement_id = :event_id";
@@ -196,18 +197,24 @@ class EvenementRepository {
                 $stmt->bindParam(":event_id", $event_id);
                 $stmt->execute();
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                
                 if (!$result) {
                     continue; 
                 }
+                
                 $frais_inscription = $result['frais_inscription'];
                 $current_solde_data = $this->GetSolde($member_id);
+                
                 if (!$current_solde_data || !isset($current_solde_data['solde'])) {
                     continue; 
                 }
+                
                 $current_solde = $current_solde_data['solde'];
                 $new_solde = $current_solde;
-
-                $is_logging = $this->logReimbursement($member_id,$event_id,$frais_inscription,$current_solde,$new_solde);
+                
+                if ($this->logReimbursement($member_id, $event_id, $frais_inscription, $current_solde, $new_solde, $user_id)) {
+                    $success_count++; 
+                }
             }
             
             if ($success_count == 0 && count($inscription_data) > 0) {
@@ -216,10 +223,11 @@ class EvenementRepository {
             }
             
             $this->conn->commit();     
-            return $this->cancelEvenement($user_id,$event_id);
+            return $this->cancelEvenement($user_id, $event_id);
             
         } catch (PDOException $e) {
             $this->conn->rollBack();
+            error_log("Error in withoutreimburseMembersForEvent: " . $e->getMessage());
             return 0;
         }
     }
