@@ -178,6 +178,52 @@ class EvenementRepository {
         }
     }
 
+    public function withoutreimburseMembersForEvent($user_id,$event_id){
+        try {
+            $this->conn->beginTransaction();
+            
+            $sqlMember = "SELECT membre_id FROM inscription_evenement WHERE evenement_id = :event_id";
+            $stmt = $this->conn->prepare($sqlMember);
+            $stmt->bindParam(":event_id", $event_id);
+            $stmt->execute();
+            $inscription_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $success_count = 0;
+            foreach ($inscription_data as $data) {
+                $member_id = $data['membre_id'];
+                $sqlEvents = "SELECT frais_inscription FROM inscription_evenement WHERE membre_id = :member_id AND evenement_id = :event_id";
+                $stmt = $this->conn->prepare($sqlEvents);
+                $stmt->bindParam(":member_id", $member_id);
+                $stmt->bindParam(":event_id", $event_id);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                if (!$result) {
+                    continue; 
+                }
+                $frais_inscription = $result['frais_inscription'];
+                $current_solde_data = $this->GetSolde($member_id);
+                if (!$current_solde_data || !isset($current_solde_data['solde'])) {
+                    continue; 
+                }
+                $current_solde = $current_solde_data['solde'];
+                $new_solde = $current_solde;
+
+                $is_logging = $this->logReimbursement($member_id,$event_id,$frais_inscription,$current_solde,$new_solde);
+            }
+            
+            if ($success_count == 0 && count($inscription_data) > 0) {
+                $this->conn->rollBack();
+                return 0;
+            }
+            
+            $this->conn->commit();     
+            return $this->cancelEvenement($user_id,$event_id);
+            
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            return 0;
+        }
+    }
+
     public function reimburseMembersForEvent($event_id) {
         try {
             $this->conn->beginTransaction();
@@ -240,7 +286,7 @@ class EvenementRepository {
             
             $organisateur_id = $organisateur["user_id"];
 
-            $transaction_type = 'reimbursement';
+            $transaction_type = 'Sans reimbursement';
 
             $sql = "INSERT INTO transaction_log (member_id, event_id, amount, old_balance, new_balance, transaction_type, created_by) VALUES (:member_id, :event_id, :amount, :old_balance, :new_balance, :transaction_type, :created_by)";
             $stmt = $this->conn->prepare($sql);
