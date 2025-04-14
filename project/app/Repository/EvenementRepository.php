@@ -158,7 +158,7 @@ class EvenementRepository {
         
         $club_id = $club_idd["club_id"];
 
-        $sqlCancel = "UPDATE evenement SET statut = :statut WHERE club_id  = :club_id AND event_id = :event_id";
+        $sqlCancel = "UPDATE evenement SET statut = :statut WHERE club_id  = :club_id AND id = :event_id";
         $stmt = $this->conn->prepare($sqlCancel);
         $status = "cancelled";
         $stmt->bindParam(":statut",$status);

@@ -781,7 +781,7 @@
                                                 <form action="/organisateur/cancelEvent" method="POST" id="cancelEventForm">
                                                     <input type="hidden" name="event_id" value="{{event.id}}">
                                                     <button 
-                                                        onclick="confirmCancelEvent('{{ event.name }}')" 
+                                                        onclick="confirmCancelEvent('{{ event.id }}','{{ event.name }}')" 
                                                         class="flex items-center px-5 py-2.5 bg-gradient-to-r from-red-50 to-red-100 text-red-600 rounded-lg hover:from-red-100 hover:to-red-200 transition-all shadow-sm border border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
                                                         <i class="fas fa-ban mr-2.5"></i> Annuler l'événement
                                                     </button>
@@ -1182,8 +1182,66 @@
             });
         }
 
-        // Function to toggle card details
-        function toggleCardDetails(card) {
+        function confirmCancelEvent(eventId, eventName) {
+            Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                html: `Voulez-vous vraiment annuler <strong>${eventName}</strong> ?<br><span class="text-gray-500 text-sm">Cette action ne peut pas être annulée.</span>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Oui, annuler',
+                cancelButtonText: 'Non, conserver',
+                customClass: {
+                    popup: 'rounded-xl',
+                    title: 'text-xl font-bold text-gray-800',
+                    htmlContainer: 'my-4',
+                    confirmButton: 'rounded-lg font-medium',
+                    cancelButton: 'rounded-lg font-medium'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Annulation en cours...',
+                        text: 'Veuillez patienter pendant que nous traitons votre demande',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Get the form using the event ID
+                    const form = document.getElementById(`cancelEventForm-${eventId}`);
+                    if (form) {
+                        setTimeout(() => form.submit(), 1000); // délai pour laisser le loader s'afficher
+                    } else {
+                        console.error("Formulaire introuvable pour l'événement ID:", eventId);
+                    }
+                }
+            });
+        }
+
+        if (urlParams.has('Evenement_Canceled_Succefully')) {
+            Swal.fire({
+                title: 'Succès!',
+                text: 'Annulation de votre evenement a été avec succès',
+                icon: 'success',
+                confirmButtonColor: '#8b5cf6'
+            }).then(cleanURL);
+        }
+
+        if (urlParams.has('Evenement_Canceled_failed')) {
+            Swal.fire({
+                title: 'Échec',
+                text: 'Annulation de votre evenment a échoué. Veuillez réessayer.',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(cleanURL);
+        }
+
+        // Make sure the function is defined in the global scope
+        window.toggleCardDetails = function(card) {
             if (!card) {
                 console.error('Card element not found');
                 return;
@@ -1219,7 +1277,19 @@
                     rotateIcon.style.transform = 'rotate(0)';
                 }
             }
-        }
+        };
+
+        // Alternative approach: Add event listeners after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find all elements that should toggle card details
+            const toggleButtons = document.querySelectorAll('.toggle-details-btn');
+            
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    toggleCardDetails(this.parentNode);
+                });
+            });
+        });
         
         // Initialize sidebar
         function initSidebar() {
@@ -1502,6 +1572,7 @@
                 });
             }
         });
+        
     </script>
 </body>
 </html>
