@@ -207,9 +207,9 @@ class EvenementRepository {
                 $current_solde = $current_solde_data['solde'];
                 $new_solde = $current_solde + $frais_inscription;
                 if ($this->updateSolde($member_id, $new_solde)) {
-                    $success_count++;
                     $this->logReimbursement($member_id, $event_id, $frais_inscription, $current_solde, $new_solde);
-                } 
+                    $success_count++;
+                }
             }
             
             if ($success_count == 0 && count($inscription_data) > 0) {
@@ -226,33 +226,48 @@ class EvenementRepository {
         }
     }
     
-    private function logReimbursement($member_id, $event_id, $amount, $old_balance, $new_balance) {
+    private function logReimbursement($member_id, $event_id, $frais_inscription, $current_solde, $new_solde) {
         try {
-            $sqlOrganisatur = "SELECT user_id FROM organisateur 
-            INNER JOIN evenement ON evenement.club_id = organisateur.club_id
-            WHERE evenement.id = :event_id";
-            $stmt = $this->conn->prepare($sqlOrganisatur);
-            $stmt->bindParam("event_id",$event_id);
+            $sqlOrganisateur = "SELECT user_id FROM organisateur INNER JOIN evenement ON evenement.club_id = organisateur.club_id WHERE evenement.id = :event_id";
+            $stmt = $this->conn->prepare($sqlOrganisateur);
+            $stmt->bindParam(":event_id", $event_id);
             $stmt->execute();
-            $oragnisateur = $stmt->fetch(PDO::FETCH_ASSOC);
-            if(!$oragnisateur){
+            $organisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$organisateur || !isset($organisateur["user_id"])) {
+                error_log("No organizer found for event ID: $event_id");
                 return false;
             }
-            $oragnisateur_id = $oragnisateur["user_id"];
+            
+            $organisateur_id = $organisateur["user_id"];
 
-            $sql = "INSERT INTO transaction_log (member_id, event_id, amount, old_balance, new_balance, transaction_type, created_by) VALUES (:member_id, :event_id, :amount, :old_balance, :new_balance, :transaction_type , :created_by)";
+            $transaction_type = 'reimbursement';
+
+            $amount_formatted = number_format((float)$frais_inscription, 2, '.', '');
+            $old_balance_formatted = number_format((float)$current_solde, 2, '.', '');
+            $new_balance_formatted = number_format((float)$new_solde, 2, '.', '');
+
+            $sql = "INSERT INTO transaction_log (member_id, event_id, amount, old_balance, new_balance, transaction_type, created_by) VALUES (:member_id, :event_id, :amount, :old_balance, :new_balance, :transaction_type, :created_by)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(":member_id", $member_id);
             $stmt->bindParam(":event_id", $event_id);
-            $stmt->bindParam(":amount", $amount);
-            $stmt->bindParam(":old_balance", $old_balance);
-            $stmt->bindParam(":new_balance", $new_balance);
-            $transaction_type = 'reimbursement';
-            $stmt->bindParam(":transaction_type",$transaction_type);
-            $stmt->bindParam(":created_by", $oragnisateur_id); 
-            $stmt->execute();
-        } catch (PDOException $e) {
-            error_log("Failed to log reimbursement: " . $e->getMessage());
+            $stmt->bindParam(":amount", $amount_formatted, PDO::PARAM_STR);
+            $stmt->bindParam(":old_balance", $old_balance_formatted, PDO::PARAM_STR);
+            $stmt->bindParam(":new_balance", $new_balance_formatted, PDO::PARAM_STR);
+            $stmt->bindParam(":transaction_type", $transaction_type);
+            $stmt->bindParam(":created_by", $organisateur_id);
+            $result = $stmt->execute();
+            
+            if (!$result) {
+                $error = $stmt->errorInfo();
+                error_log("Failed to insert transaction log: " . $error[2]);
+                return false;
+            }
+            
+            return true;
+        } 
+        catch (PDOException $e) {
+            error_log("Exception in logReimbursement: " . $e->getMessage());
+            return false;
         }
     }
     
