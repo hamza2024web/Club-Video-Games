@@ -27,7 +27,6 @@ class EvenementServices {
         } else {
             return false;
         }
-
     }
 
     private function reimburseMembers($event_id){

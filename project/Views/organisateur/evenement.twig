@@ -1272,7 +1272,7 @@
             }
             
             refundInput.value = refundValue;
-            
+
             Swal.fire({
                 title: 'Annulation en cours...',
                 text: 'Veuillez patienter pendant que nous traitons votre demande',
@@ -1289,14 +1289,13 @@
             }, 1500);
         }
 
-        if (urlParams.has('Evenement_Canceled_Succefully')) {
+        if (urlParams.has('Evenement_Canceled_Succefully_And_Participants_Reumbourse')) {
             Swal.fire({
                 title: 'Succès!',
-                text: 'Annulation de votre evenement a été avec succès',
+                text: 'Annulation de votre evenement a été avec succès Avec La reumboussement Des Participants',
                 icon: 'success',
                 confirmButtonColor: '#8b5cf6'
             }).then(() => {
-                // Clean the URL
                 const url = new URL(window.location.href);
                 url.search = '';
                 window.history.replaceState({}, document.title, url);

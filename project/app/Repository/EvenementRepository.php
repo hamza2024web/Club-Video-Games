@@ -165,7 +165,13 @@ class EvenementRepository {
         $stmt->bindParam(":event_id", $event_id);
         $result = $stmt->execute();
         if ($result && $stmt->rowCount() > 0) {
-            return true; 
+            $sqlInscription = "DELETE FROM inscription_evenement WHERE evenement_id  = :event_id";
+            $stmt = $this->conn->pepare($sqlInscription);
+            $stmt->bindParam(":event_id",$event_id);
+            $result = $stmt->execute();
+            if ($result && $stmt->rowCount() > 0){
+                return true; 
+            }
         } else {
             return false; 
         }
