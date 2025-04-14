@@ -171,51 +171,77 @@ class EvenementRepository {
         }
     }
 
-    public function FetchThePriceOfInscriptions($user_id, $event_id) {
-        $sqlMember = "SELECT membre_id  FROM inscription_evenement WHERE evenement_id  = :event_id";
+    public function reimburseMembersForEvent($event_id) {
+        $sqlMember = "SELECT membre_id FROM inscription_evenement WHERE evenement_id = :event_id";
         $stmt = $this->conn->prepare($sqlMember);
         $stmt->bindParam(":event_id", $event_id);
         $stmt->execute();
         $inscription_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($inscription_data as $member_id){
-            $sqlEvents = "SELECT frais_inscription FROM inscription_evenement WHERE membre_id  = :member_id AND evenement_id = :event_id";
+        
+        $success_count = 0;
+        
+        foreach ($inscription_data as $data) {
+            $member_id = $data['membre_id'];
+            
+            $sqlEvents = "SELECT frais_inscription FROM inscription_evenement WHERE membre_id = :member_id AND evenement_id = :event_id";
             $stmt = $this->conn->prepare($sqlEvents);
             $stmt->bindParam(":member_id", $member_id);
             $stmt->bindParam(":event_id", $event_id);
             $stmt->execute();
-            $frais_inscription = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (!$frais_inscription) {
-                return null; 
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$result) {
+                continue; 
             }
-            $CurrentSolde = $this->GetSolde($member_id);
-
-            $newSolde = $CurrentSolde + $frais_inscription;
-
-            $theNewSolde = $this->updateSolde($user_id);
+            $frais_inscription = $result['frais_inscription'];
+            
+            $current_solde_data = $this->GetSolde($member_id);
+            if (!$current_solde_data || !isset($current_solde_data['solde'])) {
+                continue; 
+            }
+            
+            $current_solde = $current_solde_data['solde'];
+            $new_solde = $current_solde + $frais_inscription;
+            
+            if ($this->updateSolde($member_id, $new_solde)) {
+                $success_count++;
+            }
         }
-
+        
+        return $success_count; 
     }
-
-    private function GetSolde ($member_id){
+    
+    private function GetSolde($member_id) {
         $user_id = $this->GetUserId($member_id);
-        $sqlSolde = "SELECT solde FROM compte WHERE user_id=:user_id";
+        $sqlSolde = "SELECT solde FROM compte WHERE user_id = :user_id";
         $stmt = $this->conn->prepare($sqlSolde);
-        $stmt->bindParam(":user_id",$user_id);
+        $stmt->bindParam(":user_id", $user_id);
         $stmt->execute();
-        $CurrentSolde = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $CurrentSolde;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    private function GetUserId($member_id){
-        $sql = "SELECT user_id FROM membre WHERE id=:member_id";
+    
+    private function GetUserId($member_id) {
+        $sql = "SELECT user_id FROM membre WHERE id = :member_id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":member_id",$member_id);
+        $stmt->bindParam(":member_id", $member_id);
         $stmt->execute();
         $id_member = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $user_id = $id_member["user_id"];
-        return $user_id;
+        if (!$id_member) {
+            return null;
+        }
+        return $id_member["user_id"];
+    }
+    
+    private function updateSolde($member_id, $new_solde) {
+        $user_id = $this->GetUserId($member_id); 
+        if (!$user_id) {
+            return false;
+        }
+        $sqlUpdateSolde = "UPDATE compte SET solde = :solde WHERE user_id = :user_id";
+        $stmt = $this->conn->prepare($sqlUpdateSolde);
+        $stmt->bindParam(":user_id", $user_id);
+        $stmt->bindParam(":solde", $new_solde);
+        $stmt->execute();
+        return $stmt->rowCount() > 0; 
     }
 }
 ?>

@@ -20,16 +20,22 @@ class EvenementServices {
     }
 
     public function cancelEventWithRemborse($user_id,$event_id){
-        $montant = $this->thPriceOfInscriptions($user_id,$event_id);
+        $is_success = $this->reimburseMembers($event_id);
+        if ($is_success){
+            $is_canceled = $this->CancelAnEvent($user_id,$event_id);
+            return $is_canceled;
+        } else {
+            return false;
+        }
 
     }
 
-    private function thPriceOfInscriptions($user_id,$event_id){
-        $theAllPrice = $this->EventRepository->FetchThePriceOfInscriptions($user_id,$event_id);
-        return $theAllPrice;
+    private function reimburseMembers($event_id){
+        $isreimburse = $this->EventRepository->reimburseMembersForEvent($event_id);
+        return $isreimburse;
     }
 
-    public function CancelAnEvent($user_id,$event_id){
+    private function CancelAnEvent($user_id,$event_id){
         $is_canceled = $this->EventRepository->cancelEvenement($user_id,$event_id);
         return $is_canceled;
     }
