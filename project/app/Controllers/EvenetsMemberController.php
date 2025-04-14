@@ -28,11 +28,11 @@ class EvenetsMemberController extends BaseController {
         $member = $this->MembreServices->getProfileMembre($user_id);
         $my_solde = $this->solde($user_id);
         $events = $this->EvenetsMemberServices->getAllEvents();
-        $inscription = $this->EvenetsMemberServices->getInscriptionEvent($user_id);
+        $inscriptions = $this->EvenetsMemberServices->getInscriptionEvent($user_id);
         foreach ($events as &$event){
             $event["programme"] = $this->EvenementProgrammeService->getByEvenementId($event['id']);
         }
-        return $this->renderMem('evenements',compact('member','my_solde','events','inscription'));
+        return $this->renderMem('evenements',compact('member','my_solde','events','inscriptions'));
     }
 
     public function inscription(){

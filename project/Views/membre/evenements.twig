@@ -778,7 +778,7 @@
                                     <!-- Action Button -->
                                     {% set userIsRegistered = false %}
                                     {% for inscription in inscriptions %}
-                                        {% if inscription.event_id == event.id %}
+                                        {% if inscription.evenement_id == event.id %}
                                             {% set userIsRegistered = true %}
                                         {% endif %}
                                     {% endfor %}
