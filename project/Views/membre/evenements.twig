@@ -663,15 +663,11 @@
                                         {% elseif event.statut == 'Pending' %}status-pending
                                         {% elseif event.statut == 'Full' %}status-full
                                         {% elseif event.statut == 'In Progress' %}status-in-progress
-                                        {% elseif event.statut == 'Completed' %}status-completed
-                                        {% elseif event.statut == 'Cancelled' %}status-cancelled
                                         {% else %}status-pending{% endif %}">
                                         {% if event.statut == 'Open' %}Ouvert
                                         {% elseif event.statut == 'Pending' %}En attente
                                         {% elseif event.statut == 'Full' %}Complet
                                         {% elseif event.statut == 'In Progress' %}En cours
-                                        {% elseif event.statut == 'Completed' %}Terminé
-                                        {% elseif event.statut == 'Cancelled' %}Annulé
                                         {% else %}{{ event.statut }}{% endif %}
                                     </div>
                                 </div>
@@ -821,7 +817,7 @@
                 </div>
             </section>
             
-            <!-- Past Events -->
+            {# <!-- Past Events -->
             <section class="mb-10">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold text-gray-800">Past Events</h2>
@@ -832,129 +828,51 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Past Event Card 1 -->
-                    <div class="event-card shadow-sm opacity-80 hover:opacity-100 transition">
-                        <div class="relative">
-                            <img src="/api/placeholder/400/250" alt="Call of Duty Tournament" class="w-full h-48 object-cover filter grayscale-[30%]">
-                            
-                            <div class="date-badge">
-                                <i class="fas fa-calendar-alt mr-1"></i> March 15, 2025
-                            </div>
-                            
-                            <div class="category-badge category-competition">
-                                Competition
-                            </div>
-                            
-                            <div class="status-badge status-ended">
-                                Ended
-                            </div>
-                        </div>
-                        
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-3">
-                                <h3 class="text-lg font-bold text-gray-800">Call of Duty Tournament</h3>
-                                <div class="flex items-center">
-                                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full flex items-center">
-                                        <i class="fas fa-check-circle mr-1"></i> Attended
-                                    </span>
+                    {% for event in events %}
+                        {% if event.statut == 'Completed'%}
+                        <div class="event-card shadow-sm opacity-80 hover:opacity-100 transition">
+                            <div class="relative">
+                                <img src="/{{event.image}}" alt="{{event.name}}" class="w-full h-48 object-cover filter grayscale-[30%]">
+                                
+                                <div class="date-badge">
+                                    <i class="fas fa-calendar-alt mr-1"></i> {{event.date_debut}} - {{event.event_time}}
+                                </div>
+                                
+                                <div class="category-badge category-competition">
+                                    {{event.type_evenement}}
+                                </div>
+                                
+                                <div class="status-badge status-ended">
+                                    {{event.status}}
                                 </div>
                             </div>
                             
-                            <p class="text-sm text-gray-600 mb-4">Team-based tournament with 16 teams competing for the championship title and prizes.</p>
-                            
-                            <div class="mt-4 flex justify-between">
-                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
-                                    <i class="fas fa-photo-video mr-2"></i> View Gallery
-                                </button>
-                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
-                                    <i class="fas fa-trophy mr-2"></i> Results
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Past Event Card 2 -->
-                    <div class="event-card shadow-sm opacity-80 hover:opacity-100 transition">
-                        <div class="relative">
-                            <img src="/api/placeholder/400/250" alt="Gaming Industry Talk" class="w-full h-48 object-cover filter grayscale-[30%]">
-                            
-                            <div class="date-badge">
-                                <i class="fas fa-calendar-alt mr-1"></i> February 28, 2025
-                            </div>
-                            
-                            <div class="category-badge category-workshop">
-                                Talk
-                            </div>
-                            
-                            <div class="status-badge status-ended">
-                                Ended
-                            </div>
-                        </div>
-                        
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-3">
-                                <h3 class="text-lg font-bold text-gray-800">Gaming Industry Talk</h3>
-                                <div class="flex items-center">
-                                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full flex items-center">
-                                        <i class="fas fa-check-circle mr-1"></i> Attended
-                                    </span>
+                            <div class="p-5">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="text-lg font-bold text-gray-800">{{event.name}}</h3>
+                                    <div class="flex items-center">
+                                        <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full flex items-center">
+                                            <i class="fas fa-check-circle mr-1"></i> {{event.lieu}}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <p class="text-sm text-gray-600 mb-4">{{event.description}}.</p>
+                                
+                                <div class="mt-4 flex justify-between">
+                                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                                        <i class="fas fa-photo-video mr-2"></i> View Gallery
+                                    </button>
+                                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                                        <i class="fas fa-trophy mr-2"></i> Results
+                                    </button>
                                 </div>
                             </div>
-                            
-                            <p class="text-sm text-gray-600 mb-4">Industry professionals discussed the future of gaming and emerging technologies.</p>
-                            
-                            <div class="mt-4 flex justify-between">
-                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
-                                    <i class="fas fa-video mr-2"></i> Watch Recording
-                                </button>
-                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
-                                    <i class="fas fa-file-alt mr-2"></i> Notes
-                                </button>
-                            </div>
                         </div>
-                    </div>
-                    
-                    <!-- Past Event Card 3 -->
-                    <div class="event-card shadow-sm opacity-80 hover:opacity-100 transition">
-                        <div class="relative">
-                            <img src="/api/placeholder/400/250" alt="Game Launch Party" class="w-full h-48 object-cover filter grayscale-[30%]">
-                            
-                            <div class="date-badge">
-                                <i class="fas fa-calendar-alt mr-1"></i> February 10, 2025
-                            </div>
-                            
-                            <div class="category-badge category-social">
-                                Launch Party
-                            </div>
-                            
-                            <div class="status-badge status-ended">
-                                Ended
-                            </div>
-                        </div>
-                        
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-3">
-                                <h3 class="text-lg font-bold text-gray-800">Elden Ring 2 Launch Party</h3>
-                                <div class="flex items-center">
-                                    <span class="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full flex items-center">
-                                        <i class="fas fa-check-circle mr-1"></i> Attended
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <p class="text-sm text-gray-600 mb-4">Celebrated the launch of Elden Ring 2 with exclusive gameplay, giveaways, and more.</p>
-                            
-                            <div class="mt-4 flex justify-between">
-                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
-                                    <i class="fas fa-photo-video mr-2"></i> View Gallery
-                                </button>
-                                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
-                                    <i class="fas fa-star mr-2"></i> Highlights
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-            </section>
+            </section> #}
         </main>
     </div>
     
