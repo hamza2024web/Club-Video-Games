@@ -80,13 +80,13 @@ class EvenementController extends BaseController{
             $cancelEventRemoborse = $this->EvenementServices->cancelEventWithRemborse($user_id,$event_id);
             
         } else {
-            $cancelEvent = $this->EvenementServices->CancelAnEvent($user_id,$event_id);
+            // $cancelEvent = $this->EvenementServices->CancelAnEvent($user_id,$event_id);
 
-            if($cancelEvent === true){ 
-                header("location: /organisateur/evenement?Evenement_Canceled_Succefully=1");
-            } else {
-                header("location: /organisateur/evenement?Evenement_Canceled_failed=1");
-            }
+            // if($cancelEvent === true){ 
+            //     header("location: /organisateur/evenement?Evenement_Canceled_Succefully=1");
+            // } else {
+            //     header("location: /organisateur/evenement?Evenement_Canceled_failed=1");
+            // }
         }
 
 

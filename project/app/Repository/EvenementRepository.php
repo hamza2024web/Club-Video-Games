@@ -172,42 +172,107 @@ class EvenementRepository {
     }
 
     public function reimburseMembersForEvent($event_id) {
-        $sqlMember = "SELECT membre_id FROM inscription_evenement WHERE evenement_id = :event_id";
-        $stmt = $this->conn->prepare($sqlMember);
-        $stmt->bindParam(":event_id", $event_id);
-        $stmt->execute();
-        $inscription_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        $success_count = 0;
-        
-        foreach ($inscription_data as $data) {
-            $member_id = $data['membre_id'];
+        try {
+            $this->conn->beginTransaction();
             
-            $sqlEvents = "SELECT frais_inscription FROM inscription_evenement WHERE membre_id = :member_id AND evenement_id = :event_id";
-            $stmt = $this->conn->prepare($sqlEvents);
-            $stmt->bindParam(":member_id", $member_id);
+            $sqlMember = "SELECT membre_id FROM inscription_evenement WHERE evenement_id = :event_id";
+            $stmt = $this->conn->prepare($sqlMember);
             $stmt->bindParam(":event_id", $event_id);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (!$result) {
-                continue; 
-            }
-            $frais_inscription = $result['frais_inscription'];
+            $inscription_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            $current_solde_data = $this->GetSolde($member_id);
-            if (!$current_solde_data || !isset($current_solde_data['solde'])) {
-                continue; 
+            $success_count = 0;
+            $log_entries = [];
+            
+            foreach ($inscription_data as $data) {
+                $member_id = $data['membre_id'];
+                
+                $sqlEvents = "SELECT frais_inscription FROM inscription_evenement WHERE membre_id = :member_id AND evenement_id = :event_id";
+                $stmt = $this->conn->prepare($sqlEvents);
+                $stmt->bindParam(":member_id", $member_id);
+                $stmt->bindParam(":event_id", $event_id);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$result) {
+                    $log_entries[] = "Member ID $member_id: No registration fee found";
+                    continue; 
+                }
+                
+                $frais_inscription = $result['frais_inscription'];
+                
+                $current_solde_data = $this->GetSolde($member_id);
+                if (!$current_solde_data || !isset($current_solde_data['solde'])) {
+                    $log_entries[] = "Member ID $member_id: No balance record found";
+                    continue; 
+                }
+                
+                $current_solde = $current_solde_data['solde'];
+                $new_solde = $current_solde + $frais_inscription;
+                
+                if ($this->updateSolde($member_id, $new_solde)) {
+                    $success_count++;
+                    $this->logReimbursement($member_id, $event_id, $frais_inscription, $current_solde, $new_solde);
+                    $log_entries[] = "Member ID $member_id: Successfully reimbursed $frais_inscription";
+                } else {
+                    $log_entries[] = "Member ID $member_id: Failed to update balance";
+                }
             }
             
-            $current_solde = $current_solde_data['solde'];
-            $new_solde = $current_solde + $frais_inscription;
-            
-            if ($this->updateSolde($member_id, $new_solde)) {
-                $success_count++;
+            if ($success_count == 0 && count($inscription_data) > 0) {
+                $this->conn->rollBack();
+                $this->logError("Event ID $event_id: Reimbursement failed - no members were reimbursed");
+                return 0;
             }
+            
+            $this->conn->commit();
+            
+            $this->logSuccess("Event ID $event_id: Successfully reimbursed $success_count members");
+            
+            return $success_count;
+            
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            $this->logError("Event ID $event_id: Reimbursement error - " . $e->getMessage());
+            return 0;
         }
-        
-        return $success_count; 
+    }
+    
+    private function logReimbursement($member_id, $event_id, $amount, $old_balance, $new_balance) {
+        try {
+            $sqlOrganisatur = "SELECT user_id FROM organisateur 
+            INNER JOIN evenement ON evenement.club_id = organisateur.club_id
+            WHERE evenement.id = :event_id";
+            $stmt = $this->conn->prepare($sqlOrganisatur);
+            $stmt->bindParam("event_id",$event_id);
+            $stmt->execute();
+            $oragnisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+            if(!$oragnisateur){
+                return false;
+            }
+            $oragnisateur_id = $oragnisateur["user_id"];
+
+            $sql = "INSERT INTO transaction_log (member_id, event_id, amount, old_balance, new_balance, transaction_type, created_by, created_at) VALUES (:member_id, :event_id, :amount, :old_balance, :new_balance, 'reimbursement', :created_by, NOW())";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":member_id", $member_id);
+            $stmt->bindParam(":event_id", $event_id);
+            $stmt->bindParam(":amount", $amount);
+            $stmt->bindParam(":old_balance", $old_balance);
+            $stmt->bindParam(":new_balance", $new_balance);
+            $stmt->bindParam(":created_by", $oragnisateur_id); 
+            $stmt->execute();
+        } catch (PDOException $e) {
+            // Log error but don't stop the transaction
+            error_log("Failed to log reimbursement: " . $e->getMessage());
+        }
+    }
+    
+    private function logError($message) {
+        error_log("REIMBURSEMENT ERROR [" . date('Y-m-d H:i:s') . "]: " . $message);
+    }
+
+    private function logSuccess($message) {
+        error_log("REIMBURSEMENT SUCCESS [" . date('Y-m-d H:i:s') . "]: " . $message);
     }
     
     private function GetSolde($member_id) {
