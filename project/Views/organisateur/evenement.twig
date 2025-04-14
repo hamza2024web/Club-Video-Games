@@ -1214,7 +1214,7 @@
                     // Get the form using the event ID
                     const form = document.getElementById(`cancelEventForm-${eventId}`);
                     if (form) {
-                        setTimeout(() => form.submit(), 1000); // délai pour laisser le loader s'afficher
+                        setTimeout(() => form.submit(), 5000); // délai pour laisser le loader s'afficher
                     } else {
                         console.error("Formulaire introuvable pour l'événement ID:", eventId);
                     }
@@ -1228,7 +1228,12 @@
                 text: 'Annulation de votre evenement a été avec succès',
                 icon: 'success',
                 confirmButtonColor: '#8b5cf6'
-            }).then(cleanURL);
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
         }
 
         if (urlParams.has('Evenement_Canceled_failed')) {
@@ -1237,7 +1242,12 @@
                 text: 'Annulation de votre evenment a échoué. Veuillez réessayer.',
                 icon: 'error',
                 confirmButtonColor: '#8b5cf6'
-            }).then(cleanURL);
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
         }
 
         // Make sure the function is defined in the global scope

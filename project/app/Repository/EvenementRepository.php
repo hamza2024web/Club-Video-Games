@@ -145,7 +145,7 @@ class EvenementRepository {
         }
     }
 
-    public function cancelEvenement($user_id,$event_id){
+    public function cancelEvenement($user_id, $event_id) {
         $query = "SELECT club_id FROM organisateur WHERE user_id=:user_id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":user_id", $user_id);
@@ -155,22 +155,19 @@ class EvenementRepository {
         if (!$club_idd) {
             return false; 
         }
-        
         $club_id = $club_idd["club_id"];
-
-        $sqlCancel = "UPDATE evenement SET statut = :statut WHERE club_id  = :club_id AND id = :event_id";
+    
+        $sqlCancel = "UPDATE evenement SET statut = :statut WHERE club_id = :club_id AND id = :event_id";
         $stmt = $this->conn->prepare($sqlCancel);
         $status = "cancelled";
-        $stmt->bindParam(":statut",$status);
-        $stmt->bindParam(":club_id",$club_id);
-        $stmt->bindParam(":event_id",$event_id);
-        $stmt->execute();
-        $canceled = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$canceled){
-            return null;
+        $stmt->bindParam(":statut", $status);
+        $stmt->bindParam(":club_id", $club_id);
+        $stmt->bindParam(":event_id", $event_id);
+        $result = $stmt->execute();
+        if ($result && $stmt->rowCount() > 0) {
+            return true; 
         } else {
-            return true;
+            return false; 
         }
     }
 }
