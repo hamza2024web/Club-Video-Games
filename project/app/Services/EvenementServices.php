@@ -21,6 +21,7 @@ class EvenementServices {
 
     public function cancelEventWithRemborse($user_id,$event_id){
         $montant = $this->thPriceOfInscriptions($user_id,$event_id);
+
     }
 
     private function thPriceOfInscriptions($user_id,$event_id){

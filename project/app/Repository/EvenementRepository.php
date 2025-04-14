@@ -171,15 +171,51 @@ class EvenementRepository {
         }
     }
 
-    public function FetchThePriceOfInscriptions($user_id,$event_id){
-        $sqlMember = "SELECT id FROM membre WHERE user_id = :user_id";
+    public function FetchThePriceOfInscriptions($user_id, $event_id) {
+        $sqlMember = "SELECT membre_id  FROM inscription_evenement WHERE evenement_id  = :event_id";
         $stmt = $this->conn->prepare($sqlMember);
+        $stmt->bindParam(":event_id", $event_id);
+        $stmt->execute();
+        $inscription_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($inscription_data as $member_id){
+            $sqlEvents = "SELECT frais_inscription FROM inscription_evenement WHERE membre_id  = :member_id AND evenement_id = :event_id";
+            $stmt = $this->conn->prepare($sqlEvents);
+            $stmt->bindParam(":member_id", $member_id);
+            $stmt->bindParam(":event_id", $event_id);
+            $stmt->execute();
+            $frais_inscription = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$frais_inscription) {
+                return null; 
+            }
+            $CurrentSolde = $this->GetSolde($member_id);
+
+            $newSolde = $CurrentSolde + $frais_inscription;
+
+            $theNewSolde = $this->updateSolde($user_id);
+        }
+
+    }
+
+    private function GetSolde ($member_id){
+        $user_id = $this->GetUserId($member_id);
+        $sqlSolde = "SELECT solde FROM compte WHERE user_id=:user_id";
+        $stmt = $this->conn->prepare($sqlSolde);
         $stmt->bindParam(":user_id",$user_id);
         $stmt->execute();
-        $member_idd = $stmt->fetch(PDO::FETCH_ASSOC);
+        $CurrentSolde = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $CurrentSolde;
+    }
 
-        $member_id = $member_idd["id"];
-        
+    private function GetUserId($member_id){
+        $sql = "SELECT user_id FROM membre WHERE id=:member_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":member_id",$member_id);
+        $stmt->execute();
+        $id_member = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $user_id = $id_member["user_id"];
+        return $user_id;
     }
 }
 ?>
