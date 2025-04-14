@@ -187,28 +187,30 @@ class EvenementRepository {
             $stmt->bindParam(":event_id", $event_id);
             $stmt->execute();
             $inscription_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             $success_count = 0;
             $log_entries = [];
             
             foreach ($inscription_data as $data) {
                 $member_id = $data['membre_id'];
-                
+
                 $sqlEvents = "SELECT frais_inscription FROM inscription_evenement WHERE membre_id = :member_id AND evenement_id = :event_id";
                 $stmt = $this->conn->prepare($sqlEvents);
                 $stmt->bindParam(":member_id", $member_id);
                 $stmt->bindParam(":event_id", $event_id);
                 $stmt->execute();
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                
+
                 if (!$result) {
                     $log_entries[] = "Member ID $member_id: No registration fee found";
                     continue; 
                 }
                 
                 $frais_inscription = $result['frais_inscription'];
-                
+
                 $current_solde_data = $this->GetSolde($member_id);
+                var_dump($current_solde_data);
+                exit();
                 if (!$current_solde_data || !isset($current_solde_data['solde'])) {
                     $log_entries[] = "Member ID $member_id: No balance record found";
                     continue; 
