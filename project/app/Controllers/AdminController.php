@@ -16,8 +16,12 @@ class AdminController extends BaseController {
 
     public function dashboard (){
         $this->renderAdmin('dashboard');
+
     }
     
+    public function StatistiqueGames (){
+        
+    }
     public function genre(){
         $genres = $this->adminServices->getGenre();
         $this->renderAdmin('genre',compact('genres'));
