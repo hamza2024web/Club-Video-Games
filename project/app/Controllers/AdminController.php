@@ -2,25 +2,29 @@
 namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\dashboardServices;
+use App\Services\StatistiqueAdminServices;
 use App\Services\UsersServices;
 
 class AdminController extends BaseController { 
     protected $usersServices;
     protected $adminServices;
+    protected $StatistiqueAdminServices;
     public function __construct()
     {
         parent::__construct();
         $this->usersServices = new UsersServices();
         $this->adminServices = new dashboardServices();
+        $this->StatistiqueAdminServices = new StatistiqueAdminServices();
     }
 
     public function dashboard (){
-        $this->renderAdmin('dashboard');
-
+        $total_games = $this->StatistiqueGames();
+        $this->renderAdmin('dashboard',compact('total_games'));
     }
     
     public function StatistiqueGames (){
-        
+        $games = $this->StatistiqueAdminServices->totalGames();
+        return $games;
     }
     public function genre(){
         $genres = $this->adminServices->getGenre();
