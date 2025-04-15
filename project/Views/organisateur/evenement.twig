@@ -357,11 +357,11 @@
                 <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
                     Événements
                 </div>
-                <a href="#" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
+                <a href="organisateur/evenement" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
                     <i class="fas fa-calendar-alt w-5 sidebar-icon text-purple-300"></i>
                     <span class="sidebar-text ml-2 text-sm">Événement</span>
                 </a>
-                <a href="tournoi" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                <a href="/tournoi" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
                     <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
                     <span class="sidebar-text ml-2 text-sm">Tournois</span>
                 </a>
@@ -570,343 +570,228 @@
                     <!-- Event Cards -->
                     <div class="p-6">
                         <div class="grid grid-cols-1 gap-4">
-                            <!-- Event Card 1 -->
-                            <div class="event-card status-active bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
-                                <!-- Event Summary (Always visible) -->
-                                <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
-                                    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-                                        <div class="flex-shrink-0">
-                                            <!-- Event image -->
-                                            <div class="w-14 h-14 rounded-lg overflow-hidden">
-                                                <img src="https://via.placeholder.com/56x56.png?text=LAN" alt="LAN Party" class="w-full h-full object-cover">
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-bold text-lg text-gray-800">LAN Party - Printemps 2025</h3>
-                                            <div class="flex items-center text-sm text-gray-500 mt-1">
-                                                <i class="far fa-calendar-alt mr-2"></i>
-                                                <span>15 avril 2025 - 18:00</span>
-                                            </div>
-                                        </div>
+                            {% if events|length == 0 %}
+                                <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                                    <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-4 float-animation">
+                                        <i class="fas fa-gamepad text-5xl text-purple-400"></i>
                                     </div>
-                                    
-                                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                                        <!-- Status Badge -->
-                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                            En cours
-                                        </span>
-                                        
-                                        <!-- Participants Counter -->
-                                        <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-users mr-1.5"></i>
-                                            <span class="text-xs font-medium">48/50</span>
-                                        </div>
-                                        
-                                        <!-- Category Icon -->
-                                        <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-laptop mr-1.5"></i>
-                                            <span class="text-xs font-medium">LAN Party</span>
-                                        </div>
-                                        
-                                        <!-- Action buttons -->
-                                        <div class="flex items-center gap-2 ml-auto">
-                                            <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
-                                                <i class="fas fa-chart-line"></i>
-                                            </button>
-                                            <button class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
-                                                <i class="fas fa-chevron-down rotate-icon"></i>
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Aucun Evenement dans votre Club</h2>
+                                    <p class="text-gray-600 mb-6 max-w-md">Vous n'avez pas encore ajouté un Evenement.</p>
                                 </div>
-                                
-                                <!-- Event Details (Hidden by default, toggles on click) -->
-                                <div class="card-details border-t border-gray-200 hidden">
-                                    <!-- Event Banner Image -->
-                                    <div class="w-full h-48 overflow-hidden">
-                                        <img src="https://via.placeholder.com/800x300.png?text=LAN+Party" alt="LAN Party" class="w-full h-full object-cover">
-                                    </div>
-                                    
-                                    <!-- Scrollable content area with max height -->
-                                    <div class="p-5 overflow-y-auto max-h-[400px] custom-scrollbar">
-                                        <!-- Event Details Row -->
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-                                            <div class="flex items-center p-4 bg-indigo-50 rounded-lg">
-                                                <div class="mr-3 p-2.5 bg-indigo-100 rounded-full">
-                                                    <i class="fas fa-users text-indigo-600"></i>
+                            {% else %}
+                                {% for event in events %}
+                                    <div class="event-card status-active bg-white rounded-xl shadow-sm overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100 hover:border-purple-200">
+                                        <!-- Event Summary (Always visible) -->
+                                        <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
+                                            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                                                <div class="flex-shrink-0">
+                                                    <!-- Event image with improved styling -->
+                                                    <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm border-2 border-indigo-50">
+                                                        <img src="/{{event.event_photo}}" alt="{{event.name}}" class="w-full h-full object-cover">
+                                                    </div>
                                                 </div>
                                                 <div>
-                                                    <p class="text-xs text-indigo-600 font-medium">Participants</p>
-                                                    <p class="text-sm font-bold text-gray-800">48/50 Inscrits</p>
+                                                    <h3 class="font-bold text-lg text-gray-800 hover:text-indigo-700 transition-colors">{{event.name}}</h3>
+                                                    <div class="flex items-center text-sm text-gray-500 mt-1.5">
+                                                        <i class="far fa-calendar-alt mr-2 text-indigo-400"></i>
+                                                        <span>{{event.date_debut}} - {{event.event_time}}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
-                                            <div class="flex items-center p-4 bg-purple-50 rounded-lg">
-                                                <div class="mr-3 p-2.5 bg-purple-100 rounded-full">
-                                                    <i class="fas fa-map-marker-alt text-purple-600"></i>
+                                            <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                                                <!-- Status Badge with enhanced styling -->
+                                                <span class="px-3.5 py-1.5 text-xs font-medium rounded-full shadow-sm
+                                                    {% if event.statut == 'Open' %}
+                                                        bg-gradient-to-r from-green-50 to-green-100 text-green-800 border border-green-200
+                                                    {% elseif event.statut == 'Completed' %}
+                                                        bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200
+                                                    {% elseif event.statut == 'Cancelled' %}
+                                                        bg-gradient-to-r from-red-50 to-red-100 text-red-800 border border-red-200
+                                                    {% elseif event.statut == 'In Progress' %}
+                                                        bg-gradient-to-r from-amber-50 to-amber-100 text-amber-800 border border-amber-200
+                                                    {% else %}
+                                                        bg-gradient-to-r from-purple-50 to-purple-100 text-purple-800 border border-purple-200
+                                                    {% endif %}
+                                                ">
+                                                    {{ event.statut }}
+                                                </span>
+                                                
+                                                <!-- Participants Counter with enhanced styling -->
+                                                <div class="bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-800 rounded-full px-3.5 py-1.5 flex items-center shadow-sm border border-indigo-200">
+                                                    <i class="fas fa-users mr-1.5 text-indigo-500"></i>
+                                                    <span class="text-xs font-semibold">{{event.numbre_membre}}</span>
                                                 </div>
-                                                <div>
-                                                    <p class="text-xs text-purple-600 font-medium">Lieu</p>
-                                                    <p class="text-sm font-bold text-gray-800">Salle Polyvalente</p>
+                                                
+                                                <!-- Category Icon with enhanced styling -->
+                                                <div class="bg-gradient-to-r from-purple-50 to-purple-100 text-purple-800 rounded-full px-3.5 py-1.5 flex items-center shadow-sm border border-purple-200">
+                                                    <i class="fas fa-laptop mr-1.5 text-purple-500"></i>
+                                                    <span class="text-xs font-semibold">{{event.type_evenement}}</span>
                                                 </div>
-                                            </div>
-                                            
-                                            <div class="flex items-center p-4 bg-green-50 rounded-lg">
-                                                <div class="mr-3 p-2.5 bg-green-100 rounded-full">
-                                                    <i class="fas fa-euro-sign text-green-600"></i>
-                                                </div>
-                                                <div>
-                                                    <p class="text-xs text-green-600 font-medium">Tarif</p>
-                                                    <p class="text-sm font-bold text-gray-800">15€ / personne</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Description Section -->
-                                        <div class="mt-5 pt-4 border-t border-gray-200">
-                                            <div class="flex items-center mb-2">
-                                                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
-                                                <h4 class="font-medium text-gray-900">Description</h4>
-                                            </div>
-                                            <div class="bg-blue-50 p-4 rounded-lg text-sm text-gray-700">
-                                                <p>Rejoignez-nous pour la plus grande LAN Party du printemps ! Apportez votre PC et affrontez d'autres joueurs dans différents tournois (Valorant, League of Legends, CS2).</p>
-                                                <p class="mt-2">Nous fournissons l'électricité, une connexion internet fibre et un espace convivial. Boissons et snacks disponibles sur place.</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Timeline Section -->
-                                        <div class="mt-5 pt-4 border-t border-gray-200">
-                                            <div class="flex items-center mb-4">
-                                                <i class="fas fa-clock text-amber-500 mr-2"></i>
-                                                <h4 class="font-medium text-gray-900">Programme</h4>
-                                            </div>
-                                            <div class="timeline pl-2">
-                                                <div class="timeline-item completed">
-                                                    <div class="timeline-point"></div>
-                                                    <div class="bg-amber-50 p-3 rounded-lg">
-                                                        <div class="font-medium text-amber-800">18:00 - Installation</div>
-                                                        <div class="text-sm text-gray-600">Arrivée des participants et installation du matériel</div>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item completed">
-                                                    <div class="timeline-point"></div>
-                                                    <div class="bg-amber-50 p-3 rounded-lg">
-                                                        <div class="font-medium text-amber-800">19:30 - Début des tournois</div>
-                                                        <div class="text-sm text-gray-600">Lancement des premiers matchs et jeux libres</div>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item">
-                                                    <div class="timeline-point"></div>
-                                                    <div class="bg-amber-50 p-3 rounded-lg">
-                                                        <div class="font-medium text-amber-800">22:00 - Pause pizza</div>
-                                                        <div class="text-sm text-gray-600">Livraison groupée de pizzas pour les participants</div>
-                                                    </div>
-                                                </div>
-                                                <div class="timeline-item">
-                                                    <div class="timeline-point"></div>
-                                                    <div class="bg-amber-50 p-3 rounded-lg">
-                                                        <div class="font-medium text-amber-800">00:00 - Tournois nocturnes</div>
-                                                        <div class="text-sm text-gray-600">Lancement des mini-tournois spéciaux</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Social Links -->
-                                        <div class="flex flex-wrap items-center gap-3 mt-5">
-                                            <a href="#" class="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-all">
-                                                <i class="fab fa-discord mr-2"></i> Discord
-                                            </a>
-                                            <a href="#" class="flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all">
-                                                <i class="fab fa-twitch mr-2"></i> Twitch
-                                            </a>
-                                            
-                                            <!-- Action Button -->
-                                            <div class="ml-auto">
-                                                <div class="group relative">
-                                                    <button class="p-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all">
-                                                        <i class="fas fa-ellipsis-v"></i>
+                                                
+                                                <!-- Action buttons with enhanced styling -->
+                                                <div class="flex items-center gap-2 ml-auto">
+                                                    <button class="p-2.5 bg-gradient-to-r from-indigo-50 to-indigo-100 hover:from-indigo-100 hover:to-indigo-200 text-indigo-700 rounded-lg transition-all shadow-sm border border-indigo-200" title="Statistiques">
+                                                        <i class="fas fa-chart-line"></i>
                                                     </button>
-                                                    <div class="absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-xl py-2 z-10 hidden group-hover:block border border-gray-100">
-                                                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                            <i class="fas fa-eye mr-3 text-gray-500"></i> Voir détails
-                                                        </a>
-                                                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                            <i class="fas fa-file-export mr-3 text-gray-500"></i> Exporter la liste
-                                                        </a>
-                                                        <div class="border-t border-gray-100 my-1"></div>
-                                                        <a href="#" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                                            <i class="fas fa-ban mr-3"></i> Annuler l'événement
-                                                        </a>
-                                                    </div>
+                                                    <button class="p-2.5 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 text-gray-700 rounded-lg transition-all shadow-sm border border-gray-200">
+                                                        <i class="fas fa-chevron-down rotate-icon"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Event Card 2 -->
-                            <div class="event-card status-upcoming bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
-                                <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
-                                    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-14 h-14 rounded-lg overflow-hidden">
-                                                <img src="https://via.placeholder.com/56x56.png?text=CS2" alt="CS2 Workshop" class="w-full h-full object-cover">
+                                        
+                                        <!-- Event Details (Hidden by default, toggles on click) -->
+                                        <div class="card-details border-t border-gray-200 hidden">
+                                            <!-- Event Banner Image with overlay gradient -->
+                                            <div class="w-full h-56 overflow-hidden relative">
+                                                <img src="/{{event.event_photo}}" alt="{{event.name}}" class="w-full h-full object-cover">
+                                                <!-- Image overlay gradient -->
+                                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+                                                    <!-- Event date badge positioned at the bottom left of the banner -->
+                                                    <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-purple-100">
+                                                        <div class="flex items-center">
+                                                            <i class="far fa-calendar-alt text-purple-600 mr-2"></i>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500 font-medium">Date</p>
+                                                                <p class="text-sm font-bold text-gray-800">{{event.date_debut}}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Scrollable content area with max height -->
+                                            <div class="p-6 overflow-y-auto max-h-[400px] custom-scrollbar">
+                                                <!-- Event Details Row with enhanced card styling -->
+                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                                    <div class="flex items-center p-4 bg-gradient-to-br from-indigo-50 to-white rounded-xl shadow-sm border border-indigo-100 hover:shadow-md transition-all">
+                                                        <div class="mr-3 p-3 bg-indigo-100 rounded-full shadow-sm">
+                                                            <i class="fas fa-users text-indigo-600"></i>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-xs text-indigo-600 font-medium uppercase tracking-wide">Participants</p>
+                                                            <p class="text-base font-bold text-gray-800">{{event.number_participants}} / {{event.numbre_membre}} Inscrits</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="flex items-center p-4 bg-gradient-to-br from-purple-50 to-white rounded-xl shadow-sm border border-purple-100 hover:shadow-md transition-all">
+                                                        <div class="mr-3 p-3 bg-purple-100 rounded-full shadow-sm">
+                                                            <i class="fas fa-map-marker-alt text-purple-600"></i>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-xs text-purple-600 font-medium uppercase tracking-wide">Lieu</p>
+                                                            <p class="text-base font-bold text-gray-800">Salle Polyvalente</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="flex items-center p-4 bg-gradient-to-br from-green-50 to-white rounded-xl shadow-sm border border-green-100 hover:shadow-md transition-all">
+                                                        <div class="mr-3 p-3 bg-green-100 rounded-full shadow-sm">
+                                                            <i class="fas fa-euro-sign text-green-600"></i>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-xs text-green-600 font-medium uppercase tracking-wide">Frais</p>
+                                                            <p class="text-base font-bold text-gray-800">{{event.entry_fee}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Description Section with improved styling -->
+                                                <div class="mt-6 pt-5 border-t border-gray-200">
+                                                    <div class="flex items-center mb-3">
+                                                        <div class="p-2 bg-blue-100 rounded-full shadow-sm mr-3">
+                                                            <i class="fas fa-info-circle text-blue-600"></i>
+                                                        </div>
+                                                        <h4 class="font-semibold text-gray-900 text-lg">Description</h4>
+                                                    </div>
+                                                    <div class="bg-gradient-to-r from-blue-50 to-white p-5 rounded-xl text-sm text-gray-700 leading-relaxed shadow-sm border border-blue-100">
+                                                        <p>{{event.description}}</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Programme Section with enhanced styling -->
+                                                <div class="mt-6 pt-5 border-t border-gray-200">
+                                                    <!-- Section Header with improved styling -->
+                                                    <div class="flex items-center mb-5">
+                                                        <div class="p-2.5 bg-gradient-to-br from-amber-100 to-amber-50 rounded-full shadow-sm mr-3 border border-amber-200">
+                                                            <i class="fas fa-clock text-amber-600 text-lg"></i>
+                                                        </div>
+                                                        <h4 class="font-semibold text-gray-900 text-lg">Programme</h4>
+                                                    </div>
+                                                    
+                                                    <!-- Timeline with improved styling -->
+                                                    <div class="relative pl-10 before:content-[''] before:absolute before:left-3.5 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-amber-300 before:to-amber-100">
+                                                        {% for item in event.programme %}
+                                                            <div class="mb-7 relative">
+                                                                <!-- Timeline Point with pulsing effect -->
+                                                                <div class="absolute left-[-30px] top-2 w-7 h-7 bg-white rounded-full border-2 border-amber-400 z-10 flex items-center justify-center shadow-md">
+                                                                    <div class="w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
+                                                                </div>
+                                                                
+                                                                <!-- Content Card with enhanced styling -->
+                                                                <div class="bg-gradient-to-r from-amber-50 to-white p-5 rounded-xl shadow-sm border border-amber-100 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:border-amber-300">
+                                                                    <!-- Time Badge with improved styling -->
+                                                                    <div class="inline-block bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1.5 rounded-full mb-3 shadow-sm border border-amber-200">
+                                                                        <i class="far fa-clock mr-1.5"></i>
+                                                                        {{ item.timeline_time }}
+                                                                    </div>
+                                                                    
+                                                                    <!-- Event Title with improved styling -->
+                                                                    <h5 class="text-amber-900 font-bold text-lg mb-2">{{ item.timeline_title }}</h5>
+                                                                    
+                                                                    <!-- Event Description with improved styling -->
+                                                                    <p class="text-gray-600 text-sm leading-relaxed">{{ item.timeline_desc }}</p>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                        
+                                                        <!-- Empty state with improved styling -->
+                                                        {% if event.programme|length == 0 %}
+                                                            <div class="text-center py-6 px-5 bg-gradient-to-r from-amber-50 to-white rounded-xl border border-amber-100 shadow-sm">
+                                                                <div class="inline-flex items-center justify-center w-14 h-14 bg-amber-100 rounded-full mb-3 text-amber-400">
+                                                                    <i class="fas fa-calendar-times text-2xl"></i>
+                                                                </div>
+                                                                <p class="text-amber-800 font-medium text-base">Aucun détail de programme disponible</p>
+                                                                <p class="text-amber-600 text-sm mt-1.5 max-w-md mx-auto">Les informations seront ajoutées prochainement.</p>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Social Links and Actions with improved styling -->
+                                            <div class="flex flex-wrap items-center gap-3 p-5 bg-gray-50 border-t border-gray-200">
+                                                <!-- Social Links Group with improved styling -->
+                                                <div class="flex flex-wrap items-center gap-2">
+                                                    <!-- Discord Link with improved styling -->
+                                                    <a href="{{event.discrord_url}}" class="flex items-center px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all shadow-sm">
+                                                        <i class="fab fa-discord mr-2"></i> Discord
+                                                    </a>
+                                                    
+                                                    <!-- Twitch Link with improved styling -->
+                                                    <a href="{{event.twitch_url}}" class="flex items-center px-4 py-2.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all shadow-sm">
+                                                        <i class="fab fa-twitch mr-2"></i> Twitch
+                                                    </a>
+                                                </div>
+                                                
+                                                <!-- Spacer to push cancel button to the right -->
+                                                <div class="flex-grow"></div>
+                                                
+                                                <!-- Cancel Button with improved styling -->
+                                                <form action="/organisateur/cancelEvent" method="POST" id="cancelEventForm-{{ event.id }}">
+                                                    <input type="hidden" name="event_id" value="{{event.id}}">
+                                                    <button 
+                                                        type="button" <!-- Add type="button" to prevent automatic form submission 
+                                                        onclick="confirmCancelEvent('{{ event.id }}','{{ event.name }}')" 
+                                                        class="flex items-center px-5 py-2.5 bg-gradient-to-r from-red-50 to-red-100 text-red-600 rounded-lg hover:from-red-100 hover:to-red-200 transition-all shadow-sm border border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                                                        <i class="fas fa-ban mr-2.5"></i> Annuler l'événement
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
-                                        <div>
-                                            <h3 class="font-bold text-lg text-gray-800">Workshop CS2 Pro Tips</h3>
-                                            <div class="flex items-center text-sm text-gray-500 mt-1">
-                                                <i class="far fa-calendar-alt mr-2"></i>
-                                                <span>22 avril 2025 - 14:00</span>
-                                            </div>
-                                        </div>
                                     </div>
-                                    
-                                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                                            À venir
-                                        </span>
-                                        
-                                        <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-users mr-1.5"></i>
-                                            <span class="text-xs font-medium">25/30</span>
-                                        </div>
-                                        
-                                        <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-chalkboard-teacher mr-1.5"></i>
-                                            <span class="text-xs font-medium">Workshop</span>
-                                        </div>
-                                        
-                                        <div class="flex items-center gap-2 ml-auto">
-                                            <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
-                                                <i class="fas fa-chart-line"></i>
-                                            </button>
-                                            <button class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
-                                                <i class="fas fa-chevron-down rotate-icon"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Hidden details section -->
-                                <div class="card-details border-t border-gray-200 hidden">
-                                    <!-- Content here, similar to Event Card 1 -->
-                                </div>
-                            </div>
-                            
-                            <!-- Event Card 3 -->
-                            <div class="event-card status-upcoming bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
-                                <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
-                                    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-14 h-14 rounded-lg overflow-hidden">
-                                                <img src="https://via.placeholder.com/56x56.png?text=Launch" alt="Game Launch" class="w-full h-full object-cover">
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-bold text-lg text-gray-800">Soirée Launch Party - Black Ops 6</h3>
-                                            <div class="flex items-center text-sm text-gray-500 mt-1">
-                                                <i class="far fa-calendar-alt mr-2"></i>
-                                                <span>30 avril 2025 - 20:00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                                            À venir
-                                        </span>
-                                        
-                                        <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-users mr-1.5"></i>
-                                            <span class="text-xs font-medium">42/70</span>
-                                        </div>
-                                        
-                                        <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-glass-cheers mr-1.5"></i>
-                                            <span class="text-xs font-medium">Launch Party</span>
-                                        </div>
-                                        
-                                        <div class="flex items-center gap-2 ml-auto">
-                                            <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
-                                                <i class="fas fa-chart-line"></i>
-                                            </button>
-                                            <button class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
-                                                <i class="fas fa-chevron-down rotate-icon"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Hidden details section -->
-                                <div class="card-details border-t border-gray-200 hidden">
-                                    <!-- Content here, similar to Event Card 1 -->
-                                </div>
-                            </div>
-                            
-                            <!-- Event Card 4 (Completed) -->
-                            <div class="event-card status-completed bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
-                                <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
-                                    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-14 h-14 rounded-lg overflow-hidden">
-                                                <img src="https://via.placeholder.com/56x56.png?text=Meet" alt="Meet & Greet" class="w-full h-full object-cover">
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-bold text-lg text-gray-800">Meet & Greet - Équipe eSport</h3>
-                                            <div class="flex items-center text-sm text-gray-500 mt-1">
-                                                <i class="far fa-calendar-alt mr-2"></i>
-                                                <span>5 mars 2025 - 15:00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full bg-purple-100 text-purple-800">
-                                            Terminé
-                                        </span>
-                                        
-                                        <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-users mr-1.5"></i>
-                                            <span class="text-xs font-medium">74/80</span>
-                                        </div>
-                                        
-                                        <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-handshake mr-1.5"></i>
-                                            <span class="text-xs font-medium">Rencontre</span>
-                                        </div>
-                                        
-                                        <div class="flex items-center gap-2 ml-auto">
-                                            <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
-                                                <i class="fas fa-chart-line"></i>
-                                            </button>
-                                            <button class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Voir le bilan">
-                                                <i class="fas fa-file-alt"></i>
-                                            </button>
-                                            <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
-                                                <i class="fas fa-chevron-down rotate-icon"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Hidden details section -->
-                                <div class="card-details border-t border-gray-200 hidden">
-                                    <!-- Content here, similar to Event Card 1 -->
-                                </div>
-                            </div>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -951,17 +836,25 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date d'ouverture des inscriptions</label>
+                                <input type="date" name="registration_start" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date de clôture des inscriptions</label>
+                                <input type="date" name="registration_end" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
                                 <select name="category" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                     <option value="">Sélectionner une catégorie</option>
-                                    <option value="lan">LAN Party</option>
-                                    <option value="tournament">Tournoi</option>
-                                    <option value="workshop">Atelier</option>
-                                    <option value="meeting">Rencontre</option>
-                                    <option value="launch">Lancement</option>
-                                    <option value="party">Soirée</option>
+                                    <option value="Tournament">Tournoi</option>
+                                    <option value="Workshop">Atelier</option>
+                                    <option value="Watch Party">Rencontre</option>
+                                    <option value="Social">Social</option>
                                 </select>
                             </div>
                             
@@ -1059,15 +952,6 @@
                                 <input type="url" name="twitch_url" placeholder="https://twitch.tv/..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Formulaire d'inscription externe</label>
-                                <input type="url" name="registration_url" placeholder="https://..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Site web</label>
-                                <input type="url" name="website_url" placeholder="https://..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1181,10 +1065,286 @@
             
             // Initialize category chips
             initCategoryChips();
+            
+            // Validation du formulaire d'événement
+            const eventForm = document.querySelector('form[action="/organisateur/addEvenement"]');
+            
+            if (eventForm) {
+                eventForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get required fields
+                    const eventName = this.querySelector('input[name="name"]').value;
+                    const category = this.querySelector('select[name="category"]').value;
+                    const eventDate = this.querySelector('input[name="event_date"]').value;
+                    const eventTime = this.querySelector('input[name="event_time"]').value;
+                    const location = this.querySelector('input[name="location"]').value;
+                    const maxParticipants = this.querySelector('input[name="max_participants"]').value;
+                    
+                    // Simple validation
+                    if (!eventName || !category || !eventDate || !eventTime || !location || !maxParticipants) {
+                        Swal.fire({
+                            title: 'Formulaire incomplet',
+                            text: 'Veuillez remplir tous les champs obligatoires',
+                            icon: 'error',
+                            confirmButtonColor: '#8b5cf6'
+                        });
+                        return;
+                    }
+                    
+                    // Check registration dates if provided
+                    const registrationStart = this.querySelector('input[name="registration_start"]').value;
+                    const registrationEnd = this.querySelector('input[name="registration_end"]').value;
+                    
+                    if (registrationStart && registrationEnd) {
+                        if (new Date(registrationEnd) <= new Date(registrationStart)) {
+                            Swal.fire({
+                                title: 'Erreur de date',
+                                text: 'La date de clôture des inscriptions doit être postérieure à la date d\'ouverture',
+                                icon: 'error',
+                                confirmButtonColor: '#8b5cf6'
+                            });
+                            return;
+                        }
+                    }
+                    
+                    // Vérification que le nombre maximum de participants est raisonnable
+                    if (parseInt(maxParticipants) > 500) {
+                        Swal.fire({
+                            title: 'Nombre de participants trop élevé',
+                            text: 'Le nombre de participants semble anormalement élevé',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#8b5cf6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Continuer quand même',
+                            cancelButtonText: 'Corriger'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                submitForm();
+                            }
+                        });
+                        return;
+                    }
+                    
+                    // If everything is valid, show loading state and submit
+                    submitForm();
+                    
+                    function submitForm() {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Création en cours',
+                            text: 'Veuillez patienter pendant que nous créons votre événement...',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        // Submit the form
+                        eventForm.submit();
+                    }
+                });
+            }
         });
+
+        // Ajouter cette vérification des URL parameters juste après la fonction DOMContentLoaded
+        const urlParams = new URLSearchParams(window.location.search);
         
-        // Function to toggle card details
-        function toggleCardDetails(card) {
+        if (urlParams.has('evenement Created successfully') || urlParams.has('Evenement Created successfully!')) {
+            Swal.fire({
+                title: "Succès !",
+                text: "Événement créé avec succès !",
+                icon: "success",
+                confirmButtonText: "OK",
+                confirmButtonColor: '#8b5cf6',
+                timer: 3000 
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+        
+        if (urlParams.has('Creation de votre evenement echouée') || urlParams.has('Creation de votre evenement echouée')) {
+            Swal.fire({
+                title: 'Erreur de création',
+                text: 'La création de votre événement a échoué',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        function confirmCancelEvent(eventId, eventName) {
+            event.preventDefault();
+            
+            Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                html: `Voulez-vous vraiment annuler <strong>${eventName}</strong> ?<br><span class="text-gray-500 text-sm">Cette action ne peut pas être annulée.</span>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Oui, annuler',
+                cancelButtonText: 'Non, conserver',
+                customClass: {
+                    popup: 'rounded-xl',
+                    title: 'text-xl font-bold text-gray-800',
+                    htmlContainer: 'my-4',
+                    confirmButton: 'rounded-lg font-medium',
+                    cancelButton: 'rounded-lg font-medium'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Veuillez choisir la méthode de l'annulation:",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: "Avec remboursement des participants",
+                        cancelButtonText: "Sans remboursement des participants",
+                        customClass: {
+                            popup: 'rounded-xl',
+                            title: 'text-xl font-bold text-gray-800',
+                            confirmButton: 'rounded-lg font-medium',
+                            cancelButton: 'rounded-lg font-medium'
+                        }
+                    }).then((refundResult) => {
+                        if (refundResult.isDismissed && refundResult.dismiss === Swal.DismissReason.cancel) {
+                            const refundValue = "sans_rembourse";
+                            processFormSubmission(eventId, refundValue);
+                        } else if (refundResult.isConfirmed) {
+                            const refundValue = "rembourse";
+                            processFormSubmission(eventId, refundValue);
+                        } else {
+                            Swal.fire({
+                                title: 'Annulation interrompue',
+                                text: "L'opération d'annulation a été interrompue.",
+                                icon: 'info',
+                                confirmButtonColor: '#8b5cf6'
+                            });
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: 'Action annulée',
+                        text: 'Votre événement a été conservé.',
+                        icon: 'info',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }
+            });
+        }
+
+        function processFormSubmission(eventId, refundValue) {
+            const form = document.getElementById(`cancelEventForm-${eventId}`);
+            if (!form) {
+                console.error("Formulaire introuvable pour l'événement ID:", eventId);
+                // Try the alternative ID as fallback
+                const altForm = document.getElementById('cancelEventForm');
+                if (altForm) {
+                    console.log("Found form with alternate ID");
+                    form = altForm;
+                } else {
+                    Swal.fire({
+                        title: 'Erreur',
+                        text: "Impossible de traiter votre demande. Formulaire non trouvé.",
+                        icon: 'error'
+                    });
+                    return;
+                }
+            }
+
+            let refundInput = form.querySelector('input[name="refundType"]');
+            if (!refundInput) {
+                refundInput = document.createElement('input');
+                refundInput.type = 'hidden';
+                refundInput.name = 'refundType';
+                form.appendChild(refundInput);
+            }
+            
+            refundInput.value = refundValue;
+
+            Swal.fire({
+                title: 'Annulation en cours...',
+                text: 'Veuillez patienter pendant que nous traitons votre demande',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            setTimeout(() => {
+                console.log("Submitting form now");
+                form.submit();
+            }, 1500);
+        }
+
+        if (urlParams.has('Evenement_Canceled_Succefully_And_Participants_Reumbourse')) {
+            Swal.fire({
+                title: 'Succès!',
+                text: 'Annulation de votre evenement a été avec succès Avec La reumboussement Des Participants',
+                icon: 'success',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        if (urlParams.has('Evenement_Canceled_failed')) {
+            Swal.fire({
+                title: 'Échec',
+                text: 'Annulation de votre evenment a échoué. Veuillez réessayer.',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        if (urlParams.has('Evenement_Canceled_Succefully_Without_Reumbousing_Participants')) {
+            Swal.fire({
+                title: 'Succès!',
+                text: 'Annulation de votre evenement a été avec succès Mais La reumboussement Des Participants Pas Fait',
+                icon: 'success',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        if (urlParams.has('Evenement_Canceled_failed_Without_Reumbousing_Participants')) {
+            Swal.fire({
+                title: 'Échec',
+                text: 'Annulation de votre evenment a échoué. Veuillez réessayer.',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        // Make sure the function is defined in the global scope
+        window.toggleCardDetails = function(card) {
             if (!card) {
                 console.error('Card element not found');
                 return;
@@ -1220,7 +1380,19 @@
                     rotateIcon.style.transform = 'rotate(0)';
                 }
             }
-        }
+        };
+
+        // Alternative approach: Add event listeners after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find all elements that should toggle card details
+            const toggleButtons = document.querySelectorAll('.toggle-details-btn');
+            
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    toggleCardDetails(this.parentNode);
+                });
+            });
+        });
         
         // Initialize sidebar
         function initSidebar() {
@@ -1458,7 +1630,7 @@
                     }, 1500);
                 });
             }
-            
+
             // Vérifier si l'URL contient le paramètre de succès (vérifier les deux formats possibles)
             const urlParams = new URLSearchParams(window.location.search);
             
@@ -1503,6 +1675,7 @@
                 });
             }
         });
+        
     </script>
 </body>
 </html>

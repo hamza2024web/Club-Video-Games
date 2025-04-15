@@ -71,16 +71,5 @@ class TournoiController extends BaseController{
             header("location: /tournoi?Creation de votre tournoi echouée=1");
         }
     }
-    public function updateTournoiStatus(){
-        $id = $_POST["tournoi_id"];
-        $new_statut = $_POST["new_status"];
-
-        $statut = $this->TournoiServices->updateStatus($id,$new_statut);
-        if($statut){
-            header("location: /tournoi?Status_Updated_Succefully=1");
-        } else {
-            header("location: /tournoi?Status_Updated_Failed=1");
-        }
-    }
 }
 ?>

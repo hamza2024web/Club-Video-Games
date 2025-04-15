@@ -104,19 +104,6 @@ class TournoiRepository {
             return false;
         }
     }
-    public function setNewStatus($id,$new_statut){
-        try{
-            $sql = "UPDATE tournoi SET statut=:new_statut WHERE id=:id";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(":new_statut",$new_statut);
-            $stmt->bindParam(":id",$id);
-            $stmt->execute();
-            return true;
-        } catch (PDOException $e){
-            error_log("Erreur PDO dans addTounroi: " . $e->getMessage());
-            echo "Erreur: " . $e->getMessage();
-            return false;
-        }
-    }
+    
 }
 ?>

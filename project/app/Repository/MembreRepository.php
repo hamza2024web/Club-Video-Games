@@ -67,5 +67,23 @@ class MembreRepository {
             return false;
         }
     }
+
+    public function getAllNotification($user_id){
+        $sql = "SELECT COUNT(notifications.user_id) as notification_number FROM notifications WHERE user_id = :user_id  AND is_read = 0 GROUP BY notifications.id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function getNotifications($user_id){
+        $sql = "SELECT notifications.id , notifications.message , notifications.type , notifications.created_at FROM notifications WHERE user_id = :user_id AND is_read = 0 GROUP BY notifications.id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
 ?>

@@ -18,6 +18,16 @@ class MembreServices {
         $newProfile = $this->Membrerepository->updateProfile($user_id,$username,$email,$tag_name,$location,$about,$discord,$instagram,$youtube,$twitch,$cover_photo,$profile_photo);
         return $newProfile;
     }
+    
+    public function CountNotifications($user_id){
+        $notification = $this->Membrerepository->getAllNotification($user_id);
+        return $notification;
+    }
+    
+    public function GetAllNotifications($user_id){
+        $notifications = $this->Membrerepository->getNotifications($user_id);
+        return $notifications;
+    }
 }
 
 ?>
