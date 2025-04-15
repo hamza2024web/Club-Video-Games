@@ -493,11 +493,32 @@
                         <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     </div>
                     <div class="relative">
-                        <button class="text-gray-600 hover:text-gray-800 transition">
+                        <!-- Notification Bell with Counter -->
+                        <button id="notificationBtn" class="text-gray-600 hover:text-gray-800 transition">
                             <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
+                            <span id="notificationCounter" class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">{{notifications.notification_number}}</span>
                         </button>
+                        
+                        <!-- Notification Modal -->
+                        <div id="notificationModal" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl z-50 border border-gray-200">
+                            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                                <h3 class="font-semibold text-gray-700">Notifications</h3>
+                                <button id="markAllReadBtn" class="text-blue-500 hover:text-blue-700 text-sm flex items-center">
+                                    <i class="fas fa-check-double mr-1"></i> Mark all as read
+                                </button>
+                            </div>
+                            
+                            <div class="max-h-96 overflow-y-auto" id="notificationList">
+                                <!-- Notification items will be inserted here -->
+                                
+                            </div>
+                            
+                            <div class="p-3 text-center border-t border-gray-200">
+                                <a href="/notifications" class="text-blue-500 hover:text-blue-700 text-sm">View all notifications</a>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </header>
             
@@ -1265,6 +1286,96 @@
                     confirmButtonColor: '#8b5cf6'
                 }).then(cleanURL);
             }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elements
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationModal = document.getElementById('notificationModal');
+        const notificationList = document.getElementById('notificationList');
+        const notificationCounter = document.getElementById('notificationCounter');
+        const markAllReadBtn = document.getElementById('markAllReadBtn');
+        
+        // Toggle notification modal
+        notificationBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notificationModal.classList.toggle('hidden');
+            
+            if (!notificationModal.classList.contains('hidden')) {
+                renderNotifications();
+            }
+        });
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!notificationModal.contains(e.target) && e.target !== notificationBtn) {
+                notificationModal.classList.add('hidden');
+            }
+        });
+        
+        function renderNotifications() {
+            notificationList.innerHTML = '';
+            
+            if (notifications.length === 0) {
+                notificationList.innerHTML = '<div class="p-4 text-center text-gray-500">No notifications</div>';
+                return;
+            }
+            
+            notifications.forEach(notification => {
+                const createdDate = new Date(notification.created_at);
+                const now = new Date('2025-04-15 08:42:19'); // Using your current time
+                const relativeTime = formatRelativeTime(createdDate, now);
+                
+                // Create notification item
+                const item = document.createElement('div');
+                item.className = `p-4 border-b border-gray-100 hover:bg-gray-50 transition ${notification.is_read ? 'opacity-60' : ''}`;
+                
+                let iconClass = 'fa-info-circle text-blue-500';
+                if (notification.type === 'reimbursement') {
+                    iconClass = 'fa-coins text-green-500';
+                } else if (notification.type === 'event_cancellation') {
+                    iconClass = 'fa-calendar-times text-red-500';
+                } 
+                item.innerHTML = `
+                    <div class="flex">
+                        <div class="flex-shrink-0 mr-3">
+                            <i class="fas ${iconClass} text-xl mt-1"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-800">${notification.message}</p>
+                            <p class="text-xs text-gray-500 mt-1">${relativeTime}</p>
+                        </div>
+                        <div class="ml-2">
+                            <button class="mark-read-btn text-gray-400 hover:text-blue-500" data-id="${notification.id}">
+                                ${notification.is_read ? '<i class="fas fa-check text-green-500"></i>' : '<i class="far fa-circle"></i>'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                notificationList.appendChild(item);
+                
+                // Add event listener to mark as read button
+                const readBtn = item.querySelector('.mark-read-btn');
+                readBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const notificationId = this.getAttribute('data-id');
+                    markAsRead(notificationId);
+                });
+            });
+            
+            // Add event listeners for individual mark as read buttons
+            document.querySelectorAll('.mark-read-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const notificationId = this.getAttribute('data-id');
+                    markAsRead(notificationId);
+                });
+            });
+        }
+        
+        
+    });
     </script>
 </body>
 </html>

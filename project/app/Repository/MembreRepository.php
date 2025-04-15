@@ -69,7 +69,7 @@ class MembreRepository {
     }
 
     public function getAllNotification($user_id){
-        $sql = "SELECT COUNT(notifications.user_id) as notification_number FROM notifications WHERE user_id = :user_id GROUP BY notifications.id";
+        $sql = "SELECT COUNT(notifications.user_id) as notification_number FROM notifications WHERE user_id = :user_id  AND is_read = 0 GROUP BY notifications.id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":user_id",$user_id);
         $stmt->execute();
