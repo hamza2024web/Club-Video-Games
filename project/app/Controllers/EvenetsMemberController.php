@@ -32,7 +32,8 @@ class EvenetsMemberController extends BaseController {
         foreach ($events as &$event){
             $event["programme"] = $this->EvenementProgrammeService->getByEvenementId($event['id']);
         }
-        return $this->renderMem('evenements',compact('member','my_solde','events','inscriptions'));
+        $notifications = $this->MembreServices->CountNotifications($user_id);
+        return $this->renderMem('evenements',compact('member','my_solde','events','inscriptions','notifications'));
     }
 
     public function inscription(){

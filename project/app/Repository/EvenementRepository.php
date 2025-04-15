@@ -359,13 +359,13 @@ class EvenementRepository {
                 $notification_type = 'event_cancellation';
             }
             
-            $sql = "INSERT INTO notifications (user_id, message, type) VALUES (:user_id, :message, :type)";
+            $sql = "INSERT INTO notifications (user_id, message, type ,is_read) VALUES (:user_id, :message, :type, :is_read)";
             $stmt = $this->conn->prepare($sql);
-            
+            $is_read = 0;
             $stmt->bindParam(":user_id", $user_id);
             $stmt->bindParam(":message", $message);
             $stmt->bindParam(":type", $notification_type);
-            
+            $stmt->bindParam(":is_read",$is_read);
             $result = $stmt->execute();
 
             if (!$result) {

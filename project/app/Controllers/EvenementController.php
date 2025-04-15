@@ -27,7 +27,6 @@ class EvenementController extends BaseController{
         foreach ($events as &$event){
             $event['programme'] = $this->EvenementProgrammeService->getByEvenementId($event['id']);
         }
-        $notifications
         return $this->renderOrg('evenement',compact('profile','my_solde','events'));
     }
     public function addEvenement(){
