@@ -59,6 +59,8 @@ class EvenetsMemberController extends BaseController {
         $read = $this->EvenetsMemberServices->IsRead($user_id,$notification_id);
         if($read){
             header("location: /member/events");
+        } else {
+            header("location: /member/events");
         }
     }
 }
