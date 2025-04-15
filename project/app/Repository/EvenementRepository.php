@@ -294,7 +294,11 @@ class EvenementRepository {
             
             $organisateur_id = $organisateur["user_id"];
 
-            $transaction_type = 'Sans reimbursement';
+            if ($current_solde == $new_solde){
+                $transaction_type = 'Sans reimbursement';
+            } else {
+                $transaction_type = 'reimbursement';
+            }
 
             $sql = "INSERT INTO transaction_log (member_id, event_id, amount, old_balance, new_balance, transaction_type, created_by) VALUES (:member_id, :event_id, :amount, :old_balance, :new_balance, :transaction_type, :created_by)";
             $stmt = $this->conn->prepare($sql);
@@ -312,7 +316,8 @@ class EvenementRepository {
                 error_log("Failed to insert transaction log: " . $error[2]);
                 return false;
             }
-            
+
+            $notification = $this->insertNotification($member_id, $event_id, $transaction_type, $frais_inscription);
             return true;
         } 
         catch (PDOException $e) {
@@ -321,6 +326,58 @@ class EvenementRepository {
         }
     }
     
+    private function insertNotification($member_id, $event_id, $transaction_type, $amount) {
+        try {
+            $sql = "SELECT user_id FROM membre WHERE id = :member_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":member_id", $member_id);
+            $stmt->execute();
+            $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$user_data || !isset($user_data['user_id'])) {
+                error_log("Failed to get user_id for member_id: $member_id");
+                return false;
+            }
+            
+            $user_id = $user_data['user_id'];
+            $sql = "SELECT name FROM evenement WHERE id = :event_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":event_id", $event_id);
+            $stmt->execute();
+            $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
+            $event_name = $event_data['name'];
+
+            if ($transaction_type == 'reimbursement') {
+                $message = "Vous avez été remboursé(e) de $amount € pour l'événement \"$event_name\".";
+                $notification_type = 'reimbursement';
+            } else {
+                $message = "L'événement \"$event_name\" a été annulé sans remboursement.";
+                $notification_type = 'event_cancellation';
+            }
+            
+            $sql = "INSERT INTO notifications (user_id, message, type) VALUES (:user_id, :message, :type)";
+            $stmt = $this->conn->prepare($sql);
+            
+            $stmt->bindParam(":user_id", $user_id);
+            $stmt->bindParam(":message", $message);
+            $stmt->bindParam(":type", $notification_type);
+            
+            $result = $stmt->execute();
+            
+            if (!$result) {
+                $error = $stmt->errorInfo();
+                error_log("Failed to insert notification: " . print_r($error, true));
+                return false;
+            }
+            
+            return true;
+        }
+        catch (PDOException $e) {
+            error_log("Exception in insertNotification: " . $e->getMessage());
+            return false;
+        }
+    }
+
     private function GetSolde($member_id) {
         $user_id = $this->GetUserId($member_id);
         $sqlSolde = "SELECT solde FROM compte WHERE user_id = :user_id";
