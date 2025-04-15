@@ -45,5 +45,10 @@ class EventsMemberServices {
         $inscription = $this->EventsMemberRepository->GEtinscription_events($user_id);
         return $inscription;
     }
+
+    public function IsRead($user_id,$notification_id){
+        $Isread = $this->EventsMemberRepository->ReadIt($user_id,$notification_id);
+        return $Isread;
+    }
 }
 ?>

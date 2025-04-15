@@ -51,5 +51,13 @@ class EvenetsMemberController extends BaseController {
             header("location: /member/events?inscription_error=1");
         }
     }
+
+    public function readNotification(){
+        $user_id = $_SESSION["user_id"];
+        $notification_id = $_POST["notification_id"];
+
+        $read = $this->EvenetsMemberServices->IsRead($user_id,$notification_id);
+        return $read;
+    }
 }
 ?>

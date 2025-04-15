@@ -57,5 +57,21 @@ class EventsMemberRepository {
         $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $events;
     }
+
+    public function ReadIt($user_id,$notification_id){
+        $sql = "UPDATE notifications SET is_read = :is_read WHERE user_id = :user_id AND notifications.id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $is_read = 1;
+        $stmt->bindParam(":is_read",$is_read);
+        $stmt->bindParam(":id",$notification_id);
+        $stmt->bindParam("user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result && $stmt->rowCount() > 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 ?>

@@ -1421,31 +1421,53 @@
         }
 
     
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elements
-            const notificationBtn = document.getElementById('notificationBtn');
-            const notificationModal = document.getElementById('notificationModal');
-            const notificationList = document.getElementById('notificationList');
-            const notificationCounter = document.getElementById('notificationCounter');
-            const markAllReadBtn = document.getElementById('markAllReadBtn');
+    document.addEventListener('DOMContentLoaded', function() {
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationModal = document.getElementById('notificationModal');
+        const markAllReadBtn = document.getElementById('markAllReadBtn');
+        
+        // Toggle notification modal
+        notificationBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
             
-            notificationBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                notificationModal.classList.toggle('hidden');
-                
-                if (!notificationModal.classList.contains('hidden')) {
-                    renderNotifications();
-                }
-            });
+            // Add wiggle animation when opening
+            if (notificationModal.classList.contains('hidden')) {
+                notificationBtn.querySelector('i').classList.add('wiggle-animation');
+                setTimeout(() => {
+                    notificationBtn.querySelector('i').classList.remove('wiggle-animation');
+                }, 600);
+            }
             
-            document.addEventListener('click', function(e) {
-                if (!notificationModal.contains(e.target) && e.target !== notificationBtn) {
-                    notificationModal.classList.add('hidden');
-                }
-            });
-            
-            
+            notificationModal.classList.toggle('hidden');
         });
+        
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
+                notificationModal.classList.add('hidden');
+            }
+        });
+    });
+
+    document.querySelectorAll('.mark-read-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/member/notificationRead';
+            
+            const idField = document.createElement('input');
+            idField.type = 'hidden';
+            idField.name = 'notification_id';
+            idField.value = this.getAttribute('data-id');
+            form.appendChild(idField);
+            
+            document.body.appendChild(form);
+            form.submit();
+        });
+    });
+
     </script>
 </body>
 </html>
