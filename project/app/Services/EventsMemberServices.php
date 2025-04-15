@@ -47,7 +47,7 @@ class EventsMemberServices {
     }
 
     public function IsRead($user_id,$notification_id){
-        $Isread = $this->EventsMemberRepository->ReadIt($user_id,$notification_id);
+        $Isread = $this->EventsMemberRepository->ReadItNotifications($user_id,$notification_id);
         return $Isread;
     }
 }

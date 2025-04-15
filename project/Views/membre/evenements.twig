@@ -503,9 +503,27 @@
                 <ul class="space-y-1">
                     <li><a href="/member/dashboard" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-home mr-3 text-purple-300"></i>Dashboard</a></li>
                     <li><a href="/member/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournaments</a></li>
-                    <li><a href="/member/events" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-calendar-alt mr-3 text-purple-300"></i>Events
-                        <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{{notifications.notification_number}}</span>
-                    </a></li>
+                    <li>
+                        <a href="/member/events" class="sidebar-item group flex items-center p-3 rounded-lg transition-all hover:bg-indigo-600 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-indigo-700 to-indigo-800 rounded-lg"></div>
+                            <div class="flex items-center justify-between w-full relative z-10">
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar-alt mr-3 text-purple-300 group-hover:text-white transition-colors"></i>
+                                    <span class="text-white font-medium">Events</span>
+                                </div>
+                                {% if notifications.notification_number|default(0) > 0 %}
+                                    <div class="relative">
+                                        <span class="flex h-5 items-center justify-center">
+                                            <span class="animate-ping absolute h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
+                                            <span class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[1.25rem] text-center">
+                                                {{notifications.notification_number|default(0)}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>
                     <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
                     <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>My Games</a></li>
                     <li><a href="/member/rewards" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gift mr-3 text-purple-300"></i>Rewards</a></li>

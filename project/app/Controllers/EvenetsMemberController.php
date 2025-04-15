@@ -57,7 +57,9 @@ class EvenetsMemberController extends BaseController {
         $notification_id = $_POST["notification_id"];
 
         $read = $this->EvenetsMemberServices->IsRead($user_id,$notification_id);
-        return $read;
+        if($read){
+            header("location: /member/events");
+        }
     }
 }
 ?>

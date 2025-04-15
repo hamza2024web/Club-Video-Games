@@ -58,7 +58,7 @@ class EventsMemberRepository {
         return $events;
     }
 
-    public function ReadIt($user_id,$notification_id){
+    public function ReadItNotifications($user_id,$notification_id){
         $sql = "UPDATE notifications SET is_read = :is_read WHERE user_id = :user_id AND notifications.id = :id";
         $stmt = $this->conn->prepare($sql);
         $is_read = 1;
