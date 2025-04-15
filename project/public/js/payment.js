@@ -78,7 +78,7 @@ function processPayment(storageKey) {
         // Map cart items to the format needed for the order
         let orderDetails = cart.map(item => ({
             game_id: item.id,
-            order_id: item.id, // Using item.id as order_id or you can generate a new one
+            order_id: item.order_id, 
             price: item.price
         }));
                 

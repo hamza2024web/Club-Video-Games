@@ -16,22 +16,43 @@ class PaymentRepository {
 
     public function savePayement($user_id, $game_id, $order_id, $price) {
         try {
-            // Decode game IDs, order IDs, and prices
             $gameIds = json_decode($game_id, true);
             $orderIds = json_decode($order_id, true);
-            $prices = json_decode($price, true);
             
-            // Check if arrays have same length
-            if (count($gameIds) !== count($orderIds) || count($gameIds) !== count($prices)) {
-                throw new Exception("Mismatch between game, order IDs, and prices");
+            // Fix for price handling - check if it's already a number
+            if (is_numeric($price)) {
+                // Single price for all items
+                $prices = array_fill(0, count($gameIds), $price);
+            } else {
+                // Try to decode as JSON array
+                $prices = json_decode($price, true);
+                
+                // If decoding failed or result isn't an array, handle the error
+                if (!is_array($prices)) {
+                    throw new Exception("Invalid price format: " . $price);
+                }
             }
             
-            // Prepare order insertion statement
+            // Verify arrays have matching counts
+            if (count($gameIds) !== count($orderIds)) {
+                throw new Exception("Mismatch between game and order IDs");
+            }
+            
+            // Make sure we have a price for each game
+            if (count($gameIds) !== count($prices)) {
+                // If we have a single price value for multiple games, replicate it
+                if (count($prices) === 1 && count($gameIds) > 1) {
+                    $singlePrice = $prices[0];
+                    $prices = array_fill(0, count($gameIds), $singlePrice);
+                } else {
+                    throw new Exception("Mismatch between games and prices");
+                }
+            }
+            
             $orderStmt = $this->conn->prepare("INSERT INTO orders (jeu_id, order_id, user_id, price) VALUES (:game_id, :order_id, :user_id, :price)");
             
             $results = [];
             
-            // Start a database transaction
             $this->conn->beginTransaction();
             
             // Process each game
@@ -43,7 +64,7 @@ class PaymentRepository {
                 $orderStmt->bindParam(":price", $prices[$i], PDO::PARAM_STR); // Changed to PARAM_STR for float values
                 $orderStmt->execute();
                 
-                // Récupérer l'ID de la dernière insertion
+                // Get the ID of the last insertion
                 $lastId = $this->conn->lastInsertId();
                 $results[] = $lastId;
                 
@@ -72,7 +93,7 @@ class PaymentRepository {
                 $this->conn->rollBack();
             }
             
-            // Log the error (replace with your logging mechanism)
+            // Log the error
             error_log("Payment save error: " . $e->getMessage());
             
             return false;

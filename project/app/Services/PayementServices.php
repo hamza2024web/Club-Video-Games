@@ -18,9 +18,10 @@ class PayementServices {
         }
         $currentSolde = (float)$currentSoldeData;
         $total = (float)$total;
+
         if ($total <= $currentSolde) {            
             try {
-                $savePaiment = $this->PaymentRepository->savePayement($user_id, $game_id, $order_id, $price);
+                $savePaiment = $this->PaymentRepository->savePayement($user_id, $game_id, $order_id, $total);
                 if ($savePaiment) {
                     $newSolde = $currentSolde - $total;
                     $newCompteSolde = $this->PaymentRepository->updateUserSolde($user_id, $newSolde);
