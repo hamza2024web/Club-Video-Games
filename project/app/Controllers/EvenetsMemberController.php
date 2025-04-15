@@ -33,7 +33,8 @@ class EvenetsMemberController extends BaseController {
             $event["programme"] = $this->EvenementProgrammeService->getByEvenementId($event['id']);
         }
         $notifications = $this->MembreServices->CountNotifications($user_id);
-        return $this->renderMem('evenements',compact('member','my_solde','events','inscriptions','notifications'));
+        $notificationsContent = $this->MembreServices->GetAllNotifications($user_id);
+        return $this->renderMem('evenements',compact('member','my_solde','events','inscriptions','notifications','notificationsContent'));
     }
 
     public function inscription(){

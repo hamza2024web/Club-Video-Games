@@ -421,6 +421,50 @@
             transition: transform 0.3s ease;
         }
 
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #notificationModal {
+            animation: fadeIn 0.2s ease-out;
+            max-height: 80vh;
+        }
+
+        /* Scrollbar styling for notification list */
+        #notificationList::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        #notificationList::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        #notificationList::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 5px;
+        }
+
+        #notificationList::-webkit-scrollbar-thumb:hover {
+            background: #ccc;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 640px) {
+            #notificationModal {
+                width: 100vw;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                max-height: 70vh;
+            }
+        }
+
     </style>
 </head>
 <body class="bg-gray-100">
@@ -500,7 +544,7 @@
                         </button>
                         
                         <!-- Notification Modal -->
-                        <div id="notificationModal" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl z-50 border border-gray-200">
+                        <div id="notificationModal" class="hidden absolute right-0 mt-2 w-96 md:w-[450px] bg-white rounded-lg shadow-xl z-50 border border-gray-200">
                             <div class="p-4 border-b border-gray-200 flex justify-between items-center">
                                 <h3 class="font-semibold text-gray-700">Notifications</h3>
                                 <button id="markAllReadBtn" class="text-blue-500 hover:text-blue-700 text-sm flex items-center">
@@ -509,7 +553,6 @@
                             </div>
                             
                             <div class="max-h-96 overflow-y-auto" id="notificationList">
-                                <!-- Notification items will be inserted here -->
                                 
                             </div>
                             
@@ -1167,215 +1210,152 @@
         }
 
                     
-            // Recharge modal functionality
-            const rechargeBtn = document.querySelector('.sidebar-footer button');
-            const rechargeModal = document.getElementById('recharge-modal');
-            const closeModalBtn = document.getElementById('close-recharge-modal');
+        // Recharge modal functionality
+        const rechargeBtn = document.querySelector('.sidebar-footer button');
+        const rechargeModal = document.getElementById('recharge-modal');
+        const closeModalBtn = document.getElementById('close-recharge-modal');
             
-            // Function to open the modal
-            function openRechargeModal() {
-                if (rechargeModal) {
-                    rechargeModal.classList.remove('hidden');
-                    rechargeModal.classList.add('flex');
-                }
-            }
-            
-            // Function to close the modal
-            function closeRechargeModal() {
-                if (rechargeModal) {
-                    rechargeModal.classList.add('hidden');
-                    rechargeModal.classList.remove('flex');
-                }
-            }
-            
-            // Add an event click to the "Recharger" button
-            if (rechargeBtn) {
-                rechargeBtn.addEventListener('click', openRechargeModal);
-            }
-            
-            // Add an event click to the close button
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', closeRechargeModal);
-            }
-            
-            // Close the modal when clicking outside
+        // Function to open the modal
+        function openRechargeModal() {
             if (rechargeModal) {
-                rechargeModal.addEventListener('click', function(e) {
-                    if (e.target === rechargeModal) {
-                        closeRechargeModal();
-                    }
-                });
+                rechargeModal.classList.remove('hidden');
+                rechargeModal.classList.add('flex');
             }
+        }
             
-            // Handle recharge form submission
-            const rechargeForm = document.getElementById('recharge-form');
-            
-            // Event handler for form submission
-            if (rechargeForm) {
-                rechargeForm.addEventListener('submit', function(e) {
-                    // Prevent default form submission
-                    e.preventDefault();
-                    
-                    // Get the entered amount
-                    const amount = document.getElementById('recharge-amount').value;
-                    
-                    // Show loading alert
-                    Swal.fire({
-                        title: 'Rechargement en cours',
-                        text: `Rechargement de ${amount} € en cours...`,
-                        icon: 'info',
-                        showConfirmButton: false,
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                    
-                    // Submit the form after a short delay to show the animation
-                    setTimeout(() => {
-                        rechargeForm.submit();
-                    }, 1500);
-                });
+        // Function to close the modal
+        function closeRechargeModal() {
+            if (rechargeModal) {
+                rechargeModal.classList.add('hidden');
+                rechargeModal.classList.remove('flex');
             }
+        }
             
-            // Check URL parameters for notifications
-            const urlParams = new URLSearchParams(window.location.search);
-            const currentPath = window.location.pathname;
+        // Add an event click to the "Recharger" button
+        if (rechargeBtn) {
+            rechargeBtn.addEventListener('click', openRechargeModal);
+        }
             
-            // Fonction pour nettoyer l'URL
-            function cleanURL() {
-                window.history.replaceState({}, document.title, currentPath);
-            }
+        // Add an event click to the close button
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeRechargeModal);
+        }
             
-            // Gestion des notifications
-            if (urlParams.has('Rechargement_de_votre_solde_réussite')) {
-                Swal.fire({
-                    title: 'Succès!',
-                    text: 'Rechargement de votre solde réussi',
-                    icon: 'success',
-                    confirmButtonColor: '#8b5cf6'
-                }).then(cleanURL);
-            }
-            
-            if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
-                Swal.fire({
-                    title: 'Échec',
-                    text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
-                    icon: 'error',
-                    confirmButtonColor: '#8b5cf6'
-                }).then(cleanURL);
-            }
-            
-            if (urlParams.has('Inscription_succefully')) {
-                Swal.fire({
-                    title: "Succès !",
-                    text: "L'inscription au Evenement a été effectuée avec succès !",
-                    icon: "success",
-                    confirmButtonText: "OK",
-                    confirmButtonColor: '#8b5cf6',
-                    timer: 3000 
-                }).then(cleanURL);
-            }
-            
-            if (urlParams.has('inscription_error')) {
-                Swal.fire({
-                    title: 'Erreur',
-                    text: "L'inscription au Evenement a échoué. Veuillez vérifier votre solde !",
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#8b5cf6'
-                }).then(cleanURL);
-            }
-
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        // Elements
-        const notificationBtn = document.getElementById('notificationBtn');
-        const notificationModal = document.getElementById('notificationModal');
-        const notificationList = document.getElementById('notificationList');
-        const notificationCounter = document.getElementById('notificationCounter');
-        const markAllReadBtn = document.getElementById('markAllReadBtn');
-        
-        // Toggle notification modal
-        notificationBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            notificationModal.classList.toggle('hidden');
-            
-            if (!notificationModal.classList.contains('hidden')) {
-                renderNotifications();
-            }
-        });
-        
-        // Close modal when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!notificationModal.contains(e.target) && e.target !== notificationBtn) {
-                notificationModal.classList.add('hidden');
-            }
-        });
-        
-        function renderNotifications() {
-            notificationList.innerHTML = '';
-            
-            if (notifications.length === 0) {
-                notificationList.innerHTML = '<div class="p-4 text-center text-gray-500">No notifications</div>';
-                return;
-            }
-            
-            notifications.forEach(notification => {
-                const createdDate = new Date(notification.created_at);
-                const now = new Date('2025-04-15 08:42:19'); // Using your current time
-                const relativeTime = formatRelativeTime(createdDate, now);
-                
-                // Create notification item
-                const item = document.createElement('div');
-                item.className = `p-4 border-b border-gray-100 hover:bg-gray-50 transition ${notification.is_read ? 'opacity-60' : ''}`;
-                
-                let iconClass = 'fa-info-circle text-blue-500';
-                if (notification.type === 'reimbursement') {
-                    iconClass = 'fa-coins text-green-500';
-                } else if (notification.type === 'event_cancellation') {
-                    iconClass = 'fa-calendar-times text-red-500';
-                } 
-                item.innerHTML = `
-                    <div class="flex">
-                        <div class="flex-shrink-0 mr-3">
-                            <i class="fas ${iconClass} text-xl mt-1"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm text-gray-800">${notification.message}</p>
-                            <p class="text-xs text-gray-500 mt-1">${relativeTime}</p>
-                        </div>
-                        <div class="ml-2">
-                            <button class="mark-read-btn text-gray-400 hover:text-blue-500" data-id="${notification.id}">
-                                ${notification.is_read ? '<i class="fas fa-check text-green-500"></i>' : '<i class="far fa-circle"></i>'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                notificationList.appendChild(item);
-                
-                // Add event listener to mark as read button
-                const readBtn = item.querySelector('.mark-read-btn');
-                readBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const notificationId = this.getAttribute('data-id');
-                    markAsRead(notificationId);
-                });
-            });
-            
-            // Add event listeners for individual mark as read buttons
-            document.querySelectorAll('.mark-read-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const notificationId = this.getAttribute('data-id');
-                    markAsRead(notificationId);
-                });
+        // Close the modal when clicking outside
+        if (rechargeModal) {
+            rechargeModal.addEventListener('click', function(e) {
+                if (e.target === rechargeModal) {
+                    closeRechargeModal();
+                }
             });
         }
-        
-        
-    });
+            
+        // Handle recharge form submission
+        const rechargeForm = document.getElementById('recharge-form');
+            
+        // Event handler for form submission
+        if (rechargeForm) {
+            rechargeForm.addEventListener('submit', function(e) {
+                // Prevent default form submission
+                e.preventDefault();
+                    
+                // Get the entered amount
+                const amount = document.getElementById('recharge-amount').value;
+                    
+                // Show loading alert
+                Swal.fire({
+                    title: 'Rechargement en cours',
+                    text: `Rechargement de ${amount} € en cours...`,
+                    icon: 'info',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                    
+                // Submit the form after a short delay to show the animation
+                setTimeout(() => {
+                    rechargeForm.submit();
+                }, 1500);
+            });
+        }
+            
+        // Check URL parameters for notifications
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentPath = window.location.pathname;
+            
+        // Fonction pour nettoyer l'URL
+        function cleanURL() {
+            window.history.replaceState({}, document.title, currentPath);
+        }
+            
+        // Gestion des notifications
+        if (urlParams.has('Rechargement_de_votre_solde_réussite')) {
+            Swal.fire({
+                title: 'Succès!',
+                text: 'Rechargement de votre solde réussi',
+                icon: 'success',
+                confirmButtonColor: '#8b5cf6'
+            }).then(cleanURL);
+        }
+            
+        if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+            Swal.fire({
+                title: 'Échec',
+                text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(cleanURL);
+        }
+            
+        if (urlParams.has('Inscription_succefully')) {
+            Swal.fire({
+                title: "Succès !",
+                text: "L'inscription au Evenement a été effectuée avec succès !",
+                icon: "success",
+                confirmButtonText: "OK",
+                confirmButtonColor: '#8b5cf6',
+                timer: 3000 
+            }).then(cleanURL);
+        }
+            
+        if (urlParams.has('inscription_error')) {
+            Swal.fire({
+                title: 'Erreur',
+                text: "L'inscription au Evenement a échoué. Veuillez vérifier votre solde !",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#8b5cf6'
+            }).then(cleanURL);
+        }
+
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationModal = document.getElementById('notificationModal');
+            const notificationList = document.getElementById('notificationList');
+            const notificationCounter = document.getElementById('notificationCounter');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+            
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationModal.classList.toggle('hidden');
+                
+                if (!notificationModal.classList.contains('hidden')) {
+                    renderNotifications();
+                }
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!notificationModal.contains(e.target) && e.target !== notificationBtn) {
+                    notificationModal.classList.add('hidden');
+                }
+            });
+            
+            
+        });
     </script>
 </body>
 </html>

@@ -23,6 +23,11 @@ class MembreServices {
         $notification = $this->Membrerepository->getAllNotification($user_id);
         return $notification;
     }
+    
+    public function GetAllNotifications($user_id){
+        $notifications = $this->Membrerepository->getNotifications($user_id);
+        return $notifications;
+    }
 }
 
 ?>
