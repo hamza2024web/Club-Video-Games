@@ -20,5 +20,15 @@ class StatistiqueAdminServices {
         $activeMembers = $this->StaticAdminRepository->TatalActiveMembers();
         return $activeMembers;
     }
+
+    public function TotalSessions(){
+        $active_session = $this->StaticAdminRepository->CountActiveSession();
+        return $active_session;
+    }
+
+    public function pendingSession(){
+        $pending = $this->StaticAdminRepository->countPendingApprovale();
+        return $pending;
+    }
 }
 ?>

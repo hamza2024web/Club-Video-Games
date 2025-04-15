@@ -20,7 +20,9 @@ class AdminController extends BaseController {
     public function dashboard (){
         $total_games = $this->StatistiqueGames();
         $active_member = $this->activeMember();
-        $this->renderAdmin('dashboard',compact('total_games','active_member'));
+        $active_session = $this->activeSession();
+        $pending_session = $this->pendingSession();
+        return $this->renderAdmin('dashboard',compact('total_games','active_member','active_session','pending_session'));
     }
     
     public function StatistiqueGames (){
@@ -31,6 +33,16 @@ class AdminController extends BaseController {
     public function activeMember(){
         $members = $this->StatistiqueAdminServices->TatalMembers();
         return $members;
+    }
+
+    public function activeSession(){
+        $sessions = $this->StatistiqueAdminServices->TotalSessions();
+        return $sessions;
+    }
+
+    public function pendingSession (){
+        $pending = $this->StatistiqueAdminServices->pendingSession();
+        return $pending;
     }
     public function genre(){
         $genres = $this->adminServices->getGenre();

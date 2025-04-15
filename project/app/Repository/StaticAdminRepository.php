@@ -27,5 +27,21 @@ class StaticAdminRepository {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function CountActiveSession(){
+        $sql = "SELECT COUNT(evenement.id) AS number_evenement FROM evenement WHERE evenement.statut = 'In Progress' OR evenement.statut = 'Open'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function countPendingApprovale(){
+        $sql = "SELECT COUNT(evenement.id) AS pending_evenemet FROM evenement WHERE evenement.statut = 'Pending'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
 ?>
