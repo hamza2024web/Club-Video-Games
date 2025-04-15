@@ -15,5 +15,10 @@ class StatistiqueAdminServices {
         $Games = $this->StaticAdminRepository->CountGames();
         return $Games;
     }
+
+    public function TatalMembers(){
+        $activeMembers = $this->StaticAdminRepository->TatalActiveMembers();
+        return $activeMembers;
+    }
 }
 ?>

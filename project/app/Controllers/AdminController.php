@@ -19,12 +19,18 @@ class AdminController extends BaseController {
 
     public function dashboard (){
         $total_games = $this->StatistiqueGames();
-        $this->renderAdmin('dashboard',compact('total_games'));
+        $active_member = $this->activeMember();
+        $this->renderAdmin('dashboard',compact('total_games','active_member'));
     }
     
     public function StatistiqueGames (){
         $games = $this->StatistiqueAdminServices->totalGames();
         return $games;
+    }
+
+    public function activeMember(){
+        $members = $this->StatistiqueAdminServices->TatalMembers();
+        return $members;
     }
     public function genre(){
         $genres = $this->adminServices->getGenre();

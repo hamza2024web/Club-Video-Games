@@ -19,5 +19,13 @@ class StaticAdminRepository {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function TatalActiveMembers(){
+        $sql = "SELECT COUNT(users.id) AS users FROM users WHERE users.status = 'Activation' AND role_id != 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
 ?>
