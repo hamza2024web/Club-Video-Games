@@ -318,7 +318,11 @@ class EvenementRepository {
             }
 
             $notification = $this->insertNotification($member_id, $event_id, $transaction_type, $frais_inscription);
-            return true;
+            if ($notification === true){
+                return true;
+            } else {
+                return false;
+            }
         } 
         catch (PDOException $e) {
             error_log("Exception in logReimbursement: " . $e->getMessage());
@@ -363,7 +367,7 @@ class EvenementRepository {
             $stmt->bindParam(":type", $notification_type);
             
             $result = $stmt->execute();
-            
+
             if (!$result) {
                 $error = $stmt->errorInfo();
                 error_log("Failed to insert notification: " . print_r($error, true));
