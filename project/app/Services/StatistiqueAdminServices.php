@@ -41,9 +41,9 @@ class StatistiqueAdminServices {
         return $evenements;
     }
 
-    // public function GamesPurchase(){
-    //     $gamesPurchace = $this->StaticAdminRepository->Count_games();
-    //     return $gamesPurchace;
-    // }
+    public function GamesPurchase($user_id){
+        $gamesPurchace = $this->StaticAdminRepository->Count_games($user_id);
+        return $gamesPurchace;
+    }
 }
 ?>

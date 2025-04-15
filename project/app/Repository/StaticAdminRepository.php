@@ -60,12 +60,13 @@ class StaticAdminRepository {
         return $result;
     }
 
-    // public function Count_games(){
-    //     $sql = "SELECT COUNT(inscription_jeu.";
-    //     $stmt = $this->conn->prepare($sql);
-    //     $stmt->execute();
-    //     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    //     return $result;
-    // }
+    public function Count_games($user_id){
+        $sql = "SELECT COUNT(orders.order_id) as number_jeux FROM orders WHERE user_id=:user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
 ?>

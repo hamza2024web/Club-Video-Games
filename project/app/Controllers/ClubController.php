@@ -25,7 +25,8 @@ class ClubController extends BaseController {
         $club = $this->clubServices->getClubUser($user_id);
         $Membres_actifs = $this->membres_actif();
         $evenements = $this->evenements();
-        return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde'));
+        $Jeux_disponibles = $this->Jeux_disponibles($user_id);
+        return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde','Membres_actifs','evenements','Jeux_disponibles'));
     }
 
     public function updateClub() {
@@ -63,10 +64,10 @@ class ClubController extends BaseController {
         return $evenements;
     }
 
-    // public function Jeux_disponibles(){
-    //     $jeux = $this->StatistiqueAdminServices->GamesPurchase();
-    //     return $jeux;
-    // }
+    public function Jeux_disponibles($user_id){
+        $jeux = $this->StatistiqueAdminServices->GamesPurchase($user_id);
+        return $jeux;
+    }
  
 }
 ?>

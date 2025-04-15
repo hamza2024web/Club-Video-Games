@@ -193,7 +193,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-500 text-sm font-medium">Membres actifs</p>
-                                <p class="text-3xl font-bold text-gray-800">87</p>
+                                <p class="text-3xl font-bold text-gray-800">{{Membres_actifs.participants_tournoi + Membres_actifs.participants_events}}</p>
                             </div>
                             <div class="bg-blue-100 p-3 rounded-lg">
                                 <i class="fas fa-users text-blue-600 text-xl"></i>
@@ -209,7 +209,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-500 text-sm font-medium">Événements ce mois</p>
-                                <p class="text-3xl font-bold text-gray-800">8</p>
+                                <p class="text-3xl font-bold text-gray-800">{{evenements.number_events}}</p>
                             </div>
                             <div class="bg-green-100 p-3 rounded-lg">
                                 <i class="fas fa-calendar-alt text-green-600 text-xl"></i>
@@ -225,7 +225,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-500 text-sm font-medium">Jeux disponibles</p>
-                                <p class="text-3xl font-bold text-gray-800">54</p>
+                                <p class="text-3xl font-bold text-gray-800">{{Jeux_disponibles.number_jeux}}</p>
                             </div>
                             <div class="bg-purple-100 p-3 rounded-lg">
                                 <i class="fas fa-gamepad text-purple-600 text-xl"></i>
