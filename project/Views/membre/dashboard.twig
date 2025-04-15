@@ -113,8 +113,15 @@
                     <li><a href="/member/dashboard" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-home mr-3 text-purple-300"></i>Dashboard</a></li>
                     <li><a href="/member/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournaments</a></li>
                     <li><a href="/member/events" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-calendar-alt mr-3 text-purple-300"></i>Events
-                        {% if notification.length > 0 %}
-                            <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">{{notifications.notification_number}}</span>
+                        {% if notification.notification_number|default(0) > 0 %}
+                            <div class="relative">
+                                <span class="flex h-5 items-center justify-center">
+                                    <span class="animate-ping absolute h-4 w-4 rounded-full bg-red-400 opacity-75 ml-10"></span>
+                                        <span class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[1.25rem] text-center ml-10">
+                                            {{notification.notification_number|default(0)}}
+                                        </span>
+                                </span>
+                            </div>
                         {% endif %}
                     </a></li>
                     <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
