@@ -10,6 +10,7 @@ function checkout() {
     const itemsCountElement = document.getElementById('payment-items-count');
     const totalElement = document.getElementById('payment-total');
     const buttonTotalElement = document.getElementById('payment-button-total');
+    document.getElementById('payment-paid-notice').classList.remove('hidden');
     
     // Calculate total
     const subtotal = cart.reduce((sum, item) => sum + item.price, 0);

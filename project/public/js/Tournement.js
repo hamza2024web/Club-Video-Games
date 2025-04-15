@@ -288,6 +288,7 @@
         const frais = parseFloat(fraisInscription);
         if (frais > 0) {
             document.getElementById('payment-amount').textContent = `${frais.toFixed(2)} €`;
+            document.getElementById('payment-paid-notice').classList.remove('hidden');
         } else {
             document.getElementById('payment-amount').textContent = 'Gratuit';
         }

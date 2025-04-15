@@ -4,20 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GamersHub - Boutique de Jeux (Membre)</title>
-    
-    <!-- Styles externes -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Scripts JS partagés -->
     <script src="../../public/js/panier.js"></script>
     <script src="../../public/js/payment.js"></script>
     <script src="../../public/js/searchBoutique.js"></script>
     <script src="../../public/js/favorite.js"></script>
     <script src="../../public/js/localStorage.js"></script>
-    
-    <!-- Styles personnalisés -->
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -1021,27 +1016,14 @@
                     <div class="text-purple-600 font-bold text-lg" id="payment-total">0.00 €</div>
                 </div>
                 
-                <!-- Formulaire de carte bancaire -->
-                <div class="space-y-4">
-                    <div class="form-floating">
-                        <input type="text" id="card-number" placeholder=" " class="input-card payment-card-field">
-                        <label for="card-number">Numéro de carte</label>
-                    </div>
+                <div class="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-100">
+                    <p class="text-sm text-gray-700">
+                        En confirmant votre inscription, vous acceptez de participer à cet événement selon les conditions définies par l'organisateur.
+                    </p>
                     
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="form-floating">
-                            <input type="text" id="card-expiry" placeholder=" " class="input-card">
-                            <label for="card-expiry">Date d'expiration</label>
-                        </div>
-                        <div class="form-floating">
-                            <input type="text" id="card-cvc" placeholder=" " class="input-card">
-                            <label for="card-cvc">CVC</label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-floating">
-                        <input type="text" id="card-name" placeholder=" " class="input-card">
-                        <label for="card-name">Nom sur la carte</label>
+                    <div id="payment-paid-notice" class="hidden mt-2 text-sm text-purple-600">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Le montant sera débité de votre solde GamersHub.
                     </div>
                 </div>
             </div>
