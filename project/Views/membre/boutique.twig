@@ -1338,12 +1338,10 @@
                     saveCartToLocalStorage('gamersMember');
                     updateCartUI();
                     
-                    // Rediriger pour enlever les paramètres d'URL
                     window.history.replaceState({}, document.title, window.location.pathname);
                 });
             }
             
-            // Notification de paiement échoué
             if (urlParams.has('paiment_échouée')) {
                 Swal.fire({
                     title: "Échec",

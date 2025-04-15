@@ -30,5 +30,20 @@ class StatistiqueAdminServices {
         $pending = $this->StaticAdminRepository->countPendingApprovale();
         return $pending;
     }
+
+    public function members_actif(){
+        $members = $this->StaticAdminRepository->Count_Partcipants();
+        return $members;
+    }
+
+    public function evenements(){
+        $evenements = $this->StaticAdminRepository->Count_Events();
+        return $evenements;
+    }
+
+    // public function GamesPurchase(){
+    //     $gamesPurchace = $this->StaticAdminRepository->Count_games();
+    //     return $gamesPurchace;
+    // }
 }
 ?>
