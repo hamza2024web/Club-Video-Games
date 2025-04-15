@@ -553,7 +553,32 @@
                             </div>
                             
                             <div class="max-h-96 overflow-y-auto" id="notificationList">
-                                
+                            {% for notification in notificationsContent %}
+                                <div class="flex">
+                                    <div class="flex-shrink-0 mr-3">
+                                        <i class="fas ${iconClass} text-xl mt-1"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <!-- Added transaction type badge -->
+                                        <div class="flex items-center mb-1">
+                                            <p class="text-sm text-gray-800">{{notification.message}}</p>
+                                            <span class="badge-transaction-type ml-2 px-2 py-0.5 text-xs rounded-full font-medium" 
+                                                :class="{
+                                                    'bg-green-100 text-green-800': notification.type === 'reimbursement',
+                                                    'bg-red-100 text-red-800': notification.type === 'event_cancelled',
+                                                }">
+                                                {{notification.type}}
+                                            </span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">{{notification.created_at}}</p>
+                                    </div>
+                                    <div class="ml-2">
+                                        <button class="mark-read-btn text-gray-400 hover:text-blue-500" :data-id="notification.id">
+                                            {{notification.is_read ? '<i class="fas fa-check text-green-500"></i>' : '<i class="far fa-circle"></i>'}}
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endfor %}
                             </div>
                             
                             <div class="p-3 text-center border-t border-gray-200">
