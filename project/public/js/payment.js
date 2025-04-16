@@ -10,6 +10,7 @@ function checkout() {
     const itemsCountElement = document.getElementById('payment-items-count');
     const totalElement = document.getElementById('payment-total');
     const buttonTotalElement = document.getElementById('payment-button-total');
+    document.getElementById('payment-paid-notice').classList.remove('hidden');
     
     // Calculate total
     const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
@@ -78,7 +79,7 @@ function processPayment(storageKey) {
         // Map cart items to the format needed for the order
         let orderDetails = cart.map(item => ({
             game_id: item.id,
-            order_id: item.id, // Using item.id as order_id or you can generate a new one
+            order_id: item.order_id, 
             price: item.price
         }));
                 

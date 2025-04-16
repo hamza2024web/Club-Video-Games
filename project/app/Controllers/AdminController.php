@@ -2,22 +2,48 @@
 namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\dashboardServices;
+use App\Services\StatistiqueAdminServices;
 use App\Services\UsersServices;
 
 class AdminController extends BaseController { 
     protected $usersServices;
     protected $adminServices;
+    protected $StatistiqueAdminServices;
     public function __construct()
     {
         parent::__construct();
         $this->usersServices = new UsersServices();
         $this->adminServices = new dashboardServices();
+        $this->StatistiqueAdminServices = new StatistiqueAdminServices();
     }
 
     public function dashboard (){
-        $this->renderAdmin('dashboard');
+        $total_games = $this->StatistiqueGames();
+        $active_member = $this->activeMember();
+        $active_session = $this->activeSession();
+        $pending_session = $this->pendingSession();
+        return $this->renderAdmin('dashboard',compact('total_games','active_member','active_session','pending_session'));
     }
     
+    public function StatistiqueGames (){
+        $games = $this->StatistiqueAdminServices->totalGames();
+        return $games;
+    }
+
+    public function activeMember(){
+        $members = $this->StatistiqueAdminServices->TatalMembers();
+        return $members;
+    }
+
+    public function activeSession(){
+        $sessions = $this->StatistiqueAdminServices->TotalSessions();
+        return $sessions;
+    }
+
+    public function pendingSession (){
+        $pending = $this->StatistiqueAdminServices->pendingSession();
+        return $pending;
+    }
     public function genre(){
         $genres = $this->adminServices->getGenre();
         $this->renderAdmin('genre',compact('genres'));
