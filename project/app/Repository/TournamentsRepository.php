@@ -2,6 +2,7 @@
 namespace App\Repository;
 use Config\Database;
 use PDO;
+use PDOException;
 
 class TournamentsRepository {
     private $conn;
@@ -23,23 +24,81 @@ class TournamentsRepository {
         $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $tournois;
     }
-    public function Inscription_Tournoi($user_id,$tournoi_id,$price){
+    public function Inscription_Tournoi($user_id, $tournoi_id, $price) {
         $sqlMember = "SELECT id FROM membre WHERE user_id = :user_id";
         $stmtMember = $this->conn->prepare($sqlMember);
         $stmtMember->bindParam(":user_id", $user_id);
         $stmtMember->execute();
         $member = $stmtMember->fetch(PDO::FETCH_ASSOC);
+        
         if (!$member) {
             return false;
         }
+        
         $member_id = $member['id'];
-        $sqlInscription = "INSERT INTO inscription_tournoi (tournoi_id, membre_id,frais_inscription) VALUES (:tournoi_id, :member_id,:frais_inscription)";
-        $stmtInsert = $this->conn->prepare($sqlInscription);
-        $stmtInsert->bindParam(":tournoi_id", $tournoi_id);
-        $stmtInsert->bindParam(":member_id", $member_id);
-        $stmtInsert->bindParam(":frais_inscription",$price);
-        return $stmtInsert->execute();
+        
+        try {
+            $this->conn->beginTransaction();
+            
+            $sqlInscription = "INSERT INTO inscription_tournoi (tournoi_id, membre_id, frais_inscription) 
+                              VALUES (:tournoi_id, :member_id, :frais_inscription)";
+            $stmtInsert = $this->conn->prepare($sqlInscription);
+            $stmtInsert->bindParam(":tournoi_id", $tournoi_id);
+            $stmtInsert->bindParam(":member_id", $member_id);
+            $stmtInsert->bindParam(":frais_inscription", $price);
+            $result = $stmtInsert->execute();
+            
+            if (!$result) {
+                $this->conn->rollBack();
+                return false;
+            }
+            
+            $sqlParticipants = "SELECT numbre_membre FROM tournoi WHERE id = :tournoi_id";
+            $stmtParticipants = $this->conn->prepare($sqlParticipants);
+            $stmtParticipants->bindParam(":tournoi_id", $tournoi_id);
+            $stmtParticipants->execute();
+            $tournoi = $stmtParticipants->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$tournoi) {
+                $this->conn->rollBack();
+                return false;
+            }
+            
+            $max_participants = $tournoi["numbre_membre"];
+            
+            $sqlCount = "SELECT COUNT(*) as participant_count FROM inscription_tournoi WHERE tournoi_id = :tournoi_id";
+            $stmtCount = $this->conn->prepare($sqlCount);
+            $stmtCount->bindParam(":tournoi_id", $tournoi_id);
+            $stmtCount->execute();
+            $count_result = $stmtCount->fetch(PDO::FETCH_ASSOC);
+            $current_count = $count_result["participant_count"];
+            
+            if ($current_count == $max_participants) {
+                $sqlProgress = "UPDATE tournoi SET statut = :statut WHERE id = :tournoi_id";
+                $stmtUpdate = $this->conn->prepare($sqlProgress);
+                $status = "In Progress";
+                $stmtUpdate->bindParam(":statut", $status);
+                $stmtUpdate->bindParam(":tournoi_id", $tournoi_id);
+                $update_result = $stmtUpdate->execute();
+                
+                if (!$update_result) {
+                    $this->conn->rollBack();
+                    return false;
+                }
+                
+                error_log(date('Y-m-d H:i:s') . " - Tournament ID: $tournoi_id status changed to In Progress because max participants ($max_participants) reached");
+            }
+            
+            $this->conn->commit();
+            return true;
+            
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            error_log("Erreur PDO dans Inscription_Tournoi: " . $e->getMessage());
+            return false;
+        }
     }
+
     public function getTournoiInscri($user_id){
         $sql = "SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.image , tournoi.numbre_membre , tournoi.frais_inscription ,tournoi.statut , tournoi.format_tournoi ,tournoi.regles , tournoi.description , tournoi.prix_total ,tournoi.premier_place , tournoi.deuxieme_place ,tournoi.troisieme_place ,tournoi.discord,tournoi.twitch 
         ,jeux.nom_de_jeu as jeu , count(inscription_tournoi.tournoi_id) as number_participants FROM tournoi
