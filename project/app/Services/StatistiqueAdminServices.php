@@ -45,5 +45,10 @@ class StatistiqueAdminServices {
         $gamesPurchace = $this->StaticAdminRepository->Count_games($user_id);
         return $gamesPurchace;
     }
+
+    public function tournoi_inscrit($user_id){
+        $tournoi = $this->StaticAdminRepository->count_tournoi($user_id);
+        return $tournoi;
+    }
 }
 ?>

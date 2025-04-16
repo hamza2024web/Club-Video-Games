@@ -68,5 +68,16 @@ class StaticAdminRepository {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function count_tournoi($user_id){
+        $sql = "SELECT COUNT(inscription_tournoi.membre_id) AS tournoi_inscrit FROM inscription_tournoi
+        INNER JOIN membre ON membre.id = inscription_tournoi.membre_id
+        WHERE membre.user_id = :user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
 ?>
