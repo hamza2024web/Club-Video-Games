@@ -54,6 +54,7 @@ Route::get('organisateur/evenement','EvenementController@index');
 Route::post('organisateur/addEvenement','EvenementController@addEvenement');
 Route::post('organisateur/cancelEvent','EvenementController@cancelEvent');
 Route::post('/organisateur/notificationRead','EvenementController@readNotification');
+Route::post('/tournoi/bracket','TournoiController@showTournamentBracket');
 
 // payment
 Route::post('payer','PaymentController@payer');

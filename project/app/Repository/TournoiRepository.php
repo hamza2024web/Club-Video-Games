@@ -104,6 +104,23 @@ class TournoiRepository {
             return false;
         }
     }
+
+    public function GetTournoi($tournoi_id){
+        $sql = "SELECT * FROM tournoi WHERE id = :tournoi_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":tournoi_id",$tournoi_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
     
+    public function getParticipants($tournoi_id){
+        $sql = "SELECT users.name , membre.tag_name , membre.profile_photo FROM inscription_tournoi INNER JOIN membre ON inscription_tournoi.membre_id = membre.id INNER JOIN users ON users.id = membre.user_id WHERE inscription_tournoi.tournoi_id = 15";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":tournoi_id",$tournoi_id);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
 ?>

@@ -33,6 +33,7 @@ class TournoiController extends BaseController{
         $notificationsContent = $this->MembreServices->GetAllNotifications($user_id);
         return $this->renderOrg('tournoi',compact('profile','jeux','tournois','my_solde','notifications','notificationsContent'));
     }
+
     public function addTournoi(){
         $user_id = $_SESSION["user_id"];
         $name = $_POST["name"];
@@ -75,6 +76,15 @@ class TournoiController extends BaseController{
         } else {
             header("location: /tournoi?Creation de votre tournoi echouée=1");
         }
+    }
+
+    public function showTournamentBracket(){
+        $tournoi_id = $_POST["tournoi_id"];
+
+        $tournoi = $this->TournoiServices->getTournoiById($tournoi_id);
+
+        $participants = $this->TournoiServices->getTournamentParticipants($tournoi_id);
+        
     }
 }
 ?>
