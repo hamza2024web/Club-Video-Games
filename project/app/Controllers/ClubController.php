@@ -2,6 +2,7 @@
 namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\ClubServices;
+use App\Services\MembreServices;
 use App\Services\ProfileServices;
 use App\Services\StatistiqueAdminServices;
 session_start();
@@ -10,6 +11,7 @@ class ClubController extends BaseController {
     protected $clubServices;
     protected $profileServices;
     protected $StatistiqueAdminServices;
+    protected $MembreServices;
 
     public function __construct()
     {
@@ -17,16 +19,18 @@ class ClubController extends BaseController {
         $this->clubServices = new ClubServices();
         $this->profileServices = new ProfileServices();
         $this->StatistiqueAdminServices = new StatistiqueAdminServices();
+        $this->MembreServices = new MembreServices();
     }
     public function index() {
         $user_id = $_SESSION["user_id"];
         $my_solde = $this->solde($user_id);
         $profile = $this->profileServices->getProfileUSer($user_id);
+        $notifications = $this->MembreServices->CountNotifications($user_id);
         $club = $this->clubServices->getClubUser($user_id);
         $Membres_actifs = $this->membres_actif();
         $evenements = $this->evenements();
         $Jeux_disponibles = $this->Jeux_disponibles($user_id);
-        return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde','Membres_actifs','evenements','Jeux_disponibles'));
+        return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde','Membres_actifs','evenements','Jeux_disponibles','notifications'));
     }
 
     public function updateClub() {
