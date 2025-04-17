@@ -429,14 +429,9 @@
                                                     <!-- Message with Transaction Type Badge -->
                                                     <div class="flex flex-wrap items-start gap-2 mb-1">
                                                         <p class="text-sm text-gray-800 font-medium">{{notification.message}}</p>
-                                                        
-                                                        {% if notification.type == 'reimbursement' %}
+                                                        {% if notification.type == 'tournament_started' %}
                                                             <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-green-100 text-green-800 border border-green-200">
-                                                                Remboursement
-                                                            </span>
-                                                        {% elseif notification.type == 'event_cancelled' %}
-                                                            <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-red-100 text-red-800 border border-red-200">
-                                                                Annulation Sans Remboursement
+                                                                tournament_started
                                                             </span>
                                                         {% endif %}
                                                     </div>
@@ -450,7 +445,7 @@
                                                 <div class="ml-2">
                                                     <button class="mark-read-btn w-8 h-8 rounded-full hover:bg-white flex items-center justify-center transition-all" 
                                                         data-id="{{notification.id}}">
-                                                        {% if notification.is_read %}
+                                                        {% if notification.is_read %}   
                                                             <i class="fas fa-check text-green-500"></i>
                                                         {% else %}
                                                             <i class="far fa-circle text-gray-400 hover:text-blue-500"></i>
@@ -1480,6 +1475,25 @@
                 if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
                     notificationModal.classList.add('hidden');
                 }
+            });
+        });
+
+        document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/organisateur/notificationRead';
+                
+                const idField = document.createElement('input');
+                idField.type = 'hidden';
+                idField.name = 'notification_id';
+                idField.value = this.getAttribute('data-id');
+                form.appendChild(idField);
+                
+                document.body.appendChild(form);
+                form.submit();
             });
         });
     </script>

@@ -1382,52 +1382,52 @@
         }
 
     
-    document.addEventListener('DOMContentLoaded', function() {
-        const notificationBtn = document.getElementById('notificationBtn');
-        const notificationModal = document.getElementById('notificationModal');
-        const markAllReadBtn = document.getElementById('markAllReadBtn');
-        
-        // Toggle notification modal
-        notificationBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationModal = document.getElementById('notificationModal');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
             
-            // Add wiggle animation when opening
-            if (notificationModal.classList.contains('hidden')) {
-                notificationBtn.querySelector('i').classList.add('wiggle-animation');
-                setTimeout(() => {
-                    notificationBtn.querySelector('i').classList.remove('wiggle-animation');
-                }, 600);
-            }
+            // Toggle notification modal
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Add wiggle animation when opening
+                if (notificationModal.classList.contains('hidden')) {
+                    notificationBtn.querySelector('i').classList.add('wiggle-animation');
+                    setTimeout(() => {
+                        notificationBtn.querySelector('i').classList.remove('wiggle-animation');
+                    }, 600);
+                }
+                
+                notificationModal.classList.toggle('hidden');
+            });
             
-            notificationModal.classList.toggle('hidden');
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
+                    notificationModal.classList.add('hidden');
+                }
+            });
         });
-        
-        // Close when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
-                notificationModal.classList.add('hidden');
-            }
-        });
-    });
 
-    document.querySelectorAll('.mark-read-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/member/notificationRead';
-            
-            const idField = document.createElement('input');
-            idField.type = 'hidden';
-            idField.name = 'notification_id';
-            idField.value = this.getAttribute('data-id');
-            form.appendChild(idField);
-            
-            document.body.appendChild(form);
-            form.submit();
+        document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/member/notificationRead';
+                
+                const idField = document.createElement('input');
+                idField.type = 'hidden';
+                idField.name = 'notification_id';
+                idField.value = this.getAttribute('data-id');
+                form.appendChild(idField);
+                
+                document.body.appendChild(form);
+                form.submit();
+            });
         });
-    });
 
     </script>
 </body>

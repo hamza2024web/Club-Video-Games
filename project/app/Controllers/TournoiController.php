@@ -30,7 +30,8 @@ class TournoiController extends BaseController{
         $jeux = $this->JeuxServices->getGame($user_id);
         $tournois = $this->TournoiServices->getTournoi($user_id);
         $notifications = $this->MembreServices->CountNotifications($user_id);
-        return $this->renderOrg('tournoi',compact('profile','jeux','tournois','my_solde','notifications'));
+        $notificationsContent = $this->MembreServices->GetAllNotifications($user_id);
+        return $this->renderOrg('tournoi',compact('profile','jeux','tournois','my_solde','notifications','notificationsContent'));
     }
     public function addTournoi(){
         $user_id = $_SESSION["user_id"];
