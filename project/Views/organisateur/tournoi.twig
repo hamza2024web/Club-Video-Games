@@ -375,10 +375,102 @@
                 <div class="flex justify-between items-center px-6 py-4">
                     <h1 class="text-2xl font-bold text-gray-800">Gestion des Tournois</h1>
                     <div class="flex items-center space-x-4">
-                        <button class="text-gray-500 hover:text-gray-700 relative">
-                            <i class="fas fa-bell text-lg"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
-                        </button>
+                        <div class="relative">
+                            <button id="notificationBtn" class="text-gray-600 hover:text-gray-800 transition p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-bell text-xl relative">
+                                    <span class="absolute top-0 right-0 h-full w-full animate-ping rounded-full bg-red-400 opacity-75" 
+                                        style="animation-duration: 2s; display: {% if notifications.notification_number > 0 %}block{% else %}none{% endif %}"></span>
+                                </i>
+                                <!-- Badge Counter with Scale Animation -->
+                                <span id="notificationCounter" 
+                                    class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full min-w-4 h-4 flex items-center justify-center text-xs px-1 transition-transform transform {% if notifications.notification_number > 0 %}scale-100{% else %}scale-0{% endif %}">
+                                    {{notifications.notification_number}}
+                                </span>
+                            </button>
+                            
+                            <div id="notificationModal" class="hidden absolute right-0 mt-2 w-96 md:w-[450px] bg-white rounded-lg shadow-2xl z-50 border border-gray-200 overflow-hidden">
+                                <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50">
+                                    <h3 class="font-semibold text-gray-800 flex items-center">
+                                        <i class="fas fa-bell-on mr-2 text-blue-500"></i>
+                                        Notifications
+                                    </h3>
+                                    <button id="markAllReadBtn" class="text-blue-600 hover:text-blue-800 text-sm flex items-center bg-white py-1 px-2 rounded-md shadow-sm hover:shadow transition-all">
+                                        <i class="fas fa-check-double mr-1"></i> Mark all as read
+                                    </button>
+                                </div>
+                                
+                                <div class="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-50" id="notificationList">
+                                    {% if notificationsContent|length == 0 %}
+                                        <div class="flex flex-col items-center justify-center py-8 text-gray-500">
+                                            <i class="far fa-bell-slash text-4xl mb-2 opacity-50"></i>
+                                            <p>No notifications yet</p>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% for notification in notificationsContent %}
+                                        <!-- Notification Item with Hover Effect and Better Layout -->
+                                        <div class="p-4 border-b border-gray-100 hover:bg-blue-50 transition-all {% if notification.is_read %}opacity-70{% else %}bg-blue-50{% endif %}">
+                                            <div class="flex">
+                                                <!-- Icon Based on Notification Type -->
+                                                <div class="flex-shrink-0 mr-3">
+                                                    {% if notification.type == 'reimbursement' %}
+                                                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                                            <i class="fas fa-coins text-green-600"></i>
+                                                        </div>
+                                                    {% elseif notification.type == 'event_cancelled' %}
+                                                        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                                                            <i class="fas fa-calendar-times text-red-600"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                <!-- Content Area with Message and Time -->
+                                                <div class="flex-1">
+                                                    <!-- Message with Transaction Type Badge -->
+                                                    <div class="flex flex-wrap items-start gap-2 mb-1">
+                                                        <p class="text-sm text-gray-800 font-medium">{{notification.message}}</p>
+                                                        
+                                                        {% if notification.type == 'reimbursement' %}
+                                                            <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-green-100 text-green-800 border border-green-200">
+                                                                Remboursement
+                                                            </span>
+                                                        {% elseif notification.type == 'event_cancelled' %}
+                                                            <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-red-100 text-red-800 border border-red-200">
+                                                                Annulation Sans Remboursement
+                                                            </span>
+                                                        {% endif %}
+                                                    </div>
+                                                    
+                                                    <p class="text-xs text-gray-500 mt-1 flex items-center">
+                                                        <i class="far fa-clock mr-1"></i>
+                                                        {{notification.created_at|date("d/m/Y H:i")}}
+                                                    </p>
+                                                </div>
+                                                
+                                                <div class="ml-2">
+                                                    <button class="mark-read-btn w-8 h-8 rounded-full hover:bg-white flex items-center justify-center transition-all" 
+                                                        data-id="{{notification.id}}">
+                                                        {% if notification.is_read %}
+                                                            <i class="fas fa-check text-green-500"></i>
+                                                        {% else %}
+                                                            <i class="far fa-circle text-gray-400 hover:text-blue-500"></i>
+                                                        {% endif %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <!-- Footer with Gradient -->
+                                <div class="p-3 text-center border-t border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50">
+                                    <a href="/notifications" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center">
+                                        <span>View all notifications</span>
+                                        <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                         <button class="text-gray-500 hover:text-gray-700 relative">
                             <i class="fas fa-envelope text-lg"></i>
                             <span class="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">2</span>
@@ -1361,6 +1453,34 @@
                     window.history.replaceState({}, document.title, currentPath);
                 });
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationModal = document.getElementById('notificationModal');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+            
+            // Toggle notification modal
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Add wiggle animation when opening
+                if (notificationModal.classList.contains('hidden')) {
+                    notificationBtn.querySelector('i').classList.add('wiggle-animation');
+                    setTimeout(() => {
+                        notificationBtn.querySelector('i').classList.remove('wiggle-animation');
+                    }, 600);
+                }
+                
+                notificationModal.classList.toggle('hidden');
+            });
+            
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
+                    notificationModal.classList.add('hidden');
+                }
+            });
         });
     </script>
 </body>
