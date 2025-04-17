@@ -85,6 +85,21 @@ class TournoiController extends BaseController{
 
         $participants = $this->TournoiServices->getTournamentParticipants($tournoi_id);
         
+        $matches = $this->generateTournamentBrackets($participants,$tournoi);    
+    }
+
+    public function generateTournamentBrackets($participants,$tournoi){
+        $matches = [];
+        $tournoi_id = $tournoi["id"];
+        $participantCount  = count($participants);
+
+        shuffle($participants);
+
+        $roundsNedded = ceil(log($participantCount,2));
+
+        $perfectBracketSize = pow(2,$roundsNedded);
+
+        
     }
 }
 ?>
