@@ -40,8 +40,7 @@ class TournamentsRepository {
         try {
             $this->conn->beginTransaction();
             
-            $sqlInscription = "INSERT INTO inscription_tournoi (tournoi_id, membre_id, frais_inscription) 
-                              VALUES (:tournoi_id, :member_id, :frais_inscription)";
+            $sqlInscription = "INSERT INTO inscription_tournoi (tournoi_id, membre_id, frais_inscription) VALUES (:tournoi_id, :member_id, :frais_inscription)";
             $stmtInsert = $this->conn->prepare($sqlInscription);
             $stmtInsert->bindParam(":tournoi_id", $tournoi_id);
             $stmtInsert->bindParam(":member_id", $member_id);
@@ -53,11 +52,11 @@ class TournamentsRepository {
                 return false;
             }
             
-            $sqlParticipants = "SELECT numbre_membre FROM tournoi WHERE id = :tournoi_id";
-            $stmtParticipants = $this->conn->prepare($sqlParticipants);
-            $stmtParticipants->bindParam(":tournoi_id", $tournoi_id);
-            $stmtParticipants->execute();
-            $tournoi = $stmtParticipants->fetch(PDO::FETCH_ASSOC);
+            $sqlTournoi = "SELECT numbre_membre, name FROM tournoi WHERE id = :tournoi_id";
+            $stmtTournoi = $this->conn->prepare($sqlTournoi);
+            $stmtTournoi->bindParam(":tournoi_id", $tournoi_id);
+            $stmtTournoi->execute();
+            $tournoi = $stmtTournoi->fetch(PDO::FETCH_ASSOC);
             
             if (!$tournoi) {
                 $this->conn->rollBack();
@@ -65,6 +64,7 @@ class TournamentsRepository {
             }
             
             $max_participants = $tournoi["numbre_membre"];
+            $tournoi_name = $tournoi["name"];
             
             $sqlCount = "SELECT COUNT(*) as participant_count FROM inscription_tournoi WHERE tournoi_id = :tournoi_id";
             $stmtCount = $this->conn->prepare($sqlCount);
@@ -84,6 +84,62 @@ class TournamentsRepository {
                 if (!$update_result) {
                     $this->conn->rollBack();
                     return false;
+                }
+                
+                $sqlClub = "SELECT club_id FROM evenement WHERE id = :tournoi_id";
+                $stmtClub = $this->conn->prepare($sqlClub);
+                $stmtClub->bindParam(":tournoi_id", $tournoi_id);
+                $stmtClub->execute();
+                $clubData = $stmtClub->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$clubData) {
+                    $this->conn->rollBack();
+                    return false;
+                }
+                
+                $club_id = $clubData['club_id'];
+                
+                $sqlOrganizer = "SELECT user_id FROM organisateur WHERE club_id = :club_id";
+                $stmtOrganizer = $this->conn->prepare($sqlOrganizer);
+                $stmtOrganizer->bindParam(":club_id", $club_id);
+                $stmtOrganizer->execute();
+                $organizerData = $stmtOrganizer->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$organizerData) {
+                    $this->conn->rollBack();
+                    return false;
+                }
+                
+                $organizer_id = $organizerData['user_id'];
+                
+                $message = "Le tournoi '{$tournoi_name}' a atteint sa capacité maximale de {$max_participants} joueurs et a démarré! Connectez-vous pour voir votre planning des matchs.";
+                $notificationType = "tournament_started";
+                $is_read = 0;
+                
+                $sqlNotification = "INSERT INTO notifications (user_id, message, type, is_read) 
+                                  VALUES (:user_id, :message, :type, :is_read)";
+                $stmtNotification = $this->conn->prepare($sqlNotification);
+                $stmtNotification->bindParam(":user_id", $organizer_id);
+                $stmtNotification->bindParam(":message", $message);
+                $stmtNotification->bindParam(":type", $notificationType);
+                $stmtNotification->bindParam(":is_read", $is_read);
+                $stmtNotification->execute();
+                
+                $sqlParticipants = "SELECT m.user_id FROM inscription_tournoi it JOIN membre m ON it.membre_id = m.id WHERE it.tournoi_id = :tournoi_id";
+                $stmtParticipants = $this->conn->prepare($sqlParticipants);
+                $stmtParticipants->bindParam(":tournoi_id", $tournoi_id);
+                $stmtParticipants->execute();
+                $participants = $stmtParticipants->fetchAll(PDO::FETCH_ASSOC);
+                
+                foreach ($participants as $participant) {
+                    if ($participant['user_id'] != $organizer_id) {
+                        $stmtNotification = $this->conn->prepare($sqlNotification);
+                        $stmtNotification->bindParam(":user_id", $participant['user_id']);
+                        $stmtNotification->bindParam(":message", $message);
+                        $stmtNotification->bindParam(":type", $notificationType);
+                        $stmtNotification->bindParam(":is_read", $is_read);
+                        $stmtNotification->execute();
+                    }
                 }
                 
                 error_log(date('Y-m-d H:i:s') . " - Tournament ID: $tournoi_id status changed to In Progress because max participants ($max_participants) reached");
