@@ -4,6 +4,7 @@ use App\Controllers\BaseController;
 use App\Services\EvenementServices;
 use App\Services\ProfileServices;
 use App\Services\EvenementProgrammeServices;
+use App\Services\EventsMemberServices;
 
 session_start();
 
@@ -11,6 +12,7 @@ class EvenementController extends BaseController{
     protected $EvenementServices;
     protected $ProfileServices;
     protected $EvenementProgrammeService;
+    protected $EvenetsMemberServices;
     
     public function __construct()
     {
@@ -18,6 +20,7 @@ class EvenementController extends BaseController{
         $this->ProfileServices = new ProfileServices();
         $this->EvenementServices = new EvenementServices();
         $this->EvenementProgrammeService = new EvenementProgrammeServices();
+        $this->EvenetsMemberServices = new EventsMemberServices();
     }
     public function index(){
         $user_id = $_SESSION["user_id"];
@@ -93,5 +96,16 @@ class EvenementController extends BaseController{
         }
     }
 
+    public function readNotification(){
+        $user_id = $_SESSION["user_id"];
+        $notification_id = $_POST["notification_id"];
+
+        $read = $this->EvenetsMemberServices->IsRead($user_id,$notification_id);
+        if($read){
+            header("location: /tournoi");
+        } else {
+            header("location: /tournoi");
+        }
+    }
 }
 ?>
