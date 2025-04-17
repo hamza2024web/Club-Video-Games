@@ -24,6 +24,7 @@ class TournamentsRepository {
         $tournois = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $tournois;
     }
+    
     public function Inscription_Tournoi($user_id, $tournoi_id, $price) {
         $sqlMember = "SELECT id FROM membre WHERE user_id = :user_id";
         $stmtMember = $this->conn->prepare($sqlMember);
@@ -119,10 +120,10 @@ class TournamentsRepository {
                 
                 $organizer_id = $organizerData['user_id'];
 
-                $message = "Le tournoi '{$tournoi_name}' a atteint sa capacité maximale de {$max_participants} joueurs et a démarré! Connectez-vous pour voir votre planning des matchs.";
+                $message = "Le tournoi $tournoi_name a atteint sa capacité maximale de {$max_participants} joueurs et a démarré! Connectez-vous pour voir votre planning des matchs.";
                 $notificationType = "tournament_started";
                 $is_read = 0;
-                
+
                 $sqlNotification = "INSERT INTO notifications (user_id, message, type, is_read) VALUES (:user_id, :message, :type, :is_read)";
                 $stmtNotification = $this->conn->prepare($sqlNotification);
                 $stmtNotification->bindParam(":user_id", $organizer_id);
@@ -130,8 +131,23 @@ class TournamentsRepository {
                 $stmtNotification->bindParam(":type", $notificationType);
                 $stmtNotification->bindParam(":is_read", $is_read);
                 $stmtNotification->execute();
-                
 
+                $sqlParticipants = "SELECT m.user_id FROM inscription_tournoi it JOIN membre m ON it.membre_id = m.id WHERE it.tournoi_id = :tournoi_id";
+                $stmtParticipants = $this->conn->prepare($sqlParticipants);
+                $stmtParticipants->bindParam(":tournoi_id", $tournoi_id);
+                $stmtParticipants->execute();
+                $participants = $stmtParticipants->fetchAll(PDO::FETCH_ASSOC);
+                
+                foreach ($participants as $participant) {
+                    if ($participant['user_id'] != $organizer_id) {
+                        $stmtNotification = $this->conn->prepare($sqlNotification);
+                        $stmtNotification->bindParam(":user_id", $participant['user_id']);
+                        $stmtNotification->bindParam(":message", $message);
+                        $stmtNotification->bindParam(":type", $notificationType);
+                        $stmtNotification->bindParam(":is_read", $is_read);
+                        $stmtNotification->execute();
+                    }
+                }
                 
                 error_log(date('Y-m-d H:i:s') . " - Tournament ID: $tournoi_id status changed to In Progress because max participants ($max_participants) reached");
             }
