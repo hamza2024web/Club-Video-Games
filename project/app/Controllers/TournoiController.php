@@ -2,6 +2,7 @@
 namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\JeuxServices;
+use App\Services\MembreServices;
 use App\Services\ProfileServices;
 use App\Services\TournoiServices;
 
@@ -11,6 +12,7 @@ class TournoiController extends BaseController{
     protected $TournoiServices;
     protected $ProfileServices;
     protected $JeuxServices;
+    protected $MembreServices;
     
     public function __construct()
     {
@@ -18,6 +20,7 @@ class TournoiController extends BaseController{
         $this->ProfileServices = new ProfileServices();
         $this->JeuxServices = new JeuxServices();
         $this->TournoiServices = new TournoiServices();
+        $this->MembreServices = new MembreServices();
     }
 
     public function index(){
@@ -26,7 +29,8 @@ class TournoiController extends BaseController{
         $profile = $this->ProfileServices->getProfileUser($user_id);
         $jeux = $this->JeuxServices->getGame($user_id);
         $tournois = $this->TournoiServices->getTournoi($user_id);
-        return $this->renderOrg('tournoi',compact('profile','jeux','tournois','my_solde'));
+        $notifications = $this->MembreServices->CountNotifications($user_id);
+        return $this->renderOrg('tournoi',compact('profile','jeux','tournois','my_solde','notifications'));
     }
     public function addTournoi(){
         $user_id = $_SESSION["user_id"];
