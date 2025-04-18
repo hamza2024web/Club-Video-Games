@@ -572,6 +572,7 @@
                             {% for match in matches %}
                                 <div class="match-card {{ match.status }} {% if round_number == matchesByRound|length and match.match_number == 1 %}final-match{% endif %}" data-match-id="{{ match.id }}">
                                     <div class="participant {% if match.winner_id == match.participant1_id %}winner{% endif %}">
+                                    {# participant 1 xith his score #}
                                         <div class="participant-name">
                                             {{ match.participant1_name }}
                                         </div>
@@ -579,6 +580,7 @@
                                             {{ match.score_participant1 is not null ? match.score_participant1 : '-' }}
                                         </div>
                                     </div>
+                                    {# the second participants with his score #}
                                     <div class="participant {% if match.winner_id == match.participant2_id %}winner{% endif %}">
                                         <div class="participant-name">
                                             {{ match.participant2_name }}
@@ -587,6 +589,7 @@
                                             {{ match.score_participant2 is not null ? match.score_participant2 : '-' }}
                                         </div>
                                     </div>
+                                    {# the scheduled of the match #}
                                     <div class="match-date">
                                         {% if match.scheduled_date %}
                                             <i class="far fa-calendar-alt mr-1"></i> {{ match.scheduled_date|date('d/m/Y H:i') }}
