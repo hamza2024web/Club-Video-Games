@@ -31,6 +31,9 @@ class TournoiServices {
         return $participants;
     }
 
-
+    public function saveMatch($match){
+        $match = $this->TournoiRepository->saveMatche($match);
+        return $match
+    }
 }
 ?>

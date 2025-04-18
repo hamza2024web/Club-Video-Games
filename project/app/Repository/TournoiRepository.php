@@ -123,5 +123,27 @@ class TournoiRepository {
         return $result;
     }
 
+    public function saveMatche($match){
+        try {
+            $sql = "INSERT INTO matches (tournoi_id, round, match_number, participant1_id, participant1_name, participant2_id, participant2_name,scheduled_date, status) 
+            VALUES (:tournoi_id, :round, :match_number, :participant1_id, :participant1_name, :participant2_id, :participant2_name,:scheduled_date, :status)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':tournoi_id', $match['tournoi_id']);
+            $stmt->bindParam(':round', $match['round']);
+            $stmt->bindParam(':match_number', $match['match_number']);
+            $stmt->bindParam(':participant1_id', $match['participant1_id']);
+            $stmt->bindParam(':participant1_name', $match['participant1_name']);
+            $stmt->bindParam(':participant2_id', $match['participant2_id']);
+            $stmt->bindParam(':participant2_name', $match['participant2_name']);
+            $stmt->bindParam(':scheduled_date', $match['scheduled_date']);
+            $stmt->bindParam(':status', $match['status']);
+            
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error saving match: " . $e->getMessage());
+            return false;
+        }
+    }
+
 }
 ?>

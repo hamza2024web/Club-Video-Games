@@ -99,7 +99,32 @@ class TournoiController extends BaseController{
 
         $perfectBracketSize = pow(2,$roundsNedded);
 
-        
+        $byeNeededs = $perfectBracketSize - $participantCount;
+
+        $matchIndex = 1;
+        for($i=0 ;$i < $participantCount - $byeNeededs;$i += 2){
+            if ($i + 1 < $participantCount){
+                $match = [
+                    'id' => $matchIndex++,
+                    'tournoi_id' => $tournoi_id,
+                    'round' => 1,
+                    'match_number' => ($i/2) +1,
+                    'participant1_id' => $participants[$i]['id'],
+                    'participant1_name' => $participants[$i]['name'],
+                    'participant2_id' => $participants[$i]['id'],
+                    'participant2_name' => $participants[$i]['name'],
+                    'score_participant1' => null,
+                    'score_participant2' => null,
+                    'winner_id' => null,
+                    'scheduled_date' => date('Y-m-d H:i:s', strtotime('+1 day')),
+                    'status' => 'scheduled'
+                ];
+
+                $matchInsert = $this->TournoiServices->saveMatch($match);
+                $matches[] = $match;
+            }
+        }
+        return $matches;
     }
 }
 ?>
