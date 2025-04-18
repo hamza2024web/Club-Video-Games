@@ -105,7 +105,7 @@ class TournoiController extends BaseController{
             }
             $matchesByRound[$round][] = $match;
         }
-        
+
         return $this->renderOrg('bracket',[
             'tournoi' => $tournoi,
             'matchesByRound' => $matchesByRound,
@@ -174,6 +174,11 @@ class TournoiController extends BaseController{
             }
         }
         return $matches;
+    }
+
+    public function updateMatchResult(){
+        var_dump($_POST);
+        exit();
     }
 }
 ?>
