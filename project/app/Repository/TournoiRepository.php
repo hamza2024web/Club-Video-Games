@@ -115,7 +115,7 @@ class TournoiRepository {
     }
     
     public function getParticipants($tournoi_id){
-        $sql = "SELECT users.name , membre.tag_name , membre.profile_photo FROM inscription_tournoi INNER JOIN membre ON inscription_tournoi.membre_id = membre.id INNER JOIN users ON users.id = membre.user_id WHERE inscription_tournoi.tournoi_id = 15";
+        $sql = "SELECT users.name , membre.tag_name , membre.profile_photo FROM inscription_tournoi INNER JOIN membre ON inscription_tournoi.membre_id = membre.id INNER JOIN users ON users.id = membre.user_id WHERE inscription_tournoi.tournoi_id = :tournoi_id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":tournoi_id",$tournoi_id);
         $stmt->execute();
