@@ -145,5 +145,14 @@ class TournoiRepository {
         }
     }
 
+    public function getTournoiMatches($tournoi_id){
+        $sql = "SELECT matches.* from matches INNER JOIN tournoi ON tournoi.id = matches.tournoi_id WHERE tournoi.id = :tournoi_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":tournoi_id",$tournoi_id);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
 }
 ?>

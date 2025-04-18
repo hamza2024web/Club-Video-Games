@@ -35,5 +35,10 @@ class TournoiServices {
         $match = $this->TournoiRepository->saveMatche($match);
         return $match;
     }
+
+    public function getMatchesByTournament($tournoi_id){
+        $matches = $this->TournoiRepository->getTournoiMatches($tournoi_id);
+        return $matches;
+    }
 }
 ?>

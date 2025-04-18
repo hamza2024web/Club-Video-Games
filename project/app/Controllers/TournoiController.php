@@ -84,10 +84,33 @@ class TournoiController extends BaseController{
         $tournoi = $this->TournoiServices->getTournoiById($tournoi_id);
 
         $participants = $this->TournoiServices->getTournamentParticipants($tournoi_id);
-        var_dump($participants);
-        exit();
         
-        $matches = $this->generateTournamentBrackets($participants,$tournoi);    
+        $existingMatches  = $this->TournoiServices->getMatchesByTournament($tournoi_id);
+        
+        $matches = [];
+        
+        if(empty($existingMatches)){
+            $matches = $this->generateTournamentBrackets($participants,$tournoi); 
+            $current_matches = $this->TournoiServices->getMatchesByTournament($tournoi_id);
+        } else {
+            $current_matches = $existingMatches;
+        }
+
+
+        $matchesByRound = [];
+        foreach ($current_matches as $match){
+            $round = $match['round'];
+            if (!isset($matchesByRound[$round])){
+                $matchesByRound[$round] = [];
+            }
+            $matchesByRound[$round][] = $match;
+        }
+
+        return $this->renderOrg('bracket',[
+            'tournoi' => $tournoi,
+            'matchesByRound' => $matchesByRound,
+            'participants' => $participants
+        ]);
     }
 
     private function generateTournamentBrackets($participants,$tournoi){
@@ -113,8 +136,8 @@ class TournoiController extends BaseController{
                     'match_number' => ($i/2) +1,
                     'participant1_id' => $participants[$i]['id'],
                     'participant1_name' => $participants[$i]['name'],
-                    'participant2_id' => $participants[$i]['id'],
-                    'participant2_name' => $participants[$i]['name'],
+                    'participant2_id' => $participants[$i+1]['id'],
+                    'participant2_name' => $participants[$i+1]['name'],
                     'score_participant1' => null,
                     'score_participant2' => null,
                     'winner_id' => null,
