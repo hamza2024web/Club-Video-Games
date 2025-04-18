@@ -33,7 +33,7 @@ class TournoiServices {
 
     public function saveMatch($match){
         $match = $this->TournoiRepository->saveMatche($match);
-        return $match
+        return $match;
     }
 }
 ?>

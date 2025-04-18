@@ -84,11 +84,13 @@ class TournoiController extends BaseController{
         $tournoi = $this->TournoiServices->getTournoiById($tournoi_id);
 
         $participants = $this->TournoiServices->getTournamentParticipants($tournoi_id);
+        var_dump($participants);
+        exit();
         
         $matches = $this->generateTournamentBrackets($participants,$tournoi);    
     }
 
-    public function generateTournamentBrackets($participants,$tournoi){
+    private function generateTournamentBrackets($participants,$tournoi){
         $matches = [];
         $tournoi_id = $tournoi["id"];
         $participantCount  = count($participants);
@@ -121,6 +123,30 @@ class TournoiController extends BaseController{
                 ];
 
                 $matchInsert = $this->TournoiServices->saveMatch($match);
+                $matches[] = $match;
+            }
+        }
+        $matchesPerRound = $perfectBracketSize / 2;
+        for ($round = 2; $round <= $roundsNedded; $round++){
+            $matchesPerRound /= 2;
+            for ($m = 1; $m <= $matchesPerRound ; $m++){
+                $match = [
+                    'id' => $matchIndex++,
+                    'tournoi_id' => $tournoi_id,
+                    'round' => $round,
+                    'match_number' => $m,
+                    'participant1_id' => null,
+                    'participant1_name' => 'TBD',
+                    'participant2_id' => null,
+                    'participant2_name' => 'TBD',
+                    'score_participant1' => null,
+                    'score_participant2' => null,
+                    'winner_id' => null,
+                    'scheduled_date' => date('Y-m-d H:i:s', strtotime("+$round days")),
+                    'status' => 'pending'
+                ];
+
+                $this->TournoiServices->saveMatch($match);
                 $matches[] = $match;
             }
         }
