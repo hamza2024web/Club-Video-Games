@@ -527,6 +527,49 @@
             margin: 0 2px;
             opacity: 0.7;
         }
+        
+        /* Modal styling */
+        .match-teams-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        #updateScoreModal .modal-content {
+            border: 2px solid #1a3fc1;
+            box-shadow: 0 0 25px rgba(19, 56, 198, 0.3);
+        }
+
+        #updateScoreModal .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(26, 63, 193, 0.25);
+        }
+
+        #updateScoreModal .score-separator {
+            color: #00c2ff;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px rgba(0, 194, 255, 0.5);
+        }
+        
+        /* Make match cards look clickable for organizers */
+        .match-card:not(.completed) {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .match-card:not(.completed)::before {
+            content: '\f044';
+            font-family: 'Font Awesome 5 Free';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.9rem;
+            color: #00c2ff;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .match-card:not(.completed):hover::before {
+            opacity: 1;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -570,9 +613,12 @@
                         
                         <div class="match-container">
                             {% for match in matches %}
-                                <div class="match-card {{ match.status }} {% if round_number == matchesByRound|length and match.match_number == 1 %}final-match{% endif %}" data-match-id="{{ match.id }}">
-                                    <div class="participant {% if match.winner_id == match.participant1_id %}winner{% endif %}">
-                                    {# participant 1 xith his score #}
+                                <div class="match-card {{ match.status }} {% if round_number == matchesByRound|length and match.match_number == 1 %}final-match{% endif %}" 
+                                     data-match-id="{{ match.id }}" 
+                                     data-match-number="{{ match.match_number }}">
+                                    
+                                    <div class="participant {% if match.winner_id == match.participant1_id %}winner{% endif %}"
+                                         data-participant-id="{{ match.participant1_id }}">
                                         <div class="participant-name">
                                             {{ match.participant1_name }}
                                         </div>
@@ -580,8 +626,9 @@
                                             {{ match.score_participant1 is not null ? match.score_participant1 : '-' }}
                                         </div>
                                     </div>
-                                    {# the second participants with his score #}
-                                    <div class="participant {% if match.winner_id == match.participant2_id %}winner{% endif %}">
+                                    
+                                    <div class="participant {% if match.winner_id == match.participant2_id %}winner{% endif %}"
+                                         data-participant-id="{{ match.participant2_id }}">
                                         <div class="participant-name">
                                             {{ match.participant2_name }}
                                         </div>
@@ -589,7 +636,7 @@
                                             {{ match.score_participant2 is not null ? match.score_participant2 : '-' }}
                                         </div>
                                     </div>
-                                    {# the scheduled of the match #}
+                                    
                                     <div class="match-date">
                                         {% if match.scheduled_date %}
                                             <i class="far fa-calendar-alt mr-1"></i> {{ match.scheduled_date|date('d/m/Y H:i') }}
@@ -625,6 +672,66 @@
                 </a>
             </div>
         </div>
+    </div>
+
+    <!-- Match Score Update Modal -->
+    <div class="modal fade" id="updateScoreModal" tabindex="-1" role="dialog" aria-labelledby="updateScoreModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-dark text-white border-primary">
+          <div class="modal-header border-bottom border-primary" style="background: linear-gradient(90deg, #0a1845 0%, #1a3fc1 100%);">
+            <h5 class="modal-title" id="updateScoreModalLabel">
+              <i class="fas fa-futbol mr-2"></i> Mettre à jour le score
+            </h5>
+            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="updateScoreForm" action="/tournoi/update-score" method="POST">
+            <div class="modal-body">
+              <input type="hidden" id="match_id" name="match_id">
+              <input type="hidden" id="tournoi_id" name="tournoi_id" value="{{ tournoi.id }}">
+              
+              <div class="match-teams mb-4 text-center">
+                <div id="match-teams-title" class="h6 mb-3"></div>
+                <div class="match-info small text-muted mb-3">
+                  <div><i class="far fa-calendar-alt"></i> <span id="match-date">Date à déterminer</span></div>
+                  <div class="mt-1">Tour: <span id="match-round"></span>, Match #<span id="match-number"></span></div>
+                </div>
+              </div>
+              
+              <div class="row align-items-center mb-3">
+                <div class="col-5">
+                  <div class="form-group mb-0">
+                    <input type="hidden" id="participant1_id" name="participant1_id">
+                    <label for="participant1_score" id="participant1_label" class="text-left d-block font-weight-bold"></label>
+                    <input type="number" min="0" class="form-control bg-dark text-white border-primary" id="participant1_score" name="participant1_score" required>
+                  </div>
+                </div>
+                <div class="col-2 text-center">
+                  <div class="score-separator font-weight-bold">VS</div>
+                </div>
+                <div class="col-5">
+                  <div class="form-group mb-0">
+                    <input type="hidden" id="participant2_id" name="participant2_id">
+                    <label for="participant2_score" id="participant2_label" class="text-left d-block font-weight-bold"></label>
+                    <input type="number" min="0" class="form-control bg-dark text-white border-primary" id="participant2_score" name="participant2_score" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i> Le vainqueur avancera automatiquement au tour suivant.
+              </div>
+            </div>
+            <div class="modal-footer border-top border-primary">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save mr-2"></i> Enregistrer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -702,6 +809,76 @@
                 }, 100 + (index * 100));
             });
         });
+
+        $(document).ready(function() {
+            $('.match-card:not(.completed)').on('click', function() {
+                const $matchCard = $(this);
+                const matchId = $matchCard.data('match-id');
+                const matchNumber = $matchCard.data('match-number') || '1';
+                const roundNumber = $matchCard.closest('.round').index() + 1;
+                
+                const participant1Name = $matchCard.find('.participant:eq(0) .participant-name').text().trim();
+                const participant2Name = $matchCard.find('.participant:eq(1) .participant-name').text().trim();
+                const participant1Id = $matchCard.find('.participant:eq(0)').data('participant-id');
+                const participant2Id = $matchCard.find('.participant:eq(1)').data('participant-id');
+                
+                let participant1Score = $matchCard.find('.participant:eq(0) .participant-score').text().trim();
+                let participant2Score = $matchCard.find('.participant:eq(1) .participant-score').text().trim();
+                
+                if (participant1Score === '-') participant1Score = '';
+                if (participant2Score === '-') participant2Score = '';
+                
+                const matchDate = $matchCard.find('.match-date').text().trim();
+                
+                $('#match_id').val(matchId);
+                $('#match-teams-title').text(`${participant1Name} vs ${participant2Name}`);
+                $('#match-round').text(roundNumber);
+                $('#match-number').text(matchNumber);
+                if (matchDate) $('#match-date').text(matchDate);
+                
+                $('#participant1_id').val(participant1Id);
+                $('#participant2_id').val(participant2Id);
+                $('#participant1_label').text(participant1Name);
+                $('#participant2_label').text(participant2Name);
+                $('#participant1_score').val(participant1Score);
+                $('#participant2_score').val(participant2Score);
+                
+                $('#updateScoreModal').modal('show');
+            });
+            
+            $('#participant1_score, #participant2_score').on('input', function() {
+                const score1 = parseInt($('#participant1_score').val()) || 0;
+                const score2 = parseInt($('#participant2_score').val()) || 0;
+                
+                $('#participant1_label, #participant2_label').removeClass('text-success');
+                
+                if (score1 > score2) {
+                    $('#participant1_label').addClass('text-success');
+                } else if (score2 > score1) {
+                    $('#participant2_label').addClass('text-success');
+                }
+            });
+            
+            $('#updateScoreForm').on('submit', function(e) {
+                const score1 = $('#participant1_score').val();
+                const score2 = $('#participant2_score').val();
+                
+                if (score1 === '' || score2 === '') {
+                    e.preventDefault();
+                    alert('Veuillez entrer les scores pour les deux participants.');
+                    return false;
+                }
+                
+                if (score1 === score2) {
+                    if (!confirm('Les scores sont identiques. Voulez-vous vraiment soumettre un match nul?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+        });
     </script>
 </body>
-</html>
+</html> 
