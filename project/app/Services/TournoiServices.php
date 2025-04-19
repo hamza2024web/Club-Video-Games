@@ -42,16 +42,18 @@ class TournoiServices {
         return $matches;
     }
 
-    public function setMatchResult($tournoi_id,$match_id,$participant1_id,$participant1_score,$participant2_id,$participant2_score){
+    public function setMatchResult($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score) {
         try {
             $match = $this->TournoiRepository->updateMatchWithScores($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score);
-
-            if ($match['winner_id']){
-                $result = $this->TournoiRepository->verifyTheTournoiIsCompleted($tournoi_id,$match);
-                if ($result == 'true'){
+    
+            if (isset($match['winner_id']) && $match['winner_id']) {
+                $isComplete = $this->TournoiRepository->verifyTheTournoiIsCompleted($tournoi_id, $match);
+                
+                if ($isComplete === true) {
                     return false;
-                } elseif ($result == 'false'){
+                } else {
                     $this->TournoiRepository->advanceWinnerToNextRound($tournoi_id, $match);
+                    return true;
                 }
             }
             

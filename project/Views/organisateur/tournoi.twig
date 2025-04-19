@@ -1440,6 +1440,19 @@
                     window.history.replaceState({}, document.title, currentPath);
                 });
             }
+
+            if(urlParams.has('status_completed')){
+                Swal.fire({
+                    title: 'Tournoi Terminé!',
+                    text: 'Le tournoi est terminé et les récompenses ont été distribuées aux finalistes.',
+                    icon: 'success',
+                    confirmButtonColor: '#1a3fc1',
+                    confirmButtonText: 'Super!'
+                }).then(() => {
+                    // Remove query parameters after user clicks confirm
+                    window.history.replaceState({}, document.title, currentPath);
+                });
+            }
         });
 
         document.addEventListener('DOMContentLoaded', function() {
