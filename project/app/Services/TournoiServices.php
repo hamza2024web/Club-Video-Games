@@ -46,8 +46,13 @@ class TournoiServices {
         try {
             $match = $this->TournoiRepository->updateMatchWithScores($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score);
 
-            if ($match['winner_id']) {
-                $this->TournoiRepository->advanceWinnerToNextRound($tournoi_id, $match);
+            if ($match['winner_id']){
+                $result = $this->TournoiRepository->verifyTheTournoiIsCompleted($tournoi_id,$match);
+                if ($result == 'true'){
+                    return false;
+                } elseif ($result == 'false'){
+                    $this->TournoiRepository->advanceWinnerToNextRound($tournoi_id, $match);
+                }
             }
             
             return true;

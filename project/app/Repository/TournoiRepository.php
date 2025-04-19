@@ -187,6 +187,32 @@ class TournoiRepository {
         return $stmtGet->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function verifyTheTournoiIsCompleted($tournoi_id,$match){
+        $currentRound = $match["round"];
+        $nextRound = $currentRound++;
+        $match_id = $match["id"];
+
+        $sql = "SELECT * FROM matches WHERE round=:next_round AND tournoi_id=:tournoi_id AND id=:match_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":next_round",$nextRound);
+        $stmt->bindParam(":tournoi_id",$tournoi_id);
+        $stmt->bindParam(":match_id",$match_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $status = $result["status"];
+
+        if ($status == "completed") {
+            $sql = "SELECT premier_place , deuxieme_place , troisieme_place FROM tournoi WHERE id=:tournoi_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":tounroi_id",$tournoi_id);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
     public function advanceWinnerToNextRound($tournoi_id, $match) {
         $currentRound = $match['round'];
         $currentMatchNumber = $match['match_number'];

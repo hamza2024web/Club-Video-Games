@@ -189,8 +189,9 @@ class TournoiController extends BaseController{
 
         if ($result == "true"){
             $this->showTournamentBracket($tournoi_id);
-        } else {
-            echo "error lors de l'insertion de winner";
+        } elseif ($result == "false") {
+            header("location: /tournoi?The_tounoi_completed");
+            exit();
         }
 
     }
