@@ -157,6 +157,7 @@ class TournoiRepository {
     }
 
     public function updateMatchWithScores($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score) {
+
         if ($participant1_score > $participant2_score) {
             $winner_id = $participant1_id;
         } elseif ($participant2_score > $participant1_score) {
@@ -164,6 +165,7 @@ class TournoiRepository {
         } else {
             $winner_id = $participant1_id;
         }
+
         
         $status = 'completed';
         
@@ -189,12 +191,12 @@ class TournoiRepository {
         $currentRound = $match['round'];
         $currentMatchNumber = $match['match_number'];
         $winnerId = $match['winner_id'];
-        
+
         $sqlWinnerName = "SELECT DISTINCT users.name FROM users
         INNER JOIN membre ON membre.user_id = users.id
         INNER JOIN inscription_tournoi ON inscription_tournoi.membre_id = membre.id
         INNER JOIN matches ON matches.tournoi_id = inscription_tournoi.tournoi_id
-        WHERE matches.winner_id = :winner_id";
+        WHERE users.id = :winner_id";
         $stmtWinner = $this->conn->prepare($sqlWinnerName);
         $stmtWinner->bindParam(":winner_id", $winnerId);
         $stmtWinner->execute();

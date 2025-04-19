@@ -183,7 +183,8 @@ class TournoiController extends BaseController{
         $participant1_score = $_POST["participant1_score"];
         $participant2_id = $_POST["participant2_id"];
         $participant2_score = $_POST["participant2_score"];
-    
+        
+
         $result = $this->TournoiServices->setMatchResult($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score);
 
         if ($result == "true"){

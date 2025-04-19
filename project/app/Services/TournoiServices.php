@@ -43,7 +43,7 @@ class TournoiServices {
     }
 
     public function setMatchResult($tournoi_id,$match_id,$participant1_id,$participant1_score,$participant2_id,$participant2_score){
-        try {            
+        try {
             $match = $this->TournoiRepository->updateMatchWithScores($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score);
 
             if ($match['winner_id']) {
