@@ -208,6 +208,23 @@ class TournoiRepository {
             $stmt->bindParam(":tounroi_id",$tournoi_id);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $sqlMatch = "SELECT winner_id FROM matches WHERE tournoi_id = :tournoi_id ORDER BY round DESC LIMIT 1";
+            $stmt = $this->conn->prepare($sqlMatch);
+            $stmt->bindParam(":tournoi_id",$tournoi_id);
+            $stmt->execute();
+            $firstt = $stmt->fetch(PDO::FETCH_ASSOC);
+            $first_place = $firstt["winner_id"];
+
+            $sqlsecond = "SELECT CASE WHEN winner_id = participant1_id THEN participant2_id ELSE participant1_id END AS second_place
+            FROM matches WHERE tournoi_id = :tournoi_id ORDER BY round DESC LIMIT 1";
+            $stmt = $this->conn->prepare($sqlsecond);
+            $stmt->bindParam(":tournoi_id",$tournoi_id);
+            $stmt->execute();
+            $secondd_place = $stmt->fetch(PDO::FETCH_ASSOC);
+            $second_place = $secondd_place["second_place"];
+
+            
         } else {
             return false;
         }
