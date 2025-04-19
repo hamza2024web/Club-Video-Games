@@ -620,6 +620,10 @@
                                                     <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
                                                         <i class="fas fa-calendar-times text-red-600"></i>
                                                     </div>
+                                                {% elseif notification.type == 'tournament_started'%}
+                                                    <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-green-100 text-green-800 border border-green-200">
+                                                        tournament_started
+                                                    </span>
                                                 {% endif %}
                                             </div>
                                             
