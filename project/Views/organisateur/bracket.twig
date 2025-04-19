@@ -734,7 +734,6 @@
       </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Create background stars
@@ -810,75 +809,92 @@
             });
         });
 
-        $(document).ready(function() {
-            $('.match-card:not(.completed)').on('click', function() {
-                const $matchCard = $(this);
-                const matchId = $matchCard.data('match-id');
-                const matchNumber = $matchCard.data('match-number') || '1';
-                const roundNumber = $matchCard.closest('.round').index() + 1;
-                
-                const participant1Name = $matchCard.find('.participant:eq(0) .participant-name').text().trim();
-                const participant2Name = $matchCard.find('.participant:eq(1) .participant-name').text().trim();
-                const participant1Id = $matchCard.find('.participant:eq(0)').data('participant-id');
-                const participant2Id = $matchCard.find('.participant:eq(1)').data('participant-id');
-                
-                let participant1Score = $matchCard.find('.participant:eq(0) .participant-score').text().trim();
-                let participant2Score = $matchCard.find('.participant:eq(1) .participant-score').text().trim();
-                
-                if (participant1Score === '-') participant1Score = '';
-                if (participant2Score === '-') participant2Score = '';
-                
-                const matchDate = $matchCard.find('.match-date').text().trim();
-                
-                $('#match_id').val(matchId);
-                $('#match-teams-title').text(`${participant1Name} vs ${participant2Name}`);
-                $('#match-round').text(roundNumber);
-                $('#match-number').text(matchNumber);
-                if (matchDate) $('#match-date').text(matchDate);
-                
-                $('#participant1_id').val(participant1Id);
-                $('#participant2_id').val(participant2Id);
-                $('#participant1_label').text(participant1Name);
-                $('#participant2_label').text(participant2Name);
-                $('#participant1_score').val(participant1Score);
-                $('#participant2_score').val(participant2Score);
-                
-                $('#updateScoreModal').modal('show');
+        document.addEventListener('DOMContentLoaded', function () {
+            // Click event on each non-completed match card
+            document.querySelectorAll('.match-card:not(.completed)').forEach(function (matchCard) {
+                matchCard.addEventListener('click', function () {
+                    const matchId = matchCard.dataset.matchId;
+                    const matchNumber = matchCard.dataset.matchNumber || '1';
+                    const roundElement = matchCard.closest('.round');
+                    const roundNumber = Array.from(roundElement.parentNode.children).indexOf(roundElement) + 1;
+
+                    const participant1 = matchCard.querySelectorAll('.participant')[0];
+                    const participant2 = matchCard.querySelectorAll('.participant')[1];
+
+                    const participant1Name = participant1.querySelector('.participant-name').textContent.trim();
+                    const participant2Name = participant2.querySelector('.participant-name').textContent.trim();
+                    const participant1Id = participant1.dataset.participantId;
+                    const participant2Id = participant2.dataset.participantId;
+
+                    let participant1Score = participant1.querySelector('.participant-score').textContent.trim();
+                    let participant2Score = participant2.querySelector('.participant-score').textContent.trim();
+
+                    if (participant1Score === '-') participant1Score = '';
+                    if (participant2Score === '-') participant2Score = '';
+
+                    const matchDateElement = matchCard.querySelector('.match-date');
+                    const matchDate = matchDateElement ? matchDateElement.textContent.trim() : '';
+
+                    document.getElementById('match_id').value = matchId;
+                    document.getElementById('match-teams-title').textContent = `${participant1Name} vs ${participant2Name}`;
+                    document.getElementById('match-round').textContent = roundNumber;
+                    document.getElementById('match-number').textContent = matchNumber;
+                    if (matchDate) {
+                        document.getElementById('match-date').textContent = matchDate;
+                    }
+
+                    document.getElementById('participant1_id').value = participant1Id;
+                    document.getElementById('participant2_id').value = participant2Id;
+                    document.getElementById('participant1_label').textContent = participant1Name;
+                    document.getElementById('participant2_label').textContent = participant2Name;
+                    document.getElementById('participant1_score').value = participant1Score;
+                    document.getElementById('participant2_score').value = participant2Score;
+
+                    // Show Bootstrap modal (requires Bootstrap JS to still work)
+                    const modal = new bootstrap.Modal(document.getElementById('updateScoreModal'));
+                    modal.show();
+                });
             });
-            
-            $('#participant1_score, #participant2_score').on('input', function() {
-                const score1 = parseInt($('#participant1_score').val()) || 0;
-                const score2 = parseInt($('#participant2_score').val()) || 0;
-                
-                $('#participant1_label, #participant2_label').removeClass('text-success');
-                
-                if (score1 > score2) {
-                    $('#participant1_label').addClass('text-success');
-                } else if (score2 > score1) {
-                    $('#participant2_label').addClass('text-success');
-                }
+
+            // Highlight winner input
+            ['participant1_score', 'participant2_score'].forEach(function (id) {
+                document.getElementById(id).addEventListener('input', function () {
+                    const score1 = parseInt(document.getElementById('participant1_score').value) || 0;
+                    const score2 = parseInt(document.getElementById('participant2_score').value) || 0;
+
+                    document.getElementById('participant1_label').classList.remove('text-success');
+                    document.getElementById('participant2_label').classList.remove('text-success');
+
+                    if (score1 > score2) {
+                        document.getElementById('participant1_label').classList.add('text-success');
+                    } else if (score2 > score1) {
+                        document.getElementById('participant2_label').classList.add('text-success');
+                    }
+                });
             });
-            
-            $('#updateScoreForm').on('submit', function(e) {
-                const score1 = $('#participant1_score').val();
-                const score2 = $('#participant2_score').val();
-                
+
+            // Form submission validation
+            document.getElementById('updateScoreForm').addEventListener('submit', function (e) {
+                const score1 = document.getElementById('participant1_score').value;
+                const score2 = document.getElementById('participant2_score').value;
+
                 if (score1 === '' || score2 === '') {
                     e.preventDefault();
                     alert('Veuillez entrer les scores pour les deux participants.');
                     return false;
                 }
-                
+
                 if (score1 === score2) {
                     if (!confirm('Les scores sont identiques. Voulez-vous vraiment soumettre un match nul?')) {
                         e.preventDefault();
                         return false;
                     }
                 }
-                
+
                 return true;
             });
         });
+
     </script>
 </body>
 </html>     
