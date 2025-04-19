@@ -1,6 +1,7 @@
 <?php
 namespace App\Repository;
 use Config\Database;
+use Exception;
 use PDO;
 use PDOException;
 
@@ -187,45 +188,131 @@ class TournoiRepository {
         return $stmtGet->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function verifyTheTournoiIsCompleted($tournoi_id,$match){
-        $currentRound = $match["round"];
-        $nextRound = $currentRound++;
-        $match_id = $match["id"];
-
-        $sql = "SELECT * FROM matches WHERE round=:next_round AND tournoi_id=:tournoi_id AND id=:match_id";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":next_round",$nextRound);
-        $stmt->bindParam(":tournoi_id",$tournoi_id);
-        $stmt->bindParam(":match_id",$match_id);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $status = $result["status"];
-
-        if ($status == "completed") {
-            $sql = "SELECT premier_place , deuxieme_place , troisieme_place FROM tournoi WHERE id=:tournoi_id";
+    public function verifyTheTournoiIsCompleted($tournoi_id, $match) {
+        try {
+            $currentRound = (int)$match["round"];
+            
+            $sql = "SELECT COUNT(*) as count FROM matches WHERE tournoi_id = :tournoi_id AND round > :current_round";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(":tounroi_id",$tournoi_id);
+            $stmt->bindParam(":tournoi_id", $tournoi_id);
+            $stmt->bindParam(":current_round", $currentRound);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $sqlMatch = "SELECT winner_id FROM matches WHERE tournoi_id = :tournoi_id ORDER BY round DESC LIMIT 1";
-            $stmt = $this->conn->prepare($sqlMatch);
-            $stmt->bindParam(":tournoi_id",$tournoi_id);
-            $stmt->execute();
-            $firstt = $stmt->fetch(PDO::FETCH_ASSOC);
-            $first_place = $firstt["winner_id"];
-
-            $sqlsecond = "SELECT CASE WHEN winner_id = participant1_id THEN participant2_id ELSE participant1_id END AS second_place
-            FROM matches WHERE tournoi_id = :tournoi_id ORDER BY round DESC LIMIT 1";
-            $stmt = $this->conn->prepare($sqlsecond);
-            $stmt->bindParam(":tournoi_id",$tournoi_id);
-            $stmt->execute();
-            $secondd_place = $stmt->fetch(PDO::FETCH_ASSOC);
-            $second_place = $secondd_place["second_place"];
-
             
-        } else {
+            if ((int)$result['count'] === 0 && $match['status'] === 'completed') {
+                $this->conn->beginTransaction();
+                
+                try {
+                    $sql = "SELECT t.premier_place, t.deuxieme_place, t.event_id, e.name as tournament_name FROM tournoi t JOIN evenement e ON t.event_id = e.id WHERE t.id = :tournoi_id";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bindParam(":tournoi_id", $tournoi_id);
+                    $stmt->execute();
+                    $tournamentInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+                    
+                    if (!$tournamentInfo) {
+                        throw new Exception("Tournament information not found");
+                    }
+                    
+                    $event_id = $tournamentInfo['event_id'];
+                    $tournament_name = $tournamentInfo['tournament_name'];
+                    
+                    $first_place_id = $match['winner_id'];
+                    
+                    if ($match['winner_id'] == $match['participant1_id']) {
+                        $second_place_id = $match['participant2_id'];
+                    } else {
+                        $second_place_id = $match['participant1_id'];
+                    }
+                    
+                    $sql = "SELECT id FROM users WHERE id = :user_id";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bindParam(":user_id", $first_place_id);
+                    $stmt->execute();
+                    $first_place_member = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $first_place_member_id = $first_place_member['id'];
+                    $stmt->bindParam(":user_id", $second_place_id);
+                    $stmt->execute();
+                    $second_place_member = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $second_place_member_id = $second_place_member['id'];
+                    
+                    $sqlOrganisateur = "SELECT organisateur.user_id FROM organisateur
+                    INNER JOIN evenement ON evenement.club_id = organisateur.club_id
+                    INNER JOIN tournoi ON tournoi.event_id = evenement.id 
+                    WHERE tournoi.id = :tournoi_id";
+                    $stmt = $this->conn->prepare($sqlOrganisateur);
+                    $stmt->bindParam(":tournoi_id",$tournoi_id);
+                    $stmt->execute();
+                    $organisateur_id = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $admin_id = $organisateur_id["user_id"];
+                    
+                    // Get current balances
+                    $first_solde = $this->GetSolde($first_place_id);
+                    $second_solde = $this->GetSolde($second_place_id);
+                    
+                    // Calculate new balances
+                    $first_prize = (float)$tournamentInfo["premier_place"];
+                    $second_prize = (float)$tournamentInfo["deuxieme_place"];
+                    $newSolde1 = $first_solde + $first_prize;
+                    $newSolde2 = $second_solde + $second_prize;
+                    
+                    // Update first place balance
+                    $resultUpdate1 = $this->updateUserSolde($first_place_id, $newSolde1);
+                    if ($resultUpdate1) {
+                        $transaction_type = "tournament_prize";
+                        $this->logTransaction(
+                            $first_place_member_id, 
+                            $event_id, 
+                            $first_prize,
+                            $first_solde,
+                            $newSolde1,
+                            $transaction_type,
+                            $admin_id
+                        );
+                        
+                        $message = "Félicitations! Vous avez remporté le tournoi \"{$tournament_name}\" et gagné {$first_prize}€ en récompense.";
+                        $this->insertPrizeNotification($first_place_id, $message, "tournament_prize_first");
+                    }
+                    
+                    $resultUpdate2 = $this->updateUserSolde($second_place_id, $newSolde2);
+                    if ($resultUpdate2) {
+                        $transaction_type = "tournament_prize";
+                        $this->logTransaction(
+                            $second_place_member_id,
+                            $event_id,
+                            $second_prize,
+                            $second_solde,
+                            $newSolde2,
+                            $transaction_type,
+                            $admin_id
+                        );
+                        
+                        $message = "Félicitations! Vous avez terminé à la 2ème place du tournoi \"{$tournament_name}\" et gagné {$second_prize}€ en récompense.";
+                        $this->insertPrizeNotification($second_place_id, $message, "tournament_prize_second");
+                    }
+                    
+                    if ($resultUpdate1 && $resultUpdate2) {
+                        $status = "Completed";
+                        $sql = "UPDATE tournoi SET statut = :status WHERE id = :tournoi_id";
+                        $stmt = $this->conn->prepare($sql);
+                        $stmt->bindParam(":status", $status);
+                        $stmt->bindParam(":tournoi_id", $tournoi_id);
+                        $stmt->execute();
+                        
+                        $this->conn->commit();
+                        return true;
+                    } else {
+                        throw new Exception("Failed to update user balances");
+                    }
+                } catch (Exception $e) {
+                    $this->conn->rollBack();
+                    error_log("Tournament completion error: " . $e->getMessage());
+                    return false;
+                }
+            }
+            
+            return false;
+        } catch (Exception $e) {
+            error_log("Error verifying tournament completion: " . $e->getMessage());
             return false;
         }
     }
@@ -259,5 +346,90 @@ class TournoiRepository {
         $stmtNext->bindParam(":next_round", $nextRound);
         $stmtNext->bindParam(":next_match_number", $nextMatchNumber);
         $stmtNext->execute();
+    }
+
+    private function GetSolde($user_id) {
+        try {
+            $sql = "SELECT solde FROM compte WHERE user_id = :user_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":user_id", $user_id);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$result) {
+                error_log("No balance found for user ID: " . $user_id);
+                return 0; 
+            }
+            
+            return (float)$result['solde'];
+        } catch (Exception $e) {
+            error_log("Error getting user balance: " . $e->getMessage());
+            return 0;
+        }
+    }
+    
+    private function updateUserSolde($user_id, $newSolde) {
+        try {
+            $sql = "UPDATE compte SET solde = :solde WHERE user_id = :user_id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":solde", $newSolde, PDO::PARAM_STR);
+            $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Update balance error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function logTransaction($member_id, $event_id, $amount, $old_balance, $new_balance, $transaction_type, $created_by) {
+        try {
+            $sql = "INSERT INTO transaction_log (member_id, event_id, amount, old_balance, new_balance, transaction_type, created_by) 
+                    VALUES (:member_id, :event_id, :amount, :old_balance, :new_balance, :transaction_type, :created_by)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(":member_id", $member_id);
+            $stmt->bindParam(":event_id", $event_id);
+            $stmt->bindParam(":amount", $amount);
+            $stmt->bindParam(":old_balance", $old_balance);
+            $stmt->bindParam(":new_balance", $new_balance);
+            $stmt->bindParam(":transaction_type", $transaction_type);
+            $stmt->bindParam(":created_by", $created_by);
+            
+            $result = $stmt->execute();
+            
+            if (!$result) {
+                $error = $stmt->errorInfo();
+                error_log("Failed to insert transaction log: " . $error[2]);
+                return false;
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Error logging transaction: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function insertPrizeNotification($user_id, $message, $notification_type) {
+        try {
+            $sql = "INSERT INTO notifications (user_id, message, type, is_read) VALUES (:user_id, :message, :type, :is_read)";
+            $stmt = $this->conn->prepare($sql);
+            $is_read = 0;
+            $stmt->bindParam(":user_id", $user_id);
+            $stmt->bindParam(":message", $message);
+            $stmt->bindParam(":type", $notification_type);
+            $stmt->bindParam(":is_read", $is_read);
+            $result = $stmt->execute();
+
+            if (!$result) {
+                $error = $stmt->errorInfo();
+                error_log("Failed to insert prize notification: " . print_r($error, true));
+                return false;
+            }
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Exception in insertPrizeNotification: " . $e->getMessage());
+            return false;
+        }
     }
 }
