@@ -175,7 +175,6 @@ class TournoiRepository {
         $stmt->bindParam(":match_id", $match_id);
         $stmt->execute();
         
-        // Get the updated match data
         $sqlGetMatch = "SELECT * FROM matches WHERE id = :match_id";
         $stmtGet = $this->conn->prepare($sqlGetMatch);
         $stmtGet->bindParam(":match_id", $match_id);
@@ -215,4 +214,3 @@ class TournoiRepository {
         $stmtNext->execute();
     }
 }
-?> 

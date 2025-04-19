@@ -45,14 +45,13 @@ class TournoiServices {
     public function setMatchResult($tournoi_id,$match_id,$participant1_id,$participant1_score,$participant2_id,$participant2_score){
         try {            
             $match = $this->TournoiRepository->updateMatchWithScores($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score);
-            
+
             if ($match['winner_id']) {
                 $this->TournoiRepository->advanceWinnerToNextRound($tournoi_id, $match);
             }
             
             return true;
         } catch (Exception $e) {
-            // Log the error
             error_log("Error updating match result: " . $e->getMessage());
             return false;
         }
