@@ -186,8 +186,12 @@ class TournoiController extends BaseController{
     
         $result = $this->TournoiServices->setMatchResult($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score);
 
-        header("Location: /tournoi/bracket");
-        exit;
+        if ($result == "true"){
+            $this->showTournamentBracket($tournoi_id);
+        } else {
+            echo "error lors de l'insertion de winner";
+        }
+
     }
 }
 ?>
