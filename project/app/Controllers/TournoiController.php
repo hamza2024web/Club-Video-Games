@@ -176,9 +176,18 @@ class TournoiController extends BaseController{
         return $matches;
     }
 
-    public function updateMatchResult(){
-        var_dump($_POST);
-        exit();
+    public function updateMatchResult() {
+        $tournoi_id = $_POST["tournoi_id"];
+        $match_id = $_POST["match_id"];
+        $participant1_id = $_POST["participant1_id"];
+        $participant1_score = $_POST["participant1_score"];
+        $participant2_id = $_POST["participant2_id"];
+        $participant2_score = $_POST["participant2_score"];
+    
+        $result = $this->TournoiServices->setMatchResult($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score);
+        
+        header("Location: /tournoi/bracket");
+        exit;
     }
 }
 ?>

@@ -154,5 +154,65 @@ class TournoiRepository {
         return $result;
     }
 
+    public function updateMatchWithScores($tournoi_id, $match_id, $participant1_id, $participant1_score, $participant2_id, $participant2_score) {
+        if ($participant1_score > $participant2_score) {
+            $winner_id = $participant1_id;
+        } elseif ($participant2_score > $participant1_score) {
+            $winner_id = $participant2_id;
+        } else {
+            $winner_id = $participant1_id;
+        }
+        
+        $status = 'completed';
+        
+        $sqlMatch = "UPDATE matches SET score_participant1 = :participant1_score, score_participant2 = :participant2_score, winner_id = :winner_id, status = :status WHERE id = :match_id AND tournoi_id = :tournoi_id";
+        $stmt = $this->conn->prepare($sqlMatch);
+        $stmt->bindParam(":participant1_score", $participant1_score);
+        $stmt->bindParam(":participant2_score", $participant2_score);
+        $stmt->bindParam(":winner_id", $winner_id);
+        $stmt->bindParam(":status", $status); 
+        $stmt->bindParam(":tournoi_id", $tournoi_id);
+        $stmt->bindParam(":match_id", $match_id);
+        $stmt->execute();
+        
+        // Get the updated match data
+        $sqlGetMatch = "SELECT * FROM matches WHERE id = :match_id";
+        $stmtGet = $this->conn->prepare($sqlGetMatch);
+        $stmtGet->bindParam(":match_id", $match_id);
+        $stmtGet->execute();
+        
+        return $stmtGet->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function advanceWinnerToNextRound($tournoi_id, $match) {
+        $currentRound = $match['round'];
+        $currentMatchNumber = $match['match_number'];
+        $winnerId = $match['winner_id'];
+        
+        $sqlWinnerName = "SELECT DISTINCT users.name FROM users
+        INNER JOIN membre ON membre.user_id = users.id
+        INNER JOIN inscription_tournoi ON inscription_tournoi.membre_id = membre.id
+        INNER JOIN matches ON matches.tournoi_id = inscription_tournoi.tournoi_id
+        WHERE matches.winner_id = :winner_id";
+        $stmtWinner = $this->conn->prepare($sqlWinnerName);
+        $stmtWinner->bindParam(":winner_id", $winnerId);
+        $stmtWinner->execute();
+        $winner = $stmtWinner->fetch(PDO::FETCH_ASSOC);
+        $winnerName = $winner['name'];
+        
+        $nextRound = $currentRound + 1;
+        $nextMatchNumber = ceil($currentMatchNumber / 2);
+        
+        $participantField = ($currentMatchNumber % 2 == 1) ? 'participant1' : 'participant2';
+        
+        $sqlUpdateNext = "UPDATE matches SET {$participantField}_id = :winner_id,{$participantField}_name = :winner_name WHERE tournoi_id = :tournoi_id AND round = :next_round AND match_number = :next_match_number";
+        $stmtNext = $this->conn->prepare($sqlUpdateNext);
+        $stmtNext->bindParam(":winner_id", $winnerId);
+        $stmtNext->bindParam(":winner_name", $winnerName);
+        $stmtNext->bindParam(":tournoi_id", $tournoi_id);
+        $stmtNext->bindParam(":next_round", $nextRound);
+        $stmtNext->bindParam(":next_match_number", $nextMatchNumber);
+        $stmtNext->execute();
+    }
 }
-?>
+?> 
