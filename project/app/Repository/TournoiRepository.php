@@ -245,17 +245,14 @@ class TournoiRepository {
                     $organisateur_id = $stmt->fetch(PDO::FETCH_ASSOC);
                     $admin_id = $organisateur_id["user_id"];
                     
-                    // Get current balances
                     $first_solde = $this->GetSolde($first_place_id);
                     $second_solde = $this->GetSolde($second_place_id);
                     
-                    // Calculate new balances
                     $first_prize = (float)$tournamentInfo["premier_place"];
                     $second_prize = (float)$tournamentInfo["deuxieme_place"];
                     $newSolde1 = $first_solde + $first_prize;
                     $newSolde2 = $second_solde + $second_prize;
                     
-                    // Update first place balance
                     $resultUpdate1 = $this->updateUserSolde($first_place_id, $newSolde1);
                     if ($resultUpdate1) {
                         $transaction_type = "tournament_prize";
