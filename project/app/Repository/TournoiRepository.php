@@ -224,7 +224,7 @@ class TournoiRepository {
                         $second_place_id = $match['participant1_id'];
                     }
                     
-                    $sql = "SELECT id FROM users WHERE id = :user_id";
+                    $sql = "SELECT membre.id FROM membre INNER JOIN users ON users.id = membre.user_id WHERE membre.user_id = :user_id";
                     $stmt = $this->conn->prepare($sql);
                     $stmt->bindParam(":user_id", $first_place_id);
                     $stmt->execute();
