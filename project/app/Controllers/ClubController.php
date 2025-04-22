@@ -28,7 +28,7 @@ class ClubController extends BaseController {
         $notifications = $this->MembreServices->CountNotifications($user_id);
         $club = $this->clubServices->getClubUser($user_id);
         $Membres_actifs = $this->membres_actif();
-        $evenements = $this->evenements();
+        $evenements = $this->evenements($user_id);
         $Jeux_disponibles = $this->Jeux_disponibles($user_id);
         return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde','Membres_actifs','evenements','Jeux_disponibles','notifications'));
     }
@@ -63,8 +63,8 @@ class ClubController extends BaseController {
         return $members_active;
     }
 
-    public function evenements (){
-        $evenements = $this->StatistiqueAdminServices->evenements();
+    public function evenements ($user_id){
+        $evenements = $this->StatistiqueAdminServices->evenements($user_id);
         return $evenements;
     }
 
