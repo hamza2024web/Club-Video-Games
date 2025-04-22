@@ -11,9 +11,16 @@ class ClubRepository {
         $db = new Database();
         $this->conn = $db->getConnection();
     }
-    public function getClubOrganisateur(){
-        $sql = "SELECT * from club ";
+    public function getClubOrganisateur($user_id){
+        $sqlClub = "SELECT club_id FROM organisateur WHERE user_id = :user_id";
+        $stmtClub = $this->conn->prepare($sqlClub);
+        $stmtClub->bindParam(":user_id",$user_id);
+        $stmtClub->execute();
+        $club_idd = $stmtClub->fetch(PDO::FETCH_ASSOC);
+        $club_id = $club_idd["club_id"];
+        $sql = "SELECT * from club WHERE id=:club_id";
         $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam("club_id",$club_id);
         $stmt->execute();
         $club = $stmt->fetch(PDO::FETCH_ASSOC);
         return $club;
