@@ -129,7 +129,7 @@
         <div class="absolute inset-0 bg-black opacity-50 z-10"></div>
         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-80 z-10"></div>
         <div class="relative h-[600px] overflow-hidden">
-            <img src="/api/placeholder/1920/600" alt="Video Game Tournament" class="w-full h-full object-cover">
+            <img src="/public/uploads/MW-DM777_esport_20150527144101_MG.jpg" alt="Video Game Tournament" class="w-full h-full object-cover">
             <div class="absolute inset-0 z-20 flex items-center justify-center text-center px-4">
                 <div class="max-w-4xl">
                     <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4">
@@ -221,90 +221,25 @@
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Game 1 -->
+                {% for game in games %}
                 <div class="game-card bg-white rounded-xl shadow-md overflow-hidden">
                     <div class="h-48 relative">
-                        <img src="/api/placeholder/400/240" alt="Call of Duty" class="w-full h-full object-cover">
+                        <img src="{{game.image}}" alt="{{game.nom_de_jeu}}" class="w-full h-full object-cover">
                         <div class="absolute top-2 right-2 bg-purple-600 text-white text-xs uppercase px-2 py-1 rounded-full">Popular</div>
                     </div>
                     <div class="p-5">
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">Call of Duty: Modern Warfare</h3>
+                        <h3 class="text-lg font-bold text-gray-900 mb-1">{{game.nom_de_jeu}}</h3>
                         <div class="flex space-x-2 mb-3">
-                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">FPS</span>
-                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Action</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">{{game.plateforme}}</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">{{game.genre}}</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <i class="fas fa-users text-purple-600 mr-1.5"></i>
-                                <span class="text-sm text-gray-600">125 players</span>
-                            </div>
-                            <a href="#" class="text-sm font-medium text-purple-600 hover:text-purple-800">Join</a>
+                            <a href="/login" class="text-sm font-medium text-purple-600 hover:text-purple-800">Join</a>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Game 2 -->
-                <div class="game-card bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="h-48 relative">
-                        <img src="/api/placeholder/400/240" alt="Fortnite" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">Fortnite</h3>
-                        <div class="flex space-x-2 mb-3">
-                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Battle Royale</span>
-                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Multiplayer</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <i class="fas fa-users text-purple-600 mr-1.5"></i>
-                                <span class="text-sm text-gray-600">98 players</span>
-                            </div>
-                            <a href="#" class="text-sm font-medium text-purple-600 hover:text-purple-800">Join</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Game 3 -->
-                <div class="game-card bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="h-48 relative">
-                        <img src="/api/placeholder/400/240" alt="Minecraft" class="w-full h-full object-cover">
-                        <div class="absolute top-2 right-2 bg-green-600 text-white text-xs uppercase px-2 py-1 rounded-full">Tournament</div>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">Minecraft</h3>
-                        <div class="flex space-x-2 mb-3">
-                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Sandbox</span>
-                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Adventure</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <i class="fas fa-users text-purple-600 mr-1.5"></i>
-                                <span class="text-sm text-gray-600">85 players</span>
-                            </div>
-                            <a href="#" class="text-sm font-medium text-purple-600 hover:text-purple-800">Join</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Game 4 -->
-                <div class="game-card bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="h-48 relative">
-                        <img src="/api/placeholder/400/240" alt="League of Legends" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">League of Legends</h3>
-                        <div class="flex space-x-2 mb-3">
-                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">MOBA</span>
-                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Strategy</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <i class="fas fa-users text-purple-600 mr-1.5"></i>
-                                <span class="text-sm text-gray-600">76 players</span>
-                            </div>
-                            <a href="#" class="text-sm font-medium text-purple-600 hover:text-purple-800">Join</a>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
+
             </div>
         </div>
     </section>
@@ -342,58 +277,6 @@
                                 </div>
                             </div>
                             <a href="#" class="text-sm font-medium text-purple-600 hover:text-purple-800">Register</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Event 2 -->
-                <div class="card-hover bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="h-48 relative">
-                        <img src="/api/placeholder/400/240" alt="Call of Duty Tournament" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 text-white">
-                            <span class="text-sm font-semibold bg-purple-600 px-2 py-1 rounded-full">APR 22</span>
-                        </div>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">COD Team Deathmatch</h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            Form your squad and compete in our Call of Duty tournament. Exclusive rewards for the winning team!
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <div class="flex items-center">
-                                    <i class="fas fa-calendar text-purple-600 mr-1.5"></i>
-                                    <span class="text-sm text-gray-600">Apr 22, 7:00 PM</span>
-                                </div>
-                            </div>
-                            <a href="#" class="text-sm font-medium text-purple-600 hover:text-purple-800">Register</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Event 3 -->
-                <div class="card-hover bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="h-48 relative">
-                        <img src="/api/placeholder/400/240" alt="Game Night" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 text-white">
-                            <span class="text-sm font-semibold bg-purple-600 px-2 py-1 rounded-full">APR 28</span>
-                        </div>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Game Release Party</h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            Join us for the release of the most anticipated game of 2025. Food, drinks, and early access!
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <div class="flex items-center">
-                                    <i class="fas fa-calendar text-purple-600 mr-1.5"></i>
-                                    <span class="text-sm text-gray-600">Apr 28, 8:00 PM</span>
-                                </div>
-                            </div>
-                            <a href="#" class="text-sm font-medium text-purple-600 hover:text-purple-800">RSVP</a>
                         </div>
                     </div>
                 </div>

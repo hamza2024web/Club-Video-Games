@@ -40,7 +40,6 @@ Route::post('/member/eventInscription','EvenetsMemberController@inscription');
 Route::post('/member/notificationRead','EvenetsMemberController@readNotification');
 
 // organisateur
-Route::get('homePage','OrganisateurController@organisateur');
 Route::get('profile','ProfileController@profile');
 Route::post('updateProfile','ProfileController@updateProfile');
 Route::post('updatePassword','ProfileController@UpdatePassword');
