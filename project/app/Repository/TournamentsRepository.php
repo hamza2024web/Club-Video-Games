@@ -6,11 +6,13 @@ use PDOException;
 
 class TournamentsRepository {
     private $conn;
+
     public function __construct()
     {
         $db = new Database();
         $this->conn = $db->getConnection();
     }
+
     public function getAllTournois(){
         $sql = "SELECT tournoi.id ,tournoi.name ,tournoi.date_de_debut , tournoi.frais_inscription , tournoi.image , tournoi.numbre_membre 
         ,tournoi.statut , tournoi.format_tournoi ,tournoi.regles , tournoi.description , tournoi.prix_total ,tournoi.premier_place , tournoi.deuxieme_place 
@@ -176,6 +178,20 @@ class TournamentsRepository {
         $stmt->execute();
         $inscriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $inscriptions;
+    }
+
+    public function getMyCalendries($user_id){
+        $sql = "SELECT matches.* FROM matches
+		INNER JOIN tournoi ON tournoi.id = matches.tournoi_id
+        INNER JOIN inscription_tournoi ON inscription_tournoi.tournoi_id = tournoi.id
+        INNER JOIN membre ON membre.id = inscription_tournoi.membre_id
+        INNER JOIN users ON users.id = membre.user_id
+        WHERE users.id = :user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
     }
 }
 ?>

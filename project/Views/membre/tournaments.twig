@@ -1166,11 +1166,142 @@
             </section>
 
             <section id="calendrier" class="hidden mb-10">
-                <div class="bg-white rounded-xl shadow-sm p-10 text-center">
-                    <i class="fas fa-calendar-alt text-5xl text-gray-300 mb-4"></i>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Calendrier des tournois</h3>
-                    <p class="text-gray-600 mb-6">Planifiez vos prochains tournois et événements</p>
-                </div>
+                {% if calendries|length > 0 %}
+                    <div class="bg-white rounded-xl shadow-sm p-6 overflow-hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-gray-800">Calendrier des tournois</h3>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-xs px-3 py-1.5 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200">
+                                    <i class="fas fa-filter mr-1"></i> Filtrer
+                                </button>
+                                <button class="text-xs px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                                    <i class="fas fa-download mr-1"></i> Exporter
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tournament Rounds Tabs -->
+                        <div class="border-b border-gray-200 mb-4">
+                            <nav class="-mb-px flex space-x-4" aria-label="Rounds">
+                                <button class="text-purple-600 border-b-2 border-purple-600 py-2 px-1 text-sm font-medium whitespace-nowrap">
+                                    Tous les matchs
+                                </button>
+                                <button class="text-gray-500 hover:text-gray-700 hover:border-gray-300 py-2 px-1 text-sm font-medium whitespace-nowrap">
+                                    Round 1
+                                </button>
+                                <button class="text-gray-500 hover:text-gray-700 hover:border-gray-300 py-2 px-1 text-sm font-medium whitespace-nowrap">
+                                    Round 2
+                                </button>
+                            </nav>
+                        </div>
+
+                        <!-- Tournament Table -->
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Round</th>
+                                        <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Match</th>
+                                        <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participants</th>
+                                        <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                                        <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                                        <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vainqueur</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for match in calendries %}
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-3 py-4 whitespace-nowrap text-sm">
+                                                <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">
+                                                    {{ match.round }}
+                                                </span>
+                                            </td>
+                                            <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ match.match_number }}
+                                            </td>
+                                            <td class="px-3 py-4 whitespace-nowrap">
+                                                <div class="flex flex-col space-y-2">
+                                                    <div class="flex items-center {% if match.winner_id == match.participant1_id %}font-medium text-green-700{% endif %}">
+                                                        <div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center mr-2 text-xs text-purple-600 font-medium">
+                                                            {{ match.participant1_name|slice(0, 1)|upper }}
+                                                        </div>
+                                                        {{ match.participant1_name }}
+                                                    </div>
+                                                    <div class="flex items-center {% if match.winner_id == match.participant2_id %}font-medium text-green-700{% endif %}">
+                                                        <div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center mr-2 text-xs text-indigo-600 font-medium">
+                                                            {{ match.participant2_name|slice(0, 1)|upper }}
+                                                        </div>
+                                                        {{ match.participant2_name }}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-3 py-4 whitespace-nowrap text-sm">
+                                                <div class="flex flex-col space-y-2">
+                                                    <span class="{% if match.winner_id == match.participant1_id %}font-bold text-green-700{% endif %}">
+                                                        {{ match.score_participant1 }}
+                                                    </span>
+                                                    <span class="{% if match.winner_id == match.participant2_id %}font-bold text-green-700{% endif %}">
+                                                        {{ match.score_participant2 }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ match.scheduled_date|date("d/m/Y") }}<br>
+                                                <span class="text-xs">{{ match.scheduled_date|date("H:i") }}</span>
+                                            </td>
+                                            <td class="px-3 py-4 whitespace-nowrap">
+                                                {% if match.status == 'completed' %}
+                                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Terminé</span>
+                                                {% elseif match.status == 'scheduled' %}
+                                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Planifié</span>
+                                                {% elseif match.status == 'in_progress' %}
+                                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">En cours</span>
+                                                {% else %}
+                                                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">{{ match.status }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="px-3 py-4 whitespace-nowrap text-sm">
+                                                {% if match.winner_id and match.status == 'completed' %}
+                                                    <div class="flex items-center">
+                                                        <i class="fas fa-trophy text-yellow-500 mr-1.5"></i>
+                                                        <span>
+                                                            {% if match.winner_id == match.participant1_id %}
+                                                                {{ match.participant1_name }}
+                                                            {% elseif match.winner_id == match.participant2_id %}
+                                                                {{ match.participant2_name }}
+                                                            {% endif %}
+                                                        </span>
+                                                    </div>
+                                                {% else %}
+                                                    <span class="text-gray-400">-</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        {% if calendries|length > 10 %}
+                            <div class="mt-4 px-3 py-2 border-t border-gray-200 flex items-center justify-between">
+                                <div class="text-sm text-gray-700">
+                                    Affichage de <span class="font-medium">1</span> à <span class="font-medium">10</span> sur <span class="font-medium">{{ calendries|length }}</span> résultats
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Précédent</button>
+                                    <button class="px-3 py-1 bg-purple-600 text-white rounded-md text-sm font-medium hover:bg-purple-700">Suivant</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="bg-white rounded-xl shadow-sm p-10 text-center">
+                        <i class="fas fa-calendar-alt text-5xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Calendrier des tournois</h3>
+                        <p class="text-gray-600 mb-6">Planifiez vos prochains tournois et événements</p>
+                    </div>
+                {% endif %}
             </section>
 
             <!-- Create Tournament Banner -->
