@@ -252,88 +252,27 @@
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- Game 1 -->
+                            {% for game in myGames %}
                             <div class="game-card flex bg-gray-50 rounded-xl overflow-hidden border border-gray-100">
                                 <div class="w-1/3">
-                                    <img src="/api/placeholder/120/120" alt="Call of Duty" class="w-full h-full object-cover">
+                                    <img src="/{{game.image}}" alt="{{game.nom_de_jeu}}" class="w-full h-full object-cover">
                                 </div>
                                 <div class="w-2/3 p-4">
-                                    <h3 class="font-bold text-gray-900">Call of Duty: MW</h3>
+                                    <h3 class="font-bold text-gray-900">{{game.nom_de_jeu}}</h3>
                                     <div class="flex items-center mt-1 mb-2">
                                         <div class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
-                                            FPS
+                                            {{game.plateforme}}
                                         </div>
                                         <div class="text-xs text-gray-500 ml-2">
                                             <i class="fas fa-clock mr-1"></i> 12h played
-                                        </div>
+                                        </div>  
                                     </div>
                                     <button class="w-full mt-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs hover:bg-purple-200 transition">
                                         Play Now
                                     </button>
                                 </div>
                             </div>
-                            
-                            <!-- Game 2 -->
-                            <div class="game-card flex bg-gray-50 rounded-xl overflow-hidden border border-gray-100">
-                                <div class="w-1/3">
-                                    <img src="/api/placeholder/120/120" alt="Fortnite" class="w-full h-full object-cover">
-                                </div>
-                                <div class="w-2/3 p-4">
-                                    <h3 class="font-bold text-gray-900">Fortnite</h3>
-                                    <div class="flex items-center mt-1 mb-2">
-                                        <div class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
-                                            Battle Royale
-                                        </div>
-                                        <div class="text-xs text-gray-500 ml-2">
-                                            <i class="fas fa-clock mr-1"></i> 8h played
-                                        </div>
-                                    </div>
-                                    <button class="w-full mt-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs hover:bg-purple-200 transition">
-                                        Play Now
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Game 3 -->
-                            <div class="game-card flex bg-gray-50 rounded-xl overflow-hidden border border-gray-100">
-                                <div class="w-1/3">
-                                    <img src="/api/placeholder/120/120" alt="Minecraft" class="w-full h-full object-cover">
-                                </div>
-                                <div class="w-2/3 p-4">
-                                    <h3 class="font-bold text-gray-900">Minecraft</h3>
-                                    <div class="flex items-center mt-1 mb-2">
-                                        <div class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
-                                            Sandbox
-                                        </div>
-                                        <div class="text-xs text-gray-500 ml-2">
-                                            <i class="fas fa-clock mr-1"></i> 5h played
-                                        </div>
-                                    </div>
-                                    <button class="w-full mt-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs hover:bg-purple-200 transition">
-                                        Play Now
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Game 4 -->
-                            <div class="game-card flex bg-gray-50 rounded-xl overflow-hidden border border-gray-100">
-                                <div class="w-1/3">
-                                    <img src="/api/placeholder/120/120" alt="League of Legends" class="w-full h-full object-cover">
-                                </div>
-                                <div class="w-2/3 p-4">
-                                    <h3 class="font-bold text-gray-900">League of Legends</h3>
-                                    <div class="flex items-center mt-1 mb-2">
-                                        <div class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">
-                                            MOBA
-                                        </div>
-                                        <div class="text-xs text-gray-500 ml-2">
-                                            <i class="fas fa-clock mr-1"></i> 3h played
-                                        </div>
-                                    </div>
-                                    <button class="w-full mt-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs hover:bg-purple-200 transition">
-                                        Play Now
-                                    </button>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </section>
                     
@@ -348,6 +287,7 @@
                         </div>
                         
                         <div class="space-y-4">
+                        
                             <!-- Tournament 1 -->
                             <div class="game-card flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
                                 <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
@@ -363,38 +303,6 @@
                                     </span>
                                     <button class="p-2 text-gray-400 hover:text-gray-600">
                                         <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Tournament 2 -->
-                            <div class="game-card flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-users text-purple-600"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="font-bold text-gray-900">COD Team Deathmatch</h3>
-                                    <p class="text-sm text-gray-500">April 22, 2025 • 7:00 PM</p>
-                                </div>
-                                <div>
-                                    <button class="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-lg hover:bg-purple-700 transition">
-                                        Register Now
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Tournament 3 -->
-                            <div class="game-card flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-cubes text-purple-600"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="font-bold text-gray-900">Minecraft Build Battle</h3>
-                                    <p class="text-sm text-gray-500">April 28, 2025 • 5:00 PM</p>
-                                </div>
-                                <div>
-                                    <button class="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-lg hover:bg-purple-700 transition">
-                                        Register Now
                                     </button>
                                 </div>
                             </div>
