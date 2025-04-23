@@ -33,6 +33,12 @@ class MembreServices {
         $notifications = $this->Membrerepository->getNotifications($user_id);
         return $notifications;
     }
+
+    public function GetMyNotifications($user_id){
+        $notification = $this->Membrerepository->GetMyNotification($user_id);
+        return $notification;
+    }
+    
 }
 
 ?>
