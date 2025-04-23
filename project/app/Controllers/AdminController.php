@@ -23,7 +23,8 @@ class AdminController extends BaseController {
         $active_session = $this->activeSession();
         $pending_session = $this->pendingSession();
         $top_players = $this->adminServices->getTopPlayers();
-        return $this->renderAdmin('dashboard',compact('total_games','active_member','active_session','pending_session','top_players'));
+        $upcomingTournoi = $this->adminServices->getUpcomingTournoi();
+        return $this->renderAdmin('dashboard',compact('total_games','active_member','active_session','pending_session','top_players','upcomingTournoi'));
     }
 
     public function StatistiqueGames (){

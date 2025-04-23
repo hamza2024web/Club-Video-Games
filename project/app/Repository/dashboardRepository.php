@@ -28,6 +28,18 @@ class dashboardRepository {
         return $friends;
     }
     
+    public function getUpcomingTournoi(){
+        $statut = "Open";
+        $status = "Pendig";
+        $sql = "SELECT * FROM tournoi WHERE statut=:statut OR statut=:status";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":statut",$statut);
+        $stmt->bindParam(":status",$status);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
     public function getAllGenre(){
         $query = "SELECT * FROM genre";
         $stmt = $this->conn->prepare($query);
