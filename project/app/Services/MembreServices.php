@@ -9,6 +9,11 @@ class MembreServices {
     {
         $this->Membrerepository = new MembreRepository();
     }
+
+    public function getFriends(){
+        $friends = $this->Membrerepository->getfriends();
+        return $friends;
+    }
     public function getProfileMembre($user_id){
         $profile = $this->Membrerepository->getProfile($user_id);
         return $profile;

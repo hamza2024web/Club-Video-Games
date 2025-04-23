@@ -31,7 +31,8 @@ class membreController extends BaseController{
         $tournoi_inscrit = $this->Tournoi($user_id);
         $myGames = $this->JeuxServices->getGame($user_id);
         $mytounament = $this->TournamentsServices->getInscriptionTournoi($user_id);
-        $this->renderMem('dashboard',compact('member','my_solde','notification','Jeux_disponibles','tournoi_inscrit','myGames','mytounament'));
+        $friends = $this->MembreServices->getFriends();
+        $this->renderMem('dashboard',compact('member','my_solde','notification','Jeux_disponibles','tournoi_inscrit','myGames','mytounament','friends'));
     }
     public function Jeux_disponibles($user_id){
         $jeux = $this->StatistiqueAdminServices->GamesPurchase($user_id);

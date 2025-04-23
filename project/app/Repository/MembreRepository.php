@@ -85,5 +85,17 @@ class MembreRepository {
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function getfriends(){
+        $role = 3;
+        $sql = "SELECT users.name , membre.profile_photo , users.email FROM users
+        INNER JOIN membre ON membre.user_id = users.id
+        WHERE role_id = :role";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":role",$role);
+        $stmt->execute();
+        $friends = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $friends;
+    }
 }
 ?>
