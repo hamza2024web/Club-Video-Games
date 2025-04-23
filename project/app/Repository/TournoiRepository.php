@@ -18,7 +18,7 @@ class TournoiRepository {
         ,tournoi.prix_total ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.frais_inscription,tournoi.discord,tournoi.twitch,tournoi.image , COUNT(inscription_tournoi.membre_id) AS number_inscription FROM tournoi
         INNER JOIN jeux ON jeux.id = tournoi.jeu_id
         INNER JOIN evenement ON evenement.id = tournoi.event_id
-        INNER JOIN inscription_tournoi ON inscription_tournoi.tournoi_id = tournoi.id
+        LEFT JOIN inscription_tournoi ON inscription_tournoi.tournoi_id = tournoi.id
         INNER JOIN organisateur ON organisateur.club_id = evenement.club_id
         WHERE organisateur.user_id = :user_id
         GROUP BY tournoi.id";
