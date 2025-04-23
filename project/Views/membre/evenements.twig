@@ -620,9 +620,20 @@
                                                     <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
                                                         <i class="fas fa-calendar-times text-red-600"></i>
                                                     </div>
+                                                {% elseif notification.type == 'tournament_started'%}
+                                                    <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-green-100 text-green-800 border border-green-200">
+                                                        tournament_started
+                                                    </span>
+                                                {% elseif notification.type == 'tournament_prize_first' %}
+                                                    <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                                                        <i class="fas fa-trophy text-yellow-600"></i>
+                                                    </div>
+                                                {% elseif notification.type == 'tournament_prize_second' %}
+                                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                                        <i class="fas fa-medal text-blue-600"></i>
+                                                    </div>
                                                 {% endif %}
                                             </div>
-                                            
                                             <!-- Content Area with Message and Time -->
                                             <div class="flex-1">
                                                 <!-- Message with Transaction Type Badge -->
@@ -1382,52 +1393,52 @@
         }
 
     
-    document.addEventListener('DOMContentLoaded', function() {
-        const notificationBtn = document.getElementById('notificationBtn');
-        const notificationModal = document.getElementById('notificationModal');
-        const markAllReadBtn = document.getElementById('markAllReadBtn');
-        
-        // Toggle notification modal
-        notificationBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationModal = document.getElementById('notificationModal');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
             
-            // Add wiggle animation when opening
-            if (notificationModal.classList.contains('hidden')) {
-                notificationBtn.querySelector('i').classList.add('wiggle-animation');
-                setTimeout(() => {
-                    notificationBtn.querySelector('i').classList.remove('wiggle-animation');
-                }, 600);
-            }
+            // Toggle notification modal
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Add wiggle animation when opening
+                if (notificationModal.classList.contains('hidden')) {
+                    notificationBtn.querySelector('i').classList.add('wiggle-animation');
+                    setTimeout(() => {
+                        notificationBtn.querySelector('i').classList.remove('wiggle-animation');
+                    }, 600);
+                }
+                
+                notificationModal.classList.toggle('hidden');
+            });
             
-            notificationModal.classList.toggle('hidden');
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
+                    notificationModal.classList.add('hidden');
+                }
+            });
         });
-        
-        // Close when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
-                notificationModal.classList.add('hidden');
-            }
-        });
-    });
 
-    document.querySelectorAll('.mark-read-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/member/notificationRead';
-            
-            const idField = document.createElement('input');
-            idField.type = 'hidden';
-            idField.name = 'notification_id';
-            idField.value = this.getAttribute('data-id');
-            form.appendChild(idField);
-            
-            document.body.appendChild(form);
-            form.submit();
+        document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/member/notificationRead';
+                
+                const idField = document.createElement('input');
+                idField.type = 'hidden';
+                idField.name = 'notification_id';
+                idField.value = this.getAttribute('data-id');
+                form.appendChild(idField);
+                
+                document.body.appendChild(form);
+                form.submit();
+            });
         });
-    });
 
     </script>
 </body>

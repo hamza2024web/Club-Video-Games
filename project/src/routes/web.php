@@ -40,7 +40,6 @@ Route::post('/member/eventInscription','EvenetsMemberController@inscription');
 Route::post('/member/notificationRead','EvenetsMemberController@readNotification');
 
 // organisateur
-Route::get('homePage','OrganisateurController@organisateur');
 Route::get('profile','ProfileController@profile');
 Route::post('updateProfile','ProfileController@updateProfile');
 Route::post('updatePassword','ProfileController@UpdatePassword');
@@ -53,6 +52,9 @@ Route::post('organisateur/addTournoi','TournoiController@addTournoi');
 Route::get('organisateur/evenement','EvenementController@index');
 Route::post('organisateur/addEvenement','EvenementController@addEvenement');
 Route::post('organisateur/cancelEvent','EvenementController@cancelEvent');
+Route::post('/organisateur/notificationRead','EvenementController@readNotification');
+Route::post('/tournoi/bracket','TournoiController@showTournamentBracket');
+Route::post('/tournoi/updateMatchResult','TournoiController@updateMatchResult');
 
 // payment
 Route::post('payer','PaymentController@payer');

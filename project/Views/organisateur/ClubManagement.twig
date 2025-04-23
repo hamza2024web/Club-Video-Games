@@ -105,9 +105,19 @@
                     <i class="fas fa-calendar-alt w-5 sidebar-icon text-purple-300"></i>
                     <span class="sidebar-text ml-2 text-sm">Événement</span>
                 </a>
-                <a href="tournoi" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
-                    <span class="sidebar-text ml-2 text-sm">Tournois</span>
+                <a href="tournoi" class="sidebar-item flex items-center justify-between px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <div class="flex items-center">
+                        <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
+                        <span class="sidebar-text ml-2 text-sm">Tournois</span>
+                    </div>
+                    {% if notifications.notification_number|default(0) > 0 %}
+                        <div class="relative flex items-center justify-center">
+                            <span class="animate-ping absolute h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[1.25rem] text-center">
+                                {{notifications.notification_number}}
+                            </span>
+                        </div>
+                    {% endif %}
                 </a>
                 <a href="/boutique" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
                     <i class="fas fa-store w-5 sidebar-icon text-purple-300"></i>

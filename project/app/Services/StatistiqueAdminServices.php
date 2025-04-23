@@ -36,8 +36,8 @@ class StatistiqueAdminServices {
         return $members;
     }
 
-    public function evenements(){
-        $evenements = $this->StaticAdminRepository->Count_Events();
+    public function evenements($user_id){
+        $evenements = $this->StaticAdminRepository->Count_Events($user_id);
         return $evenements;
     }
 

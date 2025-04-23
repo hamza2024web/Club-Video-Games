@@ -320,9 +320,19 @@
                     <i class="fas fa-calendar-alt w-5 sidebar-icon text-purple-300"></i>
                     <span class="sidebar-text ml-2 text-sm">Événement</span>
                 </a>
-                <a href="tournoi" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
-                    <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
-                    <span class="sidebar-text ml-2 text-sm">Tournois</span>
+                <a href="tournoi" class="sidebar-item active flex items-center justify-between px-3 py-2 text-white rounded-lg mb-1">
+                    <div class="flex items-center">
+                        <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
+                        <span class="sidebar-text ml-2 text-sm">Tournois</span>
+                    </div>
+                    {% if notifications.notification_number|default(0) > 0 %}
+                        <div class="relative flex items-center justify-center ml-2">
+                            <span class="animate-ping absolute h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[1.25rem] text-center">
+                                {{notifications.notification_number}}
+                            </span>
+                        </div>
+                    {% endif %}
                 </a>
                 <a href="/boutique" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
                     <i class="fas fa-store w-5 sidebar-icon text-purple-300"></i>
@@ -365,10 +375,97 @@
                 <div class="flex justify-between items-center px-6 py-4">
                     <h1 class="text-2xl font-bold text-gray-800">Gestion des Tournois</h1>
                     <div class="flex items-center space-x-4">
-                        <button class="text-gray-500 hover:text-gray-700 relative">
-                            <i class="fas fa-bell text-lg"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
-                        </button>
+                        <div class="relative">
+                            <button id="notificationBtn" class="text-gray-600 hover:text-gray-800 transition p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-bell text-xl relative">
+                                    <span class="absolute top-0 right-0 h-full w-full animate-ping rounded-full bg-red-400 opacity-75" 
+                                        style="animation-duration: 2s; display: {% if notifications.notification_number > 0 %}block{% else %}none{% endif %}"></span>
+                                </i>
+                                <!-- Badge Counter with Scale Animation -->
+                                <span id="notificationCounter" 
+                                    class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full min-w-4 h-4 flex items-center justify-center text-xs px-1 transition-transform transform {% if notifications.notification_number > 0 %}scale-100{% else %}scale-0{% endif %}">
+                                    {{notifications.notification_number}}
+                                </span>
+                            </button>
+                            
+                            <div id="notificationModal" class="hidden absolute right-0 mt-2 w-96 md:w-[450px] bg-white rounded-lg shadow-2xl z-50 border border-gray-200 overflow-hidden">
+                                <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50">
+                                    <h3 class="font-semibold text-gray-800 flex items-center">
+                                        <i class="fas fa-bell-on mr-2 text-blue-500"></i>
+                                        Notifications
+                                    </h3>
+                                    <button id="markAllReadBtn" class="text-blue-600 hover:text-blue-800 text-sm flex items-center bg-white py-1 px-2 rounded-md shadow-sm hover:shadow transition-all">
+                                        <i class="fas fa-check-double mr-1"></i> Mark all as read
+                                    </button>
+                                </div>
+                                
+                                <div class="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-50" id="notificationList">
+                                    {% if notificationsContent|length == 0 %}
+                                        <div class="flex flex-col items-center justify-center py-8 text-gray-500">
+                                            <i class="far fa-bell-slash text-4xl mb-2 opacity-50"></i>
+                                            <p>No notifications yet</p>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% for notification in notificationsContent %}
+                                        <!-- Notification Item with Hover Effect and Better Layout -->
+                                        <div class="p-4 border-b border-gray-100 hover:bg-blue-50 transition-all {% if notification.is_read %}opacity-70{% else %}bg-blue-50{% endif %}">
+                                            <div class="flex">
+                                                <!-- Icon Based on Notification Type -->
+                                                <div class="flex-shrink-0 mr-3">
+                                                    {% if notification.type == 'reimbursement' %}
+                                                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                                            <i class="fas fa-coins text-green-600"></i>
+                                                        </div>
+                                                    {% elseif notification.type == 'event_cancelled' %}
+                                                        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                                                            <i class="fas fa-calendar-times text-red-600"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                <!-- Content Area with Message and Time -->
+                                                <div class="flex-1">
+                                                    <!-- Message with Transaction Type Badge -->
+                                                    <div class="flex flex-wrap items-start gap-2 mb-1">
+                                                        <p class="text-sm text-gray-800 font-medium">{{notification.message}}</p>
+                                                        {% if notification.type == 'tournament_started' %}
+                                                            <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-green-100 text-green-800 border border-green-200">
+                                                                tournament_started
+                                                            </span>
+                                                        {% endif %}
+                                                    </div>
+                                                    
+                                                    <p class="text-xs text-gray-500 mt-1 flex items-center">
+                                                        <i class="far fa-clock mr-1"></i>
+                                                        {{notification.created_at|date("d/m/Y H:i")}}
+                                                    </p>
+                                                </div>
+                                                
+                                                <div class="ml-2">
+                                                    <button class="mark-read-btn w-8 h-8 rounded-full hover:bg-white flex items-center justify-center transition-all" 
+                                                        data-id="{{notification.id}}">
+                                                        {% if notification.is_read %}   
+                                                            <i class="fas fa-check text-green-500"></i>
+                                                        {% else %}
+                                                            <i class="far fa-circle text-gray-400 hover:text-blue-500"></i>
+                                                        {% endif %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <!-- Footer with Gradient -->
+                                <div class="p-3 text-center border-t border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50">
+                                    <a href="/notifications" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center">
+                                        <span>View all notifications</span>
+                                        <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                         <button class="text-gray-500 hover:text-gray-700 relative">
                             <i class="fas fa-envelope text-lg"></i>
                             <span class="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">2</span>
@@ -432,242 +529,207 @@
                     <!-- Updated Tournament Cards with Improved Styling -->
                     <div class="p-6">
                         <div class="grid grid-cols-1 gap-4">
-                            <!-- Improved Tournament Cards -->
-                            {% for tournoi in tournois %}
-                            <div id="tournoi-{{ tournoi.id }}" class="tournament-card bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
-                                <!-- Tournament Summary (Always visible) -->
-                                <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
-                                    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-                                        <div class="flex-shrink-0">
-                                            <!-- Use tournament image if available, otherwise show default icon -->
-                                            {% if tournoi.image %}
-                                            <div class="w-14 h-14 rounded-lg overflow-hidden">
-                                                <img src="/{{ tournoi.image }}" alt="{{ tournoi.name }}" class="w-full h-full object-cover">
-                                            </div>
-                                            {% else %}
-                                            <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
-                                                <i class="fas fa-trophy text-white text-xl"></i>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div>
-                                            <h3 class="font-bold text-lg text-gray-800">{{ tournoi.name }}</h3>
-                                            <div class="flex items-center text-sm text-gray-500 mt-1">
-                                                <i class="far fa-calendar-alt mr-2"></i>
-                                                <span>{{ tournoi.date_de_debut }}</span>
-                                            </div>
-                                        </div>
+                            {% if tournois|length == 0 %}
+                                <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                                    <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-4 float-animation">
+                                        <i class="fas fa-gamepad text-5xl text-purple-400"></i>
                                     </div>
-                                    
-                                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                                        <!-- Status Badge -->
-                                        <span class="px-3 py-1.5 text-xs font-medium rounded-full 
-                                            {% if tournoi.statut == 'Open' %}
-                                                bg-green-100 text-green-800
-                                            {% elseif tournoi.statut == 'Completed' %}
-                                                bg-blue-100 text-blue-800
-                                            {% elseif tournoi.statut == 'Cancelled' %}
-                                                bg-red-100 text-red-800
-                                            {% elseif tournoi.statut == 'In Progress' %}
-                                                bg-amber-100 text-amber-800
-                                            {% else %}
-                                                bg-purple-100 text-purple-800
-                                            {% endif %}
-                                        ">
-                                            {{ tournoi.statut }}
-                                        </span>
-                                        
-                                        <!-- Participants Counter -->
-                                        <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-users mr-1.5"></i>
-                                            <span class="text-xs font-medium">{{ tournoi.numbre_membre }}</span>
-                                        </div>
-                                        
-                                        <!-- Game Icon -->
-                                        <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
-                                            <i class="fas fa-gamepad mr-1.5"></i>
-                                            <span class="text-xs font-medium">{{ tournoi.nom_de_jeu }}</span>
-                                        </div>
-                                        
-                                        <!-- Action buttons -->
-                                        <div class="flex items-center gap-2 ml-auto">
-                                            <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
-                                                <i class="fas fa-chart-line"></i>
-                                            </button>
-                                            <button onclick="openStatutModal('{{ tournoi.id }}'); event.stopPropagation();" class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
-                                                <i class="fas fa-chevron-down rotate-icon"></i>
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Aucun Tournament dans votre Club</h2>
+                                    <p class="text-gray-600 mb-6 max-w-md">Vous n'avez pas encore ajouté un Tournament.</p>
                                 </div>
-                                
-                                <!-- Tournament Details (Hidden by default, toggles on click) -->
-                                <div class="card-details border-t border-gray-200 hidden">
-                                    <!-- Tournament Banner Image (larger version) -->
-                                    {% if tournoi.image %}
-                                    <div class="w-full h-48 overflow-hidden">
-                                        <img src="/{{ tournoi.image }}" alt="{{ tournoi.name }}" class="w-full h-full object-cover">
+                            {% else %}
+                                {% for tournoi in tournois %}
+                                <div id="tournoi-{{ tournoi.id }}" class="tournament-card bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
+                                    <!-- Tournament Summary (Always visible) -->
+                                    <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
+                                        <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                                            <div class="flex-shrink-0">
+                                                <!-- Use tournament image if available, otherwise show default icon -->
+                                                {% if tournoi.image %}
+                                                <div class="w-14 h-14 rounded-lg overflow-hidden">
+                                                    <img src="/{{ tournoi.image }}" alt="{{ tournoi.name }}" class="w-full h-full object-cover">
+                                                </div>
+                                                {% else %}
+                                                <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                                                    <i class="fas fa-trophy text-white text-xl"></i>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-lg text-gray-800">{{ tournoi.name }}</h3>
+                                                <div class="flex items-center text-sm text-gray-500 mt-1">
+                                                    <i class="far fa-calendar-alt mr-2"></i>
+                                                    <span>{{ tournoi.date_de_debut }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                                            <!-- Status Badge -->
+                                            <span class="px-3 py-1.5 text-xs font-medium rounded-full 
+                                                {% if tournoi.statut == 'Open' %}
+                                                    bg-green-100 text-green-800
+                                                {% elseif tournoi.statut == 'Completed' %}
+                                                    bg-blue-100 text-blue-800
+                                                {% elseif tournoi.statut == 'Cancelled' %}
+                                                    bg-red-100 text-red-800
+                                                {% elseif tournoi.statut == 'In Progress' %}
+                                                    bg-amber-100 text-amber-800
+                                                {% else %}
+                                                    bg-purple-100 text-purple-800
+                                                {% endif %}
+                                            ">
+                                                {{ tournoi.statut }}
+                                            </span>
+                                            
+                                            <!-- Participants Counter -->
+                                            <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
+                                                <i class="fas fa-users mr-1.5"></i>
+                                                <span class="text-xs font-medium">{{ tournoi.numbre_membre }}</span>
+                                            </div>
+                                            
+                                            <!-- Game Icon -->
+                                            <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
+                                                <i class="fas fa-gamepad mr-1.5"></i>
+                                                <span class="text-xs font-medium">{{ tournoi.nom_de_jeu }}</span>
+                                            </div>
+                                            
+                                            <!-- Action buttons -->
+                                            <div class="flex items-center gap-2 ml-auto">
+                                                <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
+                                                    <i class="fas fa-chart-line"></i>
+                                                </button>
+                                                <button onclick="openStatutModal('{{ tournoi.id }}'); event.stopPropagation();" class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
+                                                    <i class="fas fa-chevron-down rotate-icon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    {% endif %}
                                     
-                                    <!-- Scrollable content area with max height -->
-                                    <div class="p-5 overflow-y-auto max-h-[400px] custom-scrollbar">
-                                        <!-- Tournament Details Row -->
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-                                            <div class="flex items-center p-4 bg-indigo-50 rounded-lg">
-                                                <div class="mr-3 p-2.5 bg-indigo-100 rounded-full">
-                                                    <i class="fas fa-users text-indigo-600"></i>
-                                                </div>
-                                                <div>
-                                                    <p class="text-xs text-indigo-600 font-medium">Participants</p>
-                                                    <p class="text-sm font-bold text-gray-800">{{ tournoi.numbre_membre }} Max</p>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="flex items-center p-4 bg-purple-50 rounded-lg">
-                                                <div class="mr-3 p-2.5 bg-purple-100 rounded-full">
-                                                    <i class="fas fa-trophy text-purple-600"></i>
-                                                </div>
-                                                <div>
-                                                    <p class="text-xs text-purple-600 font-medium">Prix Total</p>
-                                                    <p class="text-sm font-bold text-gray-800">{{ tournoi.prix_total }} €</p>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="flex items-center p-4 bg-green-50 rounded-lg">
-                                                <div class="mr-3 p-2.5 bg-green-100 rounded-full">
-                                                    <i class="fas fa-gamepad text-green-600"></i>
-                                                </div>
-                                                <div>
-                                                    <p class="text-xs text-green-600 font-medium">Jeu</p>
-                                                    <p class="text-sm font-bold text-gray-800">{{ tournoi.nom_de_jeu }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Description Section -->
-                                        {% if tournoi.description %}
-                                        <div class="mt-5 pt-4 border-t border-gray-200">
-                                            <div class="flex items-center mb-2">
-                                                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
-                                                <h4 class="font-medium text-gray-900">Description</h4>
-                                            </div>
-                                            <div class="bg-blue-50 p-4 rounded-lg text-sm text-gray-700">
-                                                {{ tournoi.description }}
-                                            </div>
+                                    <!-- Tournament Details (Hidden by default, toggles on click) -->
+                                    <div class="card-details border-t border-gray-200 hidden">
+                                        <!-- Tournament Banner Image (larger version) -->
+                                        {% if tournoi.image %}
+                                        <div class="w-full h-48 overflow-hidden">
+                                            <img src="/{{ tournoi.image }}" alt="{{ tournoi.name }}" class="w-full h-full object-cover">
                                         </div>
                                         {% endif %}
                                         
-                                        <!-- Rules Section -->
-                                        {% if tournoi.regles %}
-                                        <div class="mt-5 pt-4 border-t border-gray-200">
-                                            <div class="flex items-center mb-2">
-                                                <i class="fas fa-gavel text-amber-500 mr-2"></i>
-                                                <h4 class="font-medium text-gray-900">Règles</h4>
-                                            </div>
-                                            <div class="bg-amber-50 p-4 rounded-lg text-sm text-gray-700">
-                                                {{ tournoi.regles }}
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        
-                                        <!-- Additional Information -->
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-5 pt-4 border-t border-gray-200">
-                                            <div class="text-gray-700">
-                                                <div class="flex items-center mb-1">
-                                                    <i class="far fa-calendar-check text-indigo-500 mr-2"></i>
-                                                    <span class="font-medium text-gray-900">Période d'inscription</span>
+                                        <!-- Scrollable content area with max height -->
+                                        <div class="p-5 overflow-y-auto max-h-[400px] custom-scrollbar">
+                                            <!-- Tournament Details Row -->
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+                                                <div class="flex items-center p-4 bg-indigo-50 rounded-lg">
+                                                    <div class="mr-3 p-2.5 bg-indigo-100 rounded-full">
+                                                        <i class="fas fa-users text-indigo-600"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs text-indigo-600 font-medium">Participants</p>
+                                                        <p class="text-sm font-bold text-gray-800">{{tournoi.number_inscription}} / {{ tournoi.numbre_membre }}</p>
+                                                    </div>
                                                 </div>
-                                                <p class="text-sm pl-6">{{ tournoi.date_ouverture_inscription }} - {{ tournoi.date_cloture_inscription }}</p>
-                                            </div>
-                                            
-                                            <div class="text-gray-700">
-                                                <div class="flex items-center mb-1">
-                                                    <i class="fas fa-euro-sign text-green-500 mr-2"></i>
-                                                    <span class="font-medium text-gray-900">Frais d'inscription</span>
+                                                
+                                                <div class="flex items-center p-4 bg-purple-50 rounded-lg">
+                                                    <div class="mr-3 p-2.5 bg-purple-100 rounded-full">
+                                                        <i class="fas fa-trophy text-purple-600"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs text-purple-600 font-medium">Prix Total</p>
+                                                        <p class="text-sm font-bold text-gray-800">{{ tournoi.prix_total }} €</p>
+                                                    </div>
                                                 </div>
-                                                <p class="text-sm pl-6">{% if tournoi.frais_inscription %}{{ tournoi.frais_inscription }} €{% else %}Gratuit{% endif %}</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Social Links -->
-                                        <div class="flex flex-wrap items-center gap-3 mt-5">
-                                            {% if tournoi.discord %}
-                                            <a href="{{ tournoi.discord }}" class="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-all">
-                                                <i class="fab fa-discord mr-2"></i> Discord
-                                            </a>
-                                            {% endif %}
-                                            {% if tournoi.twitch %}
-                                            <a href="{{ tournoi.twitch }}" class="flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all">
-                                                <i class="fab fa-twitch mr-2"></i> Twitch
-                                            </a>
-                                            {% endif %}
-                                            
-                                            <!-- Action Button -->
-                                            <div class="ml-auto">
-                                                <div class="group relative">
-                                                    <button class="p-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all">
-                                                        <i class="fas fa-ellipsis-v"></i>
-                                                    </button>
-                                                    <div class="absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-xl py-2 z-10 hidden group-hover:block border border-gray-100">
-                                                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                            <i class="fas fa-eye mr-3 text-gray-500"></i> Voir détails
-                                                        </a>
-                                                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                            <i class="fas fa-file-export mr-3 text-gray-500"></i> Exporter les résultats
-                                                        </a>
-                                                        <div class="border-t border-gray-100 my-1"></div>
-                                                        <a href="#" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                                            <i class="fas fa-ban mr-3"></i> Annuler le tournoi
-                                                        </a>
+                                                
+                                                <div class="flex items-center p-4 bg-green-50 rounded-lg">
+                                                    <div class="mr-3 p-2.5 bg-green-100 rounded-full">
+                                                        <i class="fas fa-gamepad text-green-600"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs text-green-600 font-medium">Jeu</p>
+                                                        <p class="text-sm font-bold text-gray-800">{{ tournoi.nom_de_jeu }}</p>
                                                     </div>
                                                 </div>
                                             </div>
+                                            
+                                            <!-- Description Section -->
+                                            {% if tournoi.description %}
+                                            <div class="mt-5 pt-4 border-t border-gray-200">
+                                                <div class="flex items-center mb-2">
+                                                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                                                    <h4 class="font-medium text-gray-900">Description</h4>
+                                                </div>
+                                                <div class="bg-blue-50 p-4 rounded-lg text-sm text-gray-700">
+                                                    {{ tournoi.description }}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            <!-- Rules Section -->
+                                            {% if tournoi.regles %}
+                                            <div class="mt-5 pt-4 border-t border-gray-200">
+                                                <div class="flex items-center mb-2">
+                                                    <i class="fas fa-gavel text-amber-500 mr-2"></i>
+                                                    <h4 class="font-medium text-gray-900">Règles</h4>
+                                                </div>
+                                                <div class="bg-amber-50 p-4 rounded-lg text-sm text-gray-700">
+                                                    {{ tournoi.regles }}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            <!-- Additional Information -->
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-5 pt-4 border-t border-gray-200">
+                                                <div class="text-gray-700">
+                                                    <div class="flex items-center mb-1">
+                                                        <i class="far fa-calendar-check text-indigo-500 mr-2"></i>
+                                                        <span class="font-medium text-gray-900">Période d'inscription</span>
+                                                    </div>
+                                                    <p class="text-sm pl-6">{{ tournoi.date_ouverture_inscription }} - {{ tournoi.date_cloture_inscription }}</p>
+                                                </div>
+                                                
+                                                <div class="text-gray-700">
+                                                    <div class="flex items-center mb-1">
+                                                        <i class="fas fa-euro-sign text-green-500 mr-2"></i>
+                                                        <span class="font-medium text-gray-900">Frais d'inscription</span>
+                                                    </div>
+                                                    <p class="text-sm pl-6">{% if tournoi.frais_inscription %}{{ tournoi.frais_inscription }} €{% else %}Gratuit{% endif %}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Social Links -->
+                                            <div class="flex flex-wrap items-center gap-3 mt-5">
+                                                {% if tournoi.discord %}
+                                                <a href="{{ tournoi.discord }}" class="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-all">
+                                                    <i class="fab fa-discord mr-2"></i> Discord
+                                                </a>
+                                                {% endif %}
+                                                {% if tournoi.twitch %}
+                                                <a href="{{ tournoi.twitch }}" class="flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all">
+                                                    <i class="fab fa-twitch mr-2"></i> Twitch
+                                                </a>
+                                                {% endif %}
+                                                
+                                                <!-- Action Button -->
+                                                {% if tournoi.statut == "In Progress" %}
+                                                    <div class="ml-auto">
+                                                        <form action="/tournoi/bracket" method="POST" class="inline">
+                                                            <input type="hidden" name="tournoi_id" value="{{ tournoi.id }}">
+                                                            <button type="submit" class="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-md">
+                                                                <i class="fas fa-sitemap mr-2"></i>
+                                                                Voir le tableau du tournoi
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            {% endfor %}
+                                {% endfor %}
+                            {% endif %}
                         </div>
-
-                        <!-- Status Change Modal - Outside the loop -->
-                        <div id="statusModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-                            <div id="statusModalContent" class="bg-white rounded-xl shadow-lg p-6 transform transition-all scale-95 opacity-0 w-full max-w-md">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="text-lg font-bold text-gray-800">Modifier le statut</h3>
-                                    <button onclick="closeStatusModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                                
-                                <form id="statusForm" action="/organisateur/updateTournoiStatus" method="POST">
-                                    <input type="hidden" id="tournoi_id" name="tournoi_id" value="">
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nouveau statut</label>
-                                        <select name="new_status" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                            <option value="Pending">En attente</option>
-                                            <option value="Open">Ouvert</option>
-                                            <option value="In Progress">En cours</option>
-                                            <option value="Completed">Terminé</option>
-                                            <option value="Cancelled">Annulé</option>
-                                            <option value="Full">Complet</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="flex justify-end space-x-3">
-                                        <button type="button" onclick="closeStatusModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg">
-                                            Annuler
-                                        </button>
-                                        <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg">
-                                            Enregistrer
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>  
                     </div>
 
                     </div>
@@ -1378,6 +1440,66 @@
                     window.history.replaceState({}, document.title, currentPath);
                 });
             }
+
+            if(urlParams.has('status_completed')){
+                Swal.fire({
+                    title: 'Tournoi Terminé!',
+                    text: 'Le tournoi est terminé et les récompenses ont été distribuées aux finalistes.',
+                    icon: 'success',
+                    confirmButtonColor: '#1a3fc1',
+                    confirmButtonText: 'Super!'
+                }).then(() => {
+                    // Remove query parameters after user clicks confirm
+                    window.history.replaceState({}, document.title, currentPath);
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationModal = document.getElementById('notificationModal');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+            
+            // Toggle notification modal
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Add wiggle animation when opening
+                if (notificationModal.classList.contains('hidden')) {
+                    notificationBtn.querySelector('i').classList.add('wiggle-animation');
+                    setTimeout(() => {
+                        notificationBtn.querySelector('i').classList.remove('wiggle-animation');
+                    }, 600);
+                }
+                
+                notificationModal.classList.toggle('hidden');
+            });
+            
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
+                    notificationModal.classList.add('hidden');
+                }
+            });
+        });
+
+        document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/organisateur/notificationRead';
+                
+                const idField = document.createElement('input');
+                idField.type = 'hidden';
+                idField.name = 'notification_id';
+                idField.value = this.getAttribute('data-id');
+                form.appendChild(idField);
+                
+                document.body.appendChild(form);
+                form.submit();
+            });
         });
     </script>
 </body>
