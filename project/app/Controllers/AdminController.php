@@ -22,9 +22,10 @@ class AdminController extends BaseController {
         $active_member = $this->activeMember();
         $active_session = $this->activeSession();
         $pending_session = $this->pendingSession();
-        return $this->renderAdmin('dashboard',compact('total_games','active_member','active_session','pending_session'));
+        $top_players = $this->adminServices->getTopPlayers();
+        return $this->renderAdmin('dashboard',compact('total_games','active_member','active_session','pending_session','top_players'));
     }
-    
+
     public function StatistiqueGames (){
         $games = $this->StatistiqueAdminServices->totalGames();
         return $games;

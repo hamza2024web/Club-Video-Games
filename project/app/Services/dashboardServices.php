@@ -11,6 +11,11 @@ class dashboardServices {
         $this->dashboardRepository = new dashboardRepository();
     }
 
+    public function getTopPlayers(){
+        $players = $this->dashboardRepository->getPlayers();
+        return $players;
+    }
+
     public function getGenre(){
         $genre = $this->dashboardRepository->getAllGenre();
         return $genre;
