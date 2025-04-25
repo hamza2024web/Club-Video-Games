@@ -263,42 +263,6 @@
                             </div>
                             <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Popular</span>
                         </li>
-                        <li class="game-card flex justify-between items-center p-3 rounded-lg hover:bg-gray-50">
-                            <div class="flex items-center">
-                                <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-2 mr-4">
-                                    <i class="fas fa-cubes text-white"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Minecraft</h4>
-                                    <p class="text-sm text-gray-500">Sandbox • 98 active players</p>
-                                </div>
-                            </div>
-                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">Tournament</span>
-                        </li>
-                        <li class="game-card flex justify-between items-center p-3 rounded-lg hover:bg-gray-50">
-                            <div class="flex items-center">
-                                <div class="bg-gradient-to-br from-blue-500 to-sky-600 rounded-lg p-2 mr-4">
-                                    <i class="fas fa-car text-white"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Rocket League</h4>
-                                    <p class="text-sm text-gray-500">Sports • 64 active players</p>
-                                </div>
-                            </div>
-                            <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">New</span>
-                        </li>
-                        <li class="game-card flex justify-between items-center p-3 rounded-lg hover:bg-gray-50">
-                            <div class="flex items-center">
-                                <div class="bg-gradient-to-br from-red-500 to-orange-600 rounded-lg p-2 mr-4">
-                                    <i class="fas fa-fire text-white"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Valorant</h4>
-                                    <p class="text-sm text-gray-500">FPS • 52 active players</p>
-                                </div>
-                            </div>
-                            <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Featured</span>
-                        </li>
                     </ul>
                 </div>
 
@@ -309,46 +273,46 @@
                         <a href="/leaderboard" class="text-sm text-purple-600 hover:text-purple-800 transition">View Leaderboard</a>
                     </div>
                     <ul class="space-y-4">
-                        <li class="game-card flex justify-between items-center p-3 rounded-lg hover:bg-gray-50">
-                            <div class="flex items-center">
-                                <img src="/api/placeholder/48/48" class="rounded-full mr-4 border-2 border-amber-400" alt="Top Player">
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Emma Wilson</h4>
-                                    <p class="text-sm text-gray-500">95% Win Rate • Call of Duty</p>
+                        {% for player in top_players %}
+                            <li class="game-card flex justify-between items-center p-3 rounded-lg hover:bg-gray-50 transition-all">
+                                <div class="flex items-center">
+                                    {% if player.profile_photo %}
+                                        <img src="{{ player.profile_photo }}" class="h-12 w-12 rounded-full mr-4 border-2 
+                                            {% if loop.index == 1 %}border-amber-400{% elseif loop.index == 2 %}border-gray-300{% elseif loop.index == 3 %}border-amber-700{% else %}border-gray-200{% endif %}" 
+                                            alt="{{ player.name }}">
+                                    {% else %}
+                                        <div class="h-12 w-12 rounded-full mr-4 bg-purple-100 flex items-center justify-center border-2 
+                                            {% if loop.index == 1 %}border-amber-400{% elseif loop.index == 2 %}border-gray-300{% elseif loop.index == 3 %}border-amber-700{% else %}border-gray-200{% endif %}">
+                                            <span class="text-purple-600 font-medium text-lg">{{ player.name|first|upper }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">{{ player.name }}</h4>
+                                        <div class="flex items-center">
+                                            <span class="text-xs px-2 py-0.5 bg-purple-100 text-purple-800 rounded-full mr-2">
+                                                {{ player.amount }} GameCoins
+                                            </span>
+                                            <span class="text-xs text-gray-500">Top Player</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="text-amber-500 text-xl">🏆</div>
-                        </li>
-                        <li class="game-card flex justify-between items-center p-3 rounded-lg hover:bg-gray-50">
-                            <div class="flex items-center">
-                                <img src="/api/placeholder/48/48" class="rounded-full mr-4 border-2 border-gray-300" alt="Top Player">
                                 <div>
-                                    <h4 class="font-semibold text-gray-800">Alex Rodriguez</h4>
-                                    <p class="text-sm text-gray-500">92% Win Rate • Fortnite</p>
+                                    {% if loop.index == 1 %}
+                                        <div class="text-amber-500 text-xl">🏆</div>
+                                    {% elseif loop.index == 2 %}
+                                        <div class="text-gray-400 text-xl">🥈</div>
+                                    {% elseif loop.index == 3 %}
+                                        <div class="text-amber-700 text-xl">🥉</div>
+                                    {% else %}
+                                        <div class="text-gray-400 text-lg">{{ loop.index }}th</div>
+                                    {% endif %}
                                 </div>
-                            </div>
-                            <div class="text-gray-400 text-xl">🥈</div>
-                        </li>
-                        <li class="game-card flex justify-between items-center p-3 rounded-lg hover:bg-gray-50">
-                            <div class="flex items-center">
-                                <img src="/api/placeholder/48/48" class="rounded-full mr-4 border-2 border-amber-700" alt="Top Player">
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Sarah Lee</h4>
-                                    <p class="text-sm text-gray-500">88% Win Rate • Valorant</p>
-                                </div>
-                            </div>
-                            <div class="text-amber-700 text-xl">🥉</div>
-                        </li>
-                        <li class="game-card flex justify-between items-center p-3 rounded-lg hover:bg-gray-50">
-                            <div class="flex items-center">
-                                <img src="/api/placeholder/48/48" class="rounded-full mr-4" alt="Top Player">
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Michael Khan</h4>
-                                    <p class="text-sm text-gray-500">85% Win Rate • Minecraft</p>
-                                </div>
-                            </div>
-                            <div class="text-gray-400 text-lg">4th</div>
-                        </li>
+                            </li>
+                        {% else %}
+                            <li class="text-center py-4 text-gray-500">
+                                No top players found yet
+                            </li>
+                        {% endfor %}
                     </ul>
                 </div>
             </section>
@@ -360,51 +324,23 @@
                     <a href="/tournaments" class="text-sm text-purple-600 hover:text-purple-800 transition">View All Tournaments</a>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {# upcoming tournoi #}
+                {% for Tournoi in upcomingTournoi %}
                     <div class="game-card bg-white rounded-xl shadow-sm overflow-hidden">
                         <div class="h-32 bg-gradient-to-r from-purple-600 to-indigo-600 relative">
                             <div class="absolute bottom-4 left-4 bg-white px-2 py-1 rounded text-xs font-semibold text-purple-700">
-                                Apr 15, 2025 • 6:00 PM
+                                {{Tournoi.date_de_debut}}
                             </div>
                         </div>
                         <div class="p-5">
-                            <h4 class="font-bold text-gray-800 mb-2">Call of Duty Tournament</h4>
-                            <p class="text-sm text-gray-600 mb-4">Team-based competition with prizes up to $500</p>
+                            <h4 class="font-bold text-gray-800 mb-2">{{Tournoi.name}}</h4>
+                            <p class="text-sm text-gray-600 mb-4">{{Tournoi.description}}</p>
                             <div class="flex items-center justify-between">
-                                <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">32 Teams</span>
-                                <button class="bg-purple-600 hover:bg-purple-700 text-white text-sm py-1 px-3 rounded-lg transition">Register</button>
+                                <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">{{Tournoi.number_membre}}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="game-card bg-white rounded-xl shadow-sm overflow-hidden">
-                        <div class="h-32 bg-gradient-to-r from-blue-600 to-cyan-600 relative">
-                            <div class="absolute bottom-4 left-4 bg-white px-2 py-1 rounded text-xs font-semibold text-blue-700">
-                                Apr 20, 2025 • 4:00 PM
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-800 mb-2">Fortnite Solo Challenge</h4>
-                            <p class="text-sm text-gray-600 mb-4">Last player standing wins gaming gear bundle</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">48 Players</span>
-                                <button class="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded-lg transition">Register</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="game-card bg-white rounded-xl shadow-sm overflow-hidden">
-                        <div class="h-32 bg-gradient-to-r from-green-600 to-teal-600 relative">
-                            <div class="absolute bottom-4 left-4 bg-white px-2 py-1 rounded text-xs font-semibold text-green-700">
-                                Apr 25, 2025 • 5:00 PM
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-800 mb-2">Minecraft Build Battle</h4>
-                            <p class="text-sm text-gray-600 mb-4">Creative building competition with themes</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">20 Builders</span>
-                                <button class="bg-green-600 hover:bg-green-700 text-white text-sm py-1 px-3 rounded-lg transition">Register</button>
-                            </div>
-                        </div>
-                    </div>
+                {% endfor %}
                 </div>
             </section>
 

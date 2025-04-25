@@ -9,6 +9,11 @@ class MembreServices {
     {
         $this->Membrerepository = new MembreRepository();
     }
+
+    public function getFriends(){
+        $friends = $this->Membrerepository->getfriends();
+        return $friends;
+    }
     public function getProfileMembre($user_id){
         $profile = $this->Membrerepository->getProfile($user_id);
         return $profile;
@@ -28,6 +33,12 @@ class MembreServices {
         $notifications = $this->Membrerepository->getNotifications($user_id);
         return $notifications;
     }
+
+    public function GetMyNotifications($user_id){
+        $notification = $this->Membrerepository->GetMyNotification($user_id);
+        return $notification;
+    }
+    
 }
 
 ?>

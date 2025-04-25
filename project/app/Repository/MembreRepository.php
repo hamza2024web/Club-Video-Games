@@ -85,5 +85,26 @@ class MembreRepository {
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function GetMyNotification($user_id){
+        $sql = "SELECT notifications.id , notifications.message , notifications.type , notifications.created_at FROM notifications WHERE user_id = :user_id AND is_read = 1 GROUP BY notifications.id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function getfriends(){
+        $role = 3;
+        $sql = "SELECT users.name , membre.profile_photo , users.email FROM users
+        INNER JOIN membre ON membre.user_id = users.id
+        WHERE role_id = :role";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":role",$role);
+        $stmt->execute();
+        $friends = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $friends;
+    }
 }
 ?>

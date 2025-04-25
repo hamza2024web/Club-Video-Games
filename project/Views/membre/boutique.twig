@@ -402,74 +402,61 @@
 <body class="bg-gray-50">
     <!-- Structure principale -->
     <div class="flex">
-        <!-- Barre latérale -->
-        <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
-            <!-- En-tête de la barre latérale -->
+ 
+         <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
             <div class="mb-8 text-center">
                 <div class="flex justify-center mb-3">
                     <i class="fas fa-gamepad text-4xl text-purple-300"></i>
                 </div>
                 <h1 class="text-2xl font-bold">GamersHub</h1>
-                <p class="text-sm text-purple-200">Espace Membre</p>
+                <p class="text-sm text-purple-200">Member Portal</p>
             </div>
 
-            <!-- Menu de navigation -->
             <nav class="flex-grow">
                 <ul class="space-y-1">
-                    <li><a href="/member/dashboard" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-home mr-3 text-purple-300"></i>Tableau de bord</a></li>
-                    <li><a href="/member/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournois</a></li>
+                    <li><a href="/member/dashboard" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-home mr-3 text-purple-300"></i>Dashboard</a></li>
+                    <li><a href="/member/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournaments</a></li>
                     <li><a href="/member/events" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-calendar-alt mr-3 text-purple-300"></i>Events</a></li>
                     <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
-                    <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Mes Jeux</a></li>
-                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Amis</a></li>
+                    <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>My Games</a></li>
+                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Friends</a></li>
                     <li><a href="/member/messages" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition">
                         <i class="fas fa-envelope mr-3 text-purple-300"></i>Messages
-                        <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
                     </a></li>
-                    <li><a href="/member/rewards" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gift mr-3 text-purple-300"></i>Récompenses</a></li>
-                    <li><a href="/member/profile" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profil</a></li>
+                    <li><a href="/member/rewards" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gift mr-3 text-purple-300"></i>Rewards</a></li>
+                    <li><a href="/member/profile" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profile</a></li>
                 </ul>
             </nav>
 
-            <!-- Pied de page de la barre latérale (profil et solde) -->
             <div class="absolute bottom-0 left-0 right-0 p-4">
-                <!-- Profil de l'utilisateur -->
                 <div class="flex items-center space-x-2 mb-3 p-2 rounded-lg bg-indigo-800/50">
-                    <div class="relative">
-                        <img src="/{{profile.profile_photo}}" class="rounded-full border-2 border-purple-300 h-10 w-10" alt="Member Profile">
-                        <div class="badge-profile">
-                            <i class="fas fa-check text-xs"></i>
-                        </div>
-                    </div>
+                    <img src="/{{profile.profile_photo}}" class="rounded-full border-2 border-purple-300 h-20 w-20" alt="Member Profile">
                     <div>
                         <p class="text-sm font-medium">{{profile.name}}</p>
                         <div class="flex items-center">
-                            <span class="status-dot mr-1"></span>
-                            <p class="text-xs text-purple-300">En ligne</p>
+                            <i class="fas fa-circle text-green-500 mr-1 text-xs"></i>
+                            <p class="text-xs text-purple-300">Online</p>
                         </div>
+                        <p class="text-xs text-purple-300 mt-1">Solde: {{my_solde}} €</p>
                     </div>
                 </div>
-                
-                <!-- Solde du compte -->
+                <!-- Mini Account Balance -->
                 <div class="p-3 border-t border-indigo-800 sidebar-footer">
                     <div class="bg-indigo-800 rounded-lg p-2 text-center">
                         <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
-                        <button class="recharge-btn mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                        <button class="mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
                             Recharger
                         </button>
                     </div>
                 </div>
-                
-                <!-- Bouton de déconnexion -->
                 <a href="/logout">
-                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center mt-2">
+                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center">
                         <i class="fas fa-sign-out-alt mr-2"></i>
-                        Déconnexion
+                        Logout
                     </button>
                 </a>
             </div>
         </aside>
-
         <!-- Contenu principal -->
         <main class="flex-1">
             <!-- Barre de navigation supérieure -->

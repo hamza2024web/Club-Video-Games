@@ -15,7 +15,31 @@ class dashboardRepository {
         $db = new Database();
         $this->conn = $db->getConnection();
     }
+
+    public function getPlayers(){
+        $sql = "SELECT users.name , membre.profile_photo ,transaction_log.amount FROM users
+        INNER JOIN membre ON users.id = membre.user_id
+        INNER JOIN transaction_log ON transaction_log.member_id = membre.id
+        HAVING amount >= 10
+        LIMIT 3 ";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $friends = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $friends;
+    }
     
+    public function getUpcomingTournoi(){
+        $statut = "Open";
+        $status = "Pendig";
+        $sql = "SELECT * FROM tournoi WHERE statut=:statut OR statut=:status";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":statut",$statut);
+        $stmt->bindParam(":status",$status);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
     public function getAllGenre(){
         $query = "SELECT * FROM genre";
         $stmt = $this->conn->prepare($query);

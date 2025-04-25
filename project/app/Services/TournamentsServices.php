@@ -40,9 +40,15 @@ class TournamentsServices {
         }
         
     }
+
     public function getInscriptionTournoi($user_id){
         $inscriptions = $this->TournamentsRepository->getTournoiInscri($user_id);
         return $inscriptions;
+    }
+
+    public function getCalendries($user_id){
+        $calendries = $this->TournamentsRepository->getMyCalendries($user_id);
+        return $calendries;
     }
 }
 ?>
