@@ -423,24 +423,6 @@
                                                     {% endif %}
                                                 </div>
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <button class="text-indigo-600 hover:text-indigo-900 transition-colors duration-150 mr-3">
-                                                    <i class="fas fa-user-edit"></i>
-                                                </button>
-                                                <button class="text-indigo-600 hover:text-indigo-900 transition-colors duration-150 mr-3">
-                                                    <i class="fas fa-envelope"></i>
-                                                </button>
-                                                <div class="group relative inline-block">
-                                                    <button class="text-gray-500 hover:text-gray-800 transition-colors duration-150">
-                                                        <i class="fas fa-ellipsis-v"></i>
-                                                    </button>
-                                                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
-                                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Voir le profil</a>
-                                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Modifier le rôle</a>
-                                                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Supprimer</a>
-                                                    </div>
-                                                </div>
-                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -458,93 +440,85 @@
                                 Statistiques du club
                             </h3>
                             
-                            <!-- Member Participation Table -->
-                            <div class="bg-white rounded-lg shadow p-4 border border-gray-100">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h4 class="text-lg font-medium text-gray-800">Top membres participatifs</h4>
-                                    <div class="text-sm text-purple-600">Voir tout</div>
-                                </div>
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full">
-                                        <thead class="bg-gray-50">
-                                            <tr>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Membre</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participations</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dernière activité</th>
-                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progression</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-gray-200">
-                                            <tr>
-                                                <td class="px-4 py-3 whitespace-nowrap">
-                                                    <div class="flex items-center">
-                                                        <div class="flex-shrink-0 h-8 w-8">
-                                                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
-                                                        </div>
-                                                        <div class="ml-3">
-                                                            <div class="text-sm font-medium text-gray-900">Sophie Martin</div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">32 événements</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Il y a 2 jours</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm">
-                                                    <div class="flex items-center">
-                                                        <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
-                                                            <div class="bg-purple-600 h-2 rounded-full" style="width: 85%"></div>
-                                                        </div>
-                                                        <span>85%</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="px-4 py-3 whitespace-nowrap">
-                                                    <div class="flex items-center">
-                                                        <div class="flex-shrink-0 h-8 w-8">
-                                                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
-                                                        </div>
-                                                        <div class="ml-3">
-                                                            <div class="text-sm font-medium text-gray-900">Thomas Dubois</div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">28 événements</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Hier</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm">
-                                                    <div class="flex items-center">
-                                                        <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
-                                                            <div class="bg-purple-600 h-2 rounded-full" style="width: 72%"></div>
-                                                        </div>
-                                                        <span>72%</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="px-4 py-3 whitespace-nowrap">
-                                                    <div class="flex items-center">
-                                                        <div class="flex-shrink-0 h-8 w-8">
-                                                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
-                                                        </div>
-                                                        <div class="ml-3">
-                                                            <div class="text-sm font-medium text-gray-900">Emma Petit</div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">23 événements</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Il y a 3 jours</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm">
-                                                    <div class="flex items-center">
-                                                        <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
-                                                            <div class="bg-purple-600 h-2 rounded-full" style="width: 65%"></div>
-                                                        </div>
-                                                        <span>65%</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        <!-- Member Participation Table -->
+                        <div class="bg-white rounded-lg shadow p-4 border border-gray-100">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="text-lg font-medium text-gray-800">Top membres participatifs</h4>
+                                <div class="text-sm text-purple-600">Voir tout</div>
                             </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Membre</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participations</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dernière activité</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progression</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classement</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        {% for player in top_players %}
+                                        <tr class="hover:bg-gray-50 transition-all">
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    {% if player.profile_photo %}
+                                                        <div class="flex-shrink-0 h-10 w-10">
+                                                            <img src="{{ player.profile_photo }}" class="h-10 w-10 rounded-full border-2 
+                                                                {% if loop.index == 1 %}border-amber-400{% elseif loop.index == 2 %}border-gray-300{% elseif loop.index == 3 %}border-amber-700{% else %}border-gray-200{% endif %}" 
+                                                                alt="{{ player.name }}">
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center border-2 
+                                                            {% if loop.index == 1 %}border-amber-400{% elseif loop.index == 2 %}border-gray-300{% elseif loop.index == 3 %}border-amber-700{% else %}border-gray-200{% endif %}">
+                                                            <span class="text-purple-600 font-medium text-lg">{{ player.name|first|upper }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="ml-3">
+                                                        <div class="text-sm font-medium text-gray-900">{{ player.name }}</div>
+                                                        <span class="text-xs px-2 py-0.5 bg-purple-100 text-purple-800 rounded-full">
+                                                            {{ player.amount }} GameCoins
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                                {{ player.participations|default(0) }} événements
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                                {{ player.last_activity|default('Il y a quelques jours') }}
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                <div class="flex items-center">
+                                                    <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                                        <div class="bg-purple-600 h-2 rounded-full" style="width: {{ player.progression|default(50) }}%"></div>
+                                                    </div>
+                                                    <span>{{ player.progression|default(50) }}%</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-center">
+                                                {% if loop.index == 1 %}
+                                                    <div class="text-amber-500 text-xl">🏆</div>
+                                                {% elseif loop.index == 2 %}
+                                                    <div class="text-gray-400 text-xl">🥈</div>
+                                                {% elseif loop.index == 3 %}
+                                                    <div class="text-amber-700 text-xl">🥉</div>
+                                                {% else %}
+                                                    <div class="text-gray-400 text-lg">{{ loop.index }}th</div>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4 text-gray-500">
+                                                No top players found yet
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                         </div>
                     </div>
                     
