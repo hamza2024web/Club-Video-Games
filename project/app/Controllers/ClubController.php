@@ -30,7 +30,8 @@ class ClubController extends BaseController {
         $Membres_actifs = $this->membres_actif();
         $evenements = $this->evenements($user_id);
         $Jeux_disponibles = $this->Jeux_disponibles($user_id);
-        return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde','Membres_actifs','evenements','Jeux_disponibles','notifications'));
+        $members = $this->clubServices->getMembresClub($user_id);
+        return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde','Membres_actifs','evenements','Jeux_disponibles','notifications','members'));
     }
 
     public function updateClub() {

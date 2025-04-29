@@ -43,6 +43,27 @@ class ClubRepository {
         return $stmt->execute();
     }
     
+    public function getMembers($user_id){
+        $query = "SELECT club_id FROM organisateur WHERE user_id=:user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $club_id = $result['club_id'] ?? null;
+        $sqlTournoi = "SELECT users.name , users.email ,inscription_tournoi.date_inscription , evenement.name as event_name, membre.profile_photo
+        FROM inscription_tournoi
+        INNER JOIN membre ON membre.id = inscription_tournoi.membre_id
+        INNER JOIN users ON users.id = membre.user_id
+        INNER JOIN tournoi ON tournoi.id = inscription_tournoi.tournoi_id
+        INNER JOIN evenement ON evenement.id = tournoi.event_id
+        INNER JOIN club ON club.id = evenement.club_id
+        WHERE club.id = :club_id";
+        $stmt = $this->conn->prepare($sqlTournoi);
+        $stmt->bindParam(":club_id",$club_id);
+        $stmt->execute();
+        $tournois = $stmt->fetchAll();
+        return $tournois;
+    }
 }
 
 ?>
