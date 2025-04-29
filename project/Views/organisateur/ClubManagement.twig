@@ -110,11 +110,11 @@
                         <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
                         <span class="sidebar-text ml-2 text-sm">Tournois</span>
                     </div>
-                    {% if notifications.notification_number|default(0) > 0 %}
+                    {% if activities.activitie_number|default(0) > 0 %}
                         <div class="relative flex items-center justify-center">
                             <span class="animate-ping absolute h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
                             <span class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[1.25rem] text-center">
-                                {{notifications.notification_number}}
+                                {{activities.activitie_number}}
                             </span>
                         </div>
                     {% endif %}
@@ -533,83 +533,63 @@
                             <!-- Timeline -->
                             <div class="flow-root">
                                 <ul class="-mb-8">
-                                    <li class="relative pb-8">
-                                        <div class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></div>
-                                        <div class="relative flex items-start space-x-3">
-                                            <div class="relative">
-                                                <div class="h-10 w-10 rounded-full bg-purple-500 flex items-center justify-center ring-8 ring-white">
-                                                    <i class="fas fa-trophy text-white"></i>
+                                    {% for activitie in Acticities %}
+                                        <li class="relative pb-8 {% if not loop.last %}border-l-2 border-gray-200 pl-6{% endif %}">
+                                            {% if not loop.last %}
+                                                <div class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></div>
+                                            {% endif %}
+                                            <div class="relative flex items-start space-x-3">
+                                                <div class="relative">
+                                                    <div class="h-10 w-10 rounded-full {% if activitie.type == 'tournament' %}bg-purple-500{% elseif activitie.type == 'user' %}bg-blue-500{% elseif activitie.type == 'event' %}bg-green-500{% else %}bg-amber-500{% endif %} flex items-center justify-center ring-8 ring-white">
+                                                        {% if activitie.type == 'tournament' %}
+                                                            <i class="fas fa-trophy text-white"></i>
+                                                        {% elseif activitie.type == 'user' %}
+                                                            <i class="fas fa-user-plus text-white"></i>
+                                                        {% elseif activitie.type == 'event' %}
+                                                            <i class="fas fa-calendar-check text-white"></i>
+                                                        {% else %}
+                                                            <i class="fas fa-bell text-white"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="min-w-0 flex-1 py-1.5">
+                                                    <div class="text-sm text-gray-500">
+                                                        {{ activitie.message|raw }}
+                                                        <span class="whitespace-nowrap text-xs text-gray-400 ml-1">
+                                                            {{ activitie.created_at|date("d/m/Y H:i") }}
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    {% if activitie.additional_info is defined and activitie.additional_info %}
+                                                        <div class="mt-2 text-sm {% if activitie.type == 'tournament' %}bg-purple-50{% elseif activitie.type == 'user' %}bg-blue-50{% elseif activitie.type == 'event' %}bg-green-50{% else %}bg-amber-50{% endif %} p-2 rounded-lg">
+                                                            {{ activitie.additional_info|raw }}
+                                                        </div>
+                                                    {% endif %}
                                                 </div>
                                             </div>
-                                            <div class="min-w-0 flex-1 py-1.5">
-                                                <div class="text-sm text-gray-500">
-                                                    <span class="font-medium text-gray-900">Tournoi Fortnite</span> a été créé par <span class="font-medium text-gray-900">Sophie Martin</span>
-                                                    <span class="whitespace-nowrap">il y a 2 heures</span>
-                                                </div>
-                                                <div class="mt-2 text-sm bg-purple-50 p-2 rounded-lg">
-                                                    16 membres se sont déjà inscrits au tournoi! 🎮
-                                                </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="text-center py-8">
+                                            <div class="flex flex-col items-center justify-center text-gray-500">
+                                                <i class="fas fa-inbox text-4xl mb-3 text-gray-300"></i>
+                                                <span class="text-lg">Aucune activité récente</span>
+                                                <p class="text-sm mt-1">Les activités apparaîtront ici lorsqu'elles seront disponibles</p>
                                             </div>
-                                        </div>
-                                    </li>
-                                    
-                                    <li class="relative pb-8">
-                                        <div class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></div>
-                                        <div class="relative flex items-start space-x-3">
-                                            <div class="relative">
-                                                <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center ring-8 ring-white">
-                                                    <i class="fas fa-user-plus text-white"></i>
-                                                </div>
-                                            </div>
-                                            <div class="min-w-0 flex-1 py-1.5">
-                                                <div class="text-sm text-gray-500">
-                                                    <span class="font-medium text-gray-900">Lucas Bernard</span> a rejoint le club
-                                                    <span class="whitespace-nowrap">hier à 15:30</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    
-                                    <li class="relative pb-8">
-                                        <div class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></div>
-                                        <div class="relative flex items-start space-x-3">
-                                            <div class="relative">
-                                                <div class="h-10 w-10 rounded-full bg-green-500 flex items-center justify-center ring-8 ring-white">
-                                                    <i class="fas fa-calendar-check text-white"></i>
-                                                </div>
-                                            </div>
-                                            <div class="min-w-0 flex-1 py-1.5">
-                                                <div class="text-sm text-gray-500">
-                                                    <span class="font-medium text-gray-900">Soirée Gaming</span> événement terminé avec <span class="font-medium text-gray-900">28 participants</span>
-                                                    <span class="whitespace-nowrap">il y a 3 jours</span>
-                                                </div>
-                                                <div class="mt-2 text-sm bg-green-50 p-2 rounded-lg">
-                                                    L'événement a été un grand succès! 🎉
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    
-                                    <li class="relative pb-8">
-                                        <div class="relative flex items-start space-x-3">
-                                            <div class="relative">
-                                                <div class="h-10 w-10 rounded-full bg-amber-500 flex items-center justify-center ring-8 ring-white">
-                                                    <i class="fas fa-comments text-white"></i>
-                                                </div>
-                                            </div>
-                                            <div class="min-w-0 flex-1 py-1.5">
-                                                <div class="text-sm text-gray-500">
-                                                    <span class="font-medium text-gray-900">Annonce importante</span> publiée par <span class="font-medium text-gray-900">Thomas Dubois</span>
-                                                    <span class="whitespace-nowrap">il y a 5 jours</span>
-                                                </div>
-                                                <div class="mt-2 text-sm bg-amber-50 p-2 rounded-lg">
-                                                    N'oubliez pas de vous inscrire au championnat régional avant le 15 mai! 📢
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
+                            
+                            {% if activities|length > 5 %}
+                                <div class="mt-4 text-center">
+                                    <a href="#" class="inline-flex items-center text-sm font-medium text-purple-600 hover:text-purple-700">
+                                        Voir toutes les activities
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
