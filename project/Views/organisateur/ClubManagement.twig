@@ -283,75 +283,510 @@
                         </nav>
                     </div>
                 </div>
-
-                <!-- Club Information Form -->
-                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl shadow-sm p-8 mb-6">
-                    <h3 class="text-xl font-bold text-indigo-800 mb-6 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        Informations du club
-                    </h3>
-                    <form action="/clubForm" method="POST" enctype="multipart/form-data">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="md:col-span-2">
-                                <label for="club_image" class="block text-sm font-medium text-indigo-700 mb-2">Image du club</label>
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-2 border-purple-300">
-                                        <img src="/{{club.logo|default('/images/placeholder.png')}}" alt="Club image" class="w-full h-full object-cover" id="image-preview">
+                
+                <!-- Tab Contents -->
+                <div id="tab-contents" class="mb-6">
+                    <!-- Informations générales Tab Content (Currently Visible) -->
+                    <div id="info-generale-content" class="tab-content">
+                        <!-- Club Information Form -->
+                        <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl shadow-sm p-8 mb-6">
+                            <h3 class="text-xl font-bold text-indigo-800 mb-6 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                Informations du club
+                            </h3>
+                            <form action="/clubForm" method="POST" enctype="multipart/form-data">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="md:col-span-2">
+                                        <label for="club_image" class="block text-sm font-medium text-indigo-700 mb-2">Image du club</label>
+                                        <div class="flex items-center space-x-4">
+                                            <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-2 border-purple-300">
+                                                <img src="/{{club.logo|default('/images/placeholder.png')}}" alt="Club image" class="w-full h-full object-cover" id="image-preview">
+                                            </div>
+                                            <div class="flex-1">
+                                                <label class="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    Choisir une image
+                                                    <input type="file" name="logo" id="logo" accept="image/*" class="hidden" onchange="document.getElementById('image-preview').src = window.URL.createObjectURL(this.files[0])">
+                                                </label>
+                                                <p class="mt-1 text-xs text-gray-500">JPG, PNG or GIF, Taille max. 2MB</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="flex-1">
-                                        <label class="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors">
+                                    <div>
+                                        <label class="block text-sm font-medium text-indigo-700 mb-1">Nom du club</label>
+                                        <input type="text" value="{{club.name}}" id="name" name="club_name" class="form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-indigo-700 mb-1">Email du club</label>
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                            <input type="email" name="email" id="email" value="{{club.email}}" class="form-input w-full border border-gray-300 rounded-lg pl-10 px-4 py-3 focus:outline-none">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-indigo-700 mb-1">Téléphone</label>
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                                </svg>
+                                            </div>
+                                            <input type="tel" name="phone_club" id="phone_club" value="{{club.phone_club}}" class="form-input w-full border border-gray-300 rounded-lg pl-10 px-4 py-3 focus:outline-none">
+                                        </div>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-indigo-700 mb-1">Description</label>
+                                        <textarea rows="4" name="description" id="description" class="form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none">{{club.description}}</textarea>
+                                    </div>
+                                    <div class="md:col-span-2 mt-4 flex justify-end">
+                                        <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                             </svg>
-                                            Choisir une image
-                                            <input type="file" name="logo" id="logo" accept="image/*" class="hidden" onchange="document.getElementById('image-preview').src = window.URL.createObjectURL(this.files[0])">
-                                        </label>
-                                        <p class="mt-1 text-xs text-gray-500">JPG, PNG or GIF, Taille max. 2MB</p>
+                                            Enregistrer
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-indigo-700 mb-1">Nom du club</label>
-                                <input type="text" value="{{club.name}}" id="name" name="club_name" class="form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-indigo-700 mb-1">Email du club</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Membres Tab Content (Initially Hidden) -->
+                    <div id="members-content" class="tab-content hidden">
+                        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-xl font-bold text-indigo-800 flex items-center">
+                                    <i class="fas fa-users mr-2 text-purple-600"></i>
+                                    Membres du club
+                                </h3>
+                                <div class="flex items-center">
+                                    <div class="relative mr-4">
+                                        <input type="text" placeholder="Rechercher un membre..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                     </div>
-                                    <input type="email" name="email" id="email" value="{{club.email}}" class="form-input w-full border border-gray-300 rounded-lg pl-10 px-4 py-3 focus:outline-none">
+                                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center">
+                                        <i class="fas fa-plus mr-2"></i> Ajouter
+                                    </button>
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-indigo-700 mb-1">Téléphone</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                        </svg>
-                                    </div>
-                                    <input type="tel" name="phone_club" id="phone_club" value="{{club.phone_club}}" class="form-input w-full border border-gray-300 rounded-lg pl-10 px-4 py-3 focus:outline-none">
+                            
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Membre</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date d'inscription</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participations</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <!-- Sample Member 1 -->
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">Sophie Martin</div>
+                                                        <div class="text-sm text-gray-500">sophie.m@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/01/2025</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                                                    Admin
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12 événements</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Actif
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                                <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Sample Member 2 -->
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">Thomas Dubois</div>
+                                                        <div class="text-sm text-gray-500">thomas.d@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">28/02/2025</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                    Modérateur
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8 événements</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Actif
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                                <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Sample Member 3 -->
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">Lucas Bernard</div>
+                                                        <div class="text-sm text-gray-500">lucas.b@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10/03/2025</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    Membre
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5 événements</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                    En pause
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                                <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Sample Member 4 -->
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">Emma Petit</div>
+                                                        <div class="text-sm text-gray-500">emma.p@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">22/03/2025</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    Membre
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3 événements</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Actif
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                                <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <div class="flex items-center justify-between mt-6">
+                                <div class="text-sm text-gray-500">
+                                    Affichage de <span class="font-medium">1</span> à <span class="font-medium">4</span> sur <span class="font-medium">12</span> membres
                                 </div>
-                            </div>
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-indigo-700 mb-1">Description</label>
-                                <textarea rows="4" name="description" id="description" class="form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none">{{club.description}}</textarea>
-                            </div>
-                            <div class="md:col-span-2 mt-4 flex justify-end">
-                                <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Enregistrer
-                                </button>
+                                <div class="flex space-x-1">
+                                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button class="px-3 py-1 rounded border border-purple-600 bg-purple-600 text-white">1</button>
+                                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-50">2</button>
+                                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-50">3</button>
+                                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-500 hover:bg-gray-50">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    
+                    <!-- Statistiques Tab Content (Initially Hidden) -->
+                    <div id="statistics-content" class="tab-content hidden">
+                        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                            <h3 class="text-xl font-bold text-indigo-800 mb-6 flex items-center">
+                                <i class="fas fa-chart-line mr-2 text-purple-600"></i>
+                                Statistiques du club
+                            </h3>
+                            
+                            <!-- Statistics Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <!-- Member Activity Chart -->
+                                <div class="bg-white rounded-lg shadow p-4 border border-gray-100">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h4 class="text-lg font-medium text-gray-800">Activité des membres</h4>
+                                        <div class="text-sm text-gray-500">Derniers 6 mois</div>
+                                    </div>
+                                    <div class="h-64 bg-gray-50 rounded flex items-center justify-center">
+                                        <!-- Placeholder for chart -->
+                                        <div class="text-center">
+                                            <i class="fas fa-chart-area text-4xl text-purple-300 mb-2"></i>
+                                            <p class="text-gray-500 text-sm">Graphique d'activité des membres</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 text-sm text-gray-600">
+                                        <div class="flex justify-between mb-2">
+                                            <span>Moyenne mensuelle</span>
+                                            <span class="font-medium">24 participations</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Croissance</span>
+                                            <span class="text-green-600 font-medium">+8% ce mois-ci</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Event Attendance Chart -->
+                                <div class="bg-white rounded-lg shadow p-4 border border-gray-100">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <h4 class="text-lg font-medium text-gray-800">Taux de participation</h4>
+                                        <div class="text-sm text-gray-500">Par type d'événement</div>
+                                    </div>
+                                    <div class="h-64 bg-gray-50 rounded flex items-center justify-center">
+                                        <!-- Placeholder for chart -->
+                                        <div class="text-center">
+                                            <i class="fas fa-chart-pie text-4xl text-purple-300 mb-2"></i>
+                                            <p class="text-gray-500 text-sm">Graphique de participation aux événements</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+                                        <div class="flex items-center">
+                                            <span class="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
+                                            <span>Tournois: 45%</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                                            <span>Sessions jeux: 30%</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                                            <span>Meetups: 15%</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="w-3 h-3 bg-amber-500 rounded-full mr-2"></span>
+                                            <span>Autres: 10%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Member Participation Table -->
+                            <div class="bg-white rounded-lg shadow p-4 border border-gray-100">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="text-lg font-medium text-gray-800">Top membres participatifs</h4>
+                                    <div class="text-sm text-purple-600">Voir tout</div>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Membre</th>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participations</th>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dernière activité</th>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progression</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-200">
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <div class="flex-shrink-0 h-8 w-8">
+                                                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
+                                                        </div>
+                                                        <div class="ml-3">
+                                                            <div class="text-sm font-medium text-gray-900">Sophie Martin</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">32 événements</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Il y a 2 jours</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                    <div class="flex items-center">
+                                                        <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                                            <div class="bg-purple-600 h-2 rounded-full" style="width: 85%"></div>
+                                                        </div>
+                                                        <span>85%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <div class="flex-shrink-0 h-8 w-8">
+                                                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
+                                                        </div>
+                                                        <div class="ml-3">
+                                                            <div class="text-sm font-medium text-gray-900">Thomas Dubois</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">28 événements</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Hier</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                    <div class="flex items-center">
+                                                        <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                                            <div class="bg-purple-600 h-2 rounded-full" style="width: 72%"></div>
+                                                        </div>
+                                                        <span>72%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <div class="flex-shrink-0 h-8 w-8">
+                                                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" alt="">
+                                                        </div>
+                                                        <div class="ml-3">
+                                                            <div class="text-sm font-medium text-gray-900">Emma Petit</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">23 événements</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">Il y a 3 jours</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm">
+                                                    <div class="flex items-center">
+                                                        <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                                            <div class="bg-purple-600 h-2 rounded-full" style="width: 65%"></div>
+                                                        </div>
+                                                        <span>65%</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Activités récentes Tab Content (Initially Hidden) -->
+                    <div id="activities-content" class="tab-content hidden">
+                        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                            <h3 class="text-xl font-bold text-indigo-800 mb-6 flex items-center">
+                                <i class="fas fa-history mr-2 text-purple-600"></i>
+                                Activités récentes
+                            </h3>
+                            
+                            <!-- Timeline -->
+                            <div class="flow-root">
+                                <ul class="-mb-8">
+                                    <li class="relative pb-8">
+                                        <div class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></div>
+                                        <div class="relative flex items-start space-x-3">
+                                            <div class="relative">
+                                                <div class="h-10 w-10 rounded-full bg-purple-500 flex items-center justify-center ring-8 ring-white">
+                                                    <i class="fas fa-trophy text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="min-w-0 flex-1 py-1.5">
+                                                <div class="text-sm text-gray-500">
+                                                    <span class="font-medium text-gray-900">Tournoi Fortnite</span> a été créé par <span class="font-medium text-gray-900">Sophie Martin</span>
+                                                    <span class="whitespace-nowrap">il y a 2 heures</span>
+                                                </div>
+                                                <div class="mt-2 text-sm bg-purple-50 p-2 rounded-lg">
+                                                    16 membres se sont déjà inscrits au tournoi! 🎮
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="relative pb-8">
+                                        <div class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></div>
+                                        <div class="relative flex items-start space-x-3">
+                                            <div class="relative">
+                                                <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center ring-8 ring-white">
+                                                    <i class="fas fa-user-plus text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="min-w-0 flex-1 py-1.5">
+                                                <div class="text-sm text-gray-500">
+                                                    <span class="font-medium text-gray-900">Lucas Bernard</span> a rejoint le club
+                                                    <span class="whitespace-nowrap">hier à 15:30</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="relative pb-8">
+                                        <div class="absolute left-5 top-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></div>
+                                        <div class="relative flex items-start space-x-3">
+                                            <div class="relative">
+                                                <div class="h-10 w-10 rounded-full bg-green-500 flex items-center justify-center ring-8 ring-white">
+                                                    <i class="fas fa-calendar-check text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="min-w-0 flex-1 py-1.5">
+                                                <div class="text-sm text-gray-500">
+                                                    <span class="font-medium text-gray-900">Soirée Gaming</span> événement terminé avec <span class="font-medium text-gray-900">28 participants</span>
+                                                    <span class="whitespace-nowrap">il y a 3 jours</span>
+                                                </div>
+                                                <div class="mt-2 text-sm bg-green-50 p-2 rounded-lg">
+                                                    L'événement a été un grand succès! 🎉
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="relative pb-8">
+                                        <div class="relative flex items-start space-x-3">
+                                            <div class="relative">
+                                                <div class="h-10 w-10 rounded-full bg-amber-500 flex items-center justify-center ring-8 ring-white">
+                                                    <i class="fas fa-comments text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="min-w-0 flex-1 py-1.5">
+                                                <div class="text-sm text-gray-500">
+                                                    <span class="font-medium text-gray-900">Annonce importante</span> publiée par <span class="font-medium text-gray-900">Thomas Dubois</span>
+                                                    <span class="whitespace-nowrap">il y a 5 jours</span>
+                                                </div>
+                                                <div class="mt-2 text-sm bg-amber-50 p-2 rounded-lg">
+                                                    N'oubliez pas de vous inscrire au championnat régional avant le 15 mai! 📢
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="clubInformations" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
@@ -383,7 +818,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-indigo-700 mb-1">Email du club</label>
-                                    <input type="email" id="email-modal" value="{{club.email}}" name="email" class="form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none">
+                                                                        <input type="email" id="email-modal" value="{{club.email}}" name="email" class="form-input w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-indigo-700 mb-1">Téléphone</label>
@@ -496,15 +931,43 @@
                 }).then(()=> {
                     window.location.href = "/ClubManagement";
                 });
-
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.border-b nav button');
+            
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            function setActiveTab(tabIndex) {
+                tabButtons.forEach((button) => {
+                    button.classList.remove('border-b-2', 'border-purple-600', 'text-purple-600');
+                    button.classList.add('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                });
+                
+                tabButtons[tabIndex].classList.add('border-b-2', 'border-purple-600', 'text-purple-600');
+                tabButtons[tabIndex].classList.remove('text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                
+                tabContents.forEach((content) => {
+                    content.classList.add('hidden');
+                });
+                
+                tabContents[tabIndex].classList.remove('hidden');
+            }
+            
+            tabButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    setActiveTab(index);
+                });
+            });
+            
+            setActiveTab(0);
         });
 
         function showClub(name, email, description, phone_club, logo) {
             const modal = document.getElementById("clubInformations");
             const modalContent = document.getElementById("modalContent");
 
-            // Use the correct IDs for the modal elements
             document.getElementById("name-modal").value = name;
             document.getElementById("email-modal").value = email;
             document.getElementById("description-modal").value = description;
@@ -537,34 +1000,30 @@
             }
         });
 
-        // Close modal with Escape key
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape" && !document.getElementById("clubInformations").classList.contains("hidden")) {
                 closeAnnonces();
             }
         });
+        
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButton = document.getElementById('sidebar-toggle');
             const sidebar = document.querySelector('.sidebar-expanded');
             const mainContent = document.querySelector('main');
 
             if (toggleButton && sidebar && mainContent) {
-                // Function to toggle sidebar
                 function toggleSidebar() {
                     sidebar.classList.toggle('sidebar-collapsed');
                     sidebar.classList.toggle('sidebar-expanded');
                     mainContent.classList.toggle('ml-64');
                     mainContent.classList.toggle('ml-20');
 
-                    // Update localStorage
                     const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
                     localStorage.setItem('sidebarCollapsed', isCollapsed);
                 }
 
-                // Add click event listener to toggle button
                 toggleButton.addEventListener('click', toggleSidebar);
 
-                // Check and apply initial state from localStorage
                 const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
                 if (sidebarCollapsed) {
                     sidebar.classList.add('sidebar-collapsed');
@@ -575,7 +1034,6 @@
             }
         });
 
-        // Additional CSS to support sidebar collapse
         const sidebarStyle = document.createElement('style');
         sidebarStyle.textContent = `
         .sidebar-collapsed {
@@ -598,9 +1056,7 @@
         `;
         document.head.appendChild(sidebarStyle);
         
-
         document.addEventListener('DOMContentLoaded', function() {
-            // Find the recharge button
             const rechargeButton = Array.from(document.querySelectorAll('button')).find(
                 button => button.textContent.trim() === 'Recharger'
             );
@@ -609,12 +1065,10 @@
             const closeModalButton = document.getElementById('close-recharge-modal');
             const rechargeForm = document.getElementById('recharge-form');
 
-            // Input formatting
             const cardNumberInput = document.getElementById('card-number');
             const cardExpiryInput = document.getElementById('card-expiry');
             const cardCvvInput = document.getElementById('card-cvv');
 
-            // Show modal function
             function showModal() {
                 if (rechargeModal) {
                     rechargeModal.classList.remove('hidden');
@@ -622,7 +1076,6 @@
                 }
             }
 
-            // Hide modal function
             function hideModal() {
                 if (rechargeModal) {
                     rechargeModal.classList.add('hidden');
@@ -630,30 +1083,25 @@
                 }
             }
 
-            // Add click event to recharge button
             if (rechargeButton) {
                 rechargeButton.addEventListener('click', showModal);
             }
 
-            // Close modal button event
             if (closeModalButton) {
                 closeModalButton.addEventListener('click', hideModal);
             }
 
-            // Form submission
             if (rechargeForm) {
                 rechargeForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     const amount = document.getElementById('recharge-amount').value;
                     
-                    // Simulate recharge process
                     Swal.fire({
                         title: 'Rechargement en cours',
                         text: `Rechargement de ${amount} € en cours`,
                         icon: 'info',
                         confirmButtonColor: '#8b5cf6'
                     }).then(() => {
-                        // Close modal after submission
                         hideModal();
                     });
                 });
@@ -666,23 +1114,17 @@
                     }
                 });
             }
-
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Trouver le formulaire de rechargement
             const rechargeForm = document.getElementById('recharge-form');
             
-            // Gestionnaire d'événement pour la soumission du formulaire
             if (rechargeForm) {
                 rechargeForm.addEventListener('submit', function(e) {
-                    // Empêcher la soumission par défaut du formulaire
                     e.preventDefault();
                     
-                    // Récupérer le montant saisi
                     const amount = document.getElementById('recharge-amount').value;
                     
-                    // Afficher l'alerte de chargement
                     Swal.fire({
                         title: 'Rechargement en cours',
                         text: `Rechargement de ${amount} € en cours...`,
@@ -694,17 +1136,14 @@
                         }
                     });
                     
-                    // Soumettre le formulaire après un court délai pour montrer l'animation
                     setTimeout(() => {
                         rechargeForm.submit();
                     }, 1500);
                 });
             }
             
-            // Vérifier si l'URL contient le paramètre de succès (vérifier les deux formats possibles)
             const urlParams = new URLSearchParams(window.location.search);
             
-            // Obtenir le chemin de base sans les paramètres de query
             const currentPath = window.location.pathname;
             
             if (urlParams.get('message') === 'Rechargement de votre solde réussite' || 
@@ -715,14 +1154,10 @@
                     icon: 'success',
                     confirmButtonColor: '#8b5cf6'
                 }).then(() => {
-                    // Rediriger vers la même page mais sans les paramètres de query
                     window.history.replaceState({}, document.title, currentPath);
-                    // Si vous souhaitez rafraîchir la page pour montrer le nouveau solde, décommentez la ligne suivante
-                    // window.location.reload();
                 });
             }
             
-            // Vérifier si l'URL contient un message d'échec
             if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
                 Swal.fire({
                     title: 'Échec',
@@ -730,7 +1165,6 @@
                     icon: 'error',
                     confirmButtonColor: '#8b5cf6'
                 }).then(() => {
-                    // Rediriger vers la même page mais sans les paramètres de query
                     window.history.replaceState({}, document.title, currentPath);
                 });
             }
