@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -148,8 +147,6 @@
                     <li><a href="/genre" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-list mr-3 text-purple-300"></i>Genres</a></li>
                     <li><a href="/Game" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Games</a></li>
                     <li><a href="/users" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Members</a></li>
-                    <li><a href="/events" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-calendar-alt mr-3 text-purple-300"></i>Events</a></li>
-                    <li><a href="/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournaments</a></li>
                 </ul>
             </nav>
 
@@ -175,24 +172,6 @@
             <!-- Header -->
             <header class="flex justify-between items-center mb-10">
                 <h2 class="text-3xl font-bold text-gray-800">GamersHub Dashboard</h2>
-                <div class="flex items-center space-x-6">
-                    <div class="relative">
-                        <input type="text" placeholder="Search games, users..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <div class="relative">
-                        <button class="text-gray-600 hover:text-gray-800 transition">
-                            <i class="fas fa-bell text-2xl"></i>
-                            <span class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs badge-pulse">3</span>
-                        </button>
-                    </div>
-                    <button class="text-gray-600 hover:text-gray-800 transition">
-                        <i class="fas fa-envelope text-2xl"></i>
-                    </button>
-                    <div class="text-sm text-gray-600">
-                        {{ "2025-04-30 00:21:23" }}
-                    </div>
-                </div>
             </header>
 
             <!-- Stats Overview -->
@@ -427,8 +406,7 @@
                                             <button onclick="openModal('event', {{ event.id }})" class="text-blue-600 hover:text-blue-900 mr-2 px-2 py-1 bg-blue-50 rounded-md">
                                                 <i class="fas fa-eye mr-1"></i> Voir plus
                                             </button>
-                                            <a href="/event/{{ event.id }}/edit" class="text-blue-600 hover:text-blue-900 mr-2"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></a>
+
                                         </td>
                                     </tr>
                                     {% else %}
@@ -563,9 +541,6 @@
                 <div class="border-b border-gray-200 modal-tabs">
                     <div class="flex space-x-6">
                         <button class="py-3 px-1 border-b-2 border-purple-600 text-purple-600 font-medium text-sm active" data-tab="info">Informations</button>
-                        <button class="py-3 px-1 text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="rules">Règles</button>
-                        <button class="py-3 px-1 text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="schedule">Programme</button>
-                        <button class="py-3 px-1 text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="rewards">Récompenses</button>
                     </div>
                 </div>
                 
@@ -621,32 +596,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Rules Tab -->
-                    <div id="tab-rules" class="tab-pane hidden">
-                        <div class="prose max-w-none">
-                            <h4 class="text-lg font-medium text-gray-800 mb-4">Règlement</h4>
-                            <div id="modal-rules" class="text-gray-700">
-                                <p>Chargement des règles...</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Schedule Tab -->
-                    <div id="tab-schedule" class="tab-pane hidden">
-                        <h4 class="text-lg font-medium text-gray-800 mb-4">Programme</h4>
-                        <div class="space-y-6" id="modal-schedule">
-                            <p>Chargement du programme...</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Rewards Tab -->
-                    <div id="tab-rewards" class="tab-pane hidden">
-                        <h4 class="text-lg font-medium text-gray-800 mb-4">Récompenses</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="modal-rewards">
-                            <p>Chargement des récompenses...</p>
-                        </div>
-                    </div>
                 </div>
             </div>
             
@@ -661,19 +610,16 @@
     <!-- Replace the JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Tab switching for main content
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.addEventListener('click', function() {
                     const tabId = this.id.replace('tab-', '');
                     
-                    // Hide all tabs
                     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
                     document.querySelectorAll('.tab-button').forEach(btn => {
                         btn.classList.remove('bg-purple-500', 'text-white');
                         btn.classList.add('bg-gray-200', 'text-gray-600');
                     });
                     
-                    // Show active tab
                     document.getElementById('content-' + tabId).classList.remove('hidden');
                     this.classList.remove('bg-gray-200', 'text-gray-600');
                     this.classList.add('bg-purple-500', 'text-white');
@@ -700,43 +646,35 @@
             });
         });
         
-        // Simple modal functions
         function openModal(type, id) {
-            // Show modal
             const modal = document.getElementById('detail-modal');
             modal.classList.remove('hidden');
-            
-            // Get the item that was clicked
+
             const table = type === 'tournament' ? '#content-tournaments' : '#content-events';
             const rows = document.querySelectorAll(`${table} tbody tr`);
             let dataRow = null;
-            
-            // Find the correct row based on the clicked item id
+
             rows.forEach(row => {
                 const button = row.querySelector(`button[onclick*="openModal('${type}', ${id})"]`);
                 if (button) dataRow = row;
             });
             
             if (dataRow) {
-                // Set modal title and icon
                 document.getElementById('modal-type').textContent = type === 'tournament' ? 'Tournoi' : 'Événement';
                 document.getElementById('modal-title').textContent = type === 'tournament' ? 'Détails du tournoi' : 'Détails de l\'événement';
                 document.getElementById('modal-icon').className = type === 'tournament' ? 'fas fa-trophy text-purple-600' : 'fas fa-calendar-day text-blue-600';
                 
-                // Set name and description
                 const name = dataRow.querySelector('.text-gray-900').textContent;
                 document.getElementById('modal-name').textContent = name;
                 
                 const desc = dataRow.querySelector('.text-gray-500, .text-gray-400')?.textContent || 'Aucune description disponible';
                 document.getElementById('modal-description').textContent = desc;
                 
-                // Set organizer and club
                 const club = dataRow.querySelectorAll('td')[1]?.querySelector('.text-gray-900')?.textContent || 'GamersHub';
                 const organizer = dataRow.querySelectorAll('td')[2]?.querySelector('.text-gray-900')?.textContent || 'hamza2024web';
                 document.getElementById('modal-club').textContent = club;
                 document.getElementById('modal-organizer').textContent = organizer;
                 
-                // Set date and participants
                 const date = dataRow.querySelectorAll('td')[3]?.querySelector('.text-gray-900')?.textContent || '01/01/2025';
                 const participants = dataRow.querySelectorAll('td')[4]?.querySelector('.rounded-full')?.textContent || '0/0';
                 document.getElementById('modal-date').textContent = date;
@@ -744,48 +682,9 @@
                 document.getElementById('modal-location').textContent = 'Centre GamersHub, ' + club;
                 document.getElementById('modal-time').textContent = type === 'tournament' ? '14:00 - 20:00' : '10:00 - 18:00';
                 
-                // Set image if available
                 const img = dataRow.querySelector('img');
                 if (img) {
                     document.getElementById('modal-banner').style.backgroundImage = `url('${img.src}')`;
-                } else {
-                    const defaultImg = type === 'tournament' ? 
-                        'https://images.unsplash.com/photo-1542751371-adc38448a05e' : 
-                        'https://images.unsplash.com/photo-1511882150382-421056c89033';
-                    document.getElementById('modal-banner').style.backgroundImage = `url('${defaultImg}')`;
-                }
-                
-                // Set placeholders for other tabs
-                document.getElementById('modal-rules').innerHTML = `
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li>Les participants doivent être inscrits sur la plateforme</li>
-                        <li>Les participants doivent respecter le code de conduite</li>
-                        <li>Les décisions des administrateurs sont définitives</li>
-                    </ul>
-                `;
-                
-                document.getElementById('modal-schedule').innerHTML = `
-                    <div class="relative pl-8 pb-8 border-l border-gray-200">
-                        <div class="absolute left-0 top-0 bg-purple-600 rounded-full w-4 h-4 -ml-2"></div>
-                        <div class="mb-1 text-sm text-purple-600 font-semibold">Phase 1</div>
-                        <div class="font-medium">Enregistrement et accueil</div>
-                        <div class="text-sm text-gray-600">Vérification des inscriptions</div>
-                    </div>
-                `;
-                
-                if (type === 'tournament') {
-                    document.getElementById('modal-rewards').innerHTML = `
-                        <div class="bg-gradient-to-b from-amber-50 to-amber-100 rounded-lg p-4 border border-amber-200 text-center">
-                            <div class="text-amber-500 text-2xl mb-2">🏆</div>
-                            <h5 class="font-bold text-gray-800">1ère place</h5>
-                        </div>
-                    `;
-                } else {
-                    document.getElementById('modal-rewards').innerHTML = `
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
-                            <p>Cet événement n'offre pas de récompenses spécifiques.</p>
-                        </div>
-                    `;
                 }
             }
         }
