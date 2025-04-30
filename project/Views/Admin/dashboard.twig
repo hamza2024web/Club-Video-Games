@@ -252,7 +252,6 @@
                         <div class="flex space-x-2">
                             <button id="tab-tournaments" class="tab-button px-4 py-1.5 text-sm font-medium bg-purple-500 text-white rounded-lg">Tournaments</button>
                             <button id="tab-events" class="tab-button px-4 py-1.5 text-sm font-medium bg-gray-200 text-gray-600 rounded-lg">Events</button>
-                            <button id="tab-sessions" class="tab-button px-4 py-1.5 text-sm font-medium bg-gray-200 text-gray-600 rounded-lg">Gaming Sessions</button>
                         </div>
                     </div>
                     
@@ -277,11 +276,16 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
-                                                    <i class="fas fa-trophy text-purple-600"></i>
+                                                    {% if tournament.image %}
+                                                        <img src="{{ tournament.image }}" class="h-10 w-10 rounded-full object-cover" alt="{{ tournament.name }}">
+                                                    {% else %}
+                                                        <i class="fas fa-trophy text-purple-600"></i>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">{{ tournament.name }}</div>
-                                                    <div class="text-sm text-gray-500">{{ tournament.description|slice(0, 30) }}{% if tournament.description|length > 30 %}...{% endif %}</div>
+                                                    <div class="text-sm text-gray-500">{{ tournament.nom_de_jeu }}</div>
+                                                    <div class="text-xs text-gray-400">{{ tournament.description|slice(0, 30) }}{% if tournament.description|length > 30 %}...{% endif %}</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -289,25 +293,46 @@
                                             <div class="text-sm text-gray-900">{{ tournament.club_name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ tournament.organizer_name }}</div>
+                                            <div class="text-sm text-gray-900">{{ tournament.organisateur }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ tournament.date_de_debut }}</div>
+                                            <div class="text-sm text-gray-900">{{ tournament.date_de_debut|date('d/m/Y') }}</div>
+                                            {% if tournament.date_de_fin %}
+                                                <div class="text-xs text-gray-500">Fin: {{ tournament.date_de_fin|date('d/m/Y') }}</div>
+                                            {% endif %}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center">
                                             <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                                {{ tournament.number_membre }}
+                                                {{ tournament.number_inscription }}/{{ tournament.numbre_membre }}
                                             </span>
+                                            {% if tournament.frais_inscription > 0 %}
+                                                <div class="text-xs text-gray-500 mt-1">Frais: {{ tournament.frais_inscription }}€</div>
+                                            {% else %}
+                                                <div class="text-xs text-green-500 mt-1">Gratuit</div>
+                                            {% endif %}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            {% if tournament.date_de_debut|date('Y-m-d') < "now"|date('Y-m-d') %}
+                                            {% if tournament.statut == 1 %}
                                                 <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    Completed
+                                                    Actif
+                                                </span>
+                                            {% elseif tournament.date_de_debut|date('Y-m-d') < "2025-04-30" %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                    Terminé
+                                                </span>
+                                            {% elseif tournament.date_ouverture_inscription|date('Y-m-d') <= "2025-04-30" and tournament.date_cloture_inscription|date('Y-m-d') >= "2025-04-30" %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800">
+                                                    Inscriptions Ouvertes
                                                 </span>
                                             {% else %}
                                                 <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                    Upcoming
+                                                    À venir
                                                 </span>
+                                            {% endif %}
+                                            {% if tournament.prix_total %}
+                                                <div class="text-xs text-amber-500 mt-1">
+                                                    <i class="fas fa-trophy text-xs mr-1"></i> {{ tournament.prix_total }}
+                                                </div>
                                             {% endif %}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -323,7 +348,7 @@
                                         <td colspan="7" class="px-6 py-4 text-center text-gray-500">
                                             No tournaments found
                                         </td>
-                                    </tr>
+                                    </tr>   
                                     {% endfor %}
                                 </tbody>
                             </table>
