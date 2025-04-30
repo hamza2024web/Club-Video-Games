@@ -81,6 +81,52 @@
         .stat-card:hover::before {
             opacity: 1;
         }
+
+        .tab-button.active {
+            background-color: #8b5cf6;
+            color: white;
+        }
+
+        .content-card {
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-badge {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%);
+        }
+        
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-content {
+            transition: transform 0.3s ease-out;
+            transform: scale(0.95);
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-tabs button.active {
+            border-bottom: 2px solid #8b5cf6;
+            color: #8b5cf6;
+        }
     </style>
 </head>
 
@@ -102,8 +148,8 @@
                     <li><a href="/genre" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-list mr-3 text-purple-300"></i>Genres</a></li>
                     <li><a href="/Game" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Games</a></li>
                     <li><a href="/users" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Members</a></li>
-                    <li><a href="/statistics" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-chart-line mr-3 text-purple-300"></i>Analytics</a></li>
-                    <li><a href="/settings" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-cog mr-3 text-purple-300"></i>Settings</a></li>
+                    <li><a href="/events" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-calendar-alt mr-3 text-purple-300"></i>Events</a></li>
+                    <li><a href="/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournaments</a></li>
                 </ul>
             </nav>
 
@@ -198,45 +244,181 @@
                 </div>
             </section>
 
-            <!-- Weekly Activity Chart -->
+            <!-- Club Activities Section (Replaces Weekly Activity Chart) -->
             <section class="mb-10">
                 <div class="bg-white p-6 rounded-xl shadow-sm">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-semibold text-gray-800">Weekly Activity</h3>
+                        <h3 class="text-xl font-semibold text-gray-800">Club Activities</h3>
                         <div class="flex space-x-2">
-                            <button class="px-3 py-1 text-xs bg-purple-500 text-white rounded-full">Week</button>
-                            <button class="px-3 py-1 text-xs bg-gray-200 text-gray-600 rounded-full">Month</button>
-                            <button class="px-3 py-1 text-xs bg-gray-200 text-gray-600 rounded-full">Year</button>
+                            <button id="tab-tournaments" class="tab-button px-4 py-1.5 text-sm font-medium bg-purple-500 text-white rounded-lg">Tournaments</button>
+                            <button id="tab-events" class="tab-button px-4 py-1.5 text-sm font-medium bg-gray-200 text-gray-600 rounded-lg">Events</button>
+                            <button id="tab-sessions" class="tab-button px-4 py-1.5 text-sm font-medium bg-gray-200 text-gray-600 rounded-lg">Gaming Sessions</button>
                         </div>
                     </div>
-                    <div class="h-64 flex items-end space-x-6 px-4">
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-12 bg-gradient-to-t from-indigo-500 to-blue-400 rounded-t-lg" style="height: 40%"></div>
-                            <span class="text-xs font-medium text-gray-500">Mon</span>
+                    
+                    <!-- Tournaments Tab (Default Active) -->
+                    <div id="content-tournaments" class="tab-content">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tournament</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Club</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organisateur</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Players</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for tournament in tournaments|slice(0, 5) %}
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                                                    <i class="fas fa-trophy text-purple-600"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">{{ tournament.name }}</div>
+                                                    <div class="text-sm text-gray-500">{{ tournament.description|slice(0, 30) }}{% if tournament.description|length > 30 %}...{% endif %}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ tournament.club_name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ tournament.organizer_name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ tournament.date_de_debut }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                {{ tournament.number_membre }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            {% if tournament.date_de_debut|date('Y-m-d') < "now"|date('Y-m-d') %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Completed
+                                                </span>
+                                            {% else %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    Upcoming
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button onclick="openModal('tournament', {{ tournament.id }})" class="text-purple-600 hover:text-purple-900 mr-2 px-2 py-1 bg-purple-50 rounded-md">
+                                                <i class="fas fa-eye mr-1"></i> Voir plus
+                                            </button>
+                                            <a href="/tournament/{{ tournament.id }}/edit" class="text-blue-600 hover:text-blue-900 mr-2"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                            No tournaments found
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="flex justify-center mt-4">
+                                <a href="/tournaments" class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 hover:bg-purple-50 rounded-md">
+                                    View all tournaments <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-12 bg-gradient-to-t from-indigo-500 to-blue-400 rounded-t-lg" style="height: 80%"></div>
-                            <span class="text-xs font-medium text-gray-500">Tue</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-12 bg-gradient-to-t from-indigo-500 to-blue-400 rounded-t-lg" style="height: 60%"></div>
-                            <span class="text-xs font-medium text-gray-500">Wed</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-12 bg-gradient-to-t from-indigo-500 to-blue-400 rounded-t-lg" style="height: 90%"></div>
-                            <span class="text-xs font-medium text-gray-500">Thu</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-12 bg-gradient-to-t from-indigo-500 to-blue-400 rounded-t-lg" style="height: 70%"></div>
-                            <span class="text-xs font-medium text-gray-500">Fri</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-12 bg-gradient-to-t from-indigo-500 to-blue-400 rounded-t-lg" style="height: 100%"></div>
-                            <span class="text-xs font-medium text-gray-500">Sat</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-12 bg-gradient-to-t from-indigo-500 to-blue-400 rounded-t-lg" style="height: 85%"></div>
-                            <span class="text-xs font-medium text-gray-500">Sun</span>
+                    </div>
+
+                    <!-- Events Tab (Initially Hidden) -->
+                    <div id="content-events" class="tab-content hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Club</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organisateur</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for event in events|slice(0, 5) %}
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                                    {% if event.event_photo %}
+                                                        <img src="{{ event.event_photo }}" class="h-10 w-10 rounded-full object-cover" alt="{{ event.name }}">
+                                                    {% else %}
+                                                        <i class="fas fa-calendar-day text-blue-600"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">{{ event.name }}</div>
+                                                    <div class="text-sm text-gray-500">{{ event.description|slice(0, 30) }}{% if event.description|length > 30 %}...{% endif %}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ event.club_name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ event.organisateur }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ event.type_evenement|capitalize }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ event.date_debut|date('d/m/Y') }}</div>
+                                            <div class="text-xs text-gray-500">{{ event.event_time }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            {% if event.statut == 1 %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Actif
+                                                </span>
+                                            {% elseif event.date_debut|date('Y-m-d') < "now"|date('Y-m-d') %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                    Terminé
+                                                </span>
+                                            {% else %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    À venir
+                                                </span>
+                                            {% endif %}
+                                            <div class="text-xs text-gray-500 mt-1">{{ event.number_participants }}/{{ event.numbre_membre }} participants</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button onclick="openModal('event', {{ event.id }})" class="text-blue-600 hover:text-blue-900 mr-2 px-2 py-1 bg-blue-50 rounded-md">
+                                                <i class="fas fa-eye mr-1"></i> Voir plus
+                                            </button>
+                                            <a href="/event/{{ event.id }}/edit" class="text-blue-600 hover:text-blue-900 mr-2"><i class="fas fa-edit"></i></a>
+                                            <a href="#" class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                            No events found
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="flex justify-center mt-4">
+                                <a href="/events" class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-md">
+                                    View all events <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -317,39 +499,339 @@
                 </div>
             </section>
 
-            <!-- Upcoming Tournaments -->
-            <section class="mb-10">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-semibold text-gray-800">Upcoming Tournaments</h3>
-                    <a href="/tournaments" class="text-sm text-purple-600 hover:text-purple-800 transition">View All Tournaments</a>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {# upcoming tournoi #}
-                {% for Tournoi in upcomingTournoi %}
-                    <div class="game-card bg-white rounded-xl shadow-sm overflow-hidden">
-                        <div class="h-32 bg-gradient-to-r from-purple-600 to-indigo-600 relative">
-                            <div class="absolute bottom-4 left-4 bg-white px-2 py-1 rounded text-xs font-semibold text-purple-700">
-                                {{Tournoi.date_de_debut}}
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-gray-800 mb-2">{{Tournoi.name}}</h4>
-                            <p class="text-sm text-gray-600 mb-4">{{Tournoi.description}}</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">{{Tournoi.number_membre}}</span>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                </div>
-            </section>
-
             <!-- Footer -->
             <footer class="mt-10 text-center text-gray-500 text-sm">
                 <p>© 2025 GamersHub Video Game Club. All rights reserved.</p>
             </footer>
         </main>
     </div>
+    
+    <!-- Modal for Event/Tournament Details -->
+    <div id="detail-modal" class="modal fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+                <h3 class="text-xl font-bold text-gray-800" id="modal-title">Détails</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="overflow-y-auto p-6 max-h-[calc(90vh-8rem)]">
+                <!-- Banner/Image Section -->
+                <div id="modal-banner" class="h-48 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg mb-6 bg-center bg-cover flex items-end relative">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div class="p-4 relative z-10 text-white">
+                        <div class="flex items-center">
+                            <div class="bg-white p-2 rounded-full mr-3">
+                                <i id="modal-icon" class="fas fa-trophy text-purple-600"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs uppercase tracking-wide bg-purple-500 bg-opacity-70 px-2 py-1 rounded-full" id="modal-type">Tournament</span>
+                                <h2 class="text-2xl font-bold mt-1" id="modal-name">Loading...</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabs for Modal -->
+                <div class="border-b border-gray-200 modal-tabs">
+                    <div class="flex space-x-6">
+                        <button class="py-3 px-1 border-b-2 border-purple-600 text-purple-600 font-medium text-sm active" data-tab="info">Informations</button>
+                        <button class="py-3 px-1 text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="rules">Règles</button>
+                        <button class="py-3 px-1 text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="schedule">Programme</button>
+                        <button class="py-3 px-1 text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="rewards">Récompenses</button>
+                    </div>
+                </div>
+                
+                <!-- Tab Content -->
+                <div class="mt-6">
+                    <!-- Info Tab -->
+                    <div id="tab-info" class="tab-pane">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Description</h4>
+                                <p id="modal-description" class="text-gray-600">Loading...</p>
+                                
+                                <h4 class="font-medium text-gray-700 mb-2 mt-6">Organisateur</h4>
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                                        <i class="fas fa-user text-purple-600"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p id="modal-organizer" class="text-gray-800 font-medium">Loading...</p>
+                                        <p id="modal-club" class="text-sm text-gray-500">Loading...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Détails</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center">
+                                        <div class="w-8 text-center text-gray-400">
+                                            <i class="fas fa-calendar-day"></i>
+                                        </div>
+                                        <span class="ml-3 text-gray-700" id="modal-date">Loading...</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-8 text-center text-gray-400">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <span class="ml-3 text-gray-700" id="modal-location">Loading...</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-8 text-center text-gray-400">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <span class="ml-3 text-gray-700" id="modal-participants">Loading...</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-8 text-center text-gray-400">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <span class="ml-3 text-gray-700" id="modal-time">Loading...</span>
+                                    </div>
+                                </div>
+                                
+                                <button class="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center">
+                                    <i class="fas fa-external-link-alt mr-2"></i> Voir la page complète
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rules Tab -->
+                    <div id="tab-rules" class="tab-pane hidden">
+                        <div class="prose max-w-none">
+                            <h4 class="text-lg font-medium text-gray-800 mb-4">Règlement</h4>
+                            <div id="modal-rules" class="text-gray-700">
+                                <p>Chargement des règles...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Schedule Tab -->
+                    <div id="tab-schedule" class="tab-pane hidden">
+                        <h4 class="text-lg font-medium text-gray-800 mb-4">Programme</h4>
+                        <div class="space-y-6" id="modal-schedule">
+                            <p>Chargement du programme...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Rewards Tab -->
+                    <div id="tab-rewards" class="tab-pane hidden">
+                        <h4 class="text-lg font-medium text-gray-800 mb-4">Récompenses</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="modal-rewards">
+                            <p>Chargement des récompenses...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 px-6 py-4 flex justify-end">
+                <button onclick="closeModal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors mr-2">
+                    Fermer
+                </button>
+                <button class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    Partager
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tab Switching JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            function setActiveTab(tabId) {
+                // Hide all tab contents
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // Remove active class from all buttons
+                tabButtons.forEach(button => {
+                    button.classList.remove('bg-purple-500', 'text-white');
+                    button.classList.add('bg-gray-200', 'text-gray-600');
+                });
+                
+                // Show selected tab content
+                document.getElementById('content-' + tabId).classList.remove('hidden');
+                
+                // Add active class to selected button
+                document.getElementById('tab-' + tabId).classList.remove('bg-gray-200', 'text-gray-600');
+                document.getElementById('tab-' + tabId).classList.add('bg-purple-500', 'text-white');
+            }
+            
+            // Add click event to tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.id.replace('tab-', '');
+                    setActiveTab(tabId);
+                });
+            });
+            
+            // Modal tabs
+            const modalTabButtons = document.querySelectorAll('.modal-tabs button');
+            const modalTabPanes = document.querySelectorAll('.tab-pane');
+            
+            modalTabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons and panes
+                    modalTabButtons.forEach(btn => {
+                        btn.classList.remove('border-b-2', 'border-purple-600', 'text-purple-600');
+                        btn.classList.add('text-gray-500', 'hover:text-gray-700');
+                    });
+                    
+                    modalTabPanes.forEach(pane => {
+                        pane.classList.add('hidden');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.remove('text-gray-500', 'hover:text-gray-700');
+                    this.classList.add('border-b-2', 'border-purple-600', 'text-purple-600');
+                    
+                    // Show corresponding tab pane
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById('tab-' + tabId).classList.remove('hidden');
+                });
+            });
+        });
+        
+        // Modal functions
+        function openModal(type, id) {
+            const modal = document.getElementById('detail-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.querySelector('.modal-content').classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            // Set modal type
+            document.getElementById('modal-type').textContent = type.charAt(0).toUpperCase() + type.slice(1);
+            
+            // Set default icon and colors based on type
+            const modalIcon = document.getElementById('modal-icon');
+            if (type === 'tournament') {
+                modalIcon.className = 'fas fa-trophy text-purple-600';
+                document.getElementById('modal-title').textContent = 'Détails du tournoi';
+            } else if (type === 'event') {
+                modalIcon.className = 'fas fa-calendar-day text-blue-600';
+                document.getElementById('modal-title').textContent = 'Détails de l\'événement';
+            } else {
+                modalIcon.className = 'fas fa-gamepad text-green-600';
+                document.getElementById('modal-title').textContent = 'Détails de la session';
+            }
+            
+            // Fetch and load data
+            fetchItemDetails(type, id);
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('detail-modal');
+            modal.querySelector('.modal-content').classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+        
+        function fetchItemDetails(type, id) {
+            const data = {
+                id: id,
+                name: type === 'tournament' ? 'Tournoi de Fortnite' : (type === 'event' ? 'Festival Gaming Maroc' : 'Session League of Legends'),
+                description: 'Rejoignez-nous pour cet événement exclusif où les meilleurs joueurs s\'affronteront pour remporter des prix exceptionnels. Une expérience gaming unique qui ravira tous les participants.',
+                banner_image: type === 'tournament' ? 'https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' :
+                             (type === 'event' ? 'https://images.unsplash.com/photo-1511882150382-421056c89033?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' :
+                             'https://images.unsplash.com/photo-1560253023-3ec5d502959f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'),
+                organizer_name: 'Ahmed Benani',
+                club_name: 'GamersHub Casablanca',
+                date: '15 Mai 2025',
+                location: 'Centre GamersHub, Casablanca',
+                participants: '32 participants / 64 max',
+                time: '14:00 - 20:00',
+                rules: `
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Les participants doivent être enregistrés sur la plateforme</li>
+                        <li>Chaque match se joue en mode Battle Royale</li>
+                        <li>Les participants doivent arriver 30 minutes avant le début</li>
+                        <li>Le format du tournoi est à élimination directe</li>
+                        <li>Les décisions des administrateurs sont définitives</li>
+                        <li>Tout comportement antisportif entraînera une disqualification</li>
+                    </ul>
+                `,
+                schedule: `
+                    <div class="relative pl-8 pb-8 border-l border-gray-200">
+                        <div class="absolute left-0 top-0 bg-purple-600 rounded-full w-4 h-4 -ml-2"></div>
+                        <div class="mb-1 text-sm text-purple-600 font-semibold">14:00 - 14:30</div>
+                        <div class="font-medium">Enregistrement des participants</div>
+                        <div class="text-sm text-gray-600">Vérification des inscriptions et préparation</div>
+                    </div>
+                    
+                    <div class="relative pl-8 pb-8 border-l border-gray-200">
+                        <div class="absolute left-0 top-0 bg-purple-600 rounded-full w-4 h-4 -ml-2"></div>
+                        <div class="mb-1 text-sm text-purple-600 font-semibold">14:30 - 15:00</div>
+                        <div class="font-medium">Briefing et tirage au sort</div>
+                        <div class="text-sm text-gray-600">Présentation des règles et formation des groupes</div>
+                    </div>
+                    
+                    <div class="relative pl-8 pb-8 border-l border-gray-200">
+                        <div class="absolute left-0 top-0 bg-purple-600 rounded-full w-4 h-4 -ml-2"></div>
+                        <div class="mb-1 text-sm text-purple-600 font-semibold">15:00 - 17:00</div>
+                        <div class="font-medium">Phase de groupes</div>
+                        <div class="text-sm text-gray-600">Matchs de qualification</div>
+                    </div>
+                    
+                    <div class="relative pl-8 pb-8 border-l border-gray-200">
+                        <div class="absolute left-0 top-0 bg-purple-600 rounded-full w-4 h-4 -ml-2"></div>
+                        <div class="mb-1 text-sm text-purple-600 font-semibold">17:15 - 19:30</div>
+                        <div class="font-medium">Phase finale</div>
+                        <div class="text-sm text-gray-600">Quarts de finale, demi-finales et finale</div>
+                    </div>
+                    
+                    <div class="relative pl-8">
+                        <div class="absolute left-0 top-0 bg-purple-600 rounded-full w-4 h-4 -ml-2"></div>
+                        <div class="mb-1 text-sm text-purple-600 font-semibold">19:30 - 20:00</div>
+                        <div class="font-medium">Remise des prix</div>
+                        <div class="text-sm text-gray-600">Cérémonie de clôture et récompenses</div>
+                    </div>
+                `,
+                rewards: `
+                    <div class="bg-gradient-to-b from-amber-50 to-amber-100 rounded-lg p-4 border border-amber-200 text-center">
+                        <div class="text-amber-500 text-2xl mb-2">🏆</div>
+                        <h5 class="font-bold text-gray-800">1ère place</h5>
+                        <p class="text-gray-700">2000 GameCoins + Trophée</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-b from-gray-50 to-gray-100 rounded-lg p-4 border border-gray-200 text-center">
+                        <div class="text-gray-400 text-2xl mb-2">🥈</div>
+                        <h5 class="font-bold text-gray-800">2ème place</h5>
+                        <p class="text-gray-700">1000 GameCoins</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-b from-amber-50 to-amber-100 rounded-lg p-4 border border-amber-700 text-center" style="border-color: #b45309;">
+                        <div class="text-amber-700 text-2xl mb-2">🥉</div>
+                        <h5 class="font-bold text-gray-800">3ème place</h5>
+                        <p class="text-gray-700">500 GameCoins</p>
+                    </div>
+                `
+            };
+            
+            // Populate modal with data
+            document.getElementById('modal-name').textContent = data.name;
+            document.getElementById('modal-banner').style.backgroundImage = `url('${data.banner_image}')`;
+            document.getElementById('modal-description').textContent = data.description;
+            document.getElementById('modal-organizer').textContent = data.organizer_name;
+            document.getElementById('modal-club').textContent = data.club_name;
+            document.getElementById('modal-date').textContent = data.date;
+            document.getElementById('modal-location').textContent = data.location;
+            document.getElementById('modal-participants').textContent = data.participants;
+            document.getElementById('modal-time').textContent = data.time;
+            document.getElementById('modal-rules').innerHTML = data.rules;
+            document.getElementById('modal-schedule').innerHTML = data.schedule;
+            document.getElementById('modal-rewards').innerHTML = data.rewards;
+        }
+    </script>
 </body>
 
 </html>
