@@ -25,7 +25,7 @@ class ProfileRepository {
         $stmt->execute();
         $profileUser = $stmt->fetch(PDO::FETCH_ASSOC);
         return $profileUser;
-        }
+    }
 
     public function updateUser($user_id, $name, $email) {
         $sql = "UPDATE users SET name = :name, email = :email WHERE id = :user_id";

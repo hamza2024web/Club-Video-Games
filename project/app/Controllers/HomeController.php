@@ -8,8 +8,7 @@ class HomeController extends BaseController{
     protected $dashboardServices;
     protected $EvenementServices;
 
-    public function __construct()
-    {
+    public function __construct(){
         parent::__construct();
         $this->dashboardServices = new dashboardServices();
         $this->EvenementServices = new EventsMemberServices();
@@ -21,6 +20,9 @@ class HomeController extends BaseController{
         $home = $this->render('home',compact('games','events'));
         return $home;
     }
-}
 
+    public function about(){
+        return $this->render('about');
+    }
+}
 ?>

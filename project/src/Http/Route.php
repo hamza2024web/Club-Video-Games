@@ -74,14 +74,12 @@ class Route
             }
         }
 
-        // If no route matches, return 404
         if (!$action) {
             http_response_code(404);
             echo "Error 404: Route not found";
             exit;
         }
 
-        // Apply middlewares before calling controller
         foreach ($middlewares ?? [] as $middleware) {
             $middlewareClass = "App\\Middlewares\\$middleware";
             if (class_exists($middlewareClass)) {
@@ -89,7 +87,6 @@ class Route
             }
         }
 
-        // Execute the route action
         if (is_callable($action)) {
             return call_user_func_array($action, $params);
         }
