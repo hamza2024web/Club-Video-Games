@@ -135,18 +135,6 @@
                     <h1 class="text-2xl font-bold text-gray-800">User Management</h1>
                     <p class="text-gray-500">Manage your users easily. Activate, suspend, or deactivate accounts with a few clicks.</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search users..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <div class="relative">
-                        <button class="text-gray-600 hover:text-gray-800 transition">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
-                        </button>
-                    </div>
-                </div>
             </header>
 
             <!-- Stats Overview -->
@@ -156,7 +144,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Total Users</h3>
                             <p class="text-3xl font-bold text-gray-800">1,258</p>
-                            <p class="text-xs text-green-500 mt-1">↑ 12% from last month</p>
                         </div>
                         <div class="bg-purple-100 p-3 rounded-lg">
                             <i class="fas fa-users text-purple-600 text-2xl"></i>
@@ -168,7 +155,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Active Users</h3>
                             <p class="text-3xl font-bold text-gray-800">987</p>
-                            <p class="text-xs text-green-500 mt-1">↑ 8% from last month</p>
                         </div>
                         <div class="bg-green-100 p-3 rounded-lg">
                             <i class="fas fa-user-check text-green-600 text-2xl"></i>
@@ -180,7 +166,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Suspended Users</h3>
                             <p class="text-3xl font-bold text-gray-800">42</p>
-                            <p class="text-xs text-red-500 mt-1">↑ 5 new suspensions</p>
                         </div>
                         <div class="bg-yellow-100 p-3 rounded-lg">
                             <i class="fas fa-user-clock text-yellow-600 text-2xl"></i>
@@ -192,7 +177,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Inactive Users</h3>
                             <p class="text-3xl font-bold text-gray-800">229</p>
-                            <p class="text-xs text-gray-500 mt-1">No change from last month</p>
                         </div>
                         <div class="bg-red-100 p-3 rounded-lg">
                             <i class="fas fa-user-slash text-red-600 text-2xl"></i>
@@ -209,14 +193,6 @@
                             <i class="fas fa-user-friends mr-2 text-purple-600"></i>
                             Users List
                         </h2>
-                        <div class="flex items-center space-x-2">
-                            <button class="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-                                <i class="fas fa-filter mr-1"></i> Filter
-                            </button>
-                            <button class="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-                                <i class="fas fa-download mr-1"></i> Export
-                            </button>
-                        </div>
                     </div>
                 </div>
                 
@@ -307,30 +283,7 @@
                         </tbody>
                     </table>
                 </div>
-                
-                <!-- Pagination -->
-                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">1,258</span> users
-                        </div>
-                        <div>
-                            <nav class="flex items-center space-x-2">
-                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">
-                                    <i class="fas fa-chevron-left text-xs"></i>
-                                </a>
-                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-purple-600 bg-purple-600 text-white">1</a>
-                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">2</a>
-                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">3</a>
-                                <span class="w-8 h-8 flex items-center justify-center text-gray-600">...</span>
-                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">126</a>
-                                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100">
-                                    <i class="fas fa-chevron-right text-xs"></i>
-                                </a>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
+            
             </section>
         </main>
     </div>
