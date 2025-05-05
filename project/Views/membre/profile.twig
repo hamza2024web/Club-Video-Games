@@ -106,13 +106,7 @@
                     <li><a href="/member/events" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-calendar-alt mr-3 text-purple-300"></i>Events</a></li>
                     <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
                     <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>My Games</a></li>
-                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Friends</a></li>
-                    <li><a href="/member/messages" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition">
-                        <i class="fas fa-envelope mr-3 text-purple-300"></i>Messages
-                        <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
-                    </a></li>
-                    <li><a href="/member/rewards" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gift mr-3 text-purple-300"></i>Rewards</a></li>
-                    <li><a href="/member/profile" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profile</a></li>
+git                    <li><a href="/member/profile" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profile</a></li>
                 </ul>
             </nav>
 
@@ -145,7 +139,7 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
+        <!-- Main Content -->   
         <main class="flex-1 p-8">
             <!-- Header -->
             <header class="flex justify-between items-center mb-6">
@@ -153,779 +147,417 @@
                     <h1 class="text-2xl font-bold text-gray-800">My Profile</h1>
                     <p class="text-gray-500">Manage your profile and gaming preferences</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <div class="relative">
-                        <button class="text-gray-600 hover:text-gray-800 transition">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
-                        </button>
-                    </div>
-                </div>
             </header>
 
-            <!-- Profile Header -->
-            <section class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
-                <div class="h-40 bg-gradient-to-r from-indigo-600 to-purple-600 relative">
-                    <img src="/{{profile.cover_photo}}" alt="Cover Photo" class="w-full h-full object-cover">
-                    <button class="absolute bottom-4 right-4 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full backdrop-blur-sm">
-                        <i class="fas fa-camera"></i>
-                    </button>
-                </div>
-                <div class="px-8 pb-6 relative">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-end -mt-16 sm:-mt-20">
-                        <div class="relative">
-                            <img src="/{{profile.profile_photo}}" alt="Profile Image" class="w-32 h-32 rounded-full border-4 border-white shadow-md object-cover">
-                            <button class="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
-                                <i class="fas fa-camera text-gray-600"></i>
-                            </button>
-                        </div>
-                        <div class="mt-4 sm:mt-0 sm:ml-6 flex-1">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between">
-                                <div>
-                                    <h2 class="text-2xl font-bold text-gray-900">{{profile.name}}</h2>
-                                    <p class="text-gray-600">@{{profile.tag_name}}</p>
-                                </div>
-                                <div class="mt-4 sm:mt-0 flex space-x-2">
-                                    <button class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm rounded-lg flex items-center hover:from-purple-700 hover:to-indigo-700 transition">
-                                        <i class="fas fa-edit mr-2"></i> Edit Profile
-                                    </button>
-                                    <button class="p-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 transition">
-                                        <i class="fas fa-share-alt"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-4 mt-3">
-                                <div class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-                                    Level 28
-                                </div>
-                                <div class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
-                                    <i class="fas fa-star text-yellow-500 mr-1"></i> Elite Gamer
-                                </div>
-                                <div class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                                    <i class="fas fa-shield-alt text-green-500 mr-1"></i> Premium
+            <!-- Profile Header with About Section Side-by-Side -->
+            <section class="bg-white rounded-xl shadow-lg overflow-hidden mb-8 border border-gray-100">
+                <div class="flex flex-col lg:flex-row">
+                    <!-- Profile Photo Area with cleaner styling -->
+                    <div class="lg:w-1/3 relative">
+                        <div class="h-64 lg:h-full bg-gradient-to-br from-blue-600 to-indigo-600 relative overflow-hidden">
+                            <img src="/{{profile.profile_photo}}" alt="Profile Photo" class="w-full h-full object-cover">
+                            
+                            <!-- Gradient overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end p-6">
+                                <div class="flex items-center">
+                                    <div class="relative">
+                                        <img src="/{{profile.profile_photo}}" alt="Profile Image" class="w-20 h-20 rounded-full border-4 border-white shadow-lg object-cover">
+                                        <button class="absolute bottom-0 right-0 bg-white p-1.5 rounded-full shadow-lg hover:bg-gray-100 transition-transform duration-300">
+                                            <i class="fas fa-camera text-gray-600 text-xs"></i>
+                                        </button>
+                                    </div>
+                                    <div class="ml-4 text-white">
+                                        <h2 class="text-lg font-bold">{{profile.name}}</h2>
+                                        <p class="text-sm text-white/90">
+                                            @{{profile.tag_name}}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Profile Navigation Tabs -->
-                <div class="px-8 border-t border-gray-200">
-                    <nav class="flex space-x-8 overflow-x-auto">
-                        <button class="py-4 px-1 text-gray-900 text-sm font-medium tab-active">Overview</button>
-                        <button class="py-4 px-1 text-gray-500 text-sm font-medium hover:text-gray-700 transition">Game Stats</button>
-                        <button class="py-4 px-1 text-gray-500 text-sm font-medium hover:text-gray-700 transition">Achievements</button>
-                        <button class="py-4 px-1 text-gray-500 text-sm font-medium hover:text-gray-700 transition">Friends</button>
-                        <button class="py-4 px-1 text-gray-500 text-sm font-medium hover:text-gray-700 transition">Games</button>
-                        <button class="py-4 px-1 text-gray-500 text-sm font-medium hover:text-gray-700 transition">Gallery</button>
-                    </nav>
-                </div>
-            </section>
 
-            <!-- Main Content Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Left Column - About & Stats -->
-                <div>
-                    <!-- About Section -->
-                    <section class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                            <i class="fas fa-user mr-2 text-purple-600"></i> About
-                        </h3>
-                        <p class="text-gray-600 mb-4">
-                            {{profile.about_me}}
-                        </p>
-                        
-                        <div class="space-y-3 text-gray-600">
-                            <div class="flex items-start">
-                                <i class="fas fa-map-marker-alt w-5 text-purple-600 mt-1"></i>
-                                <div class="ml-2">
-                                    <p>{{profile.location}}</p>
+                    <!-- About Section - Side by Side with Profile -->
+                    <div class="lg:w-2/3 p-8">
+                        <!-- Content -->
+                        <div>
+                            <!-- Status Row with enhanced status indicator -->
+                            <div class="flex justify-between items-center mb-6">
+                                <div class="flex items-center space-x-3">
+                                    <span class="bg-green-100 px-3 py-1.5 rounded-full text-xs text-green-800 font-medium flex items-center shadow-sm border border-green-200/50">
+                                        <span class="relative flex h-2 w-2 mr-2">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                        </span>
+                                        Online
+                                    </span>
                                 </div>
+                                <button class="px-5 py-2.5 bg-indigo-600 text-white text-sm rounded-lg flex items-center hover:bg-indigo-700 transition transform hover:-translate-y-0.5 hover:shadow-md">
+                                    <i class="fas fa-edit mr-2"></i> Edit Profile
+                                </button>
                             </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-birthday-cake w-5 text-purple-600 mt-1"></i>
-                                <div class="ml-2">
-                                    <p>{{profile.date_naissance}}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-calendar-day w-5 text-purple-600 mt-1"></i>
-                                <div class="ml-2">
-                                    <p>Joined January 15, 2023</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-clock w-5 text-purple-600 mt-1"></i>
-                                <div class="ml-2">
-                                    <p>Last online: Today at 2:45 PM</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6 pt-6 border-t border-gray-200">
-                            <h4 class="text-sm font-semibold text-gray-900 mb-3">Gaming Platforms</h4>
-                            <div class="flex flex-wrap gap-2">
-                                <div class="flex items-center px-3 py-1.5 bg-gray-100 rounded-lg text-gray-700 text-sm">
-                                    <i class="fab fa-windows mr-2 text-blue-500"></i> PC
-                                </div>
-                                <div class="flex items-center px-3 py-1.5 bg-gray-100 rounded-lg text-gray-700 text-sm">
-                                    <i class="fab fa-playstation mr-2 text-blue-600"></i> PlayStation 5
-                                </div>
-                                <div class="flex items-center px-3 py-1.5 bg-gray-100 rounded-lg text-gray-700 text-sm">
-                                    <i class="fab fa-steam mr-2 text-gray-700"></i> Steam
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6 pt-6 border-t border-gray-200">
-                            <h4 class="text-sm font-semibold text-gray-900 mb-3">Social Media</h4>
-                            <div class="flex space-x-3">
-                                <a href="{{profile.youtube}}" class="p-2 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition">
-                                    <i class="fab fa-youtube"></i>
-                                </a>
-                                <a href="{{profile.instagram}}" class="p-2 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition">
-                                    <i class="fab fa-instagram"></i>
-                                </a>
-                                <a href="{{profile.twitch}}" class="p-2 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition">
-                                    <i class="fab fa-twitch"></i>
-                                </a>
-                                <a href="{{profile.discord}}" class="p-2 bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition">
-                                    <i class="fab fa-discord"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </section>
-                    
-                    <!-- Game Stats -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                            <i class="fas fa-chart-bar mr-2 text-purple-600"></i> Game Stats
-                        </h3>
-                        
-                        <div class="space-y-6">
+
+                            <!-- About Content with enhanced typography -->
                             <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <h4 class="text-sm font-medium text-gray-700">Total Games Played</h4>
-                                    <span class="text-lg font-bold text-gray-900">628</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 h-2 rounded-full" style="width: 75%"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">75% to next milestone</p>
-                            </div>
-                            
-                            <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <h4 class="text-sm font-medium text-gray-700">Win Rate</h4>
-                                    <span class="text-lg font-bold text-gray-900">68%</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 h-2 rounded-full" style="width: 68%"></div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <h4 class="text-sm font-medium text-gray-700">Tournament Wins</h4>
-                                    <span class="text-lg font-bold text-gray-900">12</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 h-2 rounded-full" style="width: 40%"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">40% to next milestone</p>
-                            </div>
-                            
-                            <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <h4 class="text-sm font-medium text-gray-700">Total Hours Played</h4>
-                                    <span class="text-lg font-bold text-gray-900">852</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 h-2 rounded-full" style="width: 85%"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">85% to next milestone</p>
-                            </div>
-                        </div>
-                        
-                        <button class="mt-6 w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-chart-line mr-2"></i> View Detailed Stats
-                        </button>
-                    </section>
-                </div>
-                
-                <!-- Middle Column - Recent Activity -->
-                <div class="space-y-8">
-                    <!-- Recent Activity -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                            <i class="fas fa-stream mr-2 text-purple-600"></i> Recent Activity
-                        </h3>
-                        
-                        <div class="space-y-6 custom-scrollbar max-h-96 overflow-y-auto pr-2">
-                            <!-- Activity 1 -->
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0">
-                                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                                        <i class="fas fa-trophy text-green-600"></i>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-sm mr-2">
+                                        <i class="fas fa-user text-white text-sm"></i>
+                                    </div>
+                                    About
+                                </h3>
+                                
+                                <!-- About text with cleaner styling -->
+                                <div class="relative mb-6 pb-3">
+                                    <div class="absolute left-0 top-0 h-full w-1 bg-indigo-400 rounded-full"></div>
+                                    <div class="pl-4 bg-gray-50 p-3 rounded-r-lg border-l-0 border border-gray-200">
+                                        <p class="text-gray-600 italic leading-relaxed">
+                                            {{profile.about_me}}
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="ml-4 flex-1">
-                                    <p class="text-sm text-gray-800 font-medium">
-                                        Won 1st place in <span class="font-semibold">Fortnite Solo Challenge</span>
-                                    </p>
-                                    <div class="mt-1 flex items-center">
-                                        <div class="px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full">
-                                            +500 points
+                                
+                                <!-- Personal info in a 2x2 grid with cleaner cards -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                                    <div class="flex items-start p-3 bg-white rounded-lg border border-gray-200 hover:shadow-md transition duration-300 transform hover:-translate-y-0.5">
+                                        <div class="bg-blue-600 rounded-lg p-2.5 flex-shrink-0 shadow-sm">
+                                            <i class="fas fa-map-marker-alt text-white"></i>
                                         </div>
-                                        <span class="text-xs text-gray-500 ml-2">2 hours ago</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Activity 2 -->
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0">
-                                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-                                        <i class="fas fa-gamepad text-purple-600"></i>
-                                    </div>
-                                </div>
-                                <div class="ml-4 flex-1">
-                                    <p class="text-sm text-gray-800 font-medium">
-                                        Played <span class="font-semibold">Call of Duty: Modern Warfare</span> for 3 hours
-                                    </p>
-                                    <div class="mt-1 flex items-center">
-                                        <div class="px-2 py-0.5 bg-purple-100 text-purple-800 text-xs rounded-full">
-                                            +150 points
-                                        </div>
-                                        <span class="text-xs text-gray-500 ml-2">Yesterday</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Activity 3 -->
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0">
-                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                                        <i class="fas fa-user-plus text-blue-600"></i>
-                                    </div>
-                                </div>
-                                <div class="ml-4 flex-1">
-                                    <p class="text-sm text-gray-800 font-medium">
-                                        Added <span class="font-semibold">Alex Wilson</span> as a friend
-                                    </p>
-                                    <div class="mt-1 flex items-center">
-                                        <div class="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
-                                            +10 points
-                                        </div>
-                                        <span class="text-xs text-gray-500 ml-2">2 days ago</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Activity 4 -->
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0">
-                                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                        <i class="fas fa-medal text-indigo-600"></i>
-                                    </div>
-                                </div>
-                                <div class="ml-4 flex-1">
-                                    <p class="text-sm text-gray-800 font-medium">
-                                        Earned the <span class="font-semibold">Sharpshooter</span> achievement in Call of Duty
-                                    </p>
-                                    <div class="mt-1 flex items-center">
-                                        <div class="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-xs rounded-full">
-                                            +200 points
-                                        </div>
-                                        <span class="text-xs text-gray-500 ml-2">3 days ago</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Activity 5 -->
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0">
-                                    <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                                        <i class="fas fa-star text-yellow-600"></i>
-                                    </div>
-                                </div>
-                                <div class="ml-4 flex-1">
-                                    <p class="text-sm text-gray-800 font-medium">
-                                        Reached <span class="font-semibold">Level 28</span>
-                                    </p>
-                                    <div class="mt-1 flex items-center">
-                                        <div class="px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded-full">
-                                            Milestone
-                                        </div>
-                                        <span class="text-xs text-gray-500 ml-2">1 week ago</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button class="mt-6 w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-history mr-2"></i> View All Activity
-                        </button>
-                    </section>
-                    
-                    <!-- Recent Achievements -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                                <i class="fas fa-award mr-2 text-purple-600"></i> Recent Achievements
-                            </h3>
-                            <p class="text-sm text-gray-500">
-                                <span class="font-semibold text-gray-900">32</span> of 120 unlocked
-                            </p>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            <!-- Achievement 1 -->
-                            <div class="achievement-card bg-gray-50 rounded-lg p-3 text-center border border-gray-200">
-                                <div class="w-12 h-12 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-bullseye text-purple-600"></i>
-                                </div>
-                                <h4 class="text-sm font-semibold text-gray-900">Sharpshooter</h4>
-                                <p class="text-xs text-gray-500">Achieve 100 headshots</p>
-                            </div>
-                            
-                            <!-- Achievement 2 -->
-                            <div class="achievement-card bg-gray-50 rounded-lg p-3 text-center border border-gray-200">
-                                <div class="w-12 h-12 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-fist-raised text-blue-600"></i>
-                                </div>
-                                <h4 class="text-sm font-semibold text-gray-900">Survivor</h4>
-                                <p class="text-xs text-gray-500">Win a match with <5% health</p>
-                            </div>
-                            
-                            <!-- Achievement 3 -->
-                            <div class="achievement-card bg-gray-50 rounded-lg p-3 text-center border border-gray-200">
-                                <div class="w-12 h-12 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-trophy text-green-600"></i>
-                                </div>
-                                <h4 class="text-sm font-semibold text-gray-900">Champion</h4>
-                                <p class="text-xs text-gray-500">Win 10 tournaments</p>
-                            </div>
-                            
-                            <!-- Achievement 4 -->
-                            <div class="achievement-card bg-gray-50 rounded-lg p-3 text-center border border-gray-200">
-                                <div class="w-12 h-12 mx-auto bg-yellow-100 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-fire-alt text-yellow-600"></i>
-                                </div>
-                                <h4 class="text-sm font-semibold text-gray-900">Hot Streak</h4>
-                                <p class="text-xs text-gray-500">Win 5 matches in a row</p>
-                            </div>
-                            <!-- Achievement 5 -->
-                            <div class="achievement-card bg-gray-50 rounded-lg p-3 text-center border border-gray-200">
-                                <div class="w-12 h-12 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-skull-crossbones text-red-600"></i>
-                                </div>
-                                <h4 class="text-sm font-semibold text-gray-900">Executioner</h4>
-                                <p class="text-xs text-gray-500">Defeat 1000 enemies</p>
-                            </div>
-                            
-                            <!-- Achievement 6 -->
-                            <div class="achievement-card bg-gray-50 rounded-lg p-3 text-center border border-gray-200">
-                                <div class="w-12 h-12 mx-auto bg-indigo-100 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-user-ninja text-indigo-600"></i>
-                                </div>
-                                <h4 class="text-sm font-semibold text-gray-900">Ninja</h4>
-                                <p class="text-xs text-gray-500">Complete stealth mission</p>
-                            </div>
-                        </div>
-                        
-                        <button class="mt-6 w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-award mr-2"></i> View All Achievements
-                        </button>
-                    </section>
-                </div>
-                
-                <!-- Right Column - Games & Friends -->
-                <div class="space-y-8">
-                    <!-- Top Games -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                                <i class="fas fa-gamepad mr-2 text-purple-600"></i> Top Games
-                            </h3>
-                            <a href="/member/games" class="text-sm text-purple-600 hover:text-purple-800 transition">View All</a>
-                        </div>
-                        
-                        <div class="space-y-4">
-                            <!-- Game 1 -->
-                            <div class="game-card flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <img src="/api/placeholder/60/60" class="w-14 h-14 rounded-lg object-cover" alt="Call of Duty">
-                                <div class="ml-3 flex-1">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h4 class="text-sm font-semibold text-gray-900">Call of Duty: MW</h4>
-                                            <p class="text-xs text-gray-500">FPS • 125 hours played</p>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fas fa-star text-yellow-400 mr-1 text-xs"></i>
-                                            <span class="text-xs font-semibold text-gray-700">4.8</span>
-                                        </div>
-                                    </div>
-                                    <div class="mt-2 flex items-center">
-                                        <div class="flex-1">
-                                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                                <div class="bg-purple-600 h-1.5 rounded-full" style="width: 85%"></div>
-                                            </div>
-                                        </div>
-                                        <span class="ml-2 text-xs text-gray-500">Level 85</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Game 2 -->
-                            <div class="game-card flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <img src="/api/placeholder/60/60" class="w-14 h-14 rounded-lg object-cover" alt="Fortnite">
-                                <div class="ml-3 flex-1">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h4 class="text-sm font-semibold text-gray-900">Fortnite</h4>
-                                            <p class="text-xs text-gray-500">Battle Royale • 92 hours played</p>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fas fa-star text-yellow-400 mr-1 text-xs"></i>
-                                            <span class="text-xs font-semibold text-gray-700">4.5</span>
-                                        </div>
-                                    </div>
-                                    <div class="mt-2 flex items-center">
-                                        <div class="flex-1">
-                                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                                <div class="bg-purple-600 h-1.5 rounded-full" style="width: 70%"></div>
-                                            </div>
-                                        </div>
-                                        <span class="ml-2 text-xs text-gray-500">Level 70</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Game 3 -->
-                            <div class="game-card flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <img src="/api/placeholder/60/60" class="w-14 h-14 rounded-lg object-cover" alt="League of Legends">
-                                <div class="ml-3 flex-1">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h4 class="text-sm font-semibold text-gray-900">League of Legends</h4>
-                                            <p class="text-xs text-gray-500">MOBA • 78 hours played</p>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fas fa-star text-yellow-400 mr-1 text-xs"></i>
-                                            <span class="text-xs font-semibold text-gray-700">4.2</span>
-                                        </div>
-                                    </div>
-                                    <div class="mt-2 flex items-center">
-                                        <div class="flex-1">
-                                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                                <div class="bg-purple-600 h-1.5 rounded-full" style="width: 65%"></div>
-                                            </div>
-                                        </div>
-                                        <span class="ml-2 text-xs text-gray-500">Level 65</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Game 4 -->
-                            <div class="game-card flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <img src="/api/placeholder/60/60" class="w-14 h-14 rounded-lg object-cover" alt="Minecraft">
-                                <div class="ml-3 flex-1">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h4 class="text-sm font-semibold text-gray-900">Minecraft</h4>
-                                            <p class="text-xs text-gray-500">Sandbox • 64 hours played</p>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <i class="fas fa-star text-yellow-400 mr-1 text-xs"></i>
-                                            <span class="text-xs font-semibold text-gray-700">4.0</span>
-                                        </div>
-                                    </div>
-                                    <div class="mt-2 flex items-center">
-                                        <div class="flex-1">
-                                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                                <div class="bg-purple-600 h-1.5 rounded-full" style="width: 60%"></div>
-                                            </div>
-                                        </div>
-                                        <span class="ml-2 text-xs text-gray-500">Level 60</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    
-                    <!-- Friends -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                                <i class="fas fa-users mr-2 text-purple-600"></i> Friends
-                                <span class="ml-2 text-sm font-medium bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">42</span>
-                            </h3>
-                            <a href="/member/friends" class="text-sm text-purple-600 hover:text-purple-800 transition">View All</a>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <!-- Friend 1 -->
-                            <div class="game-card flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <div class="relative">
-                                    <img src="/api/placeholder/48/48" class="w-10 h-10 rounded-full object-cover" alt="Friend">
-                                    <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-white"></span>
-                                </div>
-                                <div class="ml-3 flex-1 overflow-hidden">
-                                    <h4 class="text-sm font-semibold text-gray-900 truncate">Alex Wilson</h4>
-                                    <p class="text-xs text-gray-500">Level 32 • Online</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Friend 2 -->
-                            <div class="game-card flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <div class="relative">
-                                    <img src="/api/placeholder/48/48" class="w-10 h-10 rounded-full object-cover" alt="Friend">
-                                    <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-white"></span>
-                                </div>
-                                <div class="ml-3 flex-1 overflow-hidden">
-                                    <h4 class="text-sm font-semibold text-gray-900 truncate">Jessica Lee</h4>
-                                    <p class="text-xs text-gray-500">Level 27 • Online</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Friend 3 -->
-                            <div class="game-card flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <div class="relative">
-                                    <img src="/api/placeholder/48/48" class="w-10 h-10 rounded-full object-cover" alt="Friend">
-                                    <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-gray-400 border-2 border-white"></span>
-                                </div>
-                                <div class="ml-3 flex-1 overflow-hidden">
-                                    <h4 class="text-sm font-semibold text-gray-900 truncate">Michael Brown</h4>
-                                    <p class="text-xs text-gray-500">Level 19 • Offline</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Friend 4 -->
-                            <div class="game-card flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                <div class="relative">
-                                    <img src="/api/placeholder/48/48" class="w-10 h-10 rounded-full object-cover" alt="Friend">
-                                    <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-white"></span>
-                                </div>
-                                <div class="ml-3 flex-1 overflow-hidden">
-                                    <h4 class="text-sm font-semibold text-gray-900 truncate">Emma Thompson</h4>
-                                    <p class="text-xs text-gray-500">Level 23 • Online</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6 flex space-x-3">
-                            <button class="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm rounded-lg transition flex items-center justify-center">
-                                <i class="fas fa-user-plus mr-2"></i> Find Friends
-                            </button>
-                            <button class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm rounded-lg transition flex items-center justify-center">
-                                <i class="fas fa-users mr-2"></i> Manage
-                            </button>
-                        </div>
-                    </section>
-                    
-                    <!-- Badges -->
-                    <section class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                                <i class="fas fa-certificate mr-2 text-purple-600"></i> Badges
-                            </h3>
-                            <a href="/member/badges" class="text-sm text-purple-600 hover:text-purple-800 transition">View All</a>
-                        </div>
-                        
-                        <div class="grid grid-cols-4 gap-4">
-                            <!-- Badge 1 -->
-                            <div class="text-center">
-                                <div class="w-12 h-12 mx-auto bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-crown text-white"></i>
-                                </div>
-                                <p class="text-xs text-gray-700">Champion</p>
-                            </div>
-                            
-                            <!-- Badge 2 -->
-                            <div class="text-center">
-                                <div class="w-12 h-12 mx-auto bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-medal text-white"></i>
-                                </div>
-                                <p class="text-xs text-gray-700">Veteran</p>
-                            </div>
-                            
-                            <!-- Badge 3 -->
-                            <div class="text-center">
-                                <div class="w-12 h-12 mx-auto bg-gradient-to-r from-yellow-500 to-amber-500 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-bolt text-white"></i>
-                                </div>
-                                <p class="text-xs text-gray-700">Quick</p>
-                            </div>
-                            
-                            <!-- Badge 4 -->
-                            <div class="text-center">
-                                <div class="w-12 h-12 mx-auto bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mb-2">
-                                    <i class="fas fa-shield-alt text-white"></i>
-                                </div>
-                                <p class="text-xs text-gray-700">Defender</p>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </main>
-            <!-- Edit Profile Modal -->
-            <div id="editProfileModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-                <div class="flex items-center justify-center min-h-screen p-4">
-                    <div class="relative bg-white rounded-xl shadow-xl max-w-2xl w-full mx-auto modal-content transform transition-all">
-                        <!-- Modal Header -->
-                        <div class="flex justify-between items-center p-6 border-b border-gray-200">
-                            <h3 class="text-lg font-bold text-gray-900">Edit Profile</h3>
-                            <button type="button" class="text-gray-400 hover:text-gray-500" id="closeModal">
-                                <i class="fas fa-times text-xl"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- Modal Body -->
-                        <div class="p-6">
-                            <form id="editProfileForm" class="space-y-6" action="/member/profile/edit" method="POST" enctype="multipart/form-data">
-                                <!-- Profile & Cover Photo -->
-                                <div class="space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Cover Photo</label>
-                                        <div class="mt-1 flex flex-col items-center">
-                                            <!-- Cover Photo Preview -->
-                                            <div id="coverPhotoPreview" class="w-full h-32 bg-gray-100 rounded-lg mb-2 overflow-hidden hidden">
-                                                <img id="coverPreviewImg" src="/{{profile.cover_photo}}" alt="Cover Photo Preview" class="w-full h-full object-cover">
-                                            </div>
-                                            <!-- Upload Area -->
-                                            <div class="w-full flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
-                                                <div class="space-y-1 text-center">
-                                                    <i class="fas fa-image mx-auto h-12 w-12 text-gray-400"></i>
-                                                    <div class="flex text-sm text-gray-600">
-                                                        <label for="coverPhoto" class="relative cursor-pointer bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus-within:outline-none">
-                                                            <span>Upload a file</span>
-                                                            <input id="coverPhoto" name="coverPhoto" type="file" class="sr-only" accept="image/*" onchange="previewCoverPhoto(this)">
-                                                        </label>
-                                                        <p class="pl-1">or drag and drop</p>
-                                                    </div>
-                                                    <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                                                </div>
-                                            </div>
+                                        <div class="ml-3 pt-1">
+                                            <p class="font-medium text-sm text-gray-800">Location</p>
+                                            <p class="text-sm text-gray-500">{{profile.location}}</p>
                                         </div>
                                     </div>
                                     
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
-                                        <div class="mt-1 flex items-center space-x-4">
-                                            <div class="relative">
-                                                <img id="profilePreviewImg" src="/{{profile.profile_photo}}" alt="Profile" class="w-24 h-24 rounded-full object-cover">
-                                                <label for="profilePhoto" class="absolute bottom-0 right-0 bg-purple-600 text-white p-2 rounded-full cursor-pointer hover:bg-purple-700 transition">
-                                                    <i class="fas fa-camera"></i>
-                                                    <input id="profilePhoto" name="profilePhoto" type="file" class="hidden" accept="image/*" onchange="previewProfilePhoto(this)">
-                                                </label>
-                                            </div>
-                                            <div class="text-sm text-gray-500">
-                                                <p>Recommended: Square image, at least 400x400 pixels</p>
-                                            </div>
+                                    <div class="flex items-start p-3 bg-white rounded-lg border border-gray-200 hover:shadow-md transition duration-300 transform hover:-translate-y-0.5">
+                                        <div class="bg-indigo-600 rounded-lg p-2.5 flex-shrink-0 shadow-sm">
+                                            <i class="fas fa-birthday-cake text-white"></i>
+                                        </div>
+                                        <div class="ml-3 pt-1">
+                                            <p class="font-medium text-sm text-gray-800">Birthday</p>
+                                            <p class="text-sm text-gray-500">{{profile.date_naissance}}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-start p-3 bg-white rounded-lg border border-gray-200 hover:shadow-md transition duration-300 transform hover:-translate-y-0.5">
+                                        <div class="bg-blue-600 rounded-lg p-2.5 flex-shrink-0 shadow-sm">
+                                            <i class="fas fa-calendar-day text-white"></i>
+                                        </div>
+                                        <div class="ml-3 pt-1">
+                                            <p class="font-medium text-sm text-gray-800">Member Since</p>
+                                            <p class="text-sm text-gray-500">January 15, 2025</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-start p-3 bg-white rounded-lg border border-gray-200 hover:shadow-md transition duration-300 transform hover:-translate-y-0.5">
+                                        <div class="bg-indigo-600 rounded-lg p-2.5 flex-shrink-0 shadow-sm">
+                                            <i class="fas fa-clock text-white"></i>
+                                        </div>
+                                        <div class="ml-3 pt-1">
+                                            <p class="font-medium text-sm text-gray-800">Last Online</p>
+                                            <p class="text-sm text-gray-500">Today at 2:45 PM</p>
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <!-- Basic Info -->
-                                <div>
-                                    <h4 class="text-md font-semibold text-gray-900 mb-3">Basic Information</h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                            <input type="text" name="username" value="{{profile.name}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Display Name</label>
-                                            <input type="text" name="displayName" value="{{profile.tag_name}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                            <input type="email" name="email" value="{{profile.email}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                                            <input type="text" name="location" value="{{profile.location}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- About -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">About Me</label>
-                                    <textarea name="about" rows="4" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">{{profile.about_me}}</textarea>
-                                </div>
-                                
-                                <!-- Social Links -->
-                                <div>
-                                    <h4 class="text-md font-semibold text-gray-900 mb-3">Social Links</h4>
-                                    <div class="space-y-3">
-                                        <div>
-                                            <label class="flex items-center text-sm font-medium text-gray-700 mb-1">
-                                                <i class="fab fa-discord text-indigo-500 mr-2"></i> Discord
-                                            </label>
-                                            <input type="text" name="discord" value="{{profile.discord}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Username#0000">
-                                        </div>
-                                        <div>
-                                            <label class="flex items-center text-sm font-medium text-gray-700 mb-1">
-                                                <i class="fab fa-instagram text-pink-500 mr-2"></i> Instagram
-                                            </label>
-                                            <input type="text" name="instagram" value="{{profile.instagram}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="@username">
-                                        </div>
-                                        <div>
-                                            <label class="flex items-center text-sm font-medium text-gray-700 mb-1">
-                                                <i class="fab fa-youtube text-red-500 mr-2"></i> YouTube
-                                            </label>
-                                            <input type="text" name="youtube" value="{{profile.youtube}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="@username">
-                                        </div>
-                                        <div>
-                                            <label class="flex items-center text-sm font-medium text-gray-700 mb-1">
-                                                <i class="fab fa-twitch text-purple-500 mr-2"></i> Twitch
-                                            </label>
-                                            <input type="text" name="twitch" value="{{profile.twitch}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="username">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-xl flex justify-end">
-                                    <button type="button" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg mr-2" id="cancelEditProfile">
-                                        Cancel
-                                    </button>
-                                    <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition" id="saveProfile">
-                                        Save Changes
-                                    </button>
-                                </div>
-                            </form>
-                            
-                            <!-- Separate Password Change Form -->
-                            <div class="mt-8 pt-6 border-t border-gray-200">
-                                <form id="changePasswordForm" class="space-y-6" action="/member/password/change" method="POST">
-                                    <h4 class="text-md font-semibold text-gray-900 mb-3">Change Password</h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                                            <input type="password" name="currentPassword" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter current password">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                                            <input type="password" name="newPassword" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter new password">
-                                        </div>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition" id="changePassword">
-                                            Update Password
-                                        </button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <!-- Recent Activity Section - Full Width Below -->
+            <section class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <!-- Header with gradient background -->
+                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-4">
+                    <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 w-8 h-8 rounded-lg flex items-center justify-center mr-3 shadow-sm">
+                            <i class="fas fa-stream text-white"></i>
+                        </div>
+                        Recent Activity
+                    </h3>
+                </div>
+                
+                <!-- Activity feed with improved styling -->
+                <div class="p-6">
+                    <div class="custom-scrollbar max-h-[400px] overflow-y-auto pr-1">
+                        <!-- Horizontal timeline with activities -->
+                        <div class="relative">
+                            <!-- Timeline line -->
+                            <div class="absolute left-5 top-0 h-full w-0.5 bg-gradient-to-b from-purple-300 via-blue-300 to-indigo-300 rounded-full"></div>
+                            
+                            <!-- Activities -->
+                            <div class="space-y-6">
+                                {% for activity in activities %}
+                                    <!-- Single activity with hover effect -->
+                                    <div class="flex items-start relative hover:bg-purple-50 p-3 rounded-lg transition-all duration-200 group">
+                                        <!-- Activity icon with animation -->
+                                        <div class="flex-shrink-0 z-10 transform group-hover:scale-110 transition-all duration-300">
+                                            {% if activity.type == 'tournament_started' %}
+                                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-md">
+                                                    <i class="fas fa-trophy text-white"></i>
+                                                </div>
+                                            {% elseif activity.type == 'reimbursement' %}
+                                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-md">
+                                                    <i class="fas fa-coins text-white"></i>
+                                                </div>
+                                            {% elseif activity.type == 'event_cancellation' %}
+                                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center shadow-md">
+                                                    <i class="fas fa-calendar-times text-white"></i>
+                                                </div>
+                                            {% else %}
+                                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center shadow-md">
+                                                    <i class="fas fa-bell text-white"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <!-- Activity content with improved typography and spacing -->
+                                        <div class="ml-6 flex-1">
+                                            <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                                                <p class="text-sm text-gray-800 font-medium leading-relaxed">
+                                                    {{ activity.message }}
+                                                </p>
+                                                <span class="text-xs text-gray-500 flex items-center sm:ml-4 mt-1 sm:mt-0 whitespace-nowrap flex-shrink-0">
+                                                    <i class="far fa-clock mr-1.5 text-purple-400"></i>
+                                                    {{ activity.created_at }}
+                                                </span>
+                                            </div>
+                                            <div class="mt-2">
+                                                {% if activity.type == 'tournament_started' %}
+                                                    <div class="px-2.5 py-1 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 text-xs inline-flex items-center font-medium rounded-full border border-blue-200 shadow-sm">
+                                                        <i class="fas fa-trophy mr-1 text-blue-500"></i> Tournament
+                                                    </div>
+                                                {% elseif activity.type == 'reimbursement' %}
+                                                    <div class="px-2.5 py-1 bg-gradient-to-r from-green-100 to-green-200 text-green-800 text-xs inline-flex items-center font-medium rounded-full border border-green-200 shadow-sm">
+                                                        <i class="fas fa-coins mr-1 text-green-500"></i> {{ activity.points|default('+' ~ activity.amount) }}
+                                                    </div>
+                                                    <div class="mt-2 flex flex-wrap gap-2">
+                                                        <button class="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition-all">
+                                                            Transaction Details
+                                                        </button>
+                                                    </div>
+                                                {% elseif activity.type == 'event_cancellation' %}
+                                                    <div class="px-2.5 py-1 bg-gradient-to-r from-red-100 to-red-200 text-red-800 text-xs inline-flex items-center font-medium rounded-full border border-red-200 shadow-sm">
+                                                        <i class="fas fa-calendar-times mr-1 text-red-500"></i> Cancelled
+                                                    </div>
+                                                    <div class="mt-2 flex flex-wrap gap-2">
+                                                        <button class="px-3 py-1 bg-purple-600 text-white text-xs font-medium rounded-lg hover:bg-purple-700 transition-all">
+                                                            Find Alternatives
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- View all button with improved styling -->
+                    <button class="mt-4 w-full px-4 py-2.5 bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 text-gray-700 text-sm rounded-lg transition-all duration-300 flex items-center justify-center border border-purple-200 hover:shadow-md group">
+                        <i class="fas fa-history mr-2 text-purple-500 group-hover:animate-spin"></i> View All Activity
+                    </button>
+                </div>
+            </section>
+
+            <!-- Optional: Additional Content Sections -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <!-- Gaming Platforms -->
+                <section class="bg-white rounded-xl shadow-sm p-6">
+                    <h4 class="text-md font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-gamepad mr-2 text-purple-500"></i>
+                        Gaming Platforms
+                    </h4>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex items-center px-3 py-1.5 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg text-gray-700 text-sm border border-blue-200 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+                            <i class="fab fa-windows mr-2 text-blue-500"></i> PC
+                        </div>
+                        <div class="flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg text-gray-700 text-sm border border-purple-200 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+                            <i class="fab fa-playstation mr-2 text-blue-600"></i> PS5
+                        </div>
+                        <div class="flex items-center px-3 py-1.5 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg text-gray-700 text-sm border border-gray-200 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+                            <i class="fab fa-steam mr-2 text-gray-700"></i> Steam
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Social Media -->
+                <section class="bg-white rounded-xl shadow-sm p-6">
+                    <h4 class="text-md font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-share-alt mr-2 text-purple-500"></i>
+                        Social Media
+                    </h4>
+                    <div class="flex space-x-4">
+                        <a href="{{profile.youtube}}" class="p-3 bg-gradient-to-br from-red-50 to-red-100 rounded-lg text-red-500 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-red-200 group">
+                            <i class="fab fa-youtube group-hover:animate-pulse"></i>
+                        </a>
+                        <a href="{{profile.instagram}}" class="p-3 bg-gradient-to-br from-pink-50 to-pink-100 rounded-lg text-pink-500 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-pink-200 group">
+                            <i class="fab fa-instagram group-hover:animate-pulse"></i>
+                        </a>
+                        <a href="{{profile.twitch}}" class="p-3 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg text-purple-500 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-purple-200 group">
+                            <i class="fab fa-twitch group-hover:animate-pulse"></i>
+                        </a>
+                        <a href="{{profile.discord}}" class="p-3 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg text-indigo-500 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-indigo-200 group">
+                            <i class="fab fa-discord group-hover:animate-pulse"></i>
+                        </a>
+                    </div>
+                </section>
             </div>
+        </main>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="relative bg-white rounded-xl shadow-xl max-w-2xl w-full mx-auto modal-content transform transition-all">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900">Edit Profile</h3>
+                    <button type="button" class="text-gray-400 hover:text-gray-500" id="closeModal">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="p-6">
+                    <form id="editProfileForm" class="space-y-6" action="/member/profile/edit" method="POST" enctype="multipart/form-data">
+                        <!-- Profile & Cover Photo -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Cover Photo</label>
+                                <div class="mt-1 flex flex-col items-center">
+                                    <!-- Cover Photo Preview -->
+                                    <div id="coverPhotoPreview" class="w-full h-32 bg-gray-100 rounded-lg mb-2 overflow-hidden hidden">
+                                        <img id="coverPreviewImg" src="/{{profile.cover_photo}}" alt="Cover Photo Preview" class="w-full h-full object-cover">
+                                    </div>
+                                    <!-- Upload Area -->
+                                    <div class="w-full flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
+                                        <div class="space-y-1 text-center">
+                                            <i class="fas fa-image mx-auto h-12 w-12 text-gray-400"></i>
+                                            <div class="flex text-sm text-gray-600">
+                                                <label for="coverPhoto" class="relative cursor-pointer bg-white rounded-md font-medium text-purple-600 hover:text-purple-500 focus-within:outline-none">
+                                                    <span>Upload a file</span>
+                                                    <input id="coverPhoto" name="coverPhoto" type="file" class="sr-only" accept="image/*" onchange="previewCoverPhoto(this)">
+                                                </label>
+                                                <p class="pl-1">or drag and drop</p>
+                                            </div>
+                                            <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                                <div class="mt-1 flex items-center space-x-4">
+                                    <div class="relative">
+                                        <img id="profilePreviewImg" src="/{{profile.profile_photo}}" alt="Profile" class="w-24 h-24 rounded-full object-cover">
+                                        <label for="profilePhoto" class="absolute bottom-0 right-0 bg-purple-600 text-white p-2 rounded-full cursor-pointer hover:bg-purple-700 transition">
+                                            <i class="fas fa-camera"></i>
+                                            <input id="profilePhoto" name="profilePhoto" type="file" class="hidden" accept="image/*" onchange="previewProfilePhoto(this)">
+                                        </label>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        <p>Recommended: Square image, at least 400x400 pixels</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Basic Info -->
+                        <div>
+                            <h4 class="text-md font-semibold text-gray-900 mb-3">Basic Information</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                    <input type="text" name="username" value="{{profile.name}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Display Name</label>
+                                    <input type="text" name="displayName" value="{{profile.tag_name}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" name="email" value="{{profile.email}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                                    <input type="text" name="location" value="{{profile.location}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- About -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">About Me</label>
+                            <textarea name="about" rows="4" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none">{{profile.about_me}}</textarea>
+                        </div>
+                        
+                        <!-- Social Links -->
+                        <div>
+                            <h4 class="text-md font-semibold text-gray-900 mb-3">Social Links</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="flex items-center text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fab fa-discord text-indigo-500 mr-2"></i> Discord
+                                    </label>
+                                    <input type="text" name="discord" value="{{profile.discord}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Username#0000">
+                                </div>
+                                <div>
+                                    <label class="flex items-center text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fab fa-instagram text-pink-500 mr-2"></i> Instagram
+                                    </label>
+                                    <input type="text" name="instagram" value="{{profile.instagram}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="@username">
+                                </div>
+                                <div>
+                                    <label class="flex items-center text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fab fa-youtube text-red-500 mr-2"></i> YouTube
+                                    </label>
+                                    <input type="text" name="youtube" value="{{profile.youtube}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="@username">
+                                </div>
+                                <div>
+                                    <label class="flex items-center text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fab fa-twitch text-purple-500 mr-2"></i> Twitch
+                                    </label>
+                                    <input type="text" name="twitch" value="{{profile.twitch}}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="username">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-xl flex justify-end">
+                            <button type="button" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg mr-2" id="cancelEditProfile">
+                                Cancel
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition" id="saveProfile">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Separate Password Change Form -->
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <form id="changePasswordForm" class="space-y-6" action="/member/password/change" method="POST">
+                            <h4 class="text-md font-semibold text-gray-900 mb-3">Change Password</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                                    <input type="password" name="currentPassword" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter current password">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                                    <input type="password" name="newPassword" class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter new password">
+                                </div>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition" id="changePassword">
+                                    Update Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Modal functionality

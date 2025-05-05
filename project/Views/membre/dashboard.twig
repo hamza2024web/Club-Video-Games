@@ -189,7 +189,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Total Games</h3>
                             <p class="text-3xl font-bold text-gray-800">{{Jeux_disponibles.number_jeux}}</p>
-                            <p class="text-xs text-green-500 mt-1">↑ 2 new this month</p>
                         </div>
                         <div class="bg-purple-100 p-3 rounded-lg">
                             <i class="fas fa-gamepad text-purple-600 text-2xl"></i>
@@ -201,7 +200,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Tournaments</h3>
                             <p class="text-3xl font-bold text-gray-800">{{tournoi_inscrit.tournoi_inscrit}}</p>
-                            <p class="text-xs text-green-500 mt-1">↑ Won 3 tournaments</p>
                         </div>
                         <div class="bg-green-100 p-3 rounded-lg">
                             <i class="fas fa-trophy text-green-600 text-2xl"></i>
@@ -213,7 +211,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Friends</h3>
                             <p class="text-3xl font-bold text-gray-800">42</p>
-                            <p class="text-xs text-green-500 mt-1">↑ 5 new connections</p>
                         </div>
                         <div class="bg-blue-100 p-3 rounded-lg">
                             <i class="fas fa-users text-blue-600 text-2xl"></i>
@@ -225,7 +222,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Reward Points</h3>
                             <p class="text-3xl font-bold text-gray-800">1,250</p>
-                            <p class="text-xs text-green-500 mt-1">↑ 320 this month</p>
                         </div>
                         <div class="bg-yellow-100 p-3 rounded-lg">
                             <i class="fas fa-star text-yellow-600 text-2xl"></i>
@@ -340,7 +336,7 @@
                                                 <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
                                                     <i class="fas fa-medal text-yellow-600"></i>
                                                 </div>
-                                            {% elseif notification.type == 'team_invitation' %}
+                                            {% elseif notification.type == 'tournament_started' %}
                                                 <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                                                     <i class="fas fa-users text-green-600"></i>
                                                 </div>

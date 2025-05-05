@@ -106,5 +106,9 @@ class MembreRepository {
         $friends = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $friends;
     }
+
+    // public function countWins($user_id){
+    //     $sql = "SELECT "
+    // }
 }
 ?>

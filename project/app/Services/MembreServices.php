@@ -38,6 +38,11 @@ class MembreServices {
         $notification = $this->Membrerepository->GetMyNotification($user_id);
         return $notification;
     }
+
+    // public function getWinTournoi($user_id){
+    //     $number = $this->Membrerepository->countWins($user_id);
+    //     return $number;
+    // }
     
 }
 

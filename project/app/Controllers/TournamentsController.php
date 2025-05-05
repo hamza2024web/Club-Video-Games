@@ -28,6 +28,7 @@ class TournamentsController extends BaseController {
         $calendries = $this->TournamentsServices->getCalendries($user_id);
         return $this->renderMem('tournaments',compact('member','my_solde','tournois','inscriptions','calendries'));
     }
+    
     public function inscriptionTournoi(){
         $user_id = $_SESSION["user_id"];
         $tournoi_id = $_POST["tournoi_id"];
