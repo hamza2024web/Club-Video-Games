@@ -566,30 +566,11 @@
                             </div>
                         </div>
                         
-                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-                            <button class="filter-pill active" data-filter="all">
-                                Tous les jeux
-                            </button>
-                            <button class="filter-pill" data-filter="installed">
-                                <i class="fas fa-check-circle mr-1"></i> Installés
-                            </button>
-                            <button class="filter-pill" data-filter="not-installed">
-                                <i class="fas fa-download mr-1"></i> Non installés
-                            </button>
-                            {% for genre in genres %}
-                                <button class="filter-pill" data-filter="{{ genre.name }}">
-                                    {{ genre.name }}
-                                </button>
-                            {% endfor %}
-                        </div>
-                        
                         <div>
                             <select id="sort-games" class="px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm">
                                 <option value="recent">Achat récent</option>
                                 <option value="alpha">Alphabétique (A-Z)</option>
                                 <option value="alpha-desc">Alphabétique (Z-A)</option>
-                                <option value="playtime">Temps de jeu</option>
-                                <option value="size">Taille du jeu</option>
                             </select>
                         </div>
                     </div>
