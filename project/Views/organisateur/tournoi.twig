@@ -466,10 +466,6 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="text-gray-500 hover:text-gray-700 relative">
-                            <i class="fas fa-envelope text-lg"></i>
-                            <span class="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">2</span>
-                        </button>
                     </div>
                 </div>
             </header>
@@ -483,28 +479,6 @@
                         <i class="fas fa-plus-circle mr-2"></i> Créer un tournoi
                     </button>
                     
-                    <div class="flex space-x-2">
-                        <div class="relative">
-                            <input type="text" placeholder="Rechercher un tournoi..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-search text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white">
-                            <option value="all">Tous les tournois</option>
-                            <option value="upcoming">À venir</option>
-                            <option value="active">En cours</option>
-                            <option value="completed">Terminés</option>
-                            <option value="cancelled">Annulés</option>
-                        </select>
-                        
-                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white">
-                            {% for jeu in jeux %}
-                                <option value="{{jeu.id}}">{{ jeu.nom_de_jeu }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
                 </div>
 
                 <!-- Tabs -->
@@ -513,15 +487,6 @@
                         <div class="flex">
                             <button class="tab-button active px-6 py-4 font-medium text-purple-600 focus:outline-none">
                                 Mes tournois
-                            </button>
-                            <button class="tab-button px-6 py-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
-                                À venir
-                            </button>
-                            <button class="tab-button px-6 py-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
-                                En cours
-                            </button>
-                            <button class="tab-button px-6 py-4 font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
-                                Terminés
                             </button>
                         </div>
                     </div>

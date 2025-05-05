@@ -404,10 +404,6 @@
                 <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text">
                     Menu
                 </div>
-                <a href="#" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-tachometer-alt w-5 sidebar-icon text-purple-300"></i>
-                    <span class="sidebar-text ml-2 text-sm">Vue d'ensemble</span>
-                </a>
                 
                 <!-- Management -->
                 <a href="ClubManagement" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
@@ -444,10 +440,6 @@
                 <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
                     Compte
                 </div>
-                <a href="#" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
-                    <i class="fas fa-cog w-5 sidebar-icon text-purple-300"></i>
-                    <span class="sidebar-text ml-2 text-sm">Configuration</span>
-                </a>
                 <a href="/logout" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
                     <i class="fas fa-sign-out-alt w-5 sidebar-icon text-purple-300"></i>
                     <span class="sidebar-text ml-2 text-sm">Déconnexion</span>
@@ -480,14 +472,6 @@
                         <button onclick="showWishlist()" class="text-gray-500 hover:text-gray-700 relative">
                             <i class="fas fa-heart text-lg"></i>
                             <span id="wishlist-count" class="absolute -top-1 -right-1 bg-pink-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">0</span>
-                        </button>
-                        <button onclick="showNotifications()" class="text-gray-500 hover:text-gray-700 relative">
-                            <i class="fas fa-bell text-lg"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
-                        </button>
-                        <button class="text-gray-500 hover:text-gray-700 relative">
-                            <i class="fas fa-envelope text-lg"></i>
-                            <span class="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">2</span>
                         </button>
                         <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700 relative">
                             <i class="fas fa-shopping-cart text-lg"></i>
@@ -600,17 +584,6 @@
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
-                        </div>
-                        
-                        <div class="flex flex-wrap gap-2">
-                            <button class="filter-button filter-active px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-filter="all">
-                                Tous
-                            </button>
-                            {% for genre in genres%}
-                                <button class="filter-button filter-active px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-filter="all">
-                                    {{genre.name}}
-                                </button>
-                            {% endfor %}
                         </div>
                         
                         <div>
