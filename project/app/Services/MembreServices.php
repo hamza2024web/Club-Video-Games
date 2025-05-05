@@ -43,6 +43,11 @@ class MembreServices {
     //     $number = $this->Membrerepository->countWins($user_id);
     //     return $number;
     // }
+
+    public function countPoints($user_id){
+        $points = $this->Membrerepository->count($user_id);
+        return $points;
+    }
     
 }
 

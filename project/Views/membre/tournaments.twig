@@ -646,18 +646,6 @@
                     <h1 class="text-2xl font-bold text-gray-800">Tournois</h1>
                     <p class="text-gray-500">Participez à des tournois compétitifs et gagnez des prix</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Rechercher des tournois..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <div class="relative">
-                        <button class="text-gray-600 hover:text-gray-800 transition">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
-                        </button>
-                    </div>
-                </div>
             </header>
 
             <!-- Tournament Tabs -->
@@ -677,36 +665,6 @@
                     </button>
                 </div>
             </div>
-            
-            <!-- Tournament Categories -->
-            <section class="mb-8">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-gray-800">Filtrer par catégorie</h2>
-                </div>
-                <div class="flex flex-wrap gap-3">
-                    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition shadow-sm">
-                        Tous
-                    </button>
-                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
-                        <i class="fas fa-crosshairs mr-1 text-red-500"></i> FPS
-                    </button>
-                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
-                        <i class="fas fa-gamepad mr-1 text-blue-500"></i> Battle Royale
-                    </button>
-                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
-                        <i class="fas fa-futbol mr-1 text-green-500"></i> Sports
-                    </button>
-                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
-                        <i class="fas fa-chess mr-1 text-yellow-500"></i> Stratégie
-                    </button>
-                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
-                        <i class="fas fa-fighter-jet mr-1 text-orange-500"></i> Course
-                    </button>
-                    <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm hover:bg-gray-100 transition shadow-sm">
-                        <i class="fas fa-cubes mr-1 text-purple-500"></i> Sandbox
-                    </button>
-                </div>
-            </section>
 
             <!-- Active Tournaments -->
             <section id="all-tournaments" class="mb-10">
@@ -807,65 +765,11 @@
                     </button>
                 </div>
             </section>
-
-            <!-- Tournament Stats -->
-            <section class="mb-10">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-gray-500 text-sm font-medium">Tournois participés</h3>
-                                <p class="text-3xl font-bold text-gray-800">24</p>
-                                <p class="text-xs text-green-500 mt-1">↑ 3 ce mois-ci</p>
-                            </div>
-                            <div class="bg-purple-100 p-3 rounded-lg">
-                                <i class="fas fa-gamepad text-purple-600 text-2xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-gray-500 text-sm font-medium">Victoires</h3>
-                                <p class="text-3xl font-bold text-gray-800">7</p>
-                                <p class="text-xs text-green-500 mt-1">↑ 2 ce mois-ci</p>
-                            </div>
-                            <div class="bg-green-100 p-3 rounded-lg">
-                                <i class="fas fa-trophy text-green-600 text-2xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-gray-500 text-sm font-medium">Récompenses gagnées</h3>
-                                <p class="text-3xl font-bold text-gray-800">4 250 €</p>
-                                <p class="text-xs text-green-500 mt-1">↑ 750 € ce mois-ci</p>
-                            </div>
-                            <div class="bg-yellow-100 p-3 rounded-lg">
-                                <i class="fas fa-coins text-yellow-600 text-2xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
             
             <section id="mes-inscriptions" class="hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold text-gray-800">Mes Inscriptions Actives</h2>
-                    <div class="flex items-center space-x-2">
-                        <select class="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            <option>Tous les tournois</option>
-                            <option>FPS</option>
-                            <option>Sports</option>
-                            <option>Battle Royale</option>
-                        </select>
-                        <button class="text-purple-600 hover:text-purple-800 transition flex items-center">
-                            <i class="fas fa-filter mr-1"></i> Filtrer
-                        </button>
-                    </div>
+
                 </div>
 
                 {% if inscriptions %}

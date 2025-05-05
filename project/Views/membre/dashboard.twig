@@ -168,18 +168,6 @@
                     <h1 class="text-2xl font-bold text-gray-800">Member Dashboard</h1>
                     <p class="text-gray-500">Welcome back, {{member.name}}! Here's what's happening today.</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search games, tournaments..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <div class="relative">
-                        <button class="text-gray-600 hover:text-gray-800 transition">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
-                        </button>
-                    </div>
-                </div>
             </header>
 
             <!-- Stats Overview -->
@@ -221,7 +209,7 @@
                     <div class="flex justify-between items-center">
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Reward Points</h3>
-                            <p class="text-3xl font-bold text-gray-800">1,250</p>
+                            <p class="text-3xl font-bold text-gray-800">{{points.points|default(0)}}</p>
                         </div>
                         <div class="bg-yellow-100 p-3 rounded-lg">
                             <i class="fas fa-star text-yellow-600 text-2xl"></i>
