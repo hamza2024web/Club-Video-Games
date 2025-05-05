@@ -419,11 +419,6 @@
                     <li><a href="/member/events" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-calendar-alt mr-3 text-purple-300"></i>Events</a></li>
                     <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
                     <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>My Games</a></li>
-                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Friends</a></li>
-                    <li><a href="/member/messages" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition">
-                        <i class="fas fa-envelope mr-3 text-purple-300"></i>Messages
-                    </a></li>
-                    <li><a href="/member/rewards" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gift mr-3 text-purple-300"></i>Rewards</a></li>
                     <li><a href="/member/profile" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profile</a></li>
                 </ul>
             </nav>
@@ -481,12 +476,6 @@
                         <button onclick="showWishlist()" class="text-gray-500 hover:text-gray-700 relative">
                             <i class="fas fa-heart text-lg"></i>
                             <span id="wishlist-count" class="absolute -top-1 -right-1 bg-pink-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">0</span>
-                        </button>
-                        
-                        <!-- Notifications -->
-                        <button onclick="showNotifications()" class="text-gray-500 hover:text-gray-700 relative">
-                            <i class="fas fa-bell text-lg"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
                         </button>
                         
                         <!-- Panier -->
@@ -1179,43 +1168,6 @@
             
             // Ajouter la classe active au point courant
             dots[currentSlide].classList.add('active');
-        }
-
-        /**
-         * Gestion des notifications
-         */
-        function showNotifications() {
-            Swal.fire({
-                title: 'Notifications',
-                html: `
-                    <div class="space-y-4 max-h-[400px] overflow-y-auto text-left">
-                        <div class="p-3 border-l-4 border-purple-500 bg-purple-50 rounded">
-                            <div class="flex justify-between items-start">
-                                <p class="font-medium">Nouveau tournoi disponible</p>
-                                <span class="text-xs text-gray-500">Aujourd'hui</span>
-                            </div>
-                            <p class="text-sm text-gray-600 mt-1">Un nouveau tournoi de FIFA 25 est ouvert aux inscriptions !</p>
-                        </div>
-                        <div class="p-3 border-l-4 border-green-500 bg-green-50 rounded">
-                            <div class="flex justify-between items-start">
-                                <p class="font-medium">Promo spéciale</p>
-                                <span class="text-xs text-gray-500">Hier</span>
-                            </div>
-                            <p class="text-sm text-gray-600 mt-1">Profitez de 20% de réduction sur les jeux d'action ce week-end !</p>
-                        </div>
-                        <div class="p-3 border-l-4 border-blue-500 bg-blue-50 rounded">
-                            <div class="flex justify-between items-start">
-                                <p class="font-medium">Crédit ajouté</p>
-                                <span class="text-xs text-gray-500">3 jours</span>
-                            </div>
-                            <p class="text-sm text-gray-600 mt-1">Votre compte a été crédité de 20€ suite à votre dernière recharge.</p>
-                        </div>
-                    </div>
-                `,
-                showConfirmButton: false,
-                showCloseButton: true,
-                width: '500px'
-            });
         }
 
         /**
