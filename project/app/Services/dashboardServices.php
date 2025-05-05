@@ -64,6 +64,10 @@ class dashboardServices {
         return $result;
     }
 
+    public function getTransactions(){
+        $transactions = $this->dashboardRepository->getAllTransactions();
+        return $transactions;
+    }
 }
 
 ?>

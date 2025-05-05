@@ -25,7 +25,8 @@ class AdminController extends BaseController {
         $top_players = $this->adminServices->getTopPlayers();
         $events = $this->adminServices->getEvents();
         $tournaments = $this->adminServices->getTournaments();
-        return $this->renderAdmin('dashboard',compact('total_games','active_member','active_session','pending_session','top_players','events','tournaments'));
+        $transactions = $this->adminServices->getTransactions();
+        return $this->renderAdmin('dashboard',compact('total_games','active_member','active_session','pending_session','top_players','events','tournaments','transactions'));
     }
 
     public function StatistiqueGames (){

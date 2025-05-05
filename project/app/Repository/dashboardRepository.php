@@ -272,6 +272,16 @@ class dashboardRepository {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
+    public function getAllTransactions(){
+        $sql = "SELECT users.name , evenement.name,transaction_log.amount,transaction_log.old_balance,transaction_log.new_balance,transaction_log.transaction_type FROM transaction_log
+        INNER JOIN evenement ON transaction_log.event_id = evenement.id
+        INNER JOIN membre ON membre.id = transaction_log.member_id
+        INNER JOIN users ON users.id = membre.user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $transactions;
+    }
 }
 
 ?>
