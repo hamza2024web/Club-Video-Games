@@ -91,19 +91,16 @@ class EvenementRepository {
     
     private function attachEventToProgramme($event_id, $timeline_time, $timeline_title, $timeline_desc, $event_date){
         try {
-            // Si les tableaux de timeline sont vides
             if (empty($timeline_time)) {
-                return true; // Aucun programme à ajouter, mais ce n'est pas une erreur
+                return true;
             }
             
-            // Vérifier s'il s'agit d'un tableau ou non
             if (!is_array($timeline_time)) {
                 $timeline_time = [$timeline_time];
                 $timeline_title = [$timeline_title];
                 $timeline_desc = [$timeline_desc];
             }
             
-            // Récupérer le type de colonne timeline_time
             $columnTypeQuery = "SHOW COLUMNS FROM evenement_programme LIKE 'timeline_time'";
             $stmt = $this->conn->query($columnTypeQuery);
             $columnInfo = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -137,7 +134,6 @@ class EvenementRepository {
             return true;
         } catch (PDOException $e){
             echo "Error attaching event to programme: " . $e->getMessage();
-            // Afficher le contenu du tableau pour le débogage
             echo "<pre>";
             var_dump($timeline_time);
             echo "</pre>";
