@@ -15,7 +15,7 @@ class EvenementRepository {
     }
     public function fetchAllEvents($user_id){
         $sql = "SELECT evenement.id , evenement.name , evenement.date_debut , evenement.date_fin , evenement.lieu , evenement.statut ,evenement.description,evenement.type_evenement,evenement.numbre_membre,evenement.registration_start,evenement.registration_end,evenement.event_time,evenement.event_photo,evenement.entry_fee,evenement.requirements,evenement.discord_url,evenement.twitch_url,GROUP_CONCAT(evenement_programme.timeline_time),GROUP_CONCAT(evenement_programme.timeline_title),GROUP_CONCAT(evenement_programme.timeline_desc)
-        , count(inscription_evenement.membre_id) as number_participants FROM evenement
+        , count(DISTINCT(inscription_evenement.membre_id)) as number_participants FROM evenement
         INNER JOIN club ON evenement.club_id = club.id
         INNER JOIN evenement_programme ON evenement_programme.event_id = evenement.id
         LEFT JOIN inscription_evenement ON inscription_evenement.evenement_id = evenement.id
@@ -91,19 +91,16 @@ class EvenementRepository {
     
     private function attachEventToProgramme($event_id, $timeline_time, $timeline_title, $timeline_desc, $event_date){
         try {
-            // Si les tableaux de timeline sont vides
             if (empty($timeline_time)) {
-                return true; // Aucun programme à ajouter, mais ce n'est pas une erreur
+                return true;
             }
             
-            // Vérifier s'il s'agit d'un tableau ou non
             if (!is_array($timeline_time)) {
                 $timeline_time = [$timeline_time];
                 $timeline_title = [$timeline_title];
                 $timeline_desc = [$timeline_desc];
             }
             
-            // Récupérer le type de colonne timeline_time
             $columnTypeQuery = "SHOW COLUMNS FROM evenement_programme LIKE 'timeline_time'";
             $stmt = $this->conn->query($columnTypeQuery);
             $columnInfo = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -137,7 +134,6 @@ class EvenementRepository {
             return true;
         } catch (PDOException $e){
             echo "Error attaching event to programme: " . $e->getMessage();
-            // Afficher le contenu du tableau pour le débogage
             echo "<pre>";
             var_dump($timeline_time);
             echo "</pre>";

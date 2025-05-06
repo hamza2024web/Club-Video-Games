@@ -131,8 +131,6 @@
                     <li><a href="/genre" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-list mr-3 text-purple-300"></i>Genres</a></li>
                     <li><a href="/Game" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Games</a></li>
                     <li><a href="/users" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Members</a></li>
-                    <li><a href="/statistics" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-chart-line mr-3 text-purple-300"></i>Analytics</a></li>
-                    <li><a href="/settings" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-cog mr-3 text-purple-300"></i>Settings</a></li>
                 </ul>
             </nav>
 
@@ -160,18 +158,6 @@
                 <div>
                     <h1 class="text-2xl font-bold text-gray-800">Genre Management</h1>
                     <p class="text-gray-500">Create and manage genres for your game collection</p>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search genres..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <div class="relative">
-                        <button class="text-gray-600 hover:text-gray-800 transition">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">2</span>
-                        </button>
-                    </div>
                 </div>
             </header>
 
@@ -244,16 +230,6 @@
                                 <i class="fas fa-list-alt mr-2 text-purple-600"></i>
                                 Existing Genres
                             </h2>
-                            <div class="flex items-center gap-2">
-                                <button class="px-3 py-1.5 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded transition">
-                                    <i class="fas fa-sort-alpha-down mr-1"></i> Sort
-                                </button>
-                                <div class="relative">
-                                    <button class="px-3 py-1.5 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded transition">
-                                        <i class="fas fa-filter mr-1"></i> Filter
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -290,10 +266,6 @@
                                             {{ genre.description|slice(0, 100) }}{% if genre.description|length > 100 %}...{% endif %}
                                         </p>
                                         
-                                        <div class="mt-4 pt-3 border-t border-gray-200 flex justify-between items-center text-xs text-gray-500">
-                                            <span><i class="fas fa-gamepad mr-1"></i> 12 Games</span>
-                                            <span><i class="fas fa-clock mr-1"></i> Added on Mar 12, 2025</span>
-                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}

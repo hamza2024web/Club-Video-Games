@@ -21,8 +21,7 @@ class LoginServices
         return $email;
     }
 
-    public function loginSession($email, $password)
-    {
+    public function loginSession($email, $password){
         $user = $this->userRepository->findUserByEmail($email);
 
         if (!$user) {

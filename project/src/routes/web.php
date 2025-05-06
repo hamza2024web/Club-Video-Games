@@ -3,6 +3,7 @@ require_once("../vendor/autoload.php");
 use Src\Http\Route;
 
 Route::get('','HomeController@index');
+Route::get('/about','HomeController@about');
 
 // Authentification
 Route::get('login','LoginController@index');

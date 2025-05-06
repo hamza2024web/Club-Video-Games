@@ -4,6 +4,7 @@ use App\Controllers\BaseController;
 use App\Services\MembreServices;
 use App\Controllers\IProfile;
 use App\Services\ProfileServices;
+use App\Services\StatistiqueAdminServices;
 
 session_start();
 
@@ -11,19 +12,24 @@ class ProfileMembre extends BaseController implements IProfile {
 
     protected $MembreServices;
     protected $ProfileServices;
+    protected $StatistiqueAdminServices;
+
     public function __construct()
     {
         parent::__construct();
         $this->MembreServices = new MembreServices();
         $this->ProfileServices = new ProfileServices();
-
+        $this->StatistiqueAdminServices = new StatistiqueAdminServices();
     }
     public function profile (){
         $user_id = $_SESSION["user_id"];
         $profile = $this->MembreServices->getProfileMembre($user_id);
         $my_solde = $this->solde($user_id);
-        return $this->renderMem('profile',compact('profile','my_solde'));
+        $activities = $this->MembreServices->GetMyNotifications($user_id);
+        $tournoi_inscrit = $this->Tournoi($user_id);
+        return $this->renderMem('profile',compact('profile','my_solde','activities','tournoi_inscrit'));
     }
+
     public function updateProfile() {
         $user_id = $_SESSION["user_id"];
 
@@ -49,6 +55,7 @@ class ProfileMembre extends BaseController implements IProfile {
             echo "Failed to update profile.";
         }
     }
+
     public function UpdatePassword(){
         $user_id = $_SESSION["user_id"];
         $current_password = $_POST["currentPassword"];
@@ -71,6 +78,10 @@ class ProfileMembre extends BaseController implements IProfile {
         }
     }
     
+    public function Tournoi($user_id){
+        $tournoi = $this->StatistiqueAdminServices->tournoi_inscrit($user_id);
+        return $tournoi;
+    }
 }
 
 ?>

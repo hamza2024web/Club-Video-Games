@@ -27,14 +27,33 @@ class dashboardRepository {
         $friends = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $friends;
     }
-    
-    public function getUpcomingTournoi(){
-        $statut = "Open";
-        $status = "Pendig";
-        $sql = "SELECT * FROM tournoi WHERE statut=:statut OR statut=:status";
+
+    public function getAllEvents(){
+        $sql = "SELECT users.name as organisateur, club.name as club_name, evenement.id , evenement.name , evenement.date_debut , evenement.date_fin , evenement.lieu , evenement.statut ,evenement.description,evenement.type_evenement,evenement.numbre_membre,evenement.registration_start,evenement.registration_end,evenement.event_time,evenement.event_photo,evenement.entry_fee,evenement.requirements,evenement.discord_url,evenement.twitch_url,GROUP_CONCAT(evenement_programme.timeline_time),GROUP_CONCAT(evenement_programme.timeline_title),GROUP_CONCAT(evenement_programme.timeline_desc)
+        , count(inscription_evenement.membre_id) as number_participants  FROM evenement
+        INNER JOIN club ON evenement.club_id = club.id
+        INNER JOIN evenement_programme ON evenement_programme.event_id = evenement.id
+        LEFT JOIN inscription_evenement ON inscription_evenement.evenement_id = evenement.id
+        INNER JOIN organisateur ON organisateur.club_id = evenement.club_id
+        INNER JOIN users ON users.id = organisateur.user_id
+        GROUP BY evenement.id , users.name";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":statut",$statut);
-        $stmt->bindParam(":status",$status);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function getAllTournoi(){
+        $sql = "SELECT users.name AS organisateur ,club.name AS club_name , tournoi.id,tournoi.name,tournoi.date_de_debut,tournoi.date_de_fin,tournoi.numbre_membre,tournoi.statut,tournoi.regles,tournoi.description,jeux.nom_de_jeu
+        ,tournoi.prix_total ,tournoi.date_ouverture_inscription,tournoi.date_cloture_inscription,tournoi.frais_inscription,tournoi.discord,tournoi.twitch,tournoi.image , COUNT(inscription_tournoi.membre_id) AS number_inscription FROM tournoi
+        INNER JOIN jeux ON jeux.id = tournoi.jeu_id
+        INNER JOIN evenement ON evenement.id = tournoi.event_id
+        INNER JOIN club ON club.id = evenement.club_id
+        LEFT JOIN inscription_tournoi ON inscription_tournoi.tournoi_id = tournoi.id
+        INNER JOIN organisateur ON organisateur.club_id = evenement.club_id
+        INNER JOIN users ON users.id = organisateur.user_id
+        GROUP BY tournoi.id , users.name";
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
@@ -253,6 +272,16 @@ class dashboardRepository {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
+    public function getAllTransactions(){
+        $sql = "SELECT users.name , evenement.name,transaction_log.amount,transaction_log.old_balance,transaction_log.new_balance,transaction_log.transaction_type FROM transaction_log
+        INNER JOIN evenement ON transaction_log.event_id = evenement.id
+        INNER JOIN membre ON membre.id = transaction_log.member_id
+        INNER JOIN users ON users.id = membre.user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $transactions;
+    }
 }
 
 ?>

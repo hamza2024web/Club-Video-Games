@@ -33,7 +33,8 @@ class membreController extends BaseController{
         $mytounament = $this->TournamentsServices->getInscriptionTournoi($user_id);
         $friends = $this->MembreServices->getFriends();
         $notificationsContent = $this->MembreServices->GetMyNotifications($user_id);
-        $this->renderMem('dashboard',compact('member','my_solde','notification','Jeux_disponibles','tournoi_inscrit','myGames','mytounament','friends','notificationsContent'));
+        $points = $this->MembreServices->countPoints($user_id);
+        $this->renderMem('dashboard',compact('member','my_solde','notification','Jeux_disponibles','tournoi_inscrit','myGames','mytounament','friends','notificationsContent','points'));
     }
     public function Jeux_disponibles($user_id){
         $jeux = $this->StatistiqueAdminServices->GamesPurchase($user_id);

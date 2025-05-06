@@ -435,12 +435,6 @@
                     <li><a href="/member/events" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-calendar-alt mr-3 text-purple-300"></i>Events</a></li>
                     <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
                     <li><a href="/member/games" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Mes Jeux</a></li>
-                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>friends</a></li>
-                    <li><a href="/member/messages" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition">
-                        <i class="fas fa-envelope mr-3 text-purple-300"></i>Messages
-                        <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">3</span>
-                    </a></li>
-                    <li><a href="/member/rewards" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gift mr-3 text-purple-300"></i>Récompenses</a></li>
                     <li><a href="/member/profile" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profil</a></li>
                 </ul>
             </nav>
@@ -572,30 +566,11 @@
                             </div>
                         </div>
                         
-                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-                            <button class="filter-pill active" data-filter="all">
-                                Tous les jeux
-                            </button>
-                            <button class="filter-pill" data-filter="installed">
-                                <i class="fas fa-check-circle mr-1"></i> Installés
-                            </button>
-                            <button class="filter-pill" data-filter="not-installed">
-                                <i class="fas fa-download mr-1"></i> Non installés
-                            </button>
-                            {% for genre in genres %}
-                                <button class="filter-pill" data-filter="{{ genre.name }}">
-                                    {{ genre.name }}
-                                </button>
-                            {% endfor %}
-                        </div>
-                        
                         <div>
                             <select id="sort-games" class="px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm">
                                 <option value="recent">Achat récent</option>
                                 <option value="alpha">Alphabétique (A-Z)</option>
                                 <option value="alpha-desc">Alphabétique (Z-A)</option>
-                                <option value="playtime">Temps de jeu</option>
-                                <option value="size">Taille du jeu</option>
                             </select>
                         </div>
                     </div>

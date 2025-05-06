@@ -126,8 +126,6 @@
                     </a></li>
                     <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
                     <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>My Games</a></li>
-                    <li><a href="/member/friends" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Friends</a></li>
-                    <li><a href="/member/rewards" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gift mr-3 text-purple-300"></i>Rewards</a></li>
                     <li><a href="/member/profile" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profile</a></li>
                 </ul>
             </nav>
@@ -170,18 +168,6 @@
                     <h1 class="text-2xl font-bold text-gray-800">Member Dashboard</h1>
                     <p class="text-gray-500">Welcome back, {{member.name}}! Here's what's happening today.</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search games, tournaments..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-64 bg-gray-50">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <div class="relative">
-                        <button class="text-gray-600 hover:text-gray-800 transition">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">5</span>
-                        </button>
-                    </div>
-                </div>
             </header>
 
             <!-- Stats Overview -->
@@ -191,7 +177,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Total Games</h3>
                             <p class="text-3xl font-bold text-gray-800">{{Jeux_disponibles.number_jeux}}</p>
-                            <p class="text-xs text-green-500 mt-1">↑ 2 new this month</p>
                         </div>
                         <div class="bg-purple-100 p-3 rounded-lg">
                             <i class="fas fa-gamepad text-purple-600 text-2xl"></i>
@@ -203,7 +188,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Tournaments</h3>
                             <p class="text-3xl font-bold text-gray-800">{{tournoi_inscrit.tournoi_inscrit}}</p>
-                            <p class="text-xs text-green-500 mt-1">↑ Won 3 tournaments</p>
                         </div>
                         <div class="bg-green-100 p-3 rounded-lg">
                             <i class="fas fa-trophy text-green-600 text-2xl"></i>
@@ -215,7 +199,6 @@
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Friends</h3>
                             <p class="text-3xl font-bold text-gray-800">42</p>
-                            <p class="text-xs text-green-500 mt-1">↑ 5 new connections</p>
                         </div>
                         <div class="bg-blue-100 p-3 rounded-lg">
                             <i class="fas fa-users text-blue-600 text-2xl"></i>
@@ -226,8 +209,7 @@
                     <div class="flex justify-between items-center">
                         <div>
                             <h3 class="text-gray-500 text-sm font-medium">Reward Points</h3>
-                            <p class="text-3xl font-bold text-gray-800">1,250</p>
-                            <p class="text-xs text-green-500 mt-1">↑ 320 this month</p>
+                            <p class="text-3xl font-bold text-gray-800">{{points.points|default(0)}}</p>
                         </div>
                         <div class="bg-yellow-100 p-3 rounded-lg">
                             <i class="fas fa-star text-yellow-600 text-2xl"></i>
@@ -342,7 +324,7 @@
                                                 <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
                                                     <i class="fas fa-medal text-yellow-600"></i>
                                                 </div>
-                                            {% elseif notification.type == 'team_invitation' %}
+                                            {% elseif notification.type == 'tournament_started' %}
                                                 <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                                                     <i class="fas fa-users text-green-600"></i>
                                                 </div>
@@ -695,9 +677,6 @@
                             
                             <!-- Enhanced badges with improved spacing -->
                             <div class="flex justify-center space-x-3 mt-4">
-                                <div class="px-4 py-1.5 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold shadow-sm">
-                                    Level 28
-                                </div>
                                 <div class="px-4 py-1.5 bg-yellow-100 text-yellow-700 rounded-full text-xs font-semibold shadow-sm">
                                     ★ Elite Gamer
                                 </div>
@@ -715,7 +694,7 @@
                         <!-- Enhanced stats section with subtle borders -->
                         <div class="grid grid-cols-3 gap-4 mt-8 text-center">
                             <div class="bg-gray-50 rounded-lg py-3 px-2">
-                                <p class="text-2xl font-bold text-gray-900">18</p>
+                                <p class="text-2xl font-bold text-gray-900">{{Jeux_disponibles.number_jeux}}</p>
                                 <p class="text-xs font-medium text-gray-600">Games</p>
                             </div>
                             <div class="bg-gray-50 rounded-lg py-3 px-2">
@@ -723,7 +702,7 @@
                                 <p class="text-xs font-medium text-gray-600">Friends</p>
                             </div>
                             <div class="bg-gray-50 rounded-lg py-3 px-2">
-                                <p class="text-2xl font-bold text-gray-900">7</p>
+                                <p class="text-2xl font-bold text-gray-900">{{tournoi_inscrit.tournoi_inscrit}}</p>
                                 <p class="text-xs font-medium text-gray-600">Tournaments</p>
                             </div>
                         </div>

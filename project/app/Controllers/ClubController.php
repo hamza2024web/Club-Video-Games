@@ -2,6 +2,7 @@
 namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\ClubServices;
+use App\Services\dashboardServices;
 use App\Services\MembreServices;
 use App\Services\ProfileServices;
 use App\Services\StatistiqueAdminServices;
@@ -12,6 +13,7 @@ class ClubController extends BaseController {
     protected $profileServices;
     protected $StatistiqueAdminServices;
     protected $MembreServices;
+    protected $adminServices;
 
     public function __construct()
     {
@@ -20,6 +22,7 @@ class ClubController extends BaseController {
         $this->profileServices = new ProfileServices();
         $this->StatistiqueAdminServices = new StatistiqueAdminServices();
         $this->MembreServices = new MembreServices();
+        $this->adminServices = new dashboardServices();
     }
     public function index() {
         $user_id = $_SESSION["user_id"];
@@ -30,7 +33,10 @@ class ClubController extends BaseController {
         $Membres_actifs = $this->membres_actif();
         $evenements = $this->evenements($user_id);
         $Jeux_disponibles = $this->Jeux_disponibles($user_id);
-        return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde','Membres_actifs','evenements','Jeux_disponibles','notifications'));
+        $members = $this->clubServices->getMembresClub($user_id);
+        $top_players = $this->adminServices->getTopPlayers();
+        $Acticities = $this->MembreServices->GetMyNotifications($user_id);
+        return $this->renderOrg('ClubManagement', compact('profile', 'club','my_solde','Membres_actifs','evenements','Jeux_disponibles','notifications','members','top_players','Acticities'));
     }
 
     public function updateClub() {

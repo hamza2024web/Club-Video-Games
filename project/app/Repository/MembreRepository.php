@@ -106,5 +106,21 @@ class MembreRepository {
         $friends = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $friends;
     }
+
+    // public function countWins($user_id){
+    //     $sql = "SELECT "
+    // }
+
+    public function count($user_id){
+        $sql = "SELECT SUM(transaction_log.amount) AS points FROM transaction_log
+        INNER JOIN membre ON membre.id = transaction_log.member_id
+        INNER JOIN users ON users.id = membre.user_id
+        WHERE users.id = :user_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam("user_id",$user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
 ?>

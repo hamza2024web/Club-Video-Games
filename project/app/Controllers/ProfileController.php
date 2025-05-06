@@ -3,23 +3,40 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Services\ProfileServices;
 use App\Controllers\IProfile;
+use App\Services\StatistiqueAdminServices;
 
 session_start();
 
 class ProfileController extends BaseController implements IProfile {
 
     protected $ProfileServices;
+    protected $StatistiqueAdminServices;
+
     public function __construct()
     {
         parent::__construct();
         $this->ProfileServices = new ProfileServices();
+        $this->StatistiqueAdminServices = new StatistiqueAdminServices();
 
     }
     public function profile (){
         $user_id = $_SESSION["user_id"];
         $profile = $this->ProfileServices->getProfileUser($user_id);
-        return $this->renderOrg('profile',compact('profile'));
+        $evenements = $this->evenements($user_id);
+        $jeux = $this->Jeux_disponibles($user_id);
+        return $this->renderOrg('profile',compact('profile','evenements','jeux'));
     }
+
+    public function evenements ($user_id){
+        $evenements = $this->StatistiqueAdminServices->evenements($user_id);
+        return $evenements;
+    }
+
+    public function Jeux_disponibles($user_id){
+        $jeux = $this->StatistiqueAdminServices->GamesPurchase($user_id);
+        return $jeux;
+    }
+
     public function updateProfile() {
         $user_id = $_SESSION["user_id"];
     

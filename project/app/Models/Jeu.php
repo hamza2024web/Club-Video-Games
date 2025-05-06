@@ -22,5 +22,38 @@ class Jeu {
         $this->prix = $prix;
         $this->status = $status;
     }
+
+    public function getTitle() {
+        return $this->title;
+    }
+    
+    public function getDescription() {
+        return $this->description;
+    }
+    
+    public function getPlateforme() {
+        return $this->plateforme;
+    }
+    
+    public function getDateDeSortie() {
+        return $this->date_de_sortie;
+    }
+    
+    public function getDeveloppeur() {
+        return $this->developpeur;
+    }
+    
+    public function getImage() {
+        return $this->image;
+    }
+    
+    public function getPrix() {
+        return $this->prix;
+    }
+    
+    public function getStatus() {
+        return $this->status;
+    }
+    
 }
 ?>

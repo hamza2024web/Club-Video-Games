@@ -16,9 +16,14 @@ class dashboardServices {
         return $players;
     }
 
-    public function getUpcomingTournoi(){
-        $tournois = $this->dashboardRepository->getUpcomingTournoi();
-        return $tournois;
+    public function getEvents(){
+        $events = $this->dashboardRepository->getAllEvents();
+        return $events;
+    }
+
+    public function getTournaments(){
+        $tournaments = $this->dashboardRepository->getAllTournoi();
+        return $tournaments;
     }
 
     public function getGenre(){
@@ -59,6 +64,10 @@ class dashboardServices {
         return $result;
     }
 
+    public function getTransactions(){
+        $transactions = $this->dashboardRepository->getAllTransactions();
+        return $transactions;
+    }
 }
 
 ?>
