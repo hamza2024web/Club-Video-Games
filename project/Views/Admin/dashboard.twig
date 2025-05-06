@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Game Club - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-item:hover::after {
+            width: 100%;
+        }
+
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(45deg);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .tab-button.active {
+            background-color: #8b5cf6;
+            color: white;
+        }
+
+        .content-card {
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-badge {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%);
+        }
+        
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-content {
+            transition: transform 0.3s ease-out;
+            transform: scale(0.95);
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-tabs button.active {
+            border-bottom: 2px solid #8b5cf6;
+            color: #8b5cf6;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
+            <div class="mb-8 text-center">
+                <div class="flex justify-center mb-3">
+                    <i class="fas fa-gamepad text-4xl text-purple-300"></i>
+                </div>
+                <h1 class="text-2xl font-bold">GamersHub</h1>
+                <p class="text-sm text-purple-200">Admin Portal</p>
+            </div>
+
+            <nav class="flex-grow">
+                <ul class="space-y-1">
+                    <li><a href="/dashboard" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-tachometer-alt mr-3 text-purple-300"></i>Dashboard</a></li>
+                    <li><a href="/genre" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-list mr-3 text-purple-300"></i>Genres</a></li>
+                    <li><a href="/Game" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Games</a></li>
+                    <li><a href="/users" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Members</a></li>
+                </ul>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <a href="/profile" class="flex items-center space-x-2 mb-3 p-2 rounded-lg hover:bg-indigo-700 transition">
+                    <img src="public/uploads/1742801685_Capture d'écran 2024-12-30 100608.png" class="rounded-full border-2 border-purple-300 h-20 w-20" alt="Admin Profile">
+                    <div>
+                        <p class="text-sm font-medium">hamza2024web</p>
+                        <p class="text-xs text-purple-300">Club Admin</p>
+                    </div>
+                </a>
+                <a href="/logout">
+                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-800">GamersHub Dashboard</h2>
+            </header>
+
+            <!-- Stats Overview -->
+            <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <div class="stat-card bg-white p-6 rounded-xl shadow-sm border-l-4 border-indigo-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm font-medium">Total Games</h3>
+                            <p class="text-3xl font-bold text-gray-800">{{total_games.number_games}}</p>
+                        </div>
+                        <div class="bg-indigo-100 p-3 rounded-lg">
+                            <i class="fas fa-gamepad text-indigo-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm font-medium">Active Members</h3>
+                            <p class="text-3xl font-bold text-gray-800">{{active_member.users}}</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <i class="fas fa-users text-blue-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card bg-white p-6 rounded-xl shadow-sm border-l-4 border-purple-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm font-medium">Active Sessions</h3>
+                            <p class="text-3xl font-bold text-gray-800">{{active_session.number_evenement}}</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-lg">
+                            <i class="fas fa-user-check text-purple-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card bg-white p-6 rounded-xl shadow-sm border-l-4 border-amber-500">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-sm font-medium">Pending Approvals</h3>
+                            <p class="text-3xl font-bold text-gray-800">{{pending_session.pending_evenemet}}</p>
+                        </div>
+                        <div class="bg-amber-100 p-3 rounded-lg">
+                            <i class="fas fa-hourglass-half text-amber-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Club Activities Section (Replaces Weekly Activity Chart) -->
+            <section class="mb-10">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800">Club Activities</h3>
+                        <div class="flex space-x-2">
+                            <button id="tab-tournaments" class="tab-button px-4 py-1.5 text-sm font-medium bg-purple-500 text-white rounded-lg">Tournaments</button>
+                            <button id="tab-events" class="tab-button px-4 py-1.5 text-sm font-medium bg-gray-200 text-gray-600 rounded-lg">Events</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Tournaments Tab (Default Active) -->
+                    <div id="content-tournaments" class="tab-content">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tournament</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Club</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organisateur</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Players</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for tournament in tournaments|slice(0, 5) %}
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                                                    {% if tournament.image %}
+                                                        <img src="{{ tournament.image }}" class="h-10 w-10 rounded-full object-cover" alt="{{ tournament.name }}">
+                                                    {% else %}
+                                                        <i class="fas fa-trophy text-purple-600"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">{{ tournament.name }}</div>
+                                                    <div class="text-sm text-gray-500">{{ tournament.nom_de_jeu }}</div>
+                                                    <div class="text-xs text-gray-400">{{ tournament.description|slice(0, 30) }}{% if tournament.description|length > 30 %}...{% endif %}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ tournament.club_name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ tournament.organisateur }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ tournament.date_de_debut|date('d/m/Y') }}</div>
+                                            {% if tournament.date_de_fin %}
+                                                <div class="text-xs text-gray-500">Fin: {{ tournament.date_de_fin|date('d/m/Y') }}</div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                {{ tournament.number_inscription }}/{{ tournament.numbre_membre }}
+                                            </span>
+                                            {% if tournament.frais_inscription > 0 %}
+                                                <div class="text-xs text-gray-500 mt-1">Frais: {{ tournament.frais_inscription }}€</div>
+                                            {% else %}
+                                                <div class="text-xs text-green-500 mt-1">Gratuit</div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            {% if tournament.statut == 1 %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Actif
+                                                </span>
+                                            {% elseif tournament.date_de_debut|date('Y-m-d') < "2025-04-30" %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                    Terminé
+                                                </span>
+                                            {% elseif tournament.date_ouverture_inscription|date('Y-m-d') <= "2025-04-30" and tournament.date_cloture_inscription|date('Y-m-d') >= "2025-04-30" %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800">
+                                                    Inscriptions Ouvertes
+                                                </span>
+                                            {% else %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    À venir
+                                                </span>
+                                            {% endif %}
+                                            {% if tournament.prix_total %}
+                                                <div class="text-xs text-amber-500 mt-1">
+                                                    <i class="fas fa-trophy text-xs mr-1"></i> {{ tournament.prix_total }}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button onclick="openModal('tournament', {{ tournament.id }})" class="text-purple-600 hover:text-purple-900 mr-2 px-2 py-1 bg-purple-50 rounded-md">
+                                                <i class="fas fa-eye mr-1"></i> Voir plus
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                            No tournaments found
+                                        </td>
+                                    </tr>   
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="flex justify-center mt-4">
+                                <a href="/tournaments" class="inline-flex items-center px-4 py-2 text-sm font-medium text-purple-600 hover:bg-purple-50 rounded-md">
+                                    View all tournaments <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Events Tab (Initially Hidden) -->
+                    <div id="content-events" class="tab-content hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Club</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organisateur</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {% for event in events|slice(0, 5) %}
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                                    {% if event.event_photo %}
+                                                        <img src="{{ event.event_photo }}" class="h-10 w-10 rounded-full object-cover" alt="{{ event.name }}">
+                                                    {% else %}
+                                                        <i class="fas fa-calendar-day text-blue-600"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">{{ event.name }}</div>
+                                                    <div class="text-sm text-gray-500">{{ event.description|slice(0, 30) }}{% if event.description|length > 30 %}...{% endif %}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ event.club_name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ event.name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ event.type_evenement|capitalize }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ event.date_debut|date('d/m/Y') }}</div>
+                                            <div class="text-xs text-gray-500">{{ event.event_time }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            {% if event.statut == 1 %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Actif
+                                                </span>
+                                            {% elseif event.date_debut|date('Y-m-d') < "2025-04-30" %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                                    Terminé
+                                                </span>
+                                            {% else %}
+                                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    À venir
+                                                </span>
+                                            {% endif %}
+                                            <div class="text-xs text-gray-500 mt-1">{{ event.number_participants }}/{{ event.numbre_membre }} participants</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button onclick="openModal('event', {{ event.id }})" class="text-blue-600 hover:text-blue-900 mr-2 px-2 py-1 bg-blue-50 rounded-md">
+                                                <i class="fas fa-eye mr-1"></i> Voir plus
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                                            No events found
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="flex justify-center mt-4">
+                                <a href="/events" class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-md">
+                                    View all events <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Popular Games & Top Players -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800">Recent Transactions</h3>
+                        <a href="/transactions" class="text-sm text-purple-600 hover:text-purple-800 transition">View All</a>
+                    </div>
+                    
+                    <!-- Transactions List -->
+                    <ul class="space-y-3">
+                        <!-- Transaction Item -->
+                        {% for transaction in transactions %}
+                            <li class="transition-all duration-200 hover:bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        {% if transaction.transaction_type == 'tournament_prize' %}
+                                            <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-2 mr-4 shadow-sm">
+                                                <i class="fas fa-trophy text-white"></i>
+                                            </div>
+                                        {% elseif transaction.transaction_type == 'reimbursement' %}
+                                            <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg p-2 mr-4 shadow-sm">
+                                                <i class="fas fa-coins text-white"></i>
+                                            </div>
+                                        {% else %}
+                                            <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg p-2 mr-4 shadow-sm">
+                                                <i class="fas fa-exchange-alt text-white"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <h4 class="font-semibold text-gray-800">{{ transaction.transaction_type}}</h4>
+                                            <div class="flex items-center text-sm text-gray-500">
+                                                <span>{{ transaction.name }}</span> <!-- Event name from evenement.name -->
+                                                <span class="mx-2">•</span>
+                                                <span>{{ transaction.created_at|date("M d, Y") }}</span> <!-- You might need to add this field to your query -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        {% if transaction.amount > 0 %}
+                                            <div class="font-bold text-green-600">+{{ transaction.amount }}</div>
+                                        {% else %}
+                                            <div class="font-bold text-red-600">{{ transaction.amount }}</div>
+                                        {% endif %}
+                                        <div class="text-xs text-gray-500">Balance: {{ transaction.new_balance }}</div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Top Players -->
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800">Top Players</h3>
+                        <a href="/leaderboard" class="text-sm text-purple-600 hover:text-purple-800 transition">View Leaderboard</a>
+                    </div>
+                    <ul class="space-y-4">
+                        {% for player in top_players %}
+                            <li class="game-card flex justify-between items-center p-3 rounded-lg hover:bg-gray-50 transition-all">
+                                <div class="flex items-center">
+                                    {% if player.profile_photo %}
+                                        <img src="{{ player.profile_photo }}" class="h-12 w-12 rounded-full mr-4 border-2 
+                                            {% if loop.index == 1 %}border-amber-400{% elseif loop.index == 2 %}border-gray-300{% elseif loop.index == 3 %}border-amber-700{% else %}border-gray-200{% endif %}" 
+                                            alt="{{ player.name }}">
+                                    {% else %}
+                                        <div class="h-12 w-12 rounded-full mr-4 bg-purple-100 flex items-center justify-center border-2 
+                                            {% if loop.index == 1 %}border-amber-400{% elseif loop.index == 2 %}border-gray-300{% elseif loop.index == 3 %}border-amber-700{% else %}border-gray-200{% endif %}">
+                                            <span class="text-purple-600 font-medium text-lg">{{ player.name|first|upper }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">{{ player.name }}</h4>
+                                        <div class="flex items-center">
+                                            <span class="text-xs px-2 py-0.5 bg-purple-100 text-purple-800 rounded-full mr-2">
+                                                {{ player.amount }} GameCoins
+                                            </span>
+                                            <span class="text-xs text-gray-500">Top Player</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    {% if loop.index == 1 %}
+                                        <div class="text-amber-500 text-xl">🏆</div>
+                                    {% elseif loop.index == 2 %}
+                                        <div class="text-gray-400 text-xl">🥈</div>
+                                    {% elseif loop.index == 3 %}
+                                        <div class="text-amber-700 text-xl">🥉</div>
+                                    {% else %}
+                                        <div class="text-gray-400 text-lg">{{ loop.index }}th</div>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="text-center py-4 text-gray-500">
+                                No top players found yet
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="mt-10 text-center text-gray-500 text-sm">
+                <p>© 2025 GamersHub Video Game Club. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Modal for Event/Tournament Details -->
+    <div id="detail-modal" class="modal fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center border-b border-gray-200 px-6 py-4">
+                <h3 class="text-xl font-bold text-gray-800" id="modal-title">Détails</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="overflow-y-auto p-6 max-h-[calc(90vh-8rem)]">
+                <!-- Banner/Image Section -->
+                <div id="modal-banner" class="h-48 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg mb-6 bg-center bg-cover flex items-end relative">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div class="p-4 relative z-10 text-white">
+                        <div class="flex items-center">
+                            <div class="bg-white p-2 rounded-full mr-3">
+                                <i id="modal-icon" class="fas fa-trophy text-purple-600"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs uppercase tracking-wide bg-purple-500 bg-opacity-70 px-2 py-1 rounded-full" id="modal-type">Tournament</span>
+                                <h2 class="text-2xl font-bold mt-1" id="modal-name">Loading...</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabs for Modal -->
+                <div class="border-b border-gray-200 modal-tabs">
+                    <div class="flex space-x-6">
+                        <button class="py-3 px-1 border-b-2 border-purple-600 text-purple-600 font-medium text-sm active" data-tab="info">Informations</button>
+                    </div>
+                </div>
+                
+                <!-- Tab Content -->
+                <div class="mt-6">
+                    <!-- Info Tab -->
+                    <div id="tab-info" class="tab-pane">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Description</h4>
+                                <p id="modal-description" class="text-gray-600">Loading...</p>
+                                
+                                <h4 class="font-medium text-gray-700 mb-2 mt-6">Organisateur</h4>
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                                        <i class="fas fa-user text-purple-600"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p id="modal-organizer" class="text-gray-800 font-medium">Loading...</p>
+                                        <p id="modal-club" class="text-sm text-gray-500">Loading...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-medium text-gray-700 mb-2">Détails</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center">
+                                        <div class="w-8 text-center text-gray-400">
+                                            <i class="fas fa-calendar-day"></i>
+                                        </div>
+                                        <span class="ml-3 text-gray-700" id="modal-date">Loading...</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-8 text-center text-gray-400">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <span class="ml-3 text-gray-700" id="modal-location">Loading...</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-8 text-center text-gray-400">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <span class="ml-3 text-gray-700" id="modal-participants">Loading...</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-8 text-center text-gray-400">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <span class="ml-3 text-gray-700" id="modal-time">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 px-6 py-4 flex justify-end">
+                <button onclick="closeModal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors mr-2">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Replace the JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.id.replace('tab-', '');
+                    
+                    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+                    document.querySelectorAll('.tab-button').forEach(btn => {
+                        btn.classList.remove('bg-purple-500', 'text-white');
+                        btn.classList.add('bg-gray-200', 'text-gray-600');
+                    });
+                    
+                    document.getElementById('content-' + tabId).classList.remove('hidden');
+                    this.classList.remove('bg-gray-200', 'text-gray-600');
+                    this.classList.add('bg-purple-500', 'text-white');
+                });
+            });
+            
+            // Modal tab switching
+            document.querySelectorAll('.modal-tabs button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Hide all tabs
+                    document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.add('hidden'));
+                    document.querySelectorAll('.modal-tabs button').forEach(btn => {
+                        btn.classList.remove('border-b-2', 'border-purple-600', 'text-purple-600');
+                        btn.classList.add('text-gray-500');
+                    });
+                    
+                    // Show active tab
+                    document.getElementById('tab-' + tabId).classList.remove('hidden');
+                    this.classList.add('border-b-2', 'border-purple-600', 'text-purple-600');
+                    this.classList.remove('text-gray-500');
+                });
+            });
+        });
+        
+        function openModal(type, id) {
+            const modal = document.getElementById('detail-modal');
+            modal.classList.remove('hidden');
+
+            const table = type === 'tournament' ? '#content-tournaments' : '#content-events';
+            const rows = document.querySelectorAll(`${table} tbody tr`);
+            let dataRow = null;
+
+            rows.forEach(row => {
+                const button = row.querySelector(`button[onclick*="openModal('${type}', ${id})"]`);
+                if (button) dataRow = row;
+            });
+            
+            if (dataRow) {
+                document.getElementById('modal-type').textContent = type === 'tournament' ? 'Tournoi' : 'Événement';
+                document.getElementById('modal-title').textContent = type === 'tournament' ? 'Détails du tournoi' : 'Détails de l\'événement';
+                document.getElementById('modal-icon').className = type === 'tournament' ? 'fas fa-trophy text-purple-600' : 'fas fa-calendar-day text-blue-600';
+                
+                const name = dataRow.querySelector('.text-gray-900').textContent;
+                document.getElementById('modal-name').textContent = name;
+                
+                const desc = dataRow.querySelector('.text-gray-500, .text-gray-400')?.textContent || 'Aucune description disponible';
+                document.getElementById('modal-description').textContent = desc;
+                
+                const club = dataRow.querySelectorAll('td')[1]?.querySelector('.text-gray-900')?.textContent || 'GamersHub';
+                const organizer = dataRow.querySelectorAll('td')[2]?.querySelector('.text-gray-900')?.textContent || 'hamza2024web';
+                document.getElementById('modal-club').textContent = club;
+                document.getElementById('modal-organizer').textContent = organizer;
+                
+                const date = dataRow.querySelectorAll('td')[3]?.querySelector('.text-gray-900')?.textContent || '01/01/2025';
+                const participants = dataRow.querySelectorAll('td')[4]?.querySelector('.rounded-full')?.textContent || '0/0';
+                document.getElementById('modal-date').textContent = date;
+                document.getElementById('modal-participants').textContent = participants;
+                document.getElementById('modal-location').textContent = 'Centre GamersHub, ' + club;
+                document.getElementById('modal-time').textContent = type === 'tournament' ? '14:00 - 20:00' : '10:00 - 18:00';
+                
+                const img = dataRow.querySelector('img');
+                if (img) {
+                    document.getElementById('modal-banner').style.backgroundImage = `url('${img.src}')`;
+                }
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>

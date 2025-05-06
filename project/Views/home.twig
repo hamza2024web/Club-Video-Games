@@ -1,118 +1,496 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Game Club</title>
+    <title>GamersHub - Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(91, 33, 182, 0.9) 0%, rgba(79, 70, 229, 0.9) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .game-card {
+            transition: all 0.3s ease;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-animated {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-animated::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn-animated:hover::after {
+            left: 100%;
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #8b5cf6;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 10px;
+        }
+    </style>
 </head>
-
-<body class="bg-gray-100">
-    <header class="bg-gradient-to-r from-green-400 to-blue-500 text-white py-6">
-        <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
-            <h1 class="text-3xl font-bold">🎮 Video Game Club</h1>
-            <nav class="space-x-4">
-                <a href="#" class="hover:text-gray-200">Home</a>
-                <a href="#games" class="hover:text-gray-200">Games</a>
-                <a href="#events" class="hover:text-gray-200">Events</a>
-                <a href="#membership" class="hover:text-gray-200">Membership</a>
-            </nav>
+<body class="bg-gray-50">
+    <!-- Header/Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo and Brand -->
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center">
+                        <i class="fas fa-gamepad text-2xl text-purple-600 mr-2"></i>
+                        <span class="font-bold text-xl text-gray-800">GamersHub</span>
+                    </a>
+                    <!-- Main Navigation -->
+                    <nav class="hidden md:ml-10 md:flex space-x-8">
+                        <a href="/" class="nav-link text-gray-900 font-medium">Home</a>
+                        <a href="/about" class="nav-link text-gray-500 hover:text-gray-900">About Us</a>
+                    </nav>
+                </div>
+                <!-- Right Side Actions -->
+                <div class="flex items-center">
+                    <a href="/login" class="px-4 py-2 text-sm text-purple-600 hover:text-purple-800 font-medium">Log in</a>
+                    <a href="/registre" class="ml-4 px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-sm btn-animated">Sign up</a>
+                    
+                    <!-- Mobile menu button -->
+                    <button type="button" class="ml-4 md:hidden bg-white p-2 rounded-md text-gray-400 hover:text-gray-500">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="py-10">
-        <!-- Intro Section -->
-        <section class="bg-white shadow-lg rounded-lg p-6 mb-10 mx-4 max-w-4xl mx-auto">
-            <h2 class="text-2xl font-semibold mb-2">Welcome to the Video Game Club!</h2>
-            <p class="text-gray-600">
-                Join our community of passionate gamers and explore a world filled with exciting games, events, and
-                friendships. Whether you're a casual player or a hardcore gamer, there's something for everyone!
-            </p>
-        </section>
-
-        <!-- Featured Games Section -->
-        <section id="games" class="max-w-7xl mx-auto px-4 mb-10">
-            <h2 class="text-2xl font-semibold mb-4">Featured Games</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Game Card 1 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x150" alt="Game 1" class="w-full h-32 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold">Game Title 1</h3>
-                        <p class="text-gray-600">A brief description of Game 1 goes here. It's an exciting game that you
-                            will love!</p>
-                    </div>
-                </div>
-                <!-- Game Card 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x150" alt="Game 2" class="w-full h-32 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold">Game Title 2</h3>
-                        <p class="text-gray-600">A brief description of Game 2 goes here. It's an exciting game that you
-                            will enjoy!</p>
-                    </div>
-                </div>
-                <!-- Game Card 3 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="https://via.placeholder.com/300x150" alt="Game 3" class="w-full h-32 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold">Game Title 3</h3>
-                        <p class="text-gray-600">A brief description of Game 3 goes here. It's an exciting game that you
-                            will definitely like!</p>
+    <!-- Hero Section -->
+    <section class="relative">
+        <div class="absolute inset-0 bg-black opacity-50 z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-80 z-10"></div>
+        <div class="relative h-[600px] overflow-hidden">
+            <img src="/public/uploads/MW-DM777_esport_20150527144101_MG.jpg" alt="Video Game Tournament" class="w-full h-full object-cover">
+            <div class="absolute inset-0 z-20 flex items-center justify-center text-center px-4">
+                <div class="max-w-4xl">
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4">
+                        Level Up Your Gaming Experience
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
+                        Join our vibrant community of gamers. Participate in tournaments, discover new games, and connect with fellow gaming enthusiasts.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="/register" class="btn-animated px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg shadow-lg">
+                            Join GamersHub
+                        </a>
+                        <a href="#events" class="px-8 py-4 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-medium rounded-lg border border-white/30">
+                            Upcoming Events
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Events Section -->
-        <section id="events" class="bg-white shadow-lg rounded-lg p-6 mx-4 mb-10 max-w-4xl mx-auto">
-            <h2 class="text-2xl font-semibold mb-4">Upcoming Events</h2>
-            <ul class="space-y-4">
-                <li class="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-                    <div>
-                        <h3 class="text-lg font-semibold">Monthly Game Night</h3>
-                        <p class="text-gray-600">Join us for our monthly game night on the first Friday of every month!
-                        </p>
-                    </div>
-                    <span class="text-green-500 font-bold">Next: 1st</span>
-                </li>
-                <li class="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-                    <div>
-                        <h3 class="text-lg font-semibold">Tournament Saturday</h3>
-                        <p class="text-gray-600">Compete with fellow members in our exciting tournaments every Saturday!
-                        </p>
-                    </div>
-                    <span class="text-green-500 font-bold">Next: Saturdays</span>
-                </li>
-            </ul>
-        </section>
-
-        <!-- Membership Section -->
-        <section id="membership" class="max-w-7xl mx-auto px-4 mb-10">
-            <h2 class="text-2xl font-semibold mb-4">Become a Member!</h2>
-            <div class="bg-white shadow-lg rounded-lg p-6">
-                <p class="text-gray-600 mb-4">
-                    Join our club to gain access to exclusive events, game nights, and a community of fellow gamers!
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">Why Join Our Gaming Club</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                    Experience the ultimate gaming community with exclusive benefits designed for passionate gamers.
                 </p>
-                <a href="#"
-                    class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition">Sign Up
-                    Now</a>
             </div>
-        </section>
-    </main>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Feature 1 -->
+                <div class="card-hover bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fas fa-trophy text-xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Weekly Tournaments</h3>
+                    <p class="text-gray-600">
+                        Compete in regular tournaments across various games and win exciting prizes.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="card-hover bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fas fa-users text-xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Community Events</h3>
+                    <p class="text-gray-600">
+                        Join game nights, watch parties, and special events with fellow gamers.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="card-hover bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fas fa-gamepad text-xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Game Library</h3>
+                    <p class="text-gray-600">
+                        Access our extensive collection of games across multiple platforms.
+                    </p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="card-hover bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fas fa-headset text-xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Coaching Sessions</h3>
+                    <p class="text-gray-600">
+                        Improve your skills with tips and guidance from experienced players.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <footer class="bg-gray-800 text-white py-4">
-        <div class="max-w-7xl mx-auto text-center">
-            <p>&copy; 2023 Video Game Club. All rights reserved.</p>
-            <div class="flex justify-center space-x-4 mt-2">
-                <a href="#" class="hover:text-gray-300"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="hover:text-gray-300"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+    <!-- Featured Games Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Featured Games</h2>
+                <a href="/games" class="text-purple-600 hover:text-purple-800 font-medium flex items-center">
+                    View all games <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Game 1 -->
+                {% for game in games %}
+                <div class="game-card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-48 relative">
+                        <img src="{{game.image}}" alt="{{game.nom_de_jeu}}" class="w-full h-full object-cover">
+                        <div class="absolute top-2 right-2 bg-purple-600 text-white text-xs uppercase px-2 py-1 rounded-full">Popular</div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-gray-900 mb-1">{{game.nom_de_jeu}}</h3>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">{{game.plateforme}}</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">{{game.genre}}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <a href="/login" class="text-sm font-medium text-purple-600 hover:text-purple-800">Join</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events Section -->
+    <section id="events" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">Upcoming Events</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                    Don't miss our exciting tournaments and gaming events. Mark your calendar and join the fun!
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Event 1 -->
+                {% for event in events %}
+                <div class="card-hover bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="h-48 relative">
+                        <img src="{{event.event_photo}}" alt="{{event.name}}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <span class="text-sm font-semibold bg-purple-600 px-2 py-1 rounded-full">{{event.date_debut}}</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">{{event.name}}</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            {{event.description}}
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar text-purple-600 mr-1.5"></i>
+                                    <span class="text-sm text-gray-600">{{event.registration_start}}</span>
+                                </div>
+                            </div>
+                            <a href="/registre" class="text-sm font-medium text-purple-600 hover:text-purple-800">Register</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">What Our Members Say</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                    Hear from our community about their experiences with GamersHub.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="/api/placeholder/60/60" alt="User Avatar" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900">Alex Johnson</h4>
+                            <p class="text-sm text-gray-600">Member since 2023</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">
+                        "Joining GamersHub was one of the best decisions I've made. I've met amazing people and improved my gaming skills significantly!"
+                    </p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="/api/placeholder/60/60" alt="User Avatar" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900">Sarah Miller</h4>
+                            <p class="text-sm text-gray-600">Member since 2022</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">
+                        "The tournaments are so well organized, and the community is incredibly welcoming. I've found my gaming family here!"
+                    </p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="/api/placeholder/60/60" alt="User Avatar" class="w-12 h-12 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900">Michael Chang</h4>
+                            <p class="text-sm text-gray-600">Member since 2024</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">
+                        "As a casual gamer, I never expected to win a tournament, but with the coaching sessions and practice events, I actually did it!"
+                    </p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call-to-Action Section -->
+    <section class="py-16 bg-purple-700">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold text-white mb-4">Ready to Join Our Gaming Community?</h2>
+            <p class="text-xl text-purple-200 mb-8 max-w-3xl mx-auto">
+                Sign up today and get exclusive access to our upcoming tournaments, events, and gaming sessions.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="/register" class="btn-animated px-8 py-4 bg-white text-purple-700 font-medium rounded-lg shadow-lg hover:bg-gray-100">
+                    Join GamersHub Now
+                </a>
+                <a href="/about" class="px-8 py-4 bg-purple-600 text-white font-medium rounded-lg border border-purple-500 hover:bg-purple-800">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-16 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-gamepad text-2xl text-purple-500 mr-2"></i>
+                        <span class="font-bold text-xl">GamersHub</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        The ultimate destination for gamers to connect, compete, and level up their gaming experience.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Games</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Events</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Games -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Popular Games</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Call of Duty</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Fortnite</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Minecraft</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">League of Legends</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Valorant</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-map-marker-alt mr-2 text-purple-500"></i>
+                            123 Gaming Street, Digital City
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-phone mr-2 text-purple-500"></i>
+                            +1 (555) 123-4567
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <i class="fas fa-envelope mr-2 text-purple-500"></i>
+                            info@gamershub.com
+                        </li>
+                    </ul>
+                    <div class="mt-4">
+                        <h4 class="text-sm font-semibold mb-2">Subscribe to Our Newsletter</h4>
+                        <div class="flex">
+                            <input type="email" placeholder="Your email" class="px-4 py-2 bg-gray-800 text-white rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500 w-full">
+                            <button class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-r-lg">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Footer -->
+            <div class="pt-8 border-t border-gray-800 text-sm text-gray-400 flex flex-col md:flex-row justify-between items-center">
+                <p>© 2025 GamersHub. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                    <a href="#" class="hover:text-white">Cookie Policy</a>
+                </div>
             </div>
         </div>
     </footer>
-</body>
 
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 p-3 bg-purple-600 text-white rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-purple-700">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Back to top button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
 </html>

@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamersHub - Boutique de Jeux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../public/js/panier.js"></script>
+    <script src="../../public/js/localStorage.js"></script>
+    <script src="../../public/js/payment.js"></script>
+    <script src="../../public/js/searchBoutique.js"></script>
+    <script src="../../public/js/favorite.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Animated gradient background */
+        .animated-gradient {
+            background: linear-gradient(-45deg, #6366F1, #8B5CF6, #EC4899, #8B5CF6);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .game-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-card img {
+            transition: all 0.5s ease;
+        }
+        
+        .game-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .sidebar-item {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(139, 92, 246, 0.9);
+        }
+        
+        .sidebar-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover .sidebar-icon {
+            transform: translateX(5px);
+        }
+        
+        .badge-cart {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(to right, #8B5CF6, #6366F1);
+            color: white;
+            border-radius: 50%;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .cart-item {
+            transition: all 0.3s ease;
+        }
+        
+        .cart-item:hover {
+            background-color: rgba(139, 92, 246, 0.05);
+        }
+        
+        .filter-active {
+            background-color: #8B5CF6;
+            color: white;
+        }
+        
+        .game-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .overlay-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 20px 15px 15px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .game-card:hover .overlay-info {
+            opacity: 1;
+        }
+        
+        .carousel-container {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .carousel-item {
+            flex: 0 0 100%;
+        }
+        
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .carousel-arrow:hover {
+            background-color: white;
+        }
+        
+        .carousel-arrow.prev {
+            left: 10px;
+        }
+        
+        .carousel-arrow.next {
+            right: 10px;
+        }
+        
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #CBD5E0;
+            margin: 0 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .carousel-dot.active {
+            background-color: #8B5CF6;
+            transform: scale(1.3);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #d4d4d8;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            max-width: 300px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast-success {
+            border-left: 4px solid #10B981;
+        }
+        
+        .toast-error {
+            border-left: 4px solid #EF4444;
+        }
+        
+        .toast-info {
+            border-left: 4px solid #3B82F6;
+        }
+        
+        /* Payment form styles */
+        .payment-card-field {
+            background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 10H21M7 15H9M12 15H14M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7Z' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+        }
+        
+        .input-card {
+            background-color: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        
+        .input-card:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+            border-color: #8B5CF6;
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Floating label effect */
+        .form-floating {
+            position: relative;
+        }
+        
+        .form-floating label {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            background-color: white;
+            padding: 0 5px;
+            font-size: 14px;
+            color: #6B7280;
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+        
+        .form-floating input:focus ~ label,
+        .form-floating input:not(:placeholder-shown) ~ label {
+            top: 0;
+            font-size: 12px;
+            color: #8B5CF6;
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(to right, #F59E0B, #EF4444);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+        
+        .price-old {
+            text-decoration: line-through;
+            color: #9CA3AF;
+            font-size: 0.875rem;
+        }
+
+        /* Glass morphism effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .wish-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            opacity: 0;
+        }
+        
+        .game-card:hover .wish-btn {
+            opacity: 1;
+        }
+        
+        .wish-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .wish-btn.active {
+            background-color: #EC4899;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar Navigation -->
+    <div class="flex">
+        <aside class="sidebar-expanded bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white h-screen flex flex-col fixed z-30 transition-all duration-300 overflow-hidden w-60">
+            <!-- Sidebar Header - Compact -->
+            <div class="flex items-center justify-between p-3 border-b border-indigo-800">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-gamepad text-xl text-purple-300"></i>
+                    <h2 class="text-lg font-bold sidebar-header-text">GamersHub</h2>
+                </div>
+                <button id="sidebar-toggle" class="p-1 rounded-full bg-indigo-800 text-white hover:bg-indigo-700 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- User Info - More Compact -->
+            <div class="p-3 border-b border-indigo-800 flex items-center">
+                <img src="/{{profile.profile_image}}" alt="Avatar" class="w-8 h-8 rounded-full bg-gray-500 border-2 border-purple-300">
+                <div class="sidebar-header-text ml-2">
+                    <p class="font-medium text-sm">{{profile.name}}</p>
+                    <p class="text-xs text-purple-200">{{profile.gamer_tag}}</p>
+                </div>
+            </div>
+            
+            <!-- Navigation - Reduced Padding -->
+            <nav class="flex-1 overflow-y-auto sidebar-scroll py-2">
+                <!-- Dashboard -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text">
+                    Menu
+                </div>
+                
+                <!-- Management -->
+                <a href="ClubManagement" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-users w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Gestion du club</span>
+                </a>
+                <a href="/profile" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-user w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Profil</span>
+                </a>
+                
+                <!-- Events -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
+                    Événements
+                </div>
+                <a href="organisateur/evenement" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-calendar-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Événement</span>
+                </a>
+                <a href="tournoi" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Tournois</span>
+                </a>
+                <a href="/boutique" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
+                    <i class="fas fa-store w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Boutique</span>
+                </a>
+                <a href="/jeux" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-gamepad w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Jeux</span>
+                </a>
+                
+                <!-- Settings - Combined into one section -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
+                    Compte
+                </div>
+                <a href="/logout" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-sign-out-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Déconnexion</span>
+                </a>
+            </nav>
+            
+            <!-- Mini Account Balance -->
+            <div class="p-3 border-t border-indigo-800 sidebar-footer">
+                <div class="bg-indigo-800 rounded-lg p-2 text-center">
+                    <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
+                    <button class="mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                        Recharger
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm sticky top-0 z-30">
+                <div class="flex justify-between items-center px-6 py-4">
+                    <div class="flex items-center">
+                        <h1 class="text-2xl font-bold text-gray-800">Boutique de Jeux</h1>
+                        <div class="ml-4 text-sm bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
+                            <i class="fas fa-gift mr-1"></i> Promos de Printemps
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="showWishlist()" class="text-gray-500 hover:text-gray-700 relative">
+                            <i class="fas fa-heart text-lg"></i>
+                            <span id="wishlist-count" class="absolute -top-1 -right-1 bg-pink-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">0</span>
+                        </button>
+                        <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700 relative">
+                            <i class="fas fa-shopping-cart text-lg"></i>
+                            <span id="cart-count" class="absolute -top-1 -right-1 bg-purple-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">0</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="p-6">
+                <!-- Hero Section (New) -->
+                <div class="mb-6 rounded-2xl overflow-hidden shadow-md">
+                    <div class="carousel-container relative">
+                        <div class="carousel">
+                            <!-- Carousel item 1 -->
+                            <div class="carousel-item relative">
+                                <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406" alt="Game Promotion" class="w-full h-80 object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
+                                    <div class="p-10 max-w-xl">
+                                        <div class="text-white">
+                                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Nouveauté</span>
+                                            <h2 class="text-3xl font-bold mt-3">Call of Duty: Black Ops 6</h2>
+                                            <p class="mt-2 text-gray-200">Préparez-vous pour la nouvelle ère des opérations spéciales avec des graphismes époustouflants et un gameplay révolutionnaire.</p>
+                                            <div class="mt-4 flex space-x-3">
+                                                <button class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg flex items-center transition-colors">
+                                                    <i class="fas fa-info-circle mr-2"></i> Détails
+                                                </button>
+                                                <button onclick="addToCart('Call of Duty: Black Ops 6', 69.99, 'https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg?t=1718381406')" class="bg-white hover:bg-gray-100 text-purple-700 px-6 py-2 rounded-lg flex items-center transition-colors">
+                                                    <i class="fas fa-shopping-cart mr-2"></i> Précommander
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Carousel item 2 -->
+                            <div class="carousel-item relative">
+                                <img src="https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70070000023212/a0009b79158fb57944bccf96b3fed690790cbb0de4e660128d39b28dd4311f92" alt="Game Promotion" class="w-full h-80 object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
+                                    <div class="p-10 max-w-xl">
+                                        <div class="text-white">
+                                            <span class="bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Offre Limitée</span>
+                                            <h2 class="text-3xl font-bold mt-3">FIFA 25 Ultimate Edition</h2>
+                                            <p class="mt-2 text-gray-200">Profitez d'une réduction de 20% sur l'édition Ultimate et accédez à du contenu exclusif pour votre club.</p>
+                                            <div class="mt-4 flex space-x-3">
+                                                <span class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm font-bold flex items-center">
+                                                    <i class="fas fa-tags mr-1"></i> -20%
+                                                </span>
+                                                <button onclick="addToCart('FIFA 25 Ultimate Edition', 79.99, 'https://cdn.akamai.steamstatic.com/steam/apps/2394790/header.jpg')" class="bg-white hover:bg-gray-100 text-purple-700 px-6 py-2 rounded-lg flex items-center transition-colors">
+                                                    <i class="fas fa-shopping-cart mr-2"></i> Ajouter
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Carousel item 3 -->
+                            <div class="carousel-item relative">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShtZ4-blVSiLEDsFzDeKNFrJUl_XDygpIMqA&s" alt="Game Promotion" class="w-full h-80 object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
+                                    <div class="p-10 max-w-xl">
+                                        <div class="text-white">
+                                            <span class="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Populaire</span>
+                                            <h2 class="text-3xl font-bold mt-3">Hogwarts Legacy</h2>
+                                            <p class="mt-2 text-gray-200">Embarquez pour une aventure dans le monde magique de Harry Potter avec ce jeu de rôle immersif.</p>
+                                            <div class="mt-4 flex space-x-3">
+                                                <button onclick="addToCart('Hogwarts Legacy', 49.99, 'https://cdn.cloudflare.steamstatic.com/steam/apps/990080/header.jpg')" class="bg-white hover:bg-gray-100 text-purple-700 px-6 py-2 rounded-lg flex items-center transition-colors">
+                                                    <i class="fas fa-shopping-cart mr-2"></i> Ajouter
+                                                </button>
+                                                <span class="text-gray-200 text-sm flex items-center">
+                                                    <i class="fas fa-star text-yellow-400 mr-1"></i> 4.8/5 (2.3k avis)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Carousel Controls -->
+                        <div class="carousel-arrow prev" onclick="moveCarousel(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
+                        <div class="carousel-arrow next" onclick="moveCarousel(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        
+                        <!-- Carousel Dots -->
+                        <div class="carousel-dots absolute bottom-4 w-full">
+                            <div class="carousel-dot active" onclick="setCarouselSlide(0)"></div>
+                            <div class="carousel-dot" onclick="setCarouselSlide(1)"></div>
+                            <div class="carousel-dot" onclick="setCarouselSlide(2)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search and filter -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="relative">
+                                <input type="text" id="search-input" placeholder="Rechercher un jeu..." class="pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                                <button id="clear-search" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <select id="sort-games" class="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white">
+                                <option value="popular">Popularité</option>
+                                <option value="price-asc">Prix: croissant</option>
+                                <option value="price-desc">Prix: décroissant</option>
+                                <option value="newest">Plus récents</option>
+                                <option value="rating">Meilleures notes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Category Title (New) -->
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">Jeux Populaires</h2>
+                    <a href="#" class="text-purple-600 hover:text-purple-800 text-sm font-medium flex items-center">
+                        Voir tout <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                    </a>
+                </div>
+
+                <!-- Games Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Game Card 1: Valorant -->
+                    {% for jeu in jeux %}
+                        <div class="game-card bg-white shadow-sm overflow-hidden" data-category="fps" data-price="0" data-rating="4.7" data-release="2023">
+                        <div class="relative">
+                            <img src="/{{jeu.image}}" alt="Valorant" class="w-full h-48 object-cover">
+                            <div class="game-badge bg-purple-600">{{jeu.genre}}</div>
+                            <button class="wish-btn" onclick="toggleWishlist(this, 'Valorant')">
+                            <i class="far fa-heart"></i>
+                            </button>
+                            <div class="overlay-info">
+                            <div class="flex items-center mb-1">
+                                <i class="fas fa-desktop mr-2"></i>
+                                <span>{{jeu.plateforme}}</span>
+                            </div>
+                            <div class="flex items-center mb-1">
+                                <i class="fas fa-code-branch mr-2"></i>
+                                <span>{{jeu.developpeur}}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                <span>{{jeu.date_de_sortie}}</span>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-gray-800">{{jeu.nom_de_jeu}}</h3>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-sm font-semibold">4.7</span>
+                            </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{jeu.description}}.</p>
+                            <div class="flex justify-between items-center">
+                            <span class="text-purple-600 font-bold">{{jeu.prix}} £</span>
+                            {% if jeu.id in jeuxAchetesIds %}
+                                <button class="bg-green-500 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md cursor-default">
+                                    <i class="fas fa-check mr-1"></i> Acheté
+                                </button>
+                            {% else %}
+                                <button onclick="addToCart('{{jeu.id}}', '{{jeu.nom_de_jeu}}', {{jeu.prix}}, '{{jeu.image}}', 'gamersHubCart')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-3 py-1.5 rounded-lg flex items-center text-sm shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105">
+                                    <i class="fas fa-plus mr-1"></i> Ajouter
+                                </button>
+                            {% endif %}
+                            </div>
+                        </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Overlay for cart and modals -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="shopping-cart" class="fixed top-0 right-0 h-full w-80 bg-white shadow-lg z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">
+                    <i class="fas fa-shopping-cart mr-2 text-purple-600"></i> Panier
+                </h3>
+                <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-3">
+                <div id="empty-cart-message" class="text-center py-8 text-gray-500">
+                    <i class="fas fa-shopping-cart text-4xl mb-3"></i>
+                    <p>Votre panier est vide</p>
+                    <p class="text-sm mt-2">Ajoutez des jeux pour commencer vos achats</p>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-gray-200">
+                <div class="space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Sous-total:</span>
+                        <span id="subtotal" class="font-medium">0.00 €</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">TVA (20%):</span>
+                        <span id="tax" class="font-medium">0.00 €</span>
+                    </div>
+                    <div class="flex justify-between font-bold">
+                        <span>Total:</span>
+                        <span id="total" class="text-purple-600">0.00 €</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 space-y-3">
+                    <button id="checkout-btn" onclick="checkout(document.body.dataset.storageKey)" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        Procéder au paiement
+                    </button>
+                    <button onclick="clearCart(document.body.dataset.storageKey)" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg font-medium transition-colors">
+                        Vider le panier
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+        <div id="payment-content" class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 transform scale-95 opacity-0 transition-all duration-300">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Finaliser votre achat</h3>
+                <button onclick="closePaymentModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="text-gray-700">
+                        <span id="payment-items-count">0</span> jeux dans votre panier
+                    </div>
+                    <div class="text-purple-600 font-bold text-lg" id="payment-total">0.00 €</div>
+                </div>
+                
+                <div class="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-100">
+                        <p class="text-sm text-gray-700">
+                            En confirmant votre inscription, vous acceptez de participer à cet tournament selon les conditions définies par l'organisateur.
+                        </p>
+                        
+                        <div id="payment-paid-notice" class="hidden mt-2 text-sm text-purple-600">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Le montant sera débité de votre solde GamersHub.
+                        </div>
+                    </div>
+            </div>
+            
+            <div class="p-5 border-t border-gray-200">
+                <button onclick="processPayment('gamersHubCart')" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 rounded-lg font-medium shadow-md transition-all duration-200 hover:shadow-lg flex items-center justify-center">
+                    Payer <span id="payment-button-total">0.00 €</span>
+                </button>
+                <p class="text-center text-sm text-gray-500 mt-3">
+                    <i class="fas fa-lock mr-1"></i> Transaction sécurisée
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de rechargement -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                    <div>
+                        <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                            <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="MM/AA">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4">
+                        Recharger mon compte
+                    </button>
+                    
+                    <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                        Paiement 100% sécurisé
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Cart and Payment Functionality -->
+    <script>
+
+        let currentSlide = 0;
+        const totalSlides = document.querySelectorAll('.carousel-item').length;
+
+        // Function to handle arrow navigation
+        function moveCarousel(direction) {
+            // Calculate the new slide index
+            currentSlide = (currentSlide + direction) % totalSlides;
+            
+            // Handle negative index (when going left from the first slide)
+            if (currentSlide < 0) {
+                currentSlide = totalSlides - 1;
+            }
+            
+            // Update carousel position
+            updateCarouselPosition();
+        }
+
+        // Function to directly set the slide
+        function setCarouselSlide(slideIndex) {
+            if (slideIndex >= 0 && slideIndex < totalSlides) {
+                currentSlide = slideIndex;
+                updateCarouselPosition();
+            }
+        }
+
+        // Function to update the carousel's position
+        function updateCarouselPosition() {
+            // Get all carousel items and dots
+            const slides = document.querySelectorAll('.carousel-item');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            // Hide all slides first
+            slides.forEach(slide => {
+                slide.style.display = 'none';
+            });
+            
+            // Remove active class from all dots
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            
+            // Show the current slide
+            slides[currentSlide].style.display = 'block';
+            
+            // Add active class to current dot
+            dots[currentSlide].classList.add('active');
+        }
+
+        // Initialize the carousel on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show the first slide and hide the rest
+            updateCarouselPosition();
+            
+            // Optional: Set up auto-rotation
+            setInterval(() => {
+                moveCarousel(1);
+            }, 5000); // Change slides every 5 seconds
+        });
+
+        function toggleCart() {
+            const cart = document.getElementById('shopping-cart');
+            const overlay = document.getElementById('overlay');
+            
+            if (cart.classList.contains('translate-x-full')) {
+                // Open cart
+                cart.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                // Close cart
+                cart.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('paiment_réussite')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "paiment réussite!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/boutique";
+                });
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('paiment_échouée')) {
+                Swal.fire({
+                    title: "Échec",
+                    text: "Please Verify Your Solde!",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/boutique";
+                });
+            }
+        });
+        // Initialize sidebar
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('sidebar-toggle');
+            const sidebar = document.querySelector('.sidebar-expanded');
+            const mainContent = document.querySelector('main');
+
+            if (toggleButton && sidebar && mainContent) {
+                // Function to toggle sidebar
+                function toggleSidebar() {
+                    sidebar.classList.toggle('sidebar-collapsed');
+                    sidebar.classList.toggle('sidebar-expanded');
+                    mainContent.classList.toggle('ml-64');
+                    mainContent.classList.toggle('ml-20');
+
+                    // Update localStorage
+                    const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+                    localStorage.setItem('sidebarCollapsed', isCollapsed);
+                }
+
+                // Add click event listener to toggle button
+                toggleButton.addEventListener('click', toggleSidebar);
+
+                // Check and apply initial state from localStorage
+                const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (sidebarCollapsed) {
+                    sidebar.classList.add('sidebar-collapsed');
+                    sidebar.classList.remove('sidebar-expanded');
+                    mainContent.classList.remove('ml-64');
+                    mainContent.classList.add('ml-20');
+                }
+            }
+        });
+
+        // Additional CSS to support sidebar collapse
+        const sidebarStyle = document.createElement('style');
+        sidebarStyle.textContent = `
+        .sidebar-collapsed {
+            width: 80px;
+        }
+
+        .sidebar-collapsed .sidebar-header-text,
+        .sidebar-collapsed .sidebar-text,
+        .sidebar-collapsed .sidebar-footer {
+            display: none;
+        }
+
+        .sidebar-collapsed .sidebar-item {
+            justify-content: center;
+        }
+
+        .sidebar-collapsed .sidebar-item i {
+            margin-right: 0 !important;
+        }
+        `;
+        document.head.appendChild(sidebarStyle);
+                
+                document.addEventListener('DOMContentLoaded', function() {
+            // Find the recharge button
+            const rechargeButton = Array.from(document.querySelectorAll('button')).find(
+                button => button.textContent.trim() === 'Recharger'
+            );
+            
+            const rechargeModal = document.getElementById('recharge-modal');
+            const closeModalButton = document.getElementById('close-recharge-modal');
+            const rechargeForm = document.getElementById('recharge-form');
+
+            // Input formatting
+            const cardNumberInput = document.getElementById('card-number');
+            const cardExpiryInput = document.getElementById('card-expiry');
+            const cardCvvInput = document.getElementById('card-cvv');
+
+            // Show modal function
+            function showModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.remove('hidden');
+                    rechargeModal.classList.add('flex');
+                }
+            }
+
+            // Hide modal function
+            function hideModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.add('hidden');
+                    rechargeModal.classList.remove('flex');
+                }
+            }
+
+            // Add click event to recharge button
+            if (rechargeButton) {
+                rechargeButton.addEventListener('click', showModal);
+            }
+
+            // Close modal button event
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', hideModal);
+            }
+
+            // Form submission
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Simulate recharge process
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours`,
+                        icon: 'info',
+                        confirmButtonColor: '#8b5cf6'
+                    }).then(() => {
+                        // Close modal after submission
+                        hideModal();
+                    });
+                });
+            }
+
+            if (rechargeModal) {
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        hideModal();
+                    }
+                });
+            }
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trouver le formulaire de rechargement
+            const rechargeForm = document.getElementById('recharge-form');
+            
+            // Gestionnaire d'événement pour la soumission du formulaire
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    // Empêcher la soumission par défaut du formulaire
+                    e.preventDefault();
+                    
+                    // Récupérer le montant saisi
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Afficher l'alerte de chargement
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours...`,
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Soumettre le formulaire après un court délai pour montrer l'animation
+                    setTimeout(() => {
+                        rechargeForm.submit();
+                    }, 1500);
+                });
+            }
+            
+            // Vérifier si l'URL contient le paramètre de succès (vérifier les deux formats possibles)
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Obtenir le chemin de base sans les paramètres de query
+            const currentPath = window.location.pathname;
+            
+            if (urlParams.get('message') === 'Rechargement de votre solde réussite' || 
+                urlParams.has('Rechargement_de_votre_solde_réussite')) {
+                Swal.fire({
+                    title: 'Succès!',
+                    text: 'Rechargement de votre solde réussi',
+                    icon: 'success',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                    // Si vous souhaitez rafraîchir la page pour montrer le nouveau solde, décommentez la ligne suivante
+                    // window.location.reload();
+                });
+            }
+            
+            // Vérifier si l'URL contient un message d'échec
+            if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+                Swal.fire({
+                    title: 'Échec',
+                    text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

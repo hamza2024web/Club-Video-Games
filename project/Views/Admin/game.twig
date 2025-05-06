@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Management - Video Game Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="../../public/js/EditGame.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-item:hover::after {
+            width: 100%;
+        }
+
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .input-field:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
+            <div class="mb-8 text-center">
+                <div class="flex justify-center mb-3">
+                    <i class="fas fa-gamepad text-4xl text-purple-300"></i>
+                </div>
+                <h1 class="text-2xl font-bold">GamersHub</h1>
+                <p class="text-sm text-purple-200">Admin Portal</p>
+            </div>
+
+            <nav class="flex-grow">
+                <ul class="space-y-1">
+                    <li><a href="/dashboard" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-tachometer-alt mr-3 text-purple-300"></i>Dashboard</a></li>
+                    <li><a href="/genre" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-list mr-3 text-purple-300"></i>Genres</a></li>
+                    <li><a href="/Game" class="sidebar-item flex items-center p-3 bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>Games</a></li>
+                    <li><a href="/users" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-users mr-3 text-purple-300"></i>Members</a></li>
+                </ul>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <a href="/profile" class="flex items-center space-x-2 mb-3 p-2 rounded-lg hover:bg-indigo-700 transition">
+                    <img src="public/uploads/1742801685_Capture d'écran 2024-12-30 100608.png" class="rounded-full border-2 border-purple-300 h-20 w-20" alt="Admin Profile">
+                    <div>
+                        <p class="text-sm font-medium">Hamza Akroubi</p>
+                        <p class="text-xs text-purple-300">Club Admin</p>
+                    </div>
+                </a>
+                <a href="/logout">
+                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Game Management</h1>
+                    <p class="text-gray-500">Add and manage games for your collection</p>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Add Game Section -->
+                <div class="md:col-span-1">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 id="formTitle" class="text-xl font-bold mb-6 text-gray-800 border-b pb-2 flex items-center">
+                            <i class="fas fa-plus-circle mr-2 text-purple-600"></i>
+                            Add New Game
+                        </h2>
+                        <form id="addGameForm" class="space-y-4" action="/addGame" method="post" enctype="multipart/form-data">
+                            <input type="hidden" id="gameId" name="id" value="{{game.id}}">
+                            
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Game Title</label>
+                                <div class="relative">
+                                    <i class="fas fa-gamepad absolute left-3 top-3 text-gray-400"></i>
+                                    <input type="text" id="gameTitle" name="title" 
+                                        class="input-field w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                                        placeholder="Enter game title" required>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Genre</label>
+                                <div class="relative">
+                                    <i class="fas fa-tags absolute left-3 top-3 text-gray-400"></i>
+                                    <select id="gameGenre" name="genreId[]" multiple 
+                                        class="input-field w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                        {% for genre in genres %}
+                                            <option value="{{ genre.id }}">{{ genre.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Platform</label>
+                                <div class="relative">
+                                    <i class="fas fa-desktop absolute left-3 top-3 text-gray-400"></i>
+                                    <select id="gamePlatform" name="platform" 
+                                        class="input-field w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none">
+                                        <option value="pc">PC</option>
+                                        <option value="ps5">PlayStation 5</option>
+                                        <option value="ps4">PlayStation 4</option>
+                                        <option value="xbox_series_x">Xbox Series X</option>
+                                        <option value="xbox_one">Xbox One</option>
+                                        <option value="switch">Nintendo Switch</option>
+                                        <option value="steam">Steam</option>
+                                        <option value="epic_games">Epic Games Store</option>
+                                        <option value="stadia">Google Stadia</option>
+                                        <option value="mobile">Mobile (iOS & Android)</option>
+                                    </select>
+                                    <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Developer</label>
+                                <div class="relative">
+                                    <i class="fas fa-code absolute left-3 top-3 text-gray-400"></i>
+                                    <input type="text" id="gameDeveloper" name="developer" 
+                                        class="input-field w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                                        placeholder="Game developer">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Release Year</label>
+                                <div class="relative">
+                                    <i class="fas fa-calendar absolute left-3 top-3 text-gray-400"></i>
+                                    <input type="date" id="gameYear" name="releaseYear" 
+                                        class="input-field w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Description</label>
+                                <div class="relative">
+                                    <i class="fas fa-align-left absolute left-3 top-3 text-gray-400"></i>
+                                    <textarea id="gameDescription" name="description" 
+                                        class="input-field w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                                        placeholder="Brief description of the game" rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Game Cover Image</label>
+                                <div class="relative border border-gray-300 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 transition">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-purple-400 mb-2"></i>
+                                    <p class="text-sm text-gray-500">Click to upload or drag and drop</p>
+                                    <input type="file" id="gameCover" name="coverImage" class="opacity-0 absolute inset-0 w-full cursor-pointer" accept="image/*">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Price (€)</label>
+                                <div class="relative">
+                                    <i class="fas fa-euro-sign absolute left-3 top-3 text-gray-400"></i>
+                                    <input type="number" id="prix" name="prix" 
+                                        class="input-field w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                                        placeholder="0.00" step="0.01" min="0">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Stock</label>
+                                <div class="relative">
+                                    <i class="fas fa-cubes mr-1 text-gray-400 absolute left-3 top-3"></i>
+                                    <input type="number" id="stock" name="stock" 
+                                        class="input-field w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                                        placeholder="0.00" step="0.01" min="0">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-700">Status</label>
+                                <div class="relative">
+                                    <i class="fas fa-toggle-on absolute left-3 top-3 text-gray-400"></i>
+                                    <select id="gameStatus" name="status" 
+                                        class="input-field w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none">
+                                        <option value="Available">Available</option>
+                                        <option value="Unavailable">Unavailable</option>
+                                    </select>
+                                    <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="addGame" 
+                                class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-3 px-4 rounded-lg hover:from-purple-700 hover:to-indigo-800 transition flex items-center justify-center">
+                                <i class="fas fa-plus-circle mr-2"></i>
+                                <span>Add Game</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Game List Section -->
+                <div class="md:col-span-2">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                                <i class="fas fa-book mr-2 text-purple-600"></i>
+                                Game Library
+                            </h2>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Game Card Template -->
+                            {% for game in games %}
+                                <div class="game-card bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                                    <div class="flex h-full">
+                                        <div class="w-1/3 relative">
+                                            <img src="{{ game.image|default('/images/default-game-cover.jpg') }}" 
+                                                alt="{{ game.nom_de_jeu }}" 
+                                                class="w-full h-full object-cover">
+                                            <div class="absolute top-2 left-2">
+                                                <span id="gameStatus-{{ game.id }}" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                                    {% if game.status == 'Available' %}bg-green-100 text-green-800
+                                                    {% else %}bg-red-100 text-red-800
+                                                    {% endif %}">
+                                                    <i class="fas fa-circle text-xs mr-1"></i>
+                                                    {{ game.status|default('Available') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="w-2/3 p-4">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <h3 id="gameTitle-{{ game.id }}" class="text-lg font-bold text-gray-800">{{ game.nom_de_jeu }}</h3>
+                                                <span class="text-sm text-purple-600 font-semibold">€<span id="gamePrice-{{ game.id }}">{{ game.prix|default('0.00') }}</span></span>
+                                            </div>
+                                            
+                                            <div class="flex flex-wrap gap-2 mb-2">
+                                                <span class="inline-flex items-center px-2 py-1 rounded-md bg-purple-100 text-purple-800 text-xs">
+                                                    <i class="fas fa-tag mr-1"></i>
+                                                    <span id="gameGenre-{{ game.id }}">{{ game.genre }}</span>
+                                                </span>
+                                                <span class="inline-flex items-center px-2 py-1 rounded-md bg-blue-100 text-blue-800 text-xs">
+                                                    <i class="fas fa-calendar mr-1"></i>
+                                                    <span id="gameYear-{{ game.id }}">{{ game.date_de_sortie }}</span>
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="flex flex-wrap gap-2 mb-2 text-gray-600 text-xs">
+                                                <span class="inline-flex items-center">
+                                                    <i class="fas fa-code-branch mr-1 text-purple-600"></i>
+                                                    <span id="gameDeveloper-{{ game.id }}">{{ game.developpeur }}</span>
+                                                </span>
+                                                {% if game.platform %}
+                                                <span class="inline-flex items-center">
+                                                    <i class="fas fa-gamepad mr-1 text-purple-600"></i>
+                                                    <span id="gamePlatform-{{ game.id }}">{{ game.platform }}</span>
+                                                </span>
+                                                {% endif %}
+                                            </div>
+                                            
+                                            <p id="gameDescription-{{ game.id }}" class="text-gray-600 text-xs mb-3 line-clamp-2">
+                                                {{ game.description|slice(0, 100) }}{% if game.description|length > 100 %}...{% endif %}
+                                            </p>
+                                            
+                                            <div class="flex justify-between items-center pt-2 border-t border-gray-200">
+                                                <div class="flex items-center">
+                                                    <span class="text-xs text-gray-500">
+                                                        <i class="fas fa-cubes mr-1 text-purple-600"></i>Stock: 
+                                                        <span id="gameStock-{{ game.id }}" class="font-medium">{{ game.stock|default(0) }}</span>
+                                                    </span>
+                                                </div>
+                                                <div class="flex space-x-1">
+                                                    <button class="p-1.5 bg-yellow-100 text-yellow-600 hover:bg-yellow-200 rounded-lg transition" 
+                                                            title="Edit Game" 
+                                                            onclick="editGame('{{ game.id }}')">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    
+                                                    <form action="/deleteGame" method="post" onsubmit="return confirm('Are you sure you want to delete this game?');">
+                                                        <input type="hidden" value="{{ game.id }}" name="id">
+                                                        <button type="submit" class="p-1.5 bg-red-100 text-red-600 hover:bg-red-200 rounded-lg transition" 
+                                                                title="Delete Game">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            
+                            <!-- Empty state placeholder (shown when no games exist) -->
+                            {% if games|length == 0 %}
+                                <div class="col-span-2 text-center p-10 border-2 border-dashed border-gray-300 rounded-lg">
+                                    <div class="w-16 h-16 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                                        <i class="fas fa-gamepad text-2xl text-purple-500"></i>
+                                    </div>
+                                    <h3 class="text-lg font-medium text-gray-800 mb-2">No Games Found</h3>
+                                    <p class="text-gray-500 mb-4">Start by adding your first game</p>
+                                    <button onclick="document.getElementById('gameTitle').focus()" 
+                                            class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg inline-flex items-center transition">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        <span>Add Your First Game</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('game_Inserted_successfully')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "game_Inserted_successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/Game";
+                });
+
+            }
+        });
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('game_Updated_successfully')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "game Updated Successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/Game";
+                });
+
+            }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('game_Deleted_successfully')) {
+                Swal.fire({
+                    title: "Success!",
+                    text: "game Deleted Successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    timer: 3000 
+                }).then(()=> {
+                    window.location.href = "/Game";
+                });
+
+            }
+        });
+    
+    </script>
+</body>
+</html>

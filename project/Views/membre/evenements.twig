@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamersHub - Events</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .event-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #f1f1f1;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-item:hover::after {
+            width: 100%;
+        }
+
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(45deg);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 10px;
+        }
+
+        /* Event Specific Styles */
+        .date-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .category-gaming {
+            background: rgba(124, 58, 237, 0.9);
+            color: white;
+        }
+        
+        .category-competition {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+        
+        .category-workshop {
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+        }
+        
+        .category-social {
+            background: rgba(59, 130, 246, 0.9);
+            color: white;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .info-item i {
+            margin-right: 5px;
+            color: #8b5cf6;
+        }
+        
+        .event-fee-badge {
+            background: #8b5cf6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-free-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .attendance-indicator {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .attendance-bar {
+            height: 100%;
+            background: linear-gradient(to right, #8b5cf6, #6366f1);
+            border-radius: 3px;
+        }
+        
+        .event-action-btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .event-action-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+            z-index: -1;
+            transition: all 0.6s ease;
+        }
+        
+        .event-action-btn:hover::after {
+            left: 100%;
+        }
+        
+        .status-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-upcoming {
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+        }
+        
+        .status-live {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-ended {
+            background: rgba(107, 114, 128, 0.9);
+            color: white;
+        }
+        
+        .status-full {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+        }
+
+            /* Event Card Styles */
+        .event-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #f1f1f1;
+            margin-bottom: 1rem;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .date-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .category-gaming {
+            background: rgba(124, 58, 237, 0.9);
+            color: white;
+        }
+        
+        .category-competition {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+        
+        .category-workshop {
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+        }
+        
+        .category-social {
+            background: rgba(59, 130, 246, 0.9);
+            color: white;
+        }
+        
+        .status-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-open, .status-upcoming {
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+        }
+        
+        .status-pending {
+            background: rgba(139, 92, 246, 0.9);
+            color: white;
+        }
+        
+        .status-in-progress, .status-live {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-completed, .status-ended {
+            background: rgba(107, 114, 128, 0.9);
+            color: white;
+        }
+        
+        .status-full {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+        }
+        
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .info-item i {
+            margin-right: 5px;
+            color: #8b5cf6;
+        }
+        
+        .event-fee-badge {
+            background: #8b5cf6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .event-free-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .attendance-indicator {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .attendance-bar {
+            height: 100%;
+            background: linear-gradient(to right, #8b5cf6, #6366f1);
+            border-radius: 3px;
+        }
+        
+        .event-action-btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .event-action-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+            z-index: -1;
+            transition: all 0.6s ease;
+        }
+        
+        .event-action-btn:hover::after {
+            left: 100%;
+        }
+        
+        .programme-chevron {
+            transition: transform 0.3s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #notificationModal {
+            animation: fadeIn 0.2s ease-out;
+            max-height: 80vh;
+        }
+        /* Animations and enhanced styling */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #notificationModal {
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 5px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        @keyframes wiggle {
+            0% { transform: rotate(0); }
+            15% { transform: rotate(14deg); }
+            30% { transform: rotate(-8deg); }
+            45% { transform: rotate(6deg); }
+            60% { transform: rotate(-4deg); }
+            75% { transform: rotate(2deg); }
+            100% { transform: rotate(0); }
+        }
+
+        .wiggle-animation {
+            animation: wiggle 0.6s ease-in-out;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 640px) {
+            #notificationModal {
+                width: calc(100vw - 20px);
+                right: 10px;
+            }
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white min-h-screen p-6 relative">
+            <div class="mb-8 text-center">
+                <div class="flex justify-center mb-3">
+                    <i class="fas fa-gamepad text-4xl text-purple-300"></i>
+                </div>
+                <h1 class="text-2xl font-bold">GamersHub</h1>
+                <p class="text-sm text-purple-200">Member Portal</p>
+            </div>
+
+            <nav class="flex-grow">
+                <ul class="space-y-1">
+                    <li><a href="/member/dashboard" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-home mr-3 text-purple-300"></i>Dashboard</a></li>
+                    <li><a href="/member/tournaments" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-trophy mr-3 text-purple-300"></i>Tournaments</a></li>
+                    <li>
+                        <a href="/member/events" class="sidebar-item group flex items-center p-3 rounded-lg transition-all hover:bg-indigo-600 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-indigo-700 to-indigo-800 rounded-lg"></div>
+                            <div class="flex items-center justify-between w-full relative z-10">
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar-alt mr-3 text-purple-300 group-hover:text-white transition-colors"></i>
+                                    <span class="text-white font-medium">Events</span>
+                                </div>
+                                {% if notifications.notification_number|default(0) > 0 %}
+                                    <div class="relative">
+                                        <span class="flex h-5 items-center justify-center">
+                                            <span class="animate-ping absolute h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
+                                            <span class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[1.25rem] text-center">
+                                                {{notifications.notification_number|default(0)}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>
+                    <li><a href="/member/boutique" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-store mr-3 w-5 sidebar-icon text-purple-300"></i>Boutique</a></li>
+                    <li><a href="/member/games" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-gamepad mr-3 text-purple-300"></i>My Games</a></li>
+                    <li><a href="/member/profile" class="sidebar-item flex items-center p-3 hover:bg-indigo-700 rounded-lg transition"><i class="fas fa-user mr-3 text-purple-300"></i>Profile</a></li>
+                </ul>
+            </nav>
+
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+                <div class="flex items-center space-x-2 mb-3 p-2 rounded-lg bg-indigo-800/50">
+                    <img src="/{{member.profile_photo}}" class="rounded-full border-2 border-purple-300 h-20 w-20" alt="Member Profile">
+                    <div>
+                        <p class="text-sm font-medium">{{member.name}}</p>
+                        <div class="flex items-center">
+                            <i class="fas fa-circle text-green-500 mr-1 text-xs"></i>
+                            <p class="text-xs text-purple-300">Online</p>
+                        </div>
+                        <p class="text-xs text-purple-300 mt-1">Solde: {{my_solde}} €</p>
+                    </div>
+                </div>
+                <!-- Mini Account Balance -->
+                <div class="p-3 border-t border-indigo-800 sidebar-footer">
+                    <div class="bg-indigo-800 rounded-lg p-2 text-center">
+                        <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
+                        <button class="mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                            Recharger
+                        </button>
+                    </div>
+                </div>
+                <a href="/logout">
+                    <button class="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition flex items-center justify-center">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Header -->
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Community Events</h1>
+                    <p class="text-gray-500">Discover and participate in exciting gaming events!</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button id="notificationBtn" class="text-gray-600 hover:text-gray-800 transition p-2 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-bell text-xl relative">
+                                <span class="absolute top-0 right-0 h-full w-full animate-ping rounded-full bg-red-400 opacity-75" 
+                                    style="animation-duration: 2s; display: {% if notifications.notification_number > 0 %}block{% else %}none{% endif %}"></span>
+                            </i>
+                            <!-- Badge Counter with Scale Animation -->
+                            <span id="notificationCounter" 
+                                class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full min-w-4 h-4 flex items-center justify-center text-xs px-1 transition-transform transform {% if notifications.notification_number > 0 %}scale-100{% else %}scale-0{% endif %}">
+                                {{notifications.notification_number}}
+                            </span>
+                        </button>
+                        
+                        <div id="notificationModal" class="hidden absolute right-0 mt-2 w-96 md:w-[450px] bg-white rounded-lg shadow-2xl z-50 border border-gray-200 overflow-hidden">
+                            <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50">
+                                <h3 class="font-semibold text-gray-800 flex items-center">
+                                    <i class="fas fa-bell-on mr-2 text-blue-500"></i>
+                                    Notifications
+                                </h3>
+                                <button id="markAllReadBtn" class="text-blue-600 hover:text-blue-800 text-sm flex items-center bg-white py-1 px-2 rounded-md shadow-sm hover:shadow transition-all">
+                                    <i class="fas fa-check-double mr-1"></i> Mark all as read
+                                </button>
+                            </div>
+                            
+                            <div class="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-50" id="notificationList">
+                                {% if notificationsContent|length == 0 %}
+                                    <div class="flex flex-col items-center justify-center py-8 text-gray-500">
+                                        <i class="far fa-bell-slash text-4xl mb-2 opacity-50"></i>
+                                        <p>No notifications yet</p>
+                                    </div>
+                                {% endif %}
+                                
+                                {% for notification in notificationsContent %}
+                                    <!-- Notification Item with Hover Effect and Better Layout -->
+                                    <div class="p-4 border-b border-gray-100 hover:bg-blue-50 transition-all {% if notification.is_read %}opacity-70{% else %}bg-blue-50{% endif %}">
+                                        <div class="flex">
+                                            <!-- Icon Based on Notification Type -->
+                                            <div class="flex-shrink-0 mr-3">
+                                                {% if notification.type == 'reimbursement' %}
+                                                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                                        <i class="fas fa-coins text-green-600"></i>
+                                                    </div>
+                                                {% elseif notification.type == 'event_cancelled' %}
+                                                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                                                        <i class="fas fa-calendar-times text-red-600"></i>
+                                                    </div>
+                                                {% elseif notification.type == 'tournament_started'%}
+                                                    <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-green-100 text-green-800 border border-green-200">
+                                                        tournament_started
+                                                    </span>
+                                                {% elseif notification.type == 'tournament_prize_first' %}
+                                                    <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                                                        <i class="fas fa-trophy text-yellow-600"></i>
+                                                    </div>
+                                                {% elseif notification.type == 'tournament_prize_second' %}
+                                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                                        <i class="fas fa-medal text-blue-600"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <!-- Content Area with Message and Time -->
+                                            <div class="flex-1">
+                                                <!-- Message with Transaction Type Badge -->
+                                                <div class="flex flex-wrap items-start gap-2 mb-1">
+                                                    <p class="text-sm text-gray-800 font-medium">{{notification.message}}</p>
+                                                    
+                                                    {% if notification.type == 'reimbursement' %}
+                                                        <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-green-100 text-green-800 border border-green-200">
+                                                            Remboursement
+                                                        </span>
+                                                    {% elseif notification.type == 'event_cancelled' %}
+                                                        <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-red-100 text-red-800 border border-red-200">
+                                                            Annulation Sans Remboursement
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                <p class="text-xs text-gray-500 mt-1 flex items-center">
+                                                    <i class="far fa-clock mr-1"></i>
+                                                    {{notification.created_at|date("d/m/Y H:i")}}
+                                                </p>
+                                            </div>
+                                            
+                                            <div class="ml-2">
+                                                <button class="mark-read-btn w-8 h-8 rounded-full hover:bg-white flex items-center justify-center transition-all" 
+                                                    data-id="{{notification.id}}">
+                                                    {% if notification.is_read %}
+                                                        <i class="fas fa-check text-green-500"></i>
+                                                    {% else %}
+                                                        <i class="far fa-circle text-gray-400 hover:text-blue-500"></i>
+                                                    {% endif %}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Footer with Gradient -->
+                            <div class="p-3 text-center border-t border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50">
+                                <a href="/notifications" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center">
+                                    <span>View all notifications</span>
+                                    <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Event Category Filters -->
+            <section class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-700">Filter by Category</h2>
+                    <div class="flex space-x-2">
+                        <button class="text-sm px-4 py-2 text-indigo-600 hover:text-indigo-800 transition">
+                            <i class="fas fa-redo-alt mr-1"></i> Reset Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-500 hover:shadow-md transition flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-gamepad text-purple-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Gaming</span>
+                        </div>
+                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">12</span>
+                    </button>
+                    
+                    <button class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-red-500 hover:shadow-md transition flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-red-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-trophy text-red-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Competitions</span>
+                        </div>
+                        <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">8</span>
+                    </button>
+                    
+                    <button class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500 hover:shadow-md transition flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-green-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-chalkboard-teacher text-green-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Workshops</span>
+                        </div>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">5</span>
+                    </button>
+                    
+                    <button class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500 hover:shadow-md transition flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-glass-cheers text-blue-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">Social</span>
+                        </div>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">7</span>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- All Events -->
+            <section id="all-events" class="mb-10">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Upcoming Events</h2>
+
+                </div>
+                
+                {% if events|length == 0 %}
+                    <div class="flex flex-col items-center justify-center py-16 text-center">
+                        <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-4 float-animation">
+                            <i class="fas fa-gamepad text-5xl text-purple-400"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Aucun Evenement dans votre Club</h2>
+                        <p class="text-gray-600 mb-6 max-w-md">L'organisateur n'a pas ajouté d'événement.</p>
+                    </div>
+                {% else %}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {% for event in events %}
+                            <div class="event-card shadow-sm">
+                                <!-- Card Header with Image -->
+                                <div class="relative">
+                                    <img src="/{{event.event_photo}}" alt="{{event.name}}" class="w-full h-48 object-cover">
+                                    
+                                    <div class="date-badge">
+                                        <i class="fas fa-calendar-alt mr-1"></i> {{event.date_debut}}
+                                    </div>
+                                    
+                                    <div class="category-badge 
+                                        {% if event.type_evenement == 'Social' %}category-social
+                                        {% elseif event.type_evenement == 'Competition' %}category-competition
+                                        {% elseif event.type_evenement == 'Workshop' %}category-workshop
+                                        {% elseif event.type_evenement == 'Gaming' %}category-gaming
+                                        {% else %}category-social{% endif %}">
+                                        {{event.type_evenement}}
+                                    </div>
+                                    
+                                    <div class="status-badge 
+                                        {% if event.statut == 'Open' %}status-open
+                                        {% elseif event.statut == 'Pending' %}status-pending
+                                        {% elseif event.statut == 'Full' %}status-full
+                                        {% elseif event.statut == 'In Progress' %}status-in-progress
+                                        {% else %}status-pending{% endif %}">
+                                        {% if event.statut == 'Open' %}Ouvert
+                                        {% elseif event.statut == 'Pending' %}En attente
+                                        {% elseif event.statut == 'Full' %}Complet
+                                        {% elseif event.statut == 'In Progress' %}En cours
+                                        {% else %}{{ event.statut }}{% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Event Information -->
+                                <div class="p-5">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h3 class="text-lg font-bold text-gray-800">{{event.name}}</h3>
+                                        <div class="flex items-center">
+                                            {% if event.entry_fee > 0 %}
+                                            <span class="event-fee-badge">
+                                                <i class="fas fa-coins mr-1"></i> {{event.entry_fee}} €
+                                            </span>
+                                            {% else %}
+                                            <span class="event-free-badge">
+                                                <i class="fas fa-ticket-alt mr-1"></i> Gratuit
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{event.description}}</p>
+                                    
+                                    <!-- Event Stats -->
+                                    <div class="info-row">
+                                        <div class="info-item">
+                                            <i class="fas fa-clock"></i>
+                                            <span>{{event.date_debut}}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>{{event.lieu|default('À confirmer')}}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="info-row">
+                                        <div class="info-item">
+                                            <i class="fas fa-users"></i>
+                                            <span>{{event.nombre_participants|default(0)}}/{{event.numbre_membre}}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <i class="fas fa-gamepad"></i>
+                                            <span>{{event.type_evenement}}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Attendance Progress Bar -->
+                                    <div class="mt-3">
+                                        <div class="attendance-indicator">
+                                            <div class="attendance-bar" style="width: {{ (event.nombre_participants / event.numbre_membre * 100)|round }}%"></div>
+                                        </div>
+                                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                            <span>Attendance</span>
+                                            <span>{{event.nombre_participants|default(0)}}/{{event.numbre_membre}}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Toggle button for Programme -->
+                                    <div class="mt-4 mb-2">
+                                        <button onclick="toggleProgramme(this)" class="w-full text-left text-sm text-purple-600 hover:text-purple-800 transition flex items-center justify-between px-2 py-1 rounded hover:bg-purple-50">
+                                            <span><i class="fas fa-calendar-day mr-2"></i> Voir le programme</span>
+                                            <i class="fas fa-chevron-down programme-chevron"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Programme Section (Hidden by default) -->
+                                    <div class="programme-section hidden mt-3 border-t border-gray-200 pt-3">
+                                        <!-- Timeline with styling -->
+                                        <div class="relative pl-8 before:content-[''] before:absolute before:left-3 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-purple-300 before:to-purple-100 max-h-40 overflow-y-auto custom-scrollbar pr-1">
+                                            {% if event.programme and event.programme|length > 0 %}
+                                                {% for item in event.programme %}
+                                                    <div class="mb-3 relative">
+                                                        <!-- Timeline Point with effect -->
+                                                        <div class="absolute left-[-20px] top-1.5 w-5 h-5 bg-white rounded-full border-2 border-purple-400 z-10 flex items-center justify-center">
+                                                            <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                                        </div>
+                                                        
+                                                        <!-- Content -->
+                                                        <div class="bg-purple-50 p-2 rounded-lg shadow-sm border border-purple-100">
+                                                            <!-- Time Badge -->
+                                                            <div class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full mb-1">
+                                                                <i class="far fa-clock mr-1"></i>
+                                                                {{ item.timeline_time }}
+                                                            </div>
+                                                            
+                                                            <!-- Event Title -->
+                                                            <h5 class="text-purple-900 font-bold text-sm">{{ item.timeline_title }}</h5>
+                                                            
+                                                            <!-- Event Description (limited height) -->
+                                                            <p class="text-gray-600 text-xs leading-relaxed line-clamp-2">{{ item.timeline_desc }}</p>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <!-- Empty state -->
+                                                <div class="text-center py-3 px-3 bg-purple-50 rounded-lg border border-purple-100">
+                                                    <i class="fas fa-calendar-times text-purple-300 text-lg mb-1"></i>
+                                                    <p class="text-purple-600 text-xs">Programme non disponible</p>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Action Button -->
+                                    {% set userIsRegistered = false %}
+                                    {% for inscription in inscriptions %}
+                                        {% if inscription.evenement_id == event.id %}
+                                            {% set userIsRegistered = true %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if userIsRegistered %}
+                                        <button class="w-full mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition flex items-center justify-center event-action-btn" disabled>
+                                            <i class="fas fa-check-circle mr-2"></i> Déjà inscrit
+                                        </button>
+                                    {% elseif event.statut == 'Open' or event.statut == 'Pending' %}
+                                        <button onclick="showPaymentForm('{{event.id}}', '{{event.entry_fee}}', '{{event.name}}')" class="w-full mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition flex items-center justify-center event-action-btn">
+                                            <i class="fas fa-calendar-check mr-2"></i> S'inscrire
+                                        </button>
+                                    {% elseif event.statut == 'Full' %}
+                                        <button class="w-full mt-4 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition flex items-center justify-center event-action-btn" disabled>
+                                            <i class="fas fa-user-times mr-2"></i> Complet
+                                        </button>
+                                    {% elseif event.statut == 'In Progress' %}
+                                        <div class="w-full mt-4 px-4 py-2 bg-green-600 text-white rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-play mr-2"></i> En cours
+                                        </div>
+                                    {% elseif event.statut == 'Completed' %}
+                                        <button class="w-full mt-4 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition flex items-center justify-center event-action-btn">
+                                            <i class="fas fa-photo-video mr-2"></i> Voir les photos
+                                        </button>
+                                    {% elseif event.statut == 'Cancelled' %}
+                                        <div class="w-full mt-4 px-4 py-2 bg-red-500 text-white rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-ban mr-2"></i> Annulé
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <div class="flex justify-center mt-8">
+                    <button class="px-6 py-3 bg-white border border-gray-300 rounded-lg text-purple-600 hover:bg-gray-50 transition flex items-center font-medium">
+                        Load More Events <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Quick Action Button -->
+    <button class="fixed bottom-6 right-6 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full shadow-lg hover:from-purple-700 hover:to-indigo-700 transition z-50">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Modal de rechargement -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                    <div>
+                        <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                            <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="MM/AA">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4">
+                        Recharger mon compte
+                    </button>
+                    
+                    <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                        Paiement 100% sécurisé
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div id="payment-modal-content" class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 opacity-0 scale-95">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Confirmation d'inscription</h3>
+                <button onclick="closePaymentModal()" class="p-2 text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="border-t border-b border-gray-200 py-4 mb-4">
+                <div class="mb-4">
+                    <p class="text-gray-600 text-sm mb-1">Événement:</p>
+                    <p id="payment-tournament-name" class="font-semibold text-gray-800"></p>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Frais d'inscription:</span>
+                    <span id="payment-amount" class="text-lg font-bold text-purple-600"></span>
+                </div>
+            </div>
+            
+            <form id="payment-form" onsubmit="processPayment(); return false;">
+                <input type="hidden" id="payment-tournoi-id" name="event_id" value="">
+                <input type="hidden" id="payment-frais" name="frais_inscription" value="">
+                
+                <!-- Payment confirmation message -->
+                <div class="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-100">
+                    <p class="text-sm text-gray-700">
+                        En confirmant votre inscription, vous acceptez de participer à cet événement selon les conditions définies par l'organisateur.
+                    </p>
+                    
+                    <!-- Free event notice or payment options -->
+                    <div id="payment-free-notice" class="hidden mt-2 text-sm text-green-600">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Cet événement est gratuit. Aucun frais ne sera débité.
+                    </div>
+                    
+                    <div id="payment-paid-notice" class="hidden mt-2 text-sm text-purple-600">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Le montant sera débité de votre solde GamersHub.
+                    </div>
+                </div>
+                
+                <div class="flex space-x-3">
+                    <button type="button" onclick="closePaymentModal()" class="flex-1 py-2.5 px-4 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition">
+                        Annuler
+                    </button>
+                    <button type="submit" class="flex-1 py-2.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg shadow transition">
+                        Confirmer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // JavaScript for interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example: Toggle mobile navigation
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            const sidebar = document.querySelector('aside');
+            
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function() {
+                    sidebar.classList.toggle('hidden');
+                });
+            }
+        });
+
+        // Function to toggle programme visibility
+        function toggleProgramme(button) {
+            const programmeSection = button.parentNode.nextElementSibling;
+            const chevron = button.querySelector('.programme-chevron');
+            
+            if (programmeSection.classList.contains('hidden')) {
+                programmeSection.classList.remove('hidden');
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                programmeSection.classList.add('hidden');
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Function to show payment form
+        function showPaymentForm(eventId, fraisInscription, eventName) {
+            // Update payment information
+            document.getElementById('payment-tournament-name').textContent = eventName;
+            
+            // Show price
+            const frais = parseFloat(fraisInscription);
+            if (frais > 0) {
+                document.getElementById('payment-amount').textContent = `${frais.toFixed(2)} €`;
+                document.getElementById('payment-free-notice').classList.add('hidden');
+                document.getElementById('payment-paid-notice').classList.remove('hidden');
+            } else {
+                document.getElementById('payment-amount').textContent = 'Gratuit';
+                document.getElementById('payment-free-notice').classList.remove('hidden');
+                document.getElementById('payment-paid-notice').classList.add('hidden');
+            }
+            
+            // Update hidden form values
+            document.getElementById('payment-tournoi-id').value = eventId;
+            document.getElementById('payment-frais').value = fraisInscription;
+            
+            // Show modal
+            const modal = document.getElementById('payment-modal');
+            const modalContent = document.getElementById('payment-modal-content');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Entry animation
+            setTimeout(() => {
+                modalContent.classList.remove('opacity-0', 'scale-95');
+                modalContent.classList.add('opacity-100', 'scale-100');
+            }, 10);
+            
+            // Disable page scrolling
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to close payment modal
+        function closePaymentModal() {
+            const modal = document.getElementById('payment-modal');
+            const modalContent = document.getElementById('payment-modal-content');
+            
+            // Exit animation
+            modalContent.classList.remove('opacity-100', 'scale-100');
+            modalContent.classList.add('opacity-0', 'scale-95');
+            
+            // Hide modal after animation
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                
+                // Re-enable page scrolling
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Function to process payment
+        function processPayment() {
+            // Show loading message
+            const loadingMessage = 'Veuillez patienter pendant le traitement...';
+            
+            // Check if SweetAlert2 is available
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Traitement en cours',
+                    text: loadingMessage,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            } else {
+                alert(loadingMessage);
+            }
+            
+            // Simulate processing delay (2 seconds)
+            setTimeout(() => {
+                // Get form data
+                const eventId = document.getElementById('payment-tournoi-id').value;
+                const fraisInscription = document.getElementById('payment-frais').value;
+                
+                // Create form to submit data
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/member/eventInscription';
+                
+                // Add necessary fields
+                const inputEventId = document.createElement('input');
+                inputEventId.type = 'hidden';
+                inputEventId.name = 'event_id';
+                inputEventId.value = eventId;
+                form.appendChild(inputEventId);
+                
+                const inputFrais = document.createElement('input');
+                inputFrais.type = 'hidden';
+                inputFrais.name = 'frais_inscription';
+                inputFrais.value = fraisInscription;
+                form.appendChild(inputFrais);
+                
+                // Add form to document and submit
+                document.body.appendChild(form);
+                form.submit();
+            }, 2000);
+        }
+
+                    
+        // Recharge modal functionality
+        const rechargeBtn = document.querySelector('.sidebar-footer button');
+        const rechargeModal = document.getElementById('recharge-modal');
+        const closeModalBtn = document.getElementById('close-recharge-modal');
+            
+        // Function to open the modal
+        function openRechargeModal() {
+            if (rechargeModal) {
+                rechargeModal.classList.remove('hidden');
+                rechargeModal.classList.add('flex');
+            }
+        }
+            
+        // Function to close the modal
+        function closeRechargeModal() {
+            if (rechargeModal) {
+                rechargeModal.classList.add('hidden');
+                rechargeModal.classList.remove('flex');
+            }
+        }
+            
+        // Add an event click to the "Recharger" button
+        if (rechargeBtn) {
+            rechargeBtn.addEventListener('click', openRechargeModal);
+        }
+            
+        // Add an event click to the close button
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeRechargeModal);
+        }
+            
+        // Close the modal when clicking outside
+        if (rechargeModal) {
+            rechargeModal.addEventListener('click', function(e) {
+                if (e.target === rechargeModal) {
+                    closeRechargeModal();
+                }
+            });
+        }
+            
+        // Handle recharge form submission
+        const rechargeForm = document.getElementById('recharge-form');
+            
+        // Event handler for form submission
+        if (rechargeForm) {
+            rechargeForm.addEventListener('submit', function(e) {
+                // Prevent default form submission
+                e.preventDefault();
+                    
+                // Get the entered amount
+                const amount = document.getElementById('recharge-amount').value;
+                    
+                // Show loading alert
+                Swal.fire({
+                    title: 'Rechargement en cours',
+                    text: `Rechargement de ${amount} € en cours...`,
+                    icon: 'info',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                    
+                // Submit the form after a short delay to show the animation
+                setTimeout(() => {
+                    rechargeForm.submit();
+                }, 1500);
+            });
+        }
+            
+        // Check URL parameters for notifications
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentPath = window.location.pathname;
+            
+        // Fonction pour nettoyer l'URL
+        function cleanURL() {
+            window.history.replaceState({}, document.title, currentPath);
+        }
+            
+        // Gestion des notifications
+        if (urlParams.has('Rechargement_de_votre_solde_réussite')) {
+            Swal.fire({
+                title: 'Succès!',
+                text: 'Rechargement de votre solde réussi',
+                icon: 'success',
+                confirmButtonColor: '#8b5cf6'
+            }).then(cleanURL);
+        }
+            
+        if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+            Swal.fire({
+                title: 'Échec',
+                text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(cleanURL);
+        }
+            
+        if (urlParams.has('Inscription_succefully')) {
+            Swal.fire({
+                title: "Succès !",
+                text: "L'inscription au Evenement a été effectuée avec succès !",
+                icon: "success",
+                confirmButtonText: "OK",
+                confirmButtonColor: '#8b5cf6',
+                timer: 3000 
+            }).then(cleanURL);
+        }
+            
+        if (urlParams.has('inscription_error')) {
+            Swal.fire({
+                title: 'Erreur',
+                text: "L'inscription au Evenement a échoué. Veuillez vérifier votre solde !",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#8b5cf6'
+            }).then(cleanURL);
+        }
+
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationModal = document.getElementById('notificationModal');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+            
+            // Toggle notification modal
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Add wiggle animation when opening
+                if (notificationModal.classList.contains('hidden')) {
+                    notificationBtn.querySelector('i').classList.add('wiggle-animation');
+                    setTimeout(() => {
+                        notificationBtn.querySelector('i').classList.remove('wiggle-animation');
+                    }, 600);
+                }
+                
+                notificationModal.classList.toggle('hidden');
+            });
+            
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
+                    notificationModal.classList.add('hidden');
+                }
+            });
+        });
+
+        document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/member/notificationRead';
+                
+                const idField = document.createElement('input');
+                idField.type = 'hidden';
+                idField.name = 'notification_id';
+                idField.value = this.getAttribute('data-id');
+                form.appendChild(idField);
+                
+                document.body.appendChild(form);
+                form.submit();
+            });
+        });
+
+    </script>
+</body>
+</html>

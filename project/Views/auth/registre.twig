@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Club - Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        function toggleFields() {
+            const role = document.getElementById('role').value;
+            const membreFields = document.getElementById('membreFields');
+            const organisateurFields = document.getElementById('organisateurFields');
+            
+            // Hide all fields initially
+            membreFields.style.display = 'none';
+            organisateurFields.style.display = 'none';
+            
+            // Show fields based on selected role
+            if (role === 'membre') {
+                membreFields.style.display = 'block';
+            } else if (role === 'organisateur') {
+                organisateurFields.style.display = 'block';
+
+                if (clubSelect.value === 'Tournoi') {
+                    clubInput.style.display = 'block';
+                    eventInput.style.display = 'none';
+                } else if (clubSelect.value === 'Evenements') {
+                    clubInput.style.display = 'none';
+                    eventInput.style.display = 'block';
+                }
+            }
+        }
+        
+        // Ensure fields are toggled on page load
+        window.onload = function() {
+            toggleFields();
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 to-purple-100">
+    <div class="min-h-screen flex items-center justify-center px-4 py-8">
+        <div class="bg-white shadow-2xl rounded-2xl overflow-hidden max-w-4xl w-full grid md:grid-cols-2">
+            <!-- Registration Form -->
+            <div class="p-10 bg-white">
+                <div class="mb-8 text-center">
+                    <h2 class="text-3xl font-bold text-indigo-800 mb-2">
+                        <i class="fas fa-gamepad mr-3 text-indigo-600"></i>Game Club Registration
+                    </h2>
+                    <p class="text-gray-600">Create your account and join our gaming community</p>
+                </div>
+
+                <form action="/registre" method="post" class="space-y-6">
+                    <!-- Role Selection -->
+                    <div>
+                        <label class="block text-gray-700 mb-2">Select Your Role</label>
+                        <select name="role" id="role" required onchange="toggleFields()"class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="">Choose a Role</option>
+                            <option value="membre">Member</option>
+                            <option value="organisateur">organisateur</option>
+                        </select>
+                    </div>
+
+                    <!-- Name Input -->
+                    <div>
+                        <label class="block text-gray-700 mb-2">Full Name</label>
+                        <div class="relative">
+                            <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" name="name" required placeholder="Enter your full name"class="w-full px-4 pl-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div>
+                        <label class="block text-gray-700 mb-2">Email Address</label>
+                        <div class="relative">
+                            <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="email" name="email" required placeholder="Enter your email"class="w-full px-4 pl-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div>
+                        <label class="block text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="password" name="password" required placeholder="Create a strong password"class="w-full px-4 pl-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+
+                    {# membreFields #}
+                    <div id="membreFields" style="display:none;">
+                        <label class="block text-gray-700 mb-2">Date Of Birth</label>
+                        <div class="relative">
+                            <i class="fas fa-calendar-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="date" name="naissance" class="w-full px-4 pl-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+
+                    <!-- Organisateur Additional Fields -->
+                    <div id="organisateurFields" style="display:none;">
+                        <label class="block text-gray-700 mb-2">Name Of Club</label>
+                        <div class="relative">
+                            <i class="fas fa-calendar-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" name="nam_club" placeholder="Enter name of your club" class="w-full px-4 pl-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit" name="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-700 text-white py-3 rounded-lg hover:from-indigo-700 hover:to-purple-800 transition duration-300 flex items-center justify-center">
+                            <i class="fas fa-user-plus mr-3"></i>
+                            Create Account
+                        </button>
+                    </div>
+
+                    <div id="g_id_onload"
+                        data-client_id="16802501273-egl3p0sb8f1a4hrjp3unu1pa80ckn0o5.apps.googleusercontent.com"
+                        data-context="signup"
+                        data-ux_mode="popup"
+                        data-login_uri="http://localhost:86/loginGoogle"
+                        data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin"
+                        data-type="standard"
+                        data-shape="rectangular"
+                        data-theme="filled_blue"
+                        data-text="signup_with"
+                        data-size="large"
+                        data-logo_alignment="left">
+                    </div>
+                    <!-- Login Link -->
+                    <div class="text-center mt-4">
+                        <p class="text-gray-600">
+                            Already have an account? 
+                            <a href="/login" class="text-indigo-600 hover:underline">
+                                Log in
+                            </a>
+                        </p>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- Illustration Side -->
+            <div class="hidden md:block bg-gradient-to-br from-indigo-500 to-purple-600 relative">
+                <div class="absolute inset-0 opacity-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1542751371-adf9c4dc4e3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80')"></div>
+                <div class="relative z-10 flex flex-col justify-center items-center h-full p-10 text-white text-center">
+                    <i class="fas fa-gamepad text-6xl mb-6"></i>
+                    <h3 class="text-3xl font-bold mb-4">Welcome to Game Club</h3>
+                    <p class="text-lg mb-8">
+                        Join our community and connect with gamers from around the world
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://accounts.google.com/gsi/client" async></script>
+</body>
+</html>

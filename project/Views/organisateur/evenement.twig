@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamersHub - Gestion d'Événements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-item {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(139, 92, 246, 0.9);
+        }
+        
+        .sidebar-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover .sidebar-icon {
+            transform: translateX(5px);
+        }
+        
+        .form-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+        
+        .event-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-card.status-upcoming {
+            border-left-color: #3b82f6;
+        }
+        
+        .event-card.status-active {
+            border-left-color: #10b981;
+        }
+        
+        .event-card.status-completed {
+            border-left-color: #8b5cf6;
+        }
+        
+        .event-card.status-canceled {
+            border-left-color: #ef4444;
+        }
+        
+        .tab-button {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, #8b5cf6, #6366f1);
+        }
+        
+        /* Collapsible sidebar styles */
+        .sidebar-collapsed {
+            width: 5rem;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-expanded {
+            width: 16rem;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-collapsed .sidebar-text {
+            display: none;
+        }
+        
+        .sidebar-collapsed .sidebar-header-text {
+            display: none;
+        }
+        
+        .sidebar-expanded .sidebar-text {
+            display: inline;
+        }
+        
+        .sidebar-collapsed .sidebar-footer {
+            display: none;
+        }
+        
+        .main-content-collapsed {
+            margin-left: 5rem;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .main-content-expanded {
+            margin-left: 16rem;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Improved scrollbar for sidebar */
+        .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+        }
+        
+        /* Event card detail styles */
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .card-expanded .card-details {
+            max-height: 500px;
+        }
+        
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .card-expanded .rotate-icon {
+            transform: rotate(180deg);
+        }
+            /* Adjust sidebar widths for both states */
+        .sidebar-collapsed {
+            width: 4rem !important;
+        }
+        
+        .sidebar-expanded {
+            width: 15rem;
+        }
+        
+        /* Hide text in collapsed state */
+        .sidebar-collapsed .sidebar-text,
+        .sidebar-collapsed .sidebar-header-text {
+            display: none;
+        }
+        
+        /* Hide footer in collapsed state */
+        .sidebar-collapsed .sidebar-footer {
+            display: none;
+        }
+        
+        /* Center icons when collapsed */
+        .sidebar-collapsed .sidebar-icon {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Adjust main content margin */
+        .main-content-collapsed {
+            margin-left: 4rem !important;
+        }
+        
+        .main-content-expanded {
+            margin-left: 15rem;
+        }
+        
+        /* Improve scrollbar styling */
+        .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 3px;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        /* Custom scrollbar styles for the card details */
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(107, 114, 128, 0.3) transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(107, 114, 128, 0.3);
+            border-radius: 20px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(107, 114, 128, 0.5);
+        }
+
+        /* Updated card-details styling */
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .card-expanded .card-details {
+            max-height: 650px; /* Allow enough height for banner + scrollable content */
+        }
+        
+        /* Event timeline styles */
+        .timeline {
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 12px;
+            width: 2px;
+            background-color: #e5e7eb;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .timeline-point {
+            position: absolute;
+            left: 0;
+            top: 3px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #8b5cf6;
+            z-index: 1;
+        }
+        
+        .timeline-item.completed .timeline-point {
+            background-color: #8b5cf6;
+        }
+        
+        /* Event categories chips */
+        .category-chip {
+            transition: all 0.2s ease;
+        }
+        
+        .category-chip:hover {
+            transform: translateY(-2px);
+        }
+        
+        .category-chip.active {
+            background-color: #8b5cf6;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Navigation -->
+    <div class="flex">
+        <aside class="sidebar-expanded bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white h-screen flex flex-col fixed z-30 transition-all duration-300 overflow-hidden w-60">
+            <!-- Sidebar Header - Compact -->
+            <div class="flex items-center justify-between p-3 border-b border-indigo-800">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-gamepad text-xl text-purple-300"></i>
+                    <h2 class="text-lg font-bold sidebar-header-text">GamersHub</h2>
+                </div>
+                <button id="sidebar-toggle" class="p-1 rounded-full bg-indigo-800 text-white hover:bg-indigo-700 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- User Info - More Compact -->
+            <div class="p-3 border-b border-indigo-800 flex items-center">
+                <img src="/{{profile.profile_image}}" alt="Avatar" class="w-8 h-8 rounded-full bg-gray-500 border-2 border-purple-300">
+                <div class="sidebar-header-text ml-2">
+                    <p class="font-medium text-sm">{{profile.name}}</p>
+                    <p class="text-xs text-purple-200">{{profile.gamer_tag}}</p>
+                </div>
+            </div>
+            
+            <!-- Navigation - Reduced Padding -->
+            <nav class="flex-1 overflow-y-auto sidebar-scroll py-2">
+                <!-- Dashboard -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text">
+                    Menu
+                </div>
+                <a href="#" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-tachometer-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Vue d'ensemble</span>
+                </a>
+                
+                <!-- Management -->
+                <a href="/ClubManagement" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-users w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Gestion du club</span>
+                </a>
+                <a href="/profile" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-user w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Profil</span>
+                </a>
+                
+                <!-- Events -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
+                    Événements
+                </div>
+                <a href="organisateur/evenement" class="sidebar-item active flex items-center px-3 py-2 text-white rounded-lg mb-1">
+                    <i class="fas fa-calendar-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Événement</span>
+                </a>
+                <a href="/tournoi" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Tournois</span>
+                </a>
+                <a href="/boutique" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-store w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Boutique</span>
+                </a>
+                <a href="/jeux" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-gamepad w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Jeux</span>
+                </a>
+                
+                <!-- Settings - Combined into one section -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
+                    Compte
+                </div>
+                <a href="#" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-cog w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Configuration</span>
+                </a>
+                <a href="/logout" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-sign-out-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Déconnexion</span>
+                </a>
+            </nav>
+            
+            <!-- Mini Account Balance -->
+            <div class="p-3 border-t border-indigo-800 sidebar-footer">
+                <div class="bg-indigo-800 rounded-lg p-2 text-center">
+                    <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
+                    <button class="mt-2 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                        Recharger
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content-expanded ml-64 flex-1 transition-all duration-300">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm">
+                <div class="flex justify-between items-center px-6 py-4">
+                    <h1 class="text-2xl font-bold text-gray-800">Gestion des Événements</h1>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="p-6">
+                <!-- Actions Button -->
+                <div class="flex justify-between items-center mb-6">
+                    <button id="create-event-btn" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-lg flex items-center shadow-sm transition duration-300 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-plus-circle mr-2"></i> Créer un événement
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="bg-white rounded-xl shadow-sm mb-6 overflow-hidden">
+                    <div class="border-b border-gray-200">
+                        <div class="flex">
+                            <button class="tab-button active px-6 py-4 font-medium text-purple-600 focus:outline-none">
+                                Mes événements
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Event Cards -->
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 gap-4">
+                            {% if events|length == 0 %}
+                                <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                                    <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-4 float-animation">
+                                        <i class="fas fa-gamepad text-5xl text-purple-400"></i>
+                                    </div>
+                                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Aucun Evenement dans votre Club</h2>
+                                    <p class="text-gray-600 mb-6 max-w-md">Vous n'avez pas encore ajouté un Evenement.</p>
+                                </div>
+                            {% else %}
+                                {% for event in events %}
+                                    <div class="event-card status-active bg-white rounded-xl shadow-sm overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100 hover:border-purple-200">
+                                        <!-- Event Summary (Always visible) -->
+                                        <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
+                                            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                                                <div class="flex-shrink-0">
+                                                    <!-- Event image with improved styling -->
+                                                    <div class="w-16 h-16 rounded-xl overflow-hidden shadow-sm border-2 border-indigo-50">
+                                                        <img src="/{{event.event_photo}}" alt="{{event.name}}" class="w-full h-full object-cover">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-bold text-lg text-gray-800 hover:text-indigo-700 transition-colors">{{event.name}}</h3>
+                                                    <div class="flex items-center text-sm text-gray-500 mt-1.5">
+                                                        <i class="far fa-calendar-alt mr-2 text-indigo-400"></i>
+                                                        <span>{{event.date_debut}} - {{event.event_time}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                                                <!-- Status Badge with enhanced styling -->
+                                                <span class="px-3.5 py-1.5 text-xs font-medium rounded-full shadow-sm
+                                                    {% if event.statut == 'Open' %}
+                                                        bg-gradient-to-r from-green-50 to-green-100 text-green-800 border border-green-200
+                                                    {% elseif event.statut == 'Completed' %}
+                                                        bg-gradient-to-r from-blue-50 to-blue-100 text-blue-800 border border-blue-200
+                                                    {% elseif event.statut == 'Cancelled' %}
+                                                        bg-gradient-to-r from-red-50 to-red-100 text-red-800 border border-red-200
+                                                    {% elseif event.statut == 'In Progress' %}
+                                                        bg-gradient-to-r from-amber-50 to-amber-100 text-amber-800 border border-amber-200
+                                                    {% else %}
+                                                        bg-gradient-to-r from-purple-50 to-purple-100 text-purple-800 border border-purple-200
+                                                    {% endif %}
+                                                ">
+                                                    {{ event.statut }}
+                                                </span>
+                                                
+                                                <!-- Participants Counter with enhanced styling -->
+                                                <div class="bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-800 rounded-full px-3.5 py-1.5 flex items-center shadow-sm border border-indigo-200">
+                                                    <i class="fas fa-users mr-1.5 text-indigo-500"></i>
+                                                    <span class="text-xs font-semibold">{{event.numbre_membre}}</span>
+                                                </div>
+                                                
+                                                <!-- Category Icon with enhanced styling -->
+                                                <div class="bg-gradient-to-r from-purple-50 to-purple-100 text-purple-800 rounded-full px-3.5 py-1.5 flex items-center shadow-sm border border-purple-200">
+                                                    <i class="fas fa-laptop mr-1.5 text-purple-500"></i>
+                                                    <span class="text-xs font-semibold">{{event.type_evenement}}</span>
+                                                </div>
+                                                
+                                                <!-- Action buttons with enhanced styling -->
+                                                <div class="flex items-center gap-2 ml-auto">
+                                                    <button class="p-2.5 bg-gradient-to-r from-indigo-50 to-indigo-100 hover:from-indigo-100 hover:to-indigo-200 text-indigo-700 rounded-lg transition-all shadow-sm border border-indigo-200" title="Statistiques">
+                                                        <i class="fas fa-chart-line"></i>
+                                                    </button>
+                                                    <button class="p-2.5 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 text-gray-700 rounded-lg transition-all shadow-sm border border-gray-200">
+                                                        <i class="fas fa-chevron-down rotate-icon"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Event Details (Hidden by default, toggles on click) -->
+                                        <div class="card-details border-t border-gray-200 hidden">
+                                            <!-- Event Banner Image with overlay gradient -->
+                                            <div class="w-full h-56 overflow-hidden relative">
+                                                <img src="/{{event.event_photo}}" alt="{{event.name}}" class="w-full h-full object-cover">
+                                                <!-- Image overlay gradient -->
+                                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+                                                    <!-- Event date badge positioned at the bottom left of the banner -->
+                                                    <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-purple-100">
+                                                        <div class="flex items-center">
+                                                            <i class="far fa-calendar-alt text-purple-600 mr-2"></i>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500 font-medium">Date</p>
+                                                                <p class="text-sm font-bold text-gray-800">{{event.date_debut}}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Scrollable content area with max height -->
+                                            <div class="p-6 overflow-y-auto max-h-[400px] custom-scrollbar">
+                                                <!-- Event Details Row with enhanced card styling -->
+                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                                    <div class="flex items-center p-4 bg-gradient-to-br from-indigo-50 to-white rounded-xl shadow-sm border border-indigo-100 hover:shadow-md transition-all">
+                                                        <div class="mr-3 p-3 bg-indigo-100 rounded-full shadow-sm">
+                                                            <i class="fas fa-users text-indigo-600"></i>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-xs text-indigo-600 font-medium uppercase tracking-wide">Participants</p>
+                                                            <p class="text-base font-bold text-gray-800">{{event.number_participants}} / {{event.numbre_membre}} Inscrits</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="flex items-center p-4 bg-gradient-to-br from-purple-50 to-white rounded-xl shadow-sm border border-purple-100 hover:shadow-md transition-all">
+                                                        <div class="mr-3 p-3 bg-purple-100 rounded-full shadow-sm">
+                                                            <i class="fas fa-map-marker-alt text-purple-600"></i>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-xs text-purple-600 font-medium uppercase tracking-wide">Lieu</p>
+                                                            <p class="text-base font-bold text-gray-800">Salle Polyvalente</p>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="flex items-center p-4 bg-gradient-to-br from-green-50 to-white rounded-xl shadow-sm border border-green-100 hover:shadow-md transition-all">
+                                                        <div class="mr-3 p-3 bg-green-100 rounded-full shadow-sm">
+                                                            <i class="fas fa-euro-sign text-green-600"></i>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-xs text-green-600 font-medium uppercase tracking-wide">Frais</p>
+                                                            <p class="text-base font-bold text-gray-800">{{event.entry_fee}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Description Section with improved styling -->
+                                                <div class="mt-6 pt-5 border-t border-gray-200">
+                                                    <div class="flex items-center mb-3">
+                                                        <div class="p-2 bg-blue-100 rounded-full shadow-sm mr-3">
+                                                            <i class="fas fa-info-circle text-blue-600"></i>
+                                                        </div>
+                                                        <h4 class="font-semibold text-gray-900 text-lg">Description</h4>
+                                                    </div>
+                                                    <div class="bg-gradient-to-r from-blue-50 to-white p-5 rounded-xl text-sm text-gray-700 leading-relaxed shadow-sm border border-blue-100">
+                                                        <p>{{event.description}}</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Programme Section with enhanced styling -->
+                                                <div class="mt-6 pt-5 border-t border-gray-200">
+                                                    <!-- Section Header with improved styling -->
+                                                    <div class="flex items-center mb-5">
+                                                        <div class="p-2.5 bg-gradient-to-br from-amber-100 to-amber-50 rounded-full shadow-sm mr-3 border border-amber-200">
+                                                            <i class="fas fa-clock text-amber-600 text-lg"></i>
+                                                        </div>
+                                                        <h4 class="font-semibold text-gray-900 text-lg">Programme</h4>
+                                                    </div>
+                                                    
+                                                    <!-- Timeline with improved styling -->
+                                                    <div class="relative pl-10 before:content-[''] before:absolute before:left-3.5 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-amber-300 before:to-amber-100">
+                                                        {% for item in event.programme %}
+                                                            <div class="mb-7 relative">
+                                                                <!-- Timeline Point with pulsing effect -->
+                                                                <div class="absolute left-[-30px] top-2 w-7 h-7 bg-white rounded-full border-2 border-amber-400 z-10 flex items-center justify-center shadow-md">
+                                                                    <div class="w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
+                                                                </div>
+                                                                
+                                                                <!-- Content Card with enhanced styling -->
+                                                                <div class="bg-gradient-to-r from-amber-50 to-white p-5 rounded-xl shadow-sm border border-amber-100 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:border-amber-300">
+                                                                    <!-- Time Badge with improved styling -->
+                                                                    <div class="inline-block bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1.5 rounded-full mb-3 shadow-sm border border-amber-200">
+                                                                        <i class="far fa-clock mr-1.5"></i>
+                                                                        {{ item.timeline_time }}
+                                                                    </div>
+                                                                    
+                                                                    <!-- Event Title with improved styling -->
+                                                                    <h5 class="text-amber-900 font-bold text-lg mb-2">{{ item.timeline_title }}</h5>
+                                                                    
+                                                                    <!-- Event Description with improved styling -->
+                                                                    <p class="text-gray-600 text-sm leading-relaxed">{{ item.timeline_desc }}</p>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                        
+                                                        <!-- Empty state with improved styling -->
+                                                        {% if event.programme|length == 0 %}
+                                                            <div class="text-center py-6 px-5 bg-gradient-to-r from-amber-50 to-white rounded-xl border border-amber-100 shadow-sm">
+                                                                <div class="inline-flex items-center justify-center w-14 h-14 bg-amber-100 rounded-full mb-3 text-amber-400">
+                                                                    <i class="fas fa-calendar-times text-2xl"></i>
+                                                                </div>
+                                                                <p class="text-amber-800 font-medium text-base">Aucun détail de programme disponible</p>
+                                                                <p class="text-amber-600 text-sm mt-1.5 max-w-md mx-auto">Les informations seront ajoutées prochainement.</p>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Social Links and Actions with improved styling -->
+                                            <div class="flex flex-wrap items-center gap-3 p-5 bg-gray-50 border-t border-gray-200">
+                                                <!-- Social Links Group with improved styling -->
+                                                <div class="flex flex-wrap items-center gap-2">
+                                                    <!-- Discord Link with improved styling -->
+                                                    <a href="{{event.discrord_url}}" class="flex items-center px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all shadow-sm">
+                                                        <i class="fab fa-discord mr-2"></i> Discord
+                                                    </a>
+                                                    
+                                                    <!-- Twitch Link with improved styling -->
+                                                    <a href="{{event.twitch_url}}" class="flex items-center px-4 py-2.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all shadow-sm">
+                                                        <i class="fab fa-twitch mr-2"></i> Twitch
+                                                    </a>
+                                                </div>
+                                                
+                                                <!-- Spacer to push cancel button to the right -->
+                                                <div class="flex-grow"></div>
+                                                
+                                                <!-- Cancel Button with improved styling -->
+                                                <form action="/organisateur/cancelEvent" method="POST" id="cancelEventForm-{{ event.id }}">
+                                                    <input type="hidden" name="event_id" value="{{event.id}}">
+                                                    <button 
+                                                        type="button" <!-- Add type="button" to prevent automatic form submission 
+                                                        onclick="confirmCancelEvent('{{ event.id }}','{{ event.name }}')" 
+                                                        class="flex items-center px-5 py-2.5 bg-gradient-to-r from-red-50 to-red-100 text-red-600 rounded-lg hover:from-red-100 hover:to-red-200 transition-all shadow-sm border border-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                                                        <i class="fas fa-ban mr-2.5"></i> Annuler l'événement
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div id="eventModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div id="modalContent" class="bg-white rounded-xl shadow-lg p-8 transform transition-all scale-95 opacity-0 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-indigo-800">Créer un nouvel événement</h3>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form action="/organisateur/addEvenement" method="POST" enctype="multipart/form-data">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Basic Info Section -->
+                    <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-info-circle text-purple-500 mr-2"></i> 
+                            Informations générales
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nom de l'événement</label>
+                                <input type="text" name="name" placeholder="Ex: LAN Party - Printemps 2025" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+
+                            <div class="col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Image de l'événement 
+                                    <span class="text-gray-500 text-xs ml-2">(Optionnel, max 5MB)</span>
+                                </label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="file" name="event_photo" accept="image/*" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5">
+                                    <div class="text-sm text-gray-600">
+                                        <p>Format: JPG, PNG</p>
+                                        <p>Taille max: 5MB</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date d'ouverture des inscriptions</label>
+                                <input type="date" name="registration_start" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date de clôture des inscriptions</label>
+                                <input type="date" name="registration_end" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                                <select name="category" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="">Sélectionner une catégorie</option>
+                                    <option value="Tournament">Tournoi</option>
+                                    <option value="Workshop">Atelier</option>
+                                    <option value="Watch Party">Rencontre</option>
+                                    <option value="Social">Social</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Lieu</label>
+                                <input type="text" name="location" placeholder="Ex: Salle Polyvalente" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                                <input type="date" name="event_date" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Heure</label>
+                                <input type="time" name="event_time" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre max. de participants</label>
+                                <input type="number" name="max_participants" min="1" placeholder="Ex: 50" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Prix d'entrée (€)</label>
+                                <input type="number" name="entry_fee" min="0" placeholder="Ex: 15" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Description & Details Section -->
+                    <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-align-left text-purple-500 mr-2"></i> 
+                            Description et détails
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description de l'événement</label>
+                                <textarea name="description" rows="3" placeholder="Décrivez votre événement..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Équipement requis</label>
+                                <textarea name="requirements" rows="2" placeholder="Matériel à apporter, configuration requise..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timeline Section -->
+                    <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-clock text-purple-500 mr-2"></i> 
+                            Programme de l'événement
+                        </h4>
+                        
+                        <div id="timeline-items" class="space-y-3 mb-3">
+                            <div class="timeline-item-input grid grid-cols-12 gap-2">
+                                <div class="col-span-2">
+                                    <input type="time" name="timeline_time[]" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                                </div>
+                                <div class="col-span-3">
+                                    <input type="text" name="timeline_title[]" placeholder="Titre" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                                </div>
+                                <div class="col-span-6">
+                                    <input type="text" name="timeline_desc[]" placeholder="Description de l'activité" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                                </div>
+                                <div class="col-span-1 flex items-center justify-center">
+                                    <button type="button" class="p-1.5 rounded-lg text-red-500 hover:bg-red-50 remove-timeline-item">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="add-timeline-item" class="mt-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition flex items-center text-sm">
+                            <i class="fas fa-plus mr-2"></i> Ajouter une étape
+                        </button>
+                    </div>
+                    
+                    <!-- Social & Links Section -->
+                    <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-link text-purple-500 mr-2"></i> 
+                            Liens et réseaux sociaux
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Discord</label>
+                                <input type="url" name="discord_url" placeholder="https://discord.gg/..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Twitch</label>
+                                <input type="url" name="twitch_url" placeholder="https://twitch.tv/..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" id="cancel-button" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-300">
+                        Annuler
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg shadow-sm transition duration-300 flex items-center">
+                        <i class="fas fa-plus-circle mr-2"></i> Créer l'événement
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de rechargement -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                    <div>
+                        <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                            <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="MM/AA">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4">
+                        Recharger mon compte
+                    </button>
+                    
+                    <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                        Paiement 100% sécurisé
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Logic -->
+    <script>
+        // Document ready function
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize collapsible sidebar
+            initSidebar();
+            
+            // Initialize the event modal
+            initEventModal();
+            
+            // Initialize the timeline item functionality
+            initTimelineItems();
+            
+            // Initialize tab buttons
+            initTabButtons();
+            
+            // Initialize category chips
+            initCategoryChips();
+            
+            // Validation du formulaire d'événement
+            const eventForm = document.querySelector('form[action="/organisateur/addEvenement"]');
+            
+            if (eventForm) {
+                eventForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get required fields
+                    const eventName = this.querySelector('input[name="name"]').value;
+                    const category = this.querySelector('select[name="category"]').value;
+                    const eventDate = this.querySelector('input[name="event_date"]').value;
+                    const eventTime = this.querySelector('input[name="event_time"]').value;
+                    const location = this.querySelector('input[name="location"]').value;
+                    const maxParticipants = this.querySelector('input[name="max_participants"]').value;
+                    
+                    // Simple validation
+                    if (!eventName || !category || !eventDate || !eventTime || !location || !maxParticipants) {
+                        Swal.fire({
+                            title: 'Formulaire incomplet',
+                            text: 'Veuillez remplir tous les champs obligatoires',
+                            icon: 'error',
+                            confirmButtonColor: '#8b5cf6'
+                        });
+                        return;
+                    }
+                    
+                    // Check registration dates if provided
+                    const registrationStart = this.querySelector('input[name="registration_start"]').value;
+                    const registrationEnd = this.querySelector('input[name="registration_end"]').value;
+                    
+                    if (registrationStart && registrationEnd) {
+                        if (new Date(registrationEnd) <= new Date(registrationStart)) {
+                            Swal.fire({
+                                title: 'Erreur de date',
+                                text: 'La date de clôture des inscriptions doit être postérieure à la date d\'ouverture',
+                                icon: 'error',
+                                confirmButtonColor: '#8b5cf6'
+                            });
+                            return;
+                        }
+                    }
+                    
+                    // Vérification que le nombre maximum de participants est raisonnable
+                    if (parseInt(maxParticipants) > 500) {
+                        Swal.fire({
+                            title: 'Nombre de participants trop élevé',
+                            text: 'Le nombre de participants semble anormalement élevé',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#8b5cf6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Continuer quand même',
+                            cancelButtonText: 'Corriger'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                submitForm();
+                            }
+                        });
+                        return;
+                    }
+                    
+                    // If everything is valid, show loading state and submit
+                    submitForm();
+                    
+                    function submitForm() {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Création en cours',
+                            text: 'Veuillez patienter pendant que nous créons votre événement...',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        // Submit the form
+                        eventForm.submit();
+                    }
+                });
+            }
+        });
+
+        // Ajouter cette vérification des URL parameters juste après la fonction DOMContentLoaded
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        if (urlParams.has('evenement Created successfully') || urlParams.has('Evenement Created successfully!')) {
+            Swal.fire({
+                title: "Succès !",
+                text: "Événement créé avec succès !",
+                icon: "success",
+                confirmButtonText: "OK",
+                confirmButtonColor: '#8b5cf6',
+                timer: 3000 
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+        
+        if (urlParams.has('Creation de votre evenement echouée') || urlParams.has('Creation de votre evenement echouée')) {
+            Swal.fire({
+                title: 'Erreur de création',
+                text: 'La création de votre événement a échoué',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        function confirmCancelEvent(eventId, eventName) {
+            event.preventDefault();
+            
+            Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                html: `Voulez-vous vraiment annuler <strong>${eventName}</strong> ?<br><span class="text-gray-500 text-sm">Cette action ne peut pas être annulée.</span>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Oui, annuler',
+                cancelButtonText: 'Non, conserver',
+                customClass: {
+                    popup: 'rounded-xl',
+                    title: 'text-xl font-bold text-gray-800',
+                    htmlContainer: 'my-4',
+                    confirmButton: 'rounded-lg font-medium',
+                    cancelButton: 'rounded-lg font-medium'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Veuillez choisir la méthode de l'annulation:",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: "Avec remboursement des participants",
+                        cancelButtonText: "Sans remboursement des participants",
+                        customClass: {
+                            popup: 'rounded-xl',
+                            title: 'text-xl font-bold text-gray-800',
+                            confirmButton: 'rounded-lg font-medium',
+                            cancelButton: 'rounded-lg font-medium'
+                        }
+                    }).then((refundResult) => {
+                        if (refundResult.isDismissed && refundResult.dismiss === Swal.DismissReason.cancel) {
+                            const refundValue = "sans_rembourse";
+                            processFormSubmission(eventId, refundValue);
+                        } else if (refundResult.isConfirmed) {
+                            const refundValue = "rembourse";
+                            processFormSubmission(eventId, refundValue);
+                        } else {
+                            Swal.fire({
+                                title: 'Annulation interrompue',
+                                text: "L'opération d'annulation a été interrompue.",
+                                icon: 'info',
+                                confirmButtonColor: '#8b5cf6'
+                            });
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: 'Action annulée',
+                        text: 'Votre événement a été conservé.',
+                        icon: 'info',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }
+            });
+        }
+
+        function processFormSubmission(eventId, refundValue) {
+            const form = document.getElementById(`cancelEventForm-${eventId}`);
+            if (!form) {
+                console.error("Formulaire introuvable pour l'événement ID:", eventId);
+                // Try the alternative ID as fallback
+                const altForm = document.getElementById('cancelEventForm');
+                if (altForm) {
+                    console.log("Found form with alternate ID");
+                    form = altForm;
+                } else {
+                    Swal.fire({
+                        title: 'Erreur',
+                        text: "Impossible de traiter votre demande. Formulaire non trouvé.",
+                        icon: 'error'
+                    });
+                    return;
+                }
+            }
+
+            let refundInput = form.querySelector('input[name="refundType"]');
+            if (!refundInput) {
+                refundInput = document.createElement('input');
+                refundInput.type = 'hidden';
+                refundInput.name = 'refundType';
+                form.appendChild(refundInput);
+            }
+            
+            refundInput.value = refundValue;
+
+            Swal.fire({
+                title: 'Annulation en cours...',
+                text: 'Veuillez patienter pendant que nous traitons votre demande',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            setTimeout(() => {
+                console.log("Submitting form now");
+                form.submit();
+            }, 1500);
+        }
+
+        if (urlParams.has('Evenement_Canceled_Succefully_And_Participants_Reumbourse')) {
+            Swal.fire({
+                title: 'Succès!',
+                text: 'Annulation de votre evenement a été avec succès Avec La reumboussement Des Participants',
+                icon: 'success',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        if (urlParams.has('Evenement_Canceled_failed')) {
+            Swal.fire({
+                title: 'Échec',
+                text: 'Annulation de votre evenment a échoué. Veuillez réessayer.',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        if (urlParams.has('Evenement_Canceled_Succefully_Without_Reumbousing_Participants')) {
+            Swal.fire({
+                title: 'Succès!',
+                text: 'Annulation de votre evenement a été avec succès Mais La reumboussement Des Participants Pas Fait',
+                icon: 'success',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        if (urlParams.has('Evenement_Canceled_failed_Without_Reumbousing_Participants')) {
+            Swal.fire({
+                title: 'Échec',
+                text: 'Annulation de votre evenment a échoué. Veuillez réessayer.',
+                icon: 'error',
+                confirmButtonColor: '#8b5cf6'
+            }).then(() => {
+                // Clean the URL
+                const url = new URL(window.location.href);
+                url.search = '';
+                window.history.replaceState({}, document.title, url);
+            });
+        }
+
+        // Make sure the function is defined in the global scope
+        window.toggleCardDetails = function(card) {
+            if (!card) {
+                console.error('Card element not found');
+                return;
+            }
+            
+            const detailsSection = card.querySelector('.card-details');
+            if (!detailsSection) {
+                console.error('Details section not found in card');
+                return;
+            }
+            
+            const rotateIcon = card.querySelector('.rotate-icon');
+            
+            // Toggle both classes - card-expanded for the parent and hidden for the details
+            card.classList.toggle('card-expanded');
+            
+            // Toggle visibility
+            if (detailsSection.classList.contains('hidden')) {
+                detailsSection.classList.remove('hidden');
+                detailsSection.style.maxHeight = detailsSection.scrollHeight + 'px';
+                if (rotateIcon) {
+                    rotateIcon.style.transform = 'rotate(180deg)';
+                }
+            } else {
+                // Set max height to 0 with transition
+                detailsSection.style.maxHeight = '0px';
+                // Add hidden class after transition
+                setTimeout(() => {
+                    detailsSection.classList.add('hidden');
+                }, 300); // Match this with your CSS transition time
+                
+                if (rotateIcon) {
+                    rotateIcon.style.transform = 'rotate(0)';
+                }
+            }
+        };
+
+        // Alternative approach: Add event listeners after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find all elements that should toggle card details
+            const toggleButtons = document.querySelectorAll('.toggle-details-btn');
+            
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    toggleCardDetails(this.parentNode);
+                });
+            });
+        });
+        
+        // Initialize sidebar
+        function initSidebar() {
+            const toggleButton = document.getElementById('sidebar-toggle');
+            const sidebar = document.querySelector('aside');
+            const mainContent = document.querySelector('main');
+            
+            if (toggleButton && sidebar && mainContent) {
+                // Initialize sidebar state from localStorage
+                const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                
+                // Set initial state
+                if (sidebarCollapsed) {
+                    sidebar.classList.add('sidebar-collapsed');
+                    sidebar.classList.remove('sidebar-expanded');
+                    mainContent.classList.add('main-content-collapsed');
+                    mainContent.classList.remove('main-content-expanded');
+                } else {
+                    sidebar.classList.add('sidebar-expanded');
+                    sidebar.classList.remove('sidebar-collapsed');
+                    mainContent.classList.add('main-content-expanded');
+                    mainContent.classList.remove('main-content-collapsed');
+                }
+                
+                // Add toggle functionality
+                toggleButton.addEventListener('click', function() {
+                    sidebar.classList.toggle('sidebar-collapsed');
+                    sidebar.classList.toggle('sidebar-expanded');
+                    mainContent.classList.toggle('main-content-collapsed');
+                    mainContent.classList.toggle('main-content-expanded');
+                    
+                    const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+                    localStorage.setItem('sidebarCollapsed', isCollapsed);
+                });
+            }
+        }
+        
+        // Initialize event modal
+        function initEventModal() {
+            const createButton = document.getElementById('create-event-btn');
+            const closeButton = document.getElementById('close-modal-btn');
+            const cancelButton = document.getElementById('cancel-button');
+            const modal = document.getElementById('eventModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            function openEventModal() {
+                if (modal && modalContent) {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modalContent.classList.remove('scale-95', 'opacity-0');
+                        modalContent.classList.add('scale-100', 'opacity-100');
+                    }, 10);
+                }
+            }
+            
+            function closeEventModal() {
+                if (modal && modalContent) {
+                    modalContent.classList.remove('scale-100', 'opacity-100');
+                    modalContent.classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                    }, 300);
+                }
+            }
+            
+            if (createButton) {
+                createButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openEventModal();
+                });
+            }
+            
+            if (closeButton) {
+                closeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeEventModal();
+                });
+            }
+            
+            if (cancelButton) {
+                cancelButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeEventModal();
+                });
+            }
+            
+            // Close modal when clicking outside
+            modal?.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeEventModal();
+                }
+            });
+            
+            // Close modal with ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+                    closeEventModal();
+                }
+            });
+        }
+        
+        // Initialize timeline items
+        function initTimelineItems() {
+            const addButton = document.getElementById('add-timeline-item');
+            const timelineContainer = document.getElementById('timeline-items');
+            
+            if (addButton && timelineContainer) {
+                // Add timeline item
+                addButton.addEventListener('click', function() {
+                    const newItem = document.createElement('div');
+                    newItem.className = 'timeline-item-input grid grid-cols-12 gap-2';
+                    newItem.innerHTML = `
+                        <div class="col-span-2">
+                            <input type="time" name="timeline_time[]" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                        </div>
+                        <div class="col-span-3">
+                            <input type="text" name="timeline_title[]" placeholder="Titre" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                        </div>
+                        <div class="col-span-6">
+                            <input type="text" name="timeline_desc[]" placeholder="Description de l'activité" class="form-input w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                        </div>
+                        <div class="col-span-1 flex items-center justify-center">
+                            <button type="button" class="p-1.5 rounded-lg text-red-500 hover:bg-red-50 remove-timeline-item">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    timelineContainer.appendChild(newItem);
+                    
+                    // Add event listener to the new remove button
+                    const removeButton = newItem.querySelector('.remove-timeline-item');
+                    if (removeButton) {
+                        removeButton.addEventListener('click', function() {
+                            newItem.remove();
+                        });
+                    }
+                });
+                
+                // Initialize existing remove buttons
+                const removeButtons = timelineContainer.querySelectorAll('.remove-timeline-item');
+                removeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        this.closest('.timeline-item-input').remove();
+                    });
+                });
+            }
+        }
+        
+        // Initialize tab buttons
+        function initTabButtons() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        // Initialize category chips
+        function initCategoryChips() {
+            const categoryChips = document.querySelectorAll('.category-chip');
+            
+            categoryChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    categoryChips.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // Recharge functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find the recharge button
+            const rechargeButton = Array.from(document.querySelectorAll('button')).find(
+                button => button.textContent.trim() === 'Recharger'
+            );
+            
+            const rechargeModal = document.getElementById('recharge-modal');
+            const closeModalButton = document.getElementById('close-recharge-modal');
+            const rechargeForm = document.getElementById('recharge-form');
+
+            // Show modal function
+            function showModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.remove('hidden');
+                    rechargeModal.classList.add('flex');
+                }
+            }
+
+            // Hide modal function
+            function hideModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.add('hidden');
+                    rechargeModal.classList.remove('flex');
+                }
+            }
+
+            // Add click event to recharge button
+            if (rechargeButton) {
+                rechargeButton.addEventListener('click', showModal);
+            }
+
+            // Close modal button event
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', hideModal);
+            }
+
+            // Form submission
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Simulate payment processing
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours...`,
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Submit the form after a short delay
+                    setTimeout(() => {
+                        rechargeForm.submit();
+                    }, 1500);
+                });
+            }
+
+            // Vérifier si l'URL contient le paramètre de succès (vérifier les deux formats possibles)
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Obtenir le chemin de base sans les paramètres de query
+            const currentPath = window.location.pathname;
+            
+            if (urlParams.get('message') === 'Rechargement de votre solde réussite' || 
+                urlParams.has('Rechargement_de_votre_solde_réussite')) {
+                Swal.fire({
+                    title: 'Succès!',
+                    text: 'Rechargement de votre solde réussi',
+                    icon: 'success',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                    // Si vous souhaitez rafraîchir la page pour montrer le nouveau solde, décommentez la ligne suivante
+                    // window.location.reload();
+                });
+            }
+            
+            // Vérifier si l'URL contient un message d'échec
+            if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+                Swal.fire({
+                    title: 'Échec',
+                    text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                });
+            }
+ 
+            
+            // Close modal when clicking outside
+            if (rechargeModal) {
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        hideModal();
+                    }
+                });
+            }
+        });
+        
+    </script>
+</body>
+</html>

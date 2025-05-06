@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tournoi.name }} - Tableau du tournoi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            background-color: #00163C;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+        }
+        
+        /* Champions League stars effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(19, 56, 198, 0.15), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .page-wrapper {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        /* Star elements animation */
+        .stars-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: twinkle 4s infinite;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0.2; }
+        }
+        
+        .tournament-header {
+            background: linear-gradient(135deg, #0a1845 0%, #1a3fc1 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(19, 56, 198, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tournament-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.05) 50%, 
+                rgba(255,255,255,0) 100%);
+            animation: shine 6s linear infinite;
+            pointer-events: none;
+        }
+        
+        /* Champions League Logo */
+        .cl-logo {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 70px;
+            height: 70px;
+            opacity: 0.7;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNNDAgMTZMMjggMjVMMjcgNDBMMjggNTVMNDAgNjRMNDMgMzRMNDAgMTZaIiBmaWxsPSIjMDAyNjZCIi8+PHBhdGggZD0iTTQwIDE2TDUyIDI1TDUzIDQwTDUyIDU1TDQwIDY0TDM3IDM0TDQwIDE2WiIgZmlsbD0iIzAwMjY2QiIvPjxwYXRoIGQ9Ik0yNCAzMUwxNiA0MEwyNCA0OSIgc3Ryb2tlPSIjMDAyNjZCIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNNTYgMzFMNjQgNDBMNTYgNDkiIHN0cm9rZT0iIzAwMjY2QiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTQwIDQwTDM1IDQwTDM1IDMxTDQwIDMxTDQ1IDMxTDQ1IDQwTDQwIDQwWiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0zNSA0MEw0MCA0MEw0NSA0MEw0NSA0OUw0MCA0OUwzNSA0OUwzNSA0MFoiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        
+        @keyframes shine {
+            from { transform: translateX(-100%) rotate(45deg); }
+            to { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        .tournament-header h1 {
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(19, 56, 198, 0.7);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tournament-header h1::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #1a3fc1, transparent);
+            margin-top: 5px;
+        }
+        
+        .tournament-header p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+        
+        .bracket-container {
+            display: flex;
+            justify-content: space-between;
+            overflow-x: auto;
+            padding: 2rem 0;
+            min-height: 70vh;
+            scrollbar-width: thin;
+            scrollbar-color: #1a3fc1 #0a1845;
+        }
+        
+        .bracket-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .bracket-container::-webkit-scrollbar-track {
+            background: #0a1845;
+            border-radius: 4px;
+        }
+        
+        .bracket-container::-webkit-scrollbar-thumb {
+            background: #1a3fc1;
+            border-radius: 4px;
+        }
+        
+        .round {
+            display: flex;
+            flex-direction: column;
+            min-width: 280px;
+            margin: 0 1.5rem;
+            position: relative;
+        }
+        
+        .round::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: -15px;
+            width: 2px;
+            background: linear-gradient(180deg, rgba(19, 56, 198, 0) 0%, rgba(19, 56, 198, 0.6) 50%, rgba(19, 56, 198, 0) 100%);
+            z-index: -1;
+        }
+        
+        .round:last-child::after {
+            display: none;
+        }
+        
+        .round-header {
+            text-align: center;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #0a1845 0%, #1a3fc1 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .round-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(255,255,255,0) 100%);
+            animation: shine-header 4s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes shine-header {
+            to { left: 100%; }
+        }
+        
+        .match-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-around;
+        }
+        
+        .match-card {
+            background: rgba(10, 24, 69, 0.9);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #1a3fc1;
+            transition: all 0.3s ease;
+            transform-origin: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(19, 56, 198, 0.3);
+        }
+        
+        .match-card.pending {
+            opacity: 0.8;
+            border-left-color: #4e4e7a;
+        }
+        
+        .match-card.completed {
+            border-left-color: #00c2ff;
+        }
+        
+        .match-card.scheduled {
+            border-left-color: #ff9d00;
+        }
+        
+        .match-card::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 2px;
+            right: -15px;
+            top: 50%;
+            background: rgba(19, 56, 198, 0.6);
+            transform: translateY(-50%);
+            z-index: -1;
+        }
+        
+        .match-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+        }
+        
+        .participant {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            align-items: center;
+        }
+        
+        .participant:last-child {
+            margin-bottom: 0;
+        }
+        
+        .participant:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .participant-name {
+            font-weight: 500;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            color: #f0f0f0;
+        }
+        
+        .participant-name::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4e4e7a;
+            margin-right: 8px;
+        }
+        
+        .participant-score {
+            min-width: 35px;
+            text-align: center;
+            font-weight: 600;
+            margin-left: 10px;
+            padding: 3px 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            font-size: 1.1rem;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .winner {
+            background: rgba(19, 56, 198, 0.15);
+            border: 1px solid rgba(19, 56, 198, 0.3);
+        }
+        
+        .winner .participant-name {
+            font-weight: 700;
+            color: #00c2ff;
+        }
+        
+        .winner .participant-name::before {
+            background: #00c2ff;
+            box-shadow: 0 0 8px #00c2ff;
+            animation: pulse-blue 2s infinite;
+        }
+        
+        @keyframes pulse-blue {
+            0% { box-shadow: 0 0 0 0 rgba(0, 194, 255, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(0, 194, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 194, 255, 0); }
+        }
+        
+        .match-date {
+            font-size: 0.8rem;
+            color: #a7a7c7;
+            text-align: center;
+            margin-top: 0.8rem;
+            font-style: italic;
+            padding: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .bracket-footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #a7a7c7;
+            font-size: 0.95rem;
+            padding: 1rem;
+            background: rgba(10, 24, 69, 0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .bracket-container {
+                padding-bottom: 2rem;
+            }
+            
+            .round {
+                min-width: 240px;
+            }
+        }
+        
+        /* Custom animations for Champions League style */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(19, 56, 198, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(19, 56, 198, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(19, 56, 198, 0); }
+        }
+        
+        .final-match {
+            animation: pulse 3s infinite;
+            border: 2px solid #1a3fc1;
+            background: rgba(10, 24, 69, 0.9);
+            position: relative;
+        }
+        
+        .final-match::before {
+            content: '🏆';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.7));
+        }
+        
+        .final-match::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            background: linear-gradient(45deg, gold, #1a3fc1, #00c2ff, gold) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.7;
+            z-index: -1;
+            animation: border-rotate 8s linear infinite;
+        }
+        
+        @keyframes border-rotate {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 300% 0%; }
+        }
+        
+        /* Champions League star particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(19, 56, 198, 0.5);
+            border-radius: 50%;
+            width: 3px;
+            height: 3px;
+            pointer-events: none;
+        }
+        
+        /* Champions League themed buttons */
+        .btn-outline-primary {
+            color: #00c2ff;
+            border-color: #1a3fc1;
+            background: transparent;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .btn-outline-primary:hover {
+            color: #fff;
+            background: #1a3fc1;
+            border-color: #1a3fc1;
+            box-shadow: 0 0 15px rgba(19, 56, 198, 0.5);
+        }
+        
+        .btn-outline-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(255,255,255,0) 100%);
+            transform: translateX(-100%) rotate(45deg);
+            animation: btn-shine 3s infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        @keyframes btn-shine {
+            to { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        .match-status {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .match-status.completed i {
+            color: #00c2ff;
+            filter: drop-shadow(0 0 3px rgba(0, 194, 255, 0.7));
+        }
+        
+        /* Champions League star emblem */
+        .cl-stars {
+            display: flex;
+            margin-top: 5px;
+            justify-content: center;
+        }
+        
+        .cl-star {
+            width: 15px;
+            height: 15px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z'/%3E%3C/svg%3E");
+            background-size: contain;
+            margin: 0 2px;
+            opacity: 0.7;
+        }
+        
+        /* Modal styling */
+        .match-teams-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        #updateScoreModal .modal-content {
+            border: 2px solid #1a3fc1;
+            box-shadow: 0 0 25px rgba(19, 56, 198, 0.3);
+        }
+
+        #updateScoreModal .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(26, 63, 193, 0.25);
+        }
+
+        #updateScoreModal .score-separator {
+            color: #00c2ff;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px rgba(0, 194, 255, 0.5);
+        }
+        
+        /* Make match cards look clickable for organizers */
+        .match-card:not(.completed) {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .match-card:not(.completed)::before {
+            content: '\f044';
+            font-family: 'Font Awesome 5 Free';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.9rem;
+            color: #00c2ff;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .match-card:not(.completed):hover::before {
+            opacity: 1;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars-bg" id="stars-container"></div>
+    <div class="particles" id="particles"></div>
+    <div class="page-wrapper">
+        <div class="container py-5">
+            <div class="tournament-header">
+                <div class="cl-logo"></div>
+                <h1 class="mb-0">{{ tournoi.name }}</h1>
+                <p class="mb-0 mt-2">Tableau des matchs</p>
+                <div class="cl-stars">
+                    <div class="cl-star"></div>
+                    <div class="cl-star"></div>
+                    <div class="cl-star"></div>
+                    <div class="cl-star"></div>
+                    <div class="cl-star"></div>
+                </div>
+            </div>
+            
+            {% if matchesByRound|length > 0 %}
+            <div class="bracket-container">
+                {% for round_number, matches in matchesByRound %}
+                    <div class="round">
+                        <div class="round-header">
+                            {% if round_number == 1 %}
+                                Phase de Groupes
+                            {% elseif round_number == matchesByRound|length %}
+                                Finale
+                            {% elseif round_number == matchesByRound|length - 1 %}
+                                Demi-finales
+                            {% elseif round_number == matchesByRound|length - 2 %}
+                                Quarts de finale
+                            {% elseif round_number == matchesByRound|length - 3 %}
+                                Huitièmes de finale
+                            {% else %}
+                                Tour {{ round_number }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="match-container">
+                            {% for match in matches %}
+                                <div class="match-card {{ match.status }} {% if round_number == matchesByRound|length and match.match_number == 1 %}final-match{% endif %}" 
+                                     data-match-id="{{ match.id }}" 
+                                     data-match-number="{{ match.match_number }}">
+                                    
+                                    <div class="participant {% if match.winner_id == match.participant1_id %}winner{% endif %}"
+                                         data-participant-id="{{ match.participant1_id }}">
+                                        <div class="participant-name">
+                                            {{ match.participant1_name }}
+                                        </div>
+                                        <div class="participant-score">
+                                            {{ match.score_participant1 is not null ? match.score_participant1 : '-' }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="participant {% if match.winner_id == match.participant2_id %}winner{% endif %}"
+                                         data-participant-id="{{ match.participant2_id }}">
+                                        <div class="participant-name">
+                                            {{ match.participant2_name }}
+                                        </div>
+                                        <div class="participant-score">
+                                            {{ match.score_participant2 is not null ? match.score_participant2 : '-' }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="match-date">
+                                        {% if match.scheduled_date %}
+                                            <i class="far fa-calendar-alt mr-1"></i> {{ match.scheduled_date|date('d/m/Y H:i') }}
+                                        {% else %}
+                                            <i class="fas fa-hourglass-half mr-1"></i> Date à déterminer
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% if match.status == 'completed' %}
+                                        <div class="match-status completed">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="bracket-footer">
+                <p><i class="fas fa-trophy mr-2"></i> Les vainqueurs avancent au prochain tour. Le champion remporte le trophée.</p>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i> Aucun match n'a été généré pour ce tournoi. Veuillez contacter l'organisateur.
+            </div>
+            {% endif %}
+            
+            <div class="mt-4 text-center">
+                <a href="/tournoi" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour aux détails du tournoi
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Score Update Modal -->
+    <div class="modal fade" id="updateScoreModal" tabindex="-1" role="dialog" aria-labelledby="updateScoreModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-dark text-white border-primary">
+          <div class="modal-header border-bottom border-primary" style="background: linear-gradient(90deg, #0a1845 0%, #1a3fc1 100%);">
+            <h5 class="modal-title" id="updateScoreModalLabel">
+              <i class="fas fa-futbol mr-2"></i> Mettre à jour le score
+            </h5>
+            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="updateScoreForm" action="/tournoi/updateMatchResult" method="POST">
+            <div class="modal-body">
+              <input type="hidden" id="match_id" name="match_id">
+              <input type="hidden" id="tournoi_id" name="tournoi_id" value="{{ tournoi.id }}">
+              
+              <div class="match-teams mb-4 text-center">
+                <div id="match-teams-title" class="h6 mb-3"></div>
+                <div class="match-info small text-muted mb-3">
+                  <div><i class="far fa-calendar-alt"></i> <span id="match-date">Date à déterminer</span></div>
+                  <div class="mt-1">Tour: <span id="match-round"></span>, Match #<span id="match-number"></span></div>
+                </div>
+              </div>
+              
+              <div class="row align-items-center mb-3">
+                <div class="col-5">
+                  <div class="form-group mb-0">
+                    <input type="hidden" id="participant1_id" name="participant1_id">
+                    <label for="participant1_score" id="participant1_label" class="text-left d-block font-weight-bold"></label>
+                    <input type="number" min="0" class="form-control bg-dark text-white border-primary" id="participant1_score" name="participant1_score" required>
+                  </div>
+                </div>
+                <div class="col-2 text-center">
+                  <div class="score-separator font-weight-bold">VS</div>
+                </div>
+                <div class="col-5">
+                  <div class="form-group mb-0">
+                    <input type="hidden" id="participant2_id" name="participant2_id">
+                    <label for="participant2_score" id="participant2_label" class="text-left d-block font-weight-bold"></label>
+                    <input type="number" min="0" class="form-control bg-dark text-white border-primary" id="participant2_score" name="participant2_score" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i> Le vainqueur avancera automatiquement au tour suivant.
+              </div>
+            </div>
+            <div class="modal-footer border-top border-primary">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save mr-2"></i> Enregistrer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Create background stars
+        document.addEventListener("DOMContentLoaded", function() {
+            const starsContainer = document.getElementById('stars-container');
+            const starCount = 50;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const size = Math.random() * 3 + 1;
+                const delay = Math.random() * 4;
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.animationDelay = `${delay}s`;
+                
+                starsContainer.appendChild(star);
+            }
+            
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                let particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random positions
+                const x = Math.floor(Math.random() * 100);
+                const y = Math.floor(Math.random() * 100);
+                
+                // Random size
+                const size = Math.random() * 3 + 1;
+                
+                // Random opacity
+                const opacity = Math.random() * 0.5 + 0.1;
+                
+                // Random animation duration
+                const duration = Math.random() * 20 + 10;
+                
+                particle.style.left = `${x}%`;
+                particle.style.top = `${y}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.opacity = opacity;
+                particle.style.boxShadow = `0 0 ${size * 2}px rgba(19, 56, 198, ${opacity})`;
+                
+                // Add animation
+                particle.style.animation = `float ${duration}s infinite ease-in-out`;
+                particle.style.animationDelay = `${Math.random() * duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            const matches = document.querySelectorAll('.match-card');
+            matches.forEach((match, index) => {
+                match.style.opacity = '0';
+                match.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    match.style.transition = 'all 0.5s ease';
+                    match.style.opacity = '1';
+                    match.style.transform = 'translateY(0)';
+                }, 100 + (index * 100));
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Click event on each non-completed match card
+            document.querySelectorAll('.match-card:not(.completed)').forEach(function (matchCard) {
+                matchCard.addEventListener('click', function () {
+                    const matchId = matchCard.dataset.matchId;
+                    const matchNumber = matchCard.dataset.matchNumber || '1';
+                    const roundElement = matchCard.closest('.round');
+                    const roundNumber = Array.from(roundElement.parentNode.children).indexOf(roundElement) + 1;
+
+                    const participant1 = matchCard.querySelectorAll('.participant')[0];
+                    const participant2 = matchCard.querySelectorAll('.participant')[1];
+
+                    const participant1Name = participant1.querySelector('.participant-name').textContent.trim();
+                    const participant2Name = participant2.querySelector('.participant-name').textContent.trim();
+                    const participant1Id = participant1.dataset.participantId;
+                    const participant2Id = participant2.dataset.participantId;
+
+                    let participant1Score = participant1.querySelector('.participant-score').textContent.trim();
+                    let participant2Score = participant2.querySelector('.participant-score').textContent.trim();
+
+                    if (participant1Score === '-') participant1Score = '';
+                    if (participant2Score === '-') participant2Score = '';
+
+                    const matchDateElement = matchCard.querySelector('.match-date');
+                    const matchDate = matchDateElement ? matchDateElement.textContent.trim() : '';
+
+                    document.getElementById('match_id').value = matchId;
+                    document.getElementById('match-teams-title').textContent = `${participant1Name} vs ${participant2Name}`;
+                    document.getElementById('match-round').textContent = roundNumber;
+                    document.getElementById('match-number').textContent = matchNumber;
+                    if (matchDate) {
+                        document.getElementById('match-date').textContent = matchDate;
+                    }
+
+                    document.getElementById('participant1_id').value = participant1Id;
+                    document.getElementById('participant2_id').value = participant2Id;
+                    document.getElementById('participant1_label').textContent = participant1Name;
+                    document.getElementById('participant2_label').textContent = participant2Name;
+                    document.getElementById('participant1_score').value = participant1Score;
+                    document.getElementById('participant2_score').value = participant2Score;
+
+                    // Show Bootstrap modal (requires Bootstrap JS to still work)
+                    const modal = new bootstrap.Modal(document.getElementById('updateScoreModal'));
+                    modal.show();
+                });
+            });
+
+            // Highlight winner input
+            ['participant1_score', 'participant2_score'].forEach(function (id) {
+                document.getElementById(id).addEventListener('input', function () {
+                    const score1 = parseInt(document.getElementById('participant1_score').value) || 0;
+                    const score2 = parseInt(document.getElementById('participant2_score').value) || 0;
+
+                    document.getElementById('participant1_label').classList.remove('text-success');
+                    document.getElementById('participant2_label').classList.remove('text-success');
+
+                    if (score1 > score2) {
+                        document.getElementById('participant1_label').classList.add('text-success');
+                    } else if (score2 > score1) {
+                        document.getElementById('participant2_label').classList.add('text-success');
+                    }
+                });
+            });
+
+            // Form submission validation
+            document.getElementById('updateScoreForm').addEventListener('submit', function (e) {
+                const score1 = document.getElementById('participant1_score').value;
+                const score2 = document.getElementById('participant2_score').value;
+
+                if (score1 === '' || score2 === '') {
+                    e.preventDefault();
+                    alert('Veuillez entrer les scores pour les deux participants.');
+                    return false;
+                }
+
+                if (score1 === score2) {
+                    if (!confirm('Les scores sont identiques. Voulez-vous vraiment soumettre un match nul?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+        });
+
+    </script>
+</body>
+</html>     

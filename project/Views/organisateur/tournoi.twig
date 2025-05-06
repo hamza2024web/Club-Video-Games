@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamersHub - Gestion de Tournoi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-item {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(139, 92, 246, 0.9);
+        }
+        
+        .sidebar-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover .sidebar-icon {
+            transform: translateX(5px);
+        }
+        
+        .form-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+        
+        .tournament-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+        }
+        
+        .tournament-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tournament-card.status-upcoming {
+            border-left-color: #3b82f6;
+        }
+        
+        .tournament-card.status-active {
+            border-left-color: #10b981;
+        }
+        
+        .tournament-card.status-completed {
+            border-left-color: #8b5cf6;
+        }
+        
+        .tournament-card.status-canceled {
+            border-left-color: #ef4444;
+        }
+        
+        .tab-button {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, #8b5cf6, #6366f1);
+        }
+        
+        /* Collapsible sidebar styles */
+        .sidebar-collapsed {
+            width: 5rem;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-expanded {
+            width: 16rem;
+            transition: width 0.3s ease;
+        }
+        
+        .sidebar-collapsed .sidebar-text {
+            display: none;
+        }
+        
+        .sidebar-collapsed .sidebar-header-text {
+            display: none;
+        }
+        
+        .sidebar-expanded .sidebar-text {
+            display: inline;
+        }
+        
+        .sidebar-collapsed .sidebar-footer {
+            display: none;
+        }
+        
+        .main-content-collapsed {
+            margin-left: 5rem;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .main-content-expanded {
+            margin-left: 16rem;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Improved scrollbar for sidebar */
+        .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+        }
+        
+        /* Tournament card detail styles */
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .card-expanded .card-details {
+            max-height: 500px;
+        }
+        
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .card-expanded .rotate-icon {
+            transform: rotate(180deg);
+        }
+            /* Adjust sidebar widths for both states */
+        .sidebar-collapsed {
+            width: 4rem !important;
+        }
+        
+        .sidebar-expanded {
+            width: 15rem;
+        }
+        
+        /* Hide text in collapsed state */
+        .sidebar-collapsed .sidebar-text,
+        .sidebar-collapsed .sidebar-header-text {
+            display: none;
+        }
+        
+        /* Hide footer in collapsed state */
+        .sidebar-collapsed .sidebar-footer {
+            display: none;
+        }
+        
+        /* Center icons when collapsed */
+        .sidebar-collapsed .sidebar-icon {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Adjust main content margin */
+        .main-content-collapsed {
+            margin-left: 4rem !important;
+        }
+        
+        .main-content-expanded {
+            margin-left: 15rem;
+        }
+        
+        /* Improve scrollbar styling */
+        .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 3px;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        /* Custom scrollbar styles for the card details */
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(107, 114, 128, 0.3) transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(107, 114, 128, 0.3);
+            border-radius: 20px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(107, 114, 128, 0.5);
+        }
+
+        /* Updated card-details styling */
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .card-expanded .card-details {
+            max-height: 650px; /* Allow enough height for banner + scrollable content */
+        }
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .card-expanded .card-details {
+            max-height: 650px;
+        }
+        
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Navigation -->
+    <div class="flex">
+        <aside class="sidebar-expanded bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 text-white h-screen flex flex-col fixed z-30 transition-all duration-300 overflow-hidden w-60">
+            <!-- Sidebar Header - Compact -->
+            <div class="flex items-center justify-between p-3 border-b border-indigo-800">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-gamepad text-xl text-purple-300"></i>
+                    <h2 class="text-lg font-bold sidebar-header-text">GamersHub</h2>
+                </div>
+                <button id="sidebar-toggle" class="p-1 rounded-full bg-indigo-800 text-white hover:bg-indigo-700 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- User Info - More Compact -->
+            <div class="p-3 border-b border-indigo-800 flex items-center">
+                <img src="/{{profile.profile_image}}" alt="Avatar" class="w-8 h-8 rounded-full bg-gray-500 border-2 border-purple-300">
+                <div class="sidebar-header-text ml-2">
+                    <p class="font-medium text-sm">{{profile.name}}</p>
+                    <p class="text-xs text-purple-200">{{profile.gamer_tag}}</p>
+                </div>
+            </div>
+            
+            <!-- Navigation - Reduced Padding -->
+            <nav class="flex-1 overflow-y-auto sidebar-scroll py-2">
+                <!-- Dashboard -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text">
+                    Menu
+                </div>
+                <a href="#" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-tachometer-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Vue d'ensemble</span>
+                </a>
+                
+                <!-- Management -->
+                <a href="ClubManagement" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-users w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Gestion du club</span>
+                </a>
+                <a href="/profile" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-user w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Profil</span>
+                </a>
+                
+                <!-- Events -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
+                    Événements
+                </div>
+                <a href="organisateur/evenement" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-calendar-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Événement</span>
+                </a>
+                <a href="tournoi" class="sidebar-item active flex items-center justify-between px-3 py-2 text-white rounded-lg mb-1">
+                    <div class="flex items-center">
+                        <i class="fas fa-trophy w-5 sidebar-icon text-purple-300"></i>
+                        <span class="sidebar-text ml-2 text-sm">Tournois</span>
+                    </div>
+                    {% if notifications.notification_number|default(0) > 0 %}
+                        <div class="relative flex items-center justify-center ml-2">
+                            <span class="animate-ping absolute h-4 w-4 rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[1.25rem] text-center">
+                                {{notifications.notification_number}}
+                            </span>
+                        </div>
+                    {% endif %}
+                </a>
+                <a href="/boutique" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-store w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Boutique</span>
+                </a>
+                <a href="/jeux" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-gamepad w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Jeux</span>
+                </a>
+                
+                <!-- Settings - Combined into one section -->
+                <div class="px-3 py-1 text-xs text-purple-300 uppercase tracking-wider font-semibold sidebar-text mt-2">
+                    Compte
+                </div>
+                <a href="#" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-cog w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Configuration</span>
+                </a>
+                <a href="/logout" class="sidebar-item flex items-center px-3 py-2 text-gray-100 hover:text-white rounded-lg mb-1">
+                    <i class="fas fa-sign-out-alt w-5 sidebar-icon text-purple-300"></i>
+                    <span class="sidebar-text ml-2 text-sm">Déconnexion</span>
+                </a>
+            </nav>
+            
+            <!-- Mini Account Balance -->
+            <div class="p-3 border-t border-indigo-800 sidebar-footer">
+                <div class="bg-indigo-800 rounded-lg p-2 text-center">
+                    <div class="text-xs">Solde: <span class="font-bold">{{my_solde}} €</span></div>
+                    <button class="mt-1 text-xs px-2 py-0.5 bg-purple-500 hover:bg-purple-600 rounded-full transition duration-200">
+                        Recharger
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content-expanded ml-64 flex-1 transition-all duration-300">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm">
+                <div class="flex justify-between items-center px-6 py-4">
+                    <h1 class="text-2xl font-bold text-gray-800">Gestion des Tournois</h1>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button id="notificationBtn" class="text-gray-600 hover:text-gray-800 transition p-2 rounded-full hover:bg-gray-100">
+                                <i class="fas fa-bell text-xl relative">
+                                    <span class="absolute top-0 right-0 h-full w-full animate-ping rounded-full bg-red-400 opacity-75" 
+                                        style="animation-duration: 2s; display: {% if notifications.notification_number > 0 %}block{% else %}none{% endif %}"></span>
+                                </i>
+                                <!-- Badge Counter with Scale Animation -->
+                                <span id="notificationCounter" 
+                                    class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full min-w-4 h-4 flex items-center justify-center text-xs px-1 transition-transform transform {% if notifications.notification_number > 0 %}scale-100{% else %}scale-0{% endif %}">
+                                    {{notifications.notification_number}}
+                                </span>
+                            </button>
+                            
+                            <div id="notificationModal" class="hidden absolute right-0 mt-2 w-96 md:w-[450px] bg-white rounded-lg shadow-2xl z-50 border border-gray-200 overflow-hidden">
+                                <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50">
+                                    <h3 class="font-semibold text-gray-800 flex items-center">
+                                        <i class="fas fa-bell-on mr-2 text-blue-500"></i>
+                                        Notifications
+                                    </h3>
+                                    <button id="markAllReadBtn" class="text-blue-600 hover:text-blue-800 text-sm flex items-center bg-white py-1 px-2 rounded-md shadow-sm hover:shadow transition-all">
+                                        <i class="fas fa-check-double mr-1"></i> Mark all as read
+                                    </button>
+                                </div>
+                                
+                                <div class="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-50" id="notificationList">
+                                    {% if notificationsContent|length == 0 %}
+                                        <div class="flex flex-col items-center justify-center py-8 text-gray-500">
+                                            <i class="far fa-bell-slash text-4xl mb-2 opacity-50"></i>
+                                            <p>No notifications yet</p>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% for notification in notificationsContent %}
+                                        <!-- Notification Item with Hover Effect and Better Layout -->
+                                        <div class="p-4 border-b border-gray-100 hover:bg-blue-50 transition-all {% if notification.is_read %}opacity-70{% else %}bg-blue-50{% endif %}">
+                                            <div class="flex">
+                                                <!-- Icon Based on Notification Type -->
+                                                <div class="flex-shrink-0 mr-3">
+                                                    {% if notification.type == 'reimbursement' %}
+                                                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                                            <i class="fas fa-coins text-green-600"></i>
+                                                        </div>
+                                                    {% elseif notification.type == 'event_cancelled' %}
+                                                        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                                                            <i class="fas fa-calendar-times text-red-600"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                <!-- Content Area with Message and Time -->
+                                                <div class="flex-1">
+                                                    <!-- Message with Transaction Type Badge -->
+                                                    <div class="flex flex-wrap items-start gap-2 mb-1">
+                                                        <p class="text-sm text-gray-800 font-medium">{{notification.message}}</p>
+                                                        {% if notification.type == 'tournament_started' %}
+                                                            <span class="px-2 py-0.5 text-xs rounded-full font-medium bg-green-100 text-green-800 border border-green-200">
+                                                                tournament_started
+                                                            </span>
+                                                        {% endif %}
+                                                    </div>
+                                                    
+                                                    <p class="text-xs text-gray-500 mt-1 flex items-center">
+                                                        <i class="far fa-clock mr-1"></i>
+                                                        {{notification.created_at|date("d/m/Y H:i")}}
+                                                    </p>
+                                                </div>
+                                                
+                                                <div class="ml-2">
+                                                    <button class="mark-read-btn w-8 h-8 rounded-full hover:bg-white flex items-center justify-center transition-all" 
+                                                        data-id="{{notification.id}}">
+                                                        {% if notification.is_read %}   
+                                                            <i class="fas fa-check text-green-500"></i>
+                                                        {% else %}
+                                                            <i class="far fa-circle text-gray-400 hover:text-blue-500"></i>
+                                                        {% endif %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <!-- Footer with Gradient -->
+                                <div class="p-3 text-center border-t border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50">
+                                    <a href="/notifications" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center">
+                                        <span>View all notifications</span>
+                                        <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="p-6">
+
+                <!-- Actions Button -->
+                <div class="flex justify-between items-center mb-6">
+                    <button id="create-tournament-btn" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-lg flex items-center shadow-sm transition duration-300 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-plus-circle mr-2"></i> Créer un tournoi
+                    </button>
+                    
+                </div>
+
+                <!-- Tabs -->
+                <div class="bg-white rounded-xl shadow-sm mb-6 overflow-hidden">
+                    <div class="border-b border-gray-200">
+                        <div class="flex">
+                            <button class="tab-button active px-6 py-4 font-medium text-purple-600 focus:outline-none">
+                                Mes tournois
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Updated Tournament Cards with Improved Styling -->
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 gap-4">
+                            {% if tournois|length == 0 %}
+                                <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                                    <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center mb-4 float-animation">
+                                        <i class="fas fa-gamepad text-5xl text-purple-400"></i>
+                                    </div>
+                                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Aucun Tournament dans votre Club</h2>
+                                    <p class="text-gray-600 mb-6 max-w-md">Vous n'avez pas encore ajouté un Tournament.</p>
+                                </div>
+                            {% else %}
+                                {% for tournoi in tournois %}
+                                <div id="tournoi-{{ tournoi.id }}" class="tournament-card bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg border border-gray-100">
+                                    <!-- Tournament Summary (Always visible) -->
+                                    <div class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center cursor-pointer" onclick="toggleCardDetails(this.parentNode)">
+                                        <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                                            <div class="flex-shrink-0">
+                                                <!-- Use tournament image if available, otherwise show default icon -->
+                                                {% if tournoi.image %}
+                                                <div class="w-14 h-14 rounded-lg overflow-hidden">
+                                                    <img src="/{{ tournoi.image }}" alt="{{ tournoi.name }}" class="w-full h-full object-cover">
+                                                </div>
+                                                {% else %}
+                                                <div class="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                                                    <i class="fas fa-trophy text-white text-xl"></i>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <h3 class="font-bold text-lg text-gray-800">{{ tournoi.name }}</h3>
+                                                <div class="flex items-center text-sm text-gray-500 mt-1">
+                                                    <i class="far fa-calendar-alt mr-2"></i>
+                                                    <span>{{ tournoi.date_de_debut }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                                            <!-- Status Badge -->
+                                            <span class="px-3 py-1.5 text-xs font-medium rounded-full 
+                                                {% if tournoi.statut == 'Open' %}
+                                                    bg-green-100 text-green-800
+                                                {% elseif tournoi.statut == 'Completed' %}
+                                                    bg-blue-100 text-blue-800
+                                                {% elseif tournoi.statut == 'Cancelled' %}
+                                                    bg-red-100 text-red-800
+                                                {% elseif tournoi.statut == 'In Progress' %}
+                                                    bg-amber-100 text-amber-800
+                                                {% else %}
+                                                    bg-purple-100 text-purple-800
+                                                {% endif %}
+                                            ">
+                                                {{ tournoi.statut }}
+                                            </span>
+                                            
+                                            <!-- Participants Counter -->
+                                            <div class="bg-indigo-100 text-indigo-800 rounded-full px-3 py-1 flex items-center">
+                                                <i class="fas fa-users mr-1.5"></i>
+                                                <span class="text-xs font-medium">{{ tournoi.numbre_membre }}</span>
+                                            </div>
+                                            
+                                            <!-- Game Icon -->
+                                            <div class="bg-purple-100 text-purple-800 rounded-full px-3 py-1 flex items-center">
+                                                <i class="fas fa-gamepad mr-1.5"></i>
+                                                <span class="text-xs font-medium">{{ tournoi.nom_de_jeu }}</span>
+                                            </div>
+                                            
+                                            <!-- Action buttons -->
+                                            <div class="flex items-center gap-2 ml-auto">
+                                                <button class="p-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-all" title="Statistiques">
+                                                    <i class="fas fa-chart-line"></i>
+                                                </button>
+                                                <button onclick="openStatutModal('{{ tournoi.id }}'); event.stopPropagation();" class="p-2 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all" title="Modifier le statut">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all">
+                                                    <i class="fas fa-chevron-down rotate-icon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Tournament Details (Hidden by default, toggles on click) -->
+                                    <div class="card-details border-t border-gray-200 hidden">
+                                        <!-- Tournament Banner Image (larger version) -->
+                                        {% if tournoi.image %}
+                                        <div class="w-full h-48 overflow-hidden">
+                                            <img src="/{{ tournoi.image }}" alt="{{ tournoi.name }}" class="w-full h-full object-cover">
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <!-- Scrollable content area with max height -->
+                                        <div class="p-5 overflow-y-auto max-h-[400px] custom-scrollbar">
+                                            <!-- Tournament Details Row -->
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+                                                <div class="flex items-center p-4 bg-indigo-50 rounded-lg">
+                                                    <div class="mr-3 p-2.5 bg-indigo-100 rounded-full">
+                                                        <i class="fas fa-users text-indigo-600"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs text-indigo-600 font-medium">Participants</p>
+                                                        <p class="text-sm font-bold text-gray-800">{{tournoi.number_inscription}} / {{ tournoi.numbre_membre }}</p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="flex items-center p-4 bg-purple-50 rounded-lg">
+                                                    <div class="mr-3 p-2.5 bg-purple-100 rounded-full">
+                                                        <i class="fas fa-trophy text-purple-600"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs text-purple-600 font-medium">Prix Total</p>
+                                                        <p class="text-sm font-bold text-gray-800">{{ tournoi.prix_total }} €</p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="flex items-center p-4 bg-green-50 rounded-lg">
+                                                    <div class="mr-3 p-2.5 bg-green-100 rounded-full">
+                                                        <i class="fas fa-gamepad text-green-600"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs text-green-600 font-medium">Jeu</p>
+                                                        <p class="text-sm font-bold text-gray-800">{{ tournoi.nom_de_jeu }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Description Section -->
+                                            {% if tournoi.description %}
+                                            <div class="mt-5 pt-4 border-t border-gray-200">
+                                                <div class="flex items-center mb-2">
+                                                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                                                    <h4 class="font-medium text-gray-900">Description</h4>
+                                                </div>
+                                                <div class="bg-blue-50 p-4 rounded-lg text-sm text-gray-700">
+                                                    {{ tournoi.description }}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            <!-- Rules Section -->
+                                            {% if tournoi.regles %}
+                                            <div class="mt-5 pt-4 border-t border-gray-200">
+                                                <div class="flex items-center mb-2">
+                                                    <i class="fas fa-gavel text-amber-500 mr-2"></i>
+                                                    <h4 class="font-medium text-gray-900">Règles</h4>
+                                                </div>
+                                                <div class="bg-amber-50 p-4 rounded-lg text-sm text-gray-700">
+                                                    {{ tournoi.regles }}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            <!-- Additional Information -->
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-5 pt-4 border-t border-gray-200">
+                                                <div class="text-gray-700">
+                                                    <div class="flex items-center mb-1">
+                                                        <i class="far fa-calendar-check text-indigo-500 mr-2"></i>
+                                                        <span class="font-medium text-gray-900">Période d'inscription</span>
+                                                    </div>
+                                                    <p class="text-sm pl-6">{{ tournoi.date_ouverture_inscription }} - {{ tournoi.date_cloture_inscription }}</p>
+                                                </div>
+                                                
+                                                <div class="text-gray-700">
+                                                    <div class="flex items-center mb-1">
+                                                        <i class="fas fa-euro-sign text-green-500 mr-2"></i>
+                                                        <span class="font-medium text-gray-900">Frais d'inscription</span>
+                                                    </div>
+                                                    <p class="text-sm pl-6">{% if tournoi.frais_inscription %}{{ tournoi.frais_inscription }} €{% else %}Gratuit{% endif %}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Social Links -->
+                                            <div class="flex flex-wrap items-center gap-3 mt-5">
+                                                {% if tournoi.discord %}
+                                                <a href="{{ tournoi.discord }}" class="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-all">
+                                                    <i class="fab fa-discord mr-2"></i> Discord
+                                                </a>
+                                                {% endif %}
+                                                {% if tournoi.twitch %}
+                                                <a href="{{ tournoi.twitch }}" class="flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-all">
+                                                    <i class="fab fa-twitch mr-2"></i> Twitch
+                                                </a>
+                                                {% endif %}
+                                                
+                                                <!-- Action Button -->
+                                                {% if tournoi.statut == "In Progress" %}
+                                                    <div class="ml-auto">
+                                                        <form action="/tournoi/bracket" method="POST" class="inline">
+                                                            <input type="hidden" name="tournoi_id" value="{{ tournoi.id }}">
+                                                            <button type="submit" class="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-md">
+                                                                <i class="fas fa-sitemap mr-2"></i>
+                                                                Voir le tableau du tournoi
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Tournament Modal -->
+    <div id="tournamentModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div id="modalContent" class="bg-white rounded-xl shadow-lg p-8 transform transition-all scale-95 opacity-0 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-indigo-800">Créer un nouveau tournoi</h3>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form action="organisateur/addTournoi" method="POST" enctype="multipart/form-data">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Basic Info Section -->
+                    <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-info-circle text-purple-500 mr-2"></i> 
+                            Informations générales
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nom du tournoi</label>
+                                <input type="text" name="name" placeholder="Ex: Championnat Valorant 2025" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+
+                            <div class="col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Photo du tournoi 
+                                    <span class="text-gray-500 text-xs ml-2">(Optionnel, max 5MB)</span>
+                                </label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="file" name="tournament_photo" accept="image/*" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5">
+                                    <div class="text-sm text-gray-600">
+                                        <p>Format: JPG, PNG</p>
+                                        <p>Taille max: 5MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Jeu</label>
+                                <select name="game" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="">Sélectionner un jeu</option>
+                                    {% for jeu in jeux %}
+                                    <option value="{{jeu.id}}">{{ jeu.nom_de_jeu }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Format du tournoi</label>
+                                <select name="format" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="">Sélectionner un format</option>
+                                    <option value="single-elimination">Élimination simple</option>
+                                    <option value="double-elimination">Double élimination</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+                                <input type="date" name="start_date" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
+                                <input type="date" name="end_date" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre max. de participants</label>
+                                <input type="number" name="max_participants" min="2" max="256" placeholder="Ex: 32" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Prize & Registration Section -->
+                    <div class="col-span-2 md:col-span-1 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-trophy text-purple-500 mr-2"></i> 
+                            Prix et récompenses
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Prix total (€)</label>
+                                <input type="number" name="prix_total" min="0" placeholder="Ex: 1000" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Répartition des prix</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <input type="text" name="prize_first" placeholder="1er place %" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <input type="text" name="prize_second" placeholder="2ème place %" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <input type="text" name="prize_third" placeholder="3ème place %" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Registration Settings -->
+                    <div class="col-span-2 md:col-span-1 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-user-plus text-purple-500 mr-2"></i> 
+                            Paramètres d'inscription
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date d'ouverture des inscriptions</label>
+                                <input type="date" name="registration_start" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date de clôture des inscriptions</label>
+                                <input type="date" name="registration_end" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <input id="registration_fee_toggle" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                <label for="registration_fee_toggle" class="ml-2 block text-sm text-gray-700">Frais d'inscription</label>
+                            </div>
+                            
+                            <div id="fee_input" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Montant (€)</label>
+                                <input type="number" name="registration_fee" placeholder="Ex: 10" min="0" class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Rules & Settings Section -->
+                    <div class="col-span-2 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-gavel text-purple-500 mr-2"></i> 
+                            Règles et paramètres
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description du tournoi</label>
+                                <textarea name="description" rows="3" placeholder="Décrivez votre tournoi..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Règles spécifiques</label>
+                                <textarea name="rules" rows="4" placeholder="Règles du tournoi..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Stream du tournoi</label>
+                                    <input type="url" name="stream_url" placeholder="https://twitch.tv/..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Discord du tournoi</label>
+                                    <input type="url" name="discord_url" placeholder="https://discord.gg/..." class="form-input w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" id="cancel-button" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-300">
+                        Annuler
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg shadow-sm transition duration-300 flex items-center">
+                        <i class="fas fa-plus-circle mr-2"></i> Créer le tournoi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de rechargement -->
+    <div id="recharge-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 z-10">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800">Recharger mon compte</h3>
+                <button id="close-recharge-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-5">
+                <form id="recharge-form" class="space-y-5" action="/rechargeCompte" method="POST">
+                    <div>
+                        <label for="recharge-amount" class="block text-sm text-gray-600 mb-2">Montant à recharger (10-500 €)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-euro-sign"></i>
+                            </span>
+                            <input type="number" name="solde" id="recharge-amount" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" min="10" max="500" required placeholder="Entrez le montant">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-holder" class="block text-sm text-gray-600 mb-2">Nom du titulaire de la carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" id="card-holder" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required placeholder="Nom complet">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="card-number" class="block text-sm text-gray-600 mb-2">Numéro de carte</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <input type="text" id="card-number" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{16}" maxlength="16" required placeholder="Numéro de carte">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="card-expiry" class="block text-sm text-gray-600 mb-2">Date d'expiration</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                                <input type="text" id="card-expiry" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="MM/AA">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="card-cvv" class="block text-sm text-gray-600 mb-2">CVV</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="text" id="card-cvv" class="w-full pl-10 px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" pattern="[0-9]{3}" maxlength="3" required placeholder="CVV">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 mt-4">
+                        Recharger mon compte
+                    </button>
+                    
+                    <div class="text-center text-xs text-gray-500 mt-2 flex items-center justify-center">
+                        <i class="fas fa-shield-alt mr-2 text-green-500"></i>
+                        Paiement 100% sécurisé
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Logic -->
+    <script>
+        // Assign unique IDs to tournament cards for toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Assign IDs to cards
+            const tournamentCards = document.querySelectorAll('.tournament-card');
+            tournamentCards.forEach((card, index) => {
+                card.id = 'tournament-card-' + index;
+            });
+            
+            // Initialize collapsible sidebar
+            initSidebar();
+            
+            // Fix the tournament modal
+            initTournamentModal();
+            
+            // Fix the registration fee toggle
+            initRegistrationFeeToggle();
+        });
+        
+        // Function to toggle card details
+        function toggleCardDetails(card) {
+            // Check if card exists before proceeding
+            if (!card) {
+                console.error('Card element not found');
+                return;
+            }
+            
+            const detailsSection = card.querySelector('.card-details');
+            if (!detailsSection) {
+                console.error('Details section not found in card');
+                return;
+            }
+            
+            const rotateIcon = card.querySelector('.rotate-icon');
+            
+            // Toggle both classes - card-expanded for the parent and hidden for the details
+            card.classList.toggle('card-expanded');
+            
+            // Toggle visibility
+            if (detailsSection.classList.contains('hidden')) {
+                detailsSection.classList.remove('hidden');
+                detailsSection.style.maxHeight = detailsSection.scrollHeight + 'px';
+                if (rotateIcon) {
+                    rotateIcon.style.transform = 'rotate(180deg)';
+                }
+            } else {
+                // Set max height to 0 with transition
+                detailsSection.style.maxHeight = '0px';
+                // Add hidden class after transition
+                setTimeout(() => {
+                    detailsSection.classList.add('hidden');
+                }, 300); // Match this with your CSS transition time
+                
+                if (rotateIcon) {
+                    rotateIcon.style.transform = 'rotate(0)';
+                }
+            }
+        }
+        
+        // Initialize sidebar
+        function initSidebar() {
+            const toggleButton = document.getElementById('sidebar-toggle');
+            const sidebar = document.querySelector('aside');
+            const mainContent = document.querySelector('main');
+            
+            if (toggleButton && sidebar && mainContent) {
+                // Initialize sidebar state from localStorage
+                const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                
+                // Set initial state
+                if (sidebarCollapsed) {
+                    sidebar.classList.add('sidebar-collapsed');
+                    sidebar.classList.remove('sidebar-expanded');
+                    mainContent.classList.add('main-content-collapsed');
+                    mainContent.classList.remove('main-content-expanded');
+                } else {
+                    sidebar.classList.add('sidebar-expanded');
+                    sidebar.classList.remove('sidebar-collapsed');
+                    mainContent.classList.add('main-content-expanded');
+                    mainContent.classList.remove('main-content-collapsed');
+                }
+                
+                // Add toggle functionality
+                toggleButton.addEventListener('click', function() {
+                    sidebar.classList.toggle('sidebar-collapsed');
+                    sidebar.classList.toggle('sidebar-expanded');
+                    mainContent.classList.toggle('main-content-collapsed');
+                    mainContent.classList.toggle('main-content-expanded');
+                    
+                    const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+                    localStorage.setItem('sidebarCollapsed', isCollapsed);
+                });
+            }
+        }
+        
+        // Initialize tournament modal
+        function initTournamentModal() {
+            const createButton = document.getElementById('create-tournament-btn');
+            const closeButton = document.getElementById('close-modal-btn');
+            const cancelButton = document.getElementById('cancel-button');
+            const modal = document.getElementById('tournamentModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            function openTournamentModal() {
+                if (modal && modalContent) {
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modalContent.classList.remove('scale-95', 'opacity-0');
+                        modalContent.classList.add('scale-100', 'opacity-100');
+                    }, 10);
+                }
+            }
+            
+            function closeTournamentModal() {
+                if (modal && modalContent) {
+                    modalContent.classList.remove('scale-100', 'opacity-100');
+                    modalContent.classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                    }, 300);
+                }
+            }
+            
+            if (createButton) {
+                createButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openTournamentModal();
+                });
+            }
+            
+            if (closeButton) {
+                closeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeTournamentModal();
+                });
+            }
+            
+            if (cancelButton) {
+                cancelButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeTournamentModal();
+                });
+            }
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeTournamentModal();
+                }
+            });
+            
+            // Close modal with ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeTournamentModal();
+                }
+            });
+        }
+        
+        // Initialize registration fee toggle
+        function initRegistrationFeeToggle() {
+            const feeToggle = document.getElementById('registration_fee_toggle');
+            const feeInput = document.getElementById('fee_input');
+            
+            if (feeToggle && feeInput) {
+                feeToggle.addEventListener('change', function() {
+                    if (this.checked) {
+                        feeInput.classList.remove('hidden');
+                    } else {
+                        feeInput.classList.add('hidden');
+                        // Reset value when hidden
+                        const feeInputField = document.querySelector('input[name="registration_fee"]');
+                        if (feeInputField) {
+                            feeInputField.value = '0';
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Tab switching logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                });
+            });
+            
+            // Form validation
+            const tournamentForm = document.querySelector('form[action="organisateur/addTournoi"]');
+            
+            if (tournamentForm) {
+                tournamentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get required fields
+                    const tournamentName = this.querySelector('input[name="name"]').value;
+                    const game = this.querySelector('select[name="game"]').value;
+                    const format = this.querySelector('select[name="format"]').value;
+                    const startDate = this.querySelector('input[name="start_date"]').value;
+                    const endDate = this.querySelector('input[name="end_date"]').value;
+                    const maxParticipants = this.querySelector('input[name="max_participants"]').value;
+                    
+                    // Simple validation
+                    if (!tournamentName || !game || !format || !startDate || !endDate || !maxParticipants) {
+                        Swal.fire({
+                            title: 'Formulaire incomplet',
+                            text: 'Veuillez remplir tous les champs obligatoires',
+                            icon: 'error',
+                            confirmButtonColor: '#8b5cf6'
+                        });
+                        return;
+                    }
+
+                    // Vérification que le nombre maximum de participants ne dépasse pas 16
+                    if (parseInt(maxParticipants) > 16) {
+                        Swal.fire({
+                            title: 'Nombre de participants trop élevé',
+                            text: 'Le nombre de participants ne peut pas dépasser 16',
+                            icon: 'error',
+                            confirmButtonColor: '#8b5cf6'
+                        });
+                        return;
+                    }
+                    
+                    // Check that end date is after start date
+                    if (new Date(endDate) <= new Date(startDate)) {
+                        Swal.fire({
+                            title: 'Erreur de date',
+                            text: 'La date de fin doit être postérieure à la date de début',
+                            icon: 'error',
+                            confirmButtonColor: '#8b5cf6'
+                        });
+                        return;
+                    }
+                    
+                    // If feeToggle is checked but no amount is provided
+                    const feeToggle = document.getElementById('registration_fee_toggle');
+                    if (feeToggle && feeToggle.checked) {
+                        const feeAmount = this.querySelector('input[name="registration_fee"]').value;
+                        if (!feeAmount || feeAmount <= 0) {
+                            Swal.fire({
+                                title: 'Frais d\'inscription invalides',
+                                text: 'Veuillez indiquer un montant valide pour les frais d\'inscription',
+                                icon: 'error',
+                                confirmButtonColor: '#8b5cf6'
+                            });
+                            return;
+                        }
+                    }
+                    
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Création en cours',
+                        text: 'Veuillez patienter pendant que nous créons votre tournoi...',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Submit the form
+                    this.submit();
+                });
+            }
+            
+            // Check for URL parameters for notifications
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.has('Tournoi%20Created%20successfully!') || urlParams.has('Tournoi Created successfully!')) {
+                Swal.fire({
+                    title: "Succès !",
+                    text: "Tournoi créé avec succès !",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: '#8b5cf6',
+                    timer: 3000 
+                }).then(() => {
+                    // Clean the URL
+                    const url = new URL(window.location.href);
+                    url.search = '';
+                    window.history.replaceState({}, document.title, url);
+                });
+            }
+            
+            if (urlParams.has('Creation%20de%20votre%20tournoi%20echouée') || urlParams.has('Creation de votre tournoi echouée')) {
+                Swal.fire({
+                    title: 'Erreur de création',
+                    text: 'La création de votre tournoi a échoué',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Clean the URL
+                    const url = new URL(window.location.href);
+                    url.search = '';
+                    window.history.replaceState({}, document.title, url);
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find the recharge button
+            const rechargeButton = Array.from(document.querySelectorAll('button')).find(
+                button => button.textContent.trim() === 'Recharger'
+            );
+            
+            const rechargeModal = document.getElementById('recharge-modal');
+            const closeModalButton = document.getElementById('close-recharge-modal');
+            const rechargeForm = document.getElementById('recharge-form');
+
+            // Input formatting
+            const cardNumberInput = document.getElementById('card-number');
+            const cardExpiryInput = document.getElementById('card-expiry');
+            const cardCvvInput = document.getElementById('card-cvv');
+
+            // Show modal function
+            function showModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.remove('hidden');
+                    rechargeModal.classList.add('flex');
+                }
+            }
+
+            // Hide modal function
+            function hideModal() {
+                if (rechargeModal) {
+                    rechargeModal.classList.add('hidden');
+                    rechargeModal.classList.remove('flex');
+                }
+            }
+
+            // Add click event to recharge button
+            if (rechargeButton) {
+                rechargeButton.addEventListener('click', showModal);
+            }
+
+            // Close modal button event
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', hideModal);
+            }
+
+            // Form submission
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Simulate recharge process
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours`,
+                        icon: 'info',
+                        confirmButtonColor: '#8b5cf6'
+                    }).then(() => {
+                        // Close modal after submission
+                        hideModal();
+                    });
+                });
+            }
+
+            if (rechargeModal) {
+                rechargeModal.addEventListener('click', function(e) {
+                    if (e.target === rechargeModal) {
+                        hideModal();
+                    }
+                });
+            }
+
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trouver le formulaire de rechargement
+            const rechargeForm = document.getElementById('recharge-form');
+            
+            // Gestionnaire d'événement pour la soumission du formulaire
+            if (rechargeForm) {
+                rechargeForm.addEventListener('submit', function(e) {
+                    // Empêcher la soumission par défaut du formulaire
+                    e.preventDefault();
+                    
+                    // Récupérer le montant saisi
+                    const amount = document.getElementById('recharge-amount').value;
+                    
+                    // Afficher l'alerte de chargement
+                    Swal.fire({
+                        title: 'Rechargement en cours',
+                        text: `Rechargement de ${amount} € en cours...`,
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Soumettre le formulaire après un court délai pour montrer l'animation
+                    setTimeout(() => {
+                        rechargeForm.submit();
+                    }, 1500);
+                });
+            }
+            
+            // Vérifier si l'URL contient le paramètre de succès (vérifier les deux formats possibles)
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Obtenir le chemin de base sans les paramètres de query
+            const currentPath = window.location.pathname;
+            
+            if (urlParams.get('message') === 'Rechargement de votre solde réussite' || 
+                urlParams.has('Rechargement_de_votre_solde_réussite')) {
+                Swal.fire({
+                    title: 'Succès!',
+                    text: 'Rechargement de votre solde réussi',
+                    icon: 'success',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                    // Si vous souhaitez rafraîchir la page pour montrer le nouveau solde, décommentez la ligne suivante
+                    // window.location.reload();
+                });
+            }
+            
+            // Vérifier si l'URL contient un message d'échec
+            if (urlParams.has('Rechargement_de_votre_solde_échouée')) {
+                Swal.fire({
+                    title: 'Échec',
+                    text: 'Le rechargement de votre solde a échoué. Veuillez réessayer.',
+                    icon: 'error',
+                    confirmButtonColor: '#8b5cf6'
+                }).then(() => {
+                    // Rediriger vers la même page mais sans les paramètres de query
+                    window.history.replaceState({}, document.title, currentPath);
+                });
+            }
+
+            if(urlParams.has('status_completed')){
+                Swal.fire({
+                    title: 'Tournoi Terminé!',
+                    text: 'Le tournoi est terminé et les récompenses ont été distribuées aux finalistes.',
+                    icon: 'success',
+                    confirmButtonColor: '#1a3fc1',
+                    confirmButtonText: 'Super!'
+                }).then(() => {
+                    // Remove query parameters after user clicks confirm
+                    window.history.replaceState({}, document.title, currentPath);
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationModal = document.getElementById('notificationModal');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+            
+            // Toggle notification modal
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Add wiggle animation when opening
+                if (notificationModal.classList.contains('hidden')) {
+                    notificationBtn.querySelector('i').classList.add('wiggle-animation');
+                    setTimeout(() => {
+                        notificationBtn.querySelector('i').classList.remove('wiggle-animation');
+                    }, 600);
+                }
+                
+                notificationModal.classList.toggle('hidden');
+            });
+            
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notificationModal.contains(e.target) && e.target !== notificationBtn && !notificationBtn.contains(e.target)) {
+                    notificationModal.classList.add('hidden');
+                }
+            });
+        });
+
+        document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/organisateur/notificationRead';
+                
+                const idField = document.createElement('input');
+                idField.type = 'hidden';
+                idField.name = 'notification_id';
+                idField.value = this.getAttribute('data-id');
+                form.appendChild(idField);
+                
+                document.body.appendChild(form);
+                form.submit();
+            });
+        });
+    </script>
+</body>
