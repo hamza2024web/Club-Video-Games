@@ -16,5 +16,26 @@ class Profile {
         $this->profile_image = $profile_image;
         $this->community_rating = $community_rating;
     }
+
+    public function getPhoneNumber() {
+        return $this->phone_number;
+    }
+    
+    public function getGamerTag() {
+        return $this->gamer_tag;
+    }
+    
+    public function getBio() {
+        return $this->bio;
+    }
+    
+    public function getProfileImage() {
+        return $this->profile_image;
+    }
+    
+    public function getCommunityRating() {
+        return $this->community_rating;
+    }
+    
 }
 ?>

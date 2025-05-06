@@ -742,7 +742,6 @@
             const starsContainer = document.getElementById('stars-container');
             const starCount = 50;
             
-            // Generate random stars in the background
             for (let i = 0; i < starCount; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
@@ -761,7 +760,6 @@
                 starsContainer.appendChild(star);
             }
             
-            // Create particle effect
             const particlesContainer = document.getElementById('particles');
             const particleCount = 30;
             
@@ -796,7 +794,6 @@
                 particlesContainer.appendChild(particle);
             }
             
-            // Add entrance animation for matches
             const matches = document.querySelectorAll('.match-card');
             matches.forEach((match, index) => {
                 match.style.opacity = '0';
